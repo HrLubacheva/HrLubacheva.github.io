@@ -1,0 +1,154 @@
+<!-- Модалка материалов -->
+<div id="checklistModal" class="modal">
+    <div class="modal-content">
+        <h3>Скачать материалы</h3>
+        <p>Введите email, и мы отправим ссылки на чек-лист и программу тренинга</p>
+        <input type="email" id="checklistEmail" placeholder="Ваш email" required>
+        <button id="downloadBothBtn" class="btn-primary">Скачать оба материала</button>
+        <div style="margin-top: 16px;">
+            <a href="#" class="btn-secondary" style="margin-right: 8px;" onclick="alert('Добавьте ссылку на PDF чек-листа')">📄 Чек-лист (PDF)</a>
+            <a href="#" class="btn-secondary" onclick="alert('Добавьте ссылку на PDF программы тренинга')">📘 Программа тренинга (PDF)</a>
+        </div>
+        <button id="closeModalBtn" style="margin-top: 20px; background: none; border: none; cursor: pointer;">Закрыть</button>
+    </div>
+</div>
+
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <h3>Политика конфиденциальности</h3>
+        <p>Мы собираем только те данные, которые вы добровольно предоставляете (имя, email, телефон). Данные используются для связи и предоставления услуг. Мы не передаём данные третьим лицам.</p>
+        <button id="closePrivacyModal" class="btn-primary">Закрыть</button>
+    </div>
+</div>
+
+<script>
+    // Плавная прокрутка
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                e.preventDefault();
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // КАЛЬКУЛЯТОР
+    let cart = [];
+    function renderCart() {
+        let total = 0, qty = 0;
+        cart.forEach(i => { total += i.price * i.qty; qty += i.qty; });
+        let final = total;
+        if (qty >= 2) final = total * 0.95;
+        document.getElementById('totalPrice').innerText = Math.round(final).toLocaleString() + ' ₽';
+        let discountDiv = document.getElementById('discountInfo');
+        if (qty >= 2) discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — вы экономите ${Math.round(total*0.05)} ₽`;
+        else discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
+        const businessDiv = document.getElementById('business-list');
+        const individualDiv = document.getElementById('individual-list');
+        const trainingsDiv = document.getElementById('trainings-list');
+        businessDiv.innerHTML = ''; individualDiv.innerHTML = ''; trainingsDiv.innerHTML = '';
+        cart.forEach((item, idx) => {
+            const div = document.createElement('div'); div.className = 'calc-item';
+            div.innerHTML = `<div>${item.name} × ${item.qty}</div><div>${(item.price * item.qty).toLocaleString()} ₽ <button class="remove-item" data-idx="${idx}">✖</button></div>`;
+            if (item.cat === 'business') businessDiv.appendChild(div);
+            else if (item.cat === 'individual') individualDiv.appendChild(div);
+            else trainingsDiv.appendChild(div);
+        });
+        document.querySelectorAll('.remove-item').forEach(btn => btn.addEventListener('click', (e) => { cart.splice(parseInt(btn.dataset.idx), 1); renderCart(); }));
+    }
+    function add(cat, selectId, qtyId) {
+        const select = document.getElementById(selectId);
+        const price = parseInt(select.value);
+        const name = select.options[select.selectedIndex].text.replace(/ — .*/, '');
+        const quantity = parseInt(document.getElementById(qtyId).value);
+        if (isNaN(quantity) || quantity < 1) return;
+        const existing = cart.find(i => i.name === name && i.cat === cat);
+        if (existing) existing.qty += quantity;
+        else cart.push({ name, price, qty: quantity, cat });
+        renderCart();
+    }
+    document.getElementById('business-add').addEventListener('click', () => add('business', 'business-select', 'business-qty'));
+    document.getElementById('individual-add').addEventListener('click', () => add('individual', 'individual-select', 'individual-qty'));
+    document.getElementById('trainings-add').addEventListener('click', () => add('trainings', 'trainings-select', 'trainings-qty'));
+
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.tab-pane');
+    tabs.forEach(btn => btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        panes.forEach(p => p.classList.remove('active'));
+        document.getElementById(`tab-${tab}`).classList.add('active');
+    }));
+
+    // КВИЗ
+    const quizQuestions = [
+        { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
+        { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"] },
+        { text: "3. Как быстро нужен результат?", options: ["Вчера", "1–2 месяца", "3–6 месяцев", "Планирую постепенно"] },
+        { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности"] },
+        { text: "5. Бюджет на консультацию/подбор?", options: ["До 5000 ₽", "5000–15000 ₽", "15000–50000 ₽", "Выше 50000 ₽"] }
+    ];
+    let answers = [null,null,null,null,null];
+    function renderQuiz() {
+        let html = '';
+        quizQuestions.forEach((q, idx) => {
+            html += `<div class="quiz-question"><p>${q.text}</p><div class="quiz-options" data-q="${idx}">`;
+            q.options.forEach(opt => { html += `<div class="quiz-option ${answers[idx]===opt?'selected':''}" data-opt="${opt}">${opt}</div>`; });
+            html += `</div></div>`;
+        });
+        html += `<button id="submitQuizBtn" class="btn-primary">Узнать рекомендацию</button>`;
+        document.getElementById('quizContainer').innerHTML = html;
+        document.querySelectorAll('.quiz-option').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const qIdx = parseInt(el.parentElement.dataset.q);
+                answers[qIdx] = el.dataset.opt;
+                renderQuiz();
+            });
+        });
+        document.getElementById('submitQuizBtn')?.addEventListener('click', () => {
+            if (answers.includes(null)) { alert('Ответьте на все вопросы'); return; }
+            let rec = "Рекомендуем начать с индивидуальной консультации по карьерной стратегии.";
+            if (answers[0].includes("Подбираю сотрудников")) rec = "Для бизнеса: начните с бесплатной диагностики вакансии. Я подберу кандидатов за 28 дней.";
+            else if (answers[1] === "Junior / начинающий") rec = "Вам нужна карьерная стратегия + упаковка резюме. Покажу, как выделиться без опыта.";
+            else if (answers[1] === "Middle / опытный") rec = "Тренинг «Продай себя дорого» и переговоры о зарплате. Вы получите +30% к доходу.";
+            else rec = "Сопровождение до оффера + подготовка к интервью с топ-менеджерами. Работаем на повышение статуса.";
+            document.getElementById('quizResult').innerHTML = `<strong>🎯 Рекомендация:</strong> ${rec}<br><br><a href="https://t.me/hrsavicheva" class="btn-primary" target="_blank">Обсудить в Telegram</a>`;
+            document.getElementById('quizResult').style.display = 'block';
+        });
+    }
+    renderQuiz();
+
+    // Модалка материалов
+    const modal = document.getElementById('checklistModal');
+    const openModal = document.getElementById('openChecklistModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const downloadBoth = document.getElementById('downloadBothBtn');
+    if (openModal) openModal.onclick = () => modal.style.display = 'flex';
+    if (closeModalBtn) closeModalBtn.onclick = () => modal.style.display = 'none';
+    if (downloadBoth) downloadBoth.onclick = () => {
+        const email = document.getElementById('checklistEmail').value;
+        if (!email || !email.includes('@')) { alert('Введите корректный email'); return; }
+        alert(`Материалы будут отправлены на ${email}. Спасибо!\n(Добавьте реальные ссылки на PDF)`);
+        modal.style.display = 'none';
+    };
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+    // Политика конфиденциальности
+    const privacyModal = document.getElementById('privacyModal');
+    const privacyLink = document.getElementById('privacyLink');
+    const closePrivacy = document.getElementById('closePrivacyModal');
+    if (privacyLink) privacyLink.onclick = (e) => { e.preventDefault(); privacyModal.style.display = 'flex'; };
+    if (closePrivacy) closePrivacy.onclick = () => privacyModal.style.display = 'none';
+    window.onclick = (e) => { if (e.target === privacyModal) privacyModal.style.display = 'none'; };
+
+    // Анимации при скролле
+    const faders = document.querySelectorAll('.role-card, .service-card, .stat-item, .benefit-card, .process-card, .quiz-card, .checklist-card, .calendar-card');
+    const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.15 });
+    faders.forEach(el => { el.classList.add('fade-up'); obs.observe(el); });
+</script>
+</body>
+</html>
