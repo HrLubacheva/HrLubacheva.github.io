@@ -4,23 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Виктория Любачева | Карьерный консультант · HR-эксперт · Бизнес-тренер</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            color-scheme: light;
+            --bg: #F4F7FB;
+            --surface: #FFFFFF;
+            --surface-soft: #F8FAFE;
+            --surface-strong: #EAF2FB;
+            --text: #12263F;
+            --text-muted: #5C6E87;
+            --text-inverse: #FFFFFF;
+            --primary: #2D6A9F;
+            --primary-strong: #1D4D7A;
+            --accent: #F9A826;
+            --border: #E4E9F2;
+            --shadow: 0 18px 50px rgba(17, 40, 82, 0.08);
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: #FFFFFF;
-            color: #1A2C3E;
-            line-height: 1.5;
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
             scroll-behavior: smooth;
+            min-height: 100vh;
         }
+        a { color: inherit; }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
         .navbar {
             position: sticky;
             top: 0;
-            background: rgba(255,255,255,0.92);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid #E9EDF2;
-            padding: 12px 0;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(73, 95, 133, 0.08);
+            padding: 18px 0;
             z-index: 100;
         }
         /* Верхняя строка: логотип + иконки */
@@ -28,41 +48,50 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
         .logo {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 700;
-            font-size: 1.6rem;
+            gap: 10px;
+            font-weight: 800;
+            font-size: 1.7rem;
             text-decoration: none;
-            color: #1A2C3E;
+            color: var(--text);
         }
         .logo-triangle {
-            width: 26px;
-            height: 26px;
-            background: #2D6A9F;
+            width: 28px;
+            height: 28px;
+            background: var(--primary);
             clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
         }
-        .logo-sub { font-size: 0.85rem; font-weight: 500; color: #2D6A9F; margin-left: 4px; }
+        .logo-sub { font-size: 0.9rem; font-weight: 600; color: var(--primary); margin-left: 4px; }
         .social-icons {
             display: flex;
             gap: 12px;
         }
         .social-icons a {
             display: inline-flex;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: #F8FAFE;
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            background: rgba(45,106,159,0.08);
             align-items: center;
             justify-content: center;
-            transition: 0.2s;
+            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
             text-decoration: none;
-            font-size: 1.3rem;
+            color: var(--primary);
         }
-        .social-icons a:hover { background: #2D6A9F; transform: translateY(-2px); color: white; }
+        .social-icons a svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+        }
+        .social-icons a:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+            color: var(--text-inverse);
+        }
         /* Нижняя строка: навигация с прокруткой */
         .nav-bottom {
             overflow-x: auto;
@@ -73,13 +102,13 @@
         .nav-links {
             display: inline-flex;
             gap: 28px;
-            font-weight: 500;
+            font-weight: 600;
             padding-bottom: 4px;
         }
         .nav-links a {
             text-decoration: none;
-            color: #1A2C3E;
-            transition: 0.2s;
+            color: var(--text);
+            transition: color 0.2s ease;
             position: relative;
             font-size: 1rem;
             white-space: nowrap;
@@ -91,45 +120,46 @@
             left: 0;
             width: 0;
             height: 2px;
-            background: #2D6A9F;
-            transition: 0.2s;
+            background: var(--primary);
+            transition: width 0.2s ease;
         }
         .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
-        .nav-links a:hover { color: #2D6A9F; }
+        .nav-links a:hover { color: var(--primary); }
         /* Кнопки */
         .btn-primary {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: #2D6A9F;
+            background: linear-gradient(135deg, var(--primary), var(--primary-strong));
             color: white;
             padding: 14px 32px;
-            border-radius: 60px;
+            border-radius: 999px;
             text-decoration: none;
-            font-weight: 600;
-            transition: 0.2s;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
             border: none;
             cursor: pointer;
+            box-shadow: 0 16px 30px rgba(45, 106, 159, 0.16);
         }
-        .btn-primary:hover { background: #1E4A6F; transform: translateY(-2px); }
+        .btn-primary:hover { background: var(--primary-strong); transform: translateY(-2px); }
         .btn-secondary {
             display: inline-block;
             background: transparent;
-            border: 1px solid #2D6A9F;
-            color: #2D6A9F;
+            border: 1px solid rgba(45,106,159,0.28);
+            color: var(--primary);
             padding: 10px 24px;
-            border-radius: 60px;
+            border-radius: 999px;
             text-decoration: none;
-            font-weight: 500;
-            transition: 0.2s;
+            font-weight: 600;
+            transition: background 0.2s ease, color 0.2s ease;
             cursor: pointer;
         }
-        .btn-secondary:hover { background: #2D6A9F; color: white; }
+        .btn-secondary:hover { background: var(--primary); color: white; }
         /* Секции */
-        section { padding: 80px 0; }
-        .section-dark { background: #0F1A2C; color: white; }
-        .section-light { background: #F8FAFE; }
-        .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.02em; }
+        section { padding: 82px 0; }
+        .section-dark { background: #12263F; color: white; }
+        .section-light { background: var(--surface-soft); }
+        .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.03em; line-height: 1.05; }
         /* Герой */
         .hero {
             display: flex;
@@ -137,199 +167,73 @@
             gap: 60px;
             flex-wrap: wrap;
         }
-        .hero-content { flex: 1.2; }
-        .hero-image { flex: 0.8; text-align: center; }
-        .hero-image img { width: 100%; max-width: 400px; border-radius: 32px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+        .hero-content { flex: 1.2; min-width: 320px; }
+        .hero-image { flex: 0.8; text-align: center; min-width: 300px; }
+        .hero-image img { width: 100%; max-width: 420px; border-radius: 36px; box-shadow: var(--shadow); }
         .hero-title {
-            font-size: 3rem;
+            font-size: clamp(2.6rem, 5vw, 3.8rem);
             font-weight: 800;
-            line-height: 1.2;
-            margin-bottom: 16px;
-            background: linear-gradient(135deg, #1A2C3E, #2D6A9F);
+            line-height: 1.05;
+            margin-bottom: 18px;
+            background: linear-gradient(135deg, var(--text), var(--primary));
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
         }
         .hero-subtitle {
-            font-size: 1.3rem;
+            font-size: 1.35rem;
             font-weight: 600;
             margin-bottom: 24px;
-            color: #2D6A9F;
+            color: var(--primary);
         }
-        .hero-text { font-size: 1.1rem; margin-bottom: 28px; color: #2C3E50; }
-        .small-note { margin-top: 20px; font-size: 0.9rem; color: #6B7F95; border-left: 3px solid #2D6A9F; padding-left: 18px; }
+        .hero-text { font-size: 1.08rem; margin-bottom: 28px; color: var(--text-muted); max-width: 680px; }
+        .hero-text strong { color: var(--text); }
+        .small-note { margin-top: 20px; font-size: 0.95rem; color: var(--text-muted); border-left: 3px solid var(--primary); padding-left: 18px; }
         /* Роли, процессы */
-        .roles-grid, .process-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 24px;
-            margin: 40px 0;
-        }
+        .roles-grid, .process-grid { display: flex; flex-wrap: wrap; gap: 24px; margin: 40px 0; }
+        .role-card, .process-card, .service-card, .quiz-card, .checklist-card, .calendar-card, .stat-item, .benefit-card { background: var(--surface); }
         .role-card, .process-card {
             flex: 1;
-            background: white;
             border-radius: 28px;
-            padding: 28px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-            border: 1px solid #E9EDF2;
-            transition: 0.2s;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(17,40,82,0.06);
+            border: 1px solid rgba(226,232,240,0.85);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
-        .role-card:hover, .process-card:hover { transform: translateY(-5px); box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08); }
+        .role-card:hover, .process-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(17,40,82,0.08); }
         .process-card { text-align: center; }
-        .process-step { font-size: 2rem; font-weight: 800; color: #2D6A9F; margin-bottom: 12px; }
-        .process-card h4 { font-size: 1.3rem; margin-bottom: 12px; }
-        /* Услуги */
-        .services-flex { display: flex; gap: 30px; flex-wrap: wrap; }
-        .service-card {
-            background: white;
-            border-radius: 28px;
-            padding: 36px 32px;
-            transition: 0.2s;
-            border: 1px solid #E9EDF2;
-            flex: 1;
-        }
-        .service-card:hover { transform: translateY(-8px); }
-        /* Цифры */
-        .stats-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 30px;
-            margin: 56px 0 20px;
-        }
-        .stat-item {
-            flex: 1;
-            text-align: center;
-            padding: 20px 12px;
-            background: #F8FAFE;
-            border-radius: 32px;
-        }
-        .stat-number { font-size: 3.5rem; font-weight: 800; color: #2D6A9F; }
-        /* Преимущества */
-        .benefits-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 30px;
-            margin-top: 40px;
-        }
-        .benefit-card {
-            background: rgba(255,255,255,0.05);
-            flex: 1;
-            padding: 32px 24px;
-            border-radius: 24px;
-            border-left: 4px solid #2D6A9F;
-        }
-        /* Калькулятор */
-        .calculator-tabs {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            margin-bottom: 32px;
-            border-bottom: 1px solid #E9EDF2;
-            padding-bottom: 16px;
-        }
-        .tab-btn {
-            background: none;
-            border: none;
-            padding: 12px 28px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 60px;
-            transition: 0.2s;
-            color: #2C3E50;
-        }
-        .tab-btn.active {
-            background: #2D6A9F;
-            color: white;
-        }
+        .process-step { font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+        .process-card h4 { font-size: 1.25rem; margin-bottom: 12px; color: var(--text); }
+        .service-card { background: var(--surface); border-radius: 28px; padding: 36px 32px; transition: transform 0.25s ease, box-shadow 0.25s ease; border: 1px solid rgba(226,232,240,0.85); flex: 1; }
+        .service-card:hover { transform: translateY(-6px); box-shadow: 0 24px 50px rgba(17,40,82,0.08); }
+        .stats-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; margin: 56px 0 20px; }
+        .stat-item { flex: 1; text-align: center; padding: 24px 18px; background: var(--surface-soft); border-radius: 32px; border: 1px solid rgba(226,232,240,0.9); }
+        .stat-number { font-size: 3.5rem; font-weight: 800; color: var(--primary); }
+        .benefits-grid { display: flex; flex-wrap: wrap; gap: 30px; margin-top: 40px; }
+        .benefit-card { background: rgba(255,255,255,0.08); flex: 1; padding: 32px 26px; border-radius: 24px; border-left: 4px solid var(--primary); color: inherit; }
+        .calculator-tabs { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; border-bottom: 1px solid rgba(226,232,240,0.9); padding-bottom: 16px; }
+        .tab-btn { background: none; border: none; padding: 12px 28px; font-size: 1.05rem; font-weight: 600; cursor: pointer; border-radius: 999px; transition: background 0.2s ease, color 0.2s ease; color: var(--text); }
+        .tab-btn.active { background: var(--primary); color: white; }
         .tab-pane { display: none; }
         .tab-pane.active { display: block; }
-        .calc-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #F8FAFE;
-            padding: 16px 20px;
-            border-radius: 60px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-        .add-service {
-            margin-top: 20px;
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            align-items: flex-end;
-        }
-        .add-service select, .add-service input {
-            padding: 12px 16px;
-            border-radius: 60px;
-            border: 1px solid #E9EDF2;
-            background: #F8FAFE;
-            font-size: 1rem;
-        }
-        .total-block {
-            background: rgba(45,106,159,0.08);
-            padding: 24px;
-            border-radius: 32px;
-            text-align: center;
-            margin-top: 32px;
-        }
-        .total-price { font-size: 2.2rem; font-weight: 800; color: #2D6A9F; }
-        /* Квиз, чек-лист, календарь */
-        .quiz-card, .checklist-card, .calendar-card {
-            background: white;
-            border-radius: 28px;
-            padding: 32px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-            margin-top: 40px;
-        }
-        .quiz-question { margin-bottom: 28px; }
+        .calc-item { display: flex; justify-content: space-between; align-items: center; background: var(--surface-soft); padding: 18px 22px; border-radius: 60px; margin-bottom: 14px; flex-wrap: wrap; gap: 12px; border: 1px solid rgba(226,232,240,0.95); }
+        .add-service { margin-top: 20px; display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end; }
+        .add-service select, .add-service input { padding: 14px 18px; border-radius: 60px; border: 1px solid rgba(226,232,240,0.9); background: var(--surface-soft); font-size: 1rem; color: var(--text); min-width: 180px; }
+        .total-block { background: rgba(45,106,159,0.08); padding: 26px; border-radius: 32px; text-align: center; margin-top: 32px; border: 1px solid rgba(45,106,159,0.14); }
+        .total-price { font-size: 2.2rem; font-weight: 800; color: var(--primary); }
+        .quiz-card, .checklist-card, .calendar-card { background: var(--surface); border-radius: 28px; padding: 36px; box-shadow: var(--shadow); margin-top: 40px; }
+        .quiz-question { margin-bottom: 30px; }
         .quiz-options { display: flex; flex-wrap: wrap; gap: 12px; }
-        .quiz-option {
-            background: #F8FAFE;
-            border: 1px solid #E9EDF2;
-            padding: 10px 20px;
-            border-radius: 60px;
-            cursor: pointer;
-        }
-        .quiz-option.selected {
-            background: #2D6A9F;
-            color: white;
-        }
-        .quiz-result {
-            margin-top: 28px;
-            padding: 20px;
-            background: rgba(45,106,159,0.08);
-            border-radius: 28px;
-            display: none;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-        .modal-content {
-            background: white;
-            max-width: 500px;
-            width: 90%;
-            padding: 32px;
-            border-radius: 32px;
-            text-align: center;
-        }
+        .quiz-option { background: var(--surface-soft); border: 1px solid rgba(226,232,240,0.95); padding: 12px 22px; border-radius: 60px; cursor: pointer; transition: background 0.2s ease, color 0.2s ease; }
+        .quiz-option.selected { background: var(--primary); color: var(--text-inverse); border-color: rgba(45,106,159,0.4); }
+        .quiz-result { margin-top: 28px; padding: 24px; background: rgba(45,106,159,0.08); border-radius: 28px; display: none; border: 1px solid rgba(45,106,159,0.14); }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: var(--surface); max-width: 520px; width: 92%; padding: 34px; border-radius: 34px; text-align: center; box-shadow: var(--shadow); }
         .contact-block { text-align: center; max-width: 700px; margin: 0 auto; }
-        .contact-line { margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 12px; }
-        footer { text-align: center; padding: 32px; border-top: 1px solid #E9EDF2; font-size: 0.85rem; }
-        .fade-up { opacity: 0; transform: translateY(30px); transition: 0.7s; }
+        .contact-line { margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 12px; color: currentColor; }
+        .contact-line a { color: inherit; text-decoration: none; }
+        footer { text-align: center; padding: 32px; border-top: 1px solid rgba(226,232,240,0.9); font-size: 0.9rem; color: var(--text-muted); }
+        .fade-up { opacity: 0; transform: translateY(30px); transition: 0.7s ease; }
         .fade-up.visible { opacity: 1; transform: translateY(0); }
 
         /* Адаптивность для мобильных (уменьшаем, сохраняем две строки) */
@@ -338,8 +242,8 @@
             .navbar { padding: 8px 0; }
             .nav-top { margin-bottom: 8px; }
             .logo { font-size: 1.3rem; }
-            .logo-triangle { width: 20px; height: 20px; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid #2D6A9F; }
-            .social-icons a { width: 32px; height: 32px; font-size: 1.1rem; }
+            .logo-triangle { width: 20px; height: 20px; }
+            .social-icons a { width: 36px; height: 36px; }
             .nav-links { gap: 20px; }
             .nav-links a { font-size: 0.85rem; }
             .hero-title { font-size: 2rem; }
@@ -366,10 +270,21 @@
                 <span>HR <span class="logo-sub">HrLubacheva</span></span>
             </a>
             <div class="social-icons">
-                <a href="https://t.me/HrLubacheva" target="_blank">📱</a>
-                <a href="#" target="_blank">📘</a>
-                <a href="#" target="_blank">💬</a>
-                <a href="#" target="_blank">📷</a>
+                <a href="https://t.me/HrLubacheva" target="_blank" aria-label="Telegram">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12l16.5-7.5L9 13.5l-2 6 6-4 4.5 4.5L21 4.5 3 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+                <a href="https://www.linkedin.com/in/%D0%B2%D0%B8%D0%BA%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D0%BB%D1%8E%D0%B1%D0%B0%D1%87%D0%B5%D0%B2%D0%B0-hrsavacheva-2a52847b/" target="_blank" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 7.5h4v12H4v-12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 4.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 12h3.5v1.5h.1c.5-.9 1.6-1.8 3.2-1.8 3.4 0 4 2.3 4 5.3v6h-4v-5.3c0-1.3 0-3-1.8-3-1.8 0-2 1.3-2 2.9V21.5h-4v-12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+                <a href="https://www.facebook.com/hrsavicheva/" target="_blank" aria-label="Facebook">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 22.5V12H4.5V8.5h3V6.3c0-2.4 1.4-3.8 3.6-3.8 1 0 2 0 2 0v3.6h-1.4c-1 0-1.2.5-1.2 1.2V8.5h3l-.5 3.5h-2.5v10.5H7.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+                <a href="https://wa.me/79217916655" target="_blank" aria-label="WhatsApp">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 7.5a5.5 5.5 0 1 0-10.8 2.7L5 17l4.9-1.3a5.5 5.5 0 0 0 7.1-8.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.2 11.2c.5.7 1.5 1.2 2.3 1.4.5.1.8.1 1.2 0 .3-.1.6-.2.8-.3.2-.1.4-.1.5.1.1.2.1.4.1.6v.8c0 .2-.1.4-.3.6-.2.2-.7.7-1.4 1-.7.3-1.4.4-2.5.2-1.1-.2-2.8-1.1-4.2-2.9-1.5-1.8-1.3-3.7-.8-4.2.5-.5 1.1-.6 1.5-.6.3 0 .7 0 1 .1.3.1.8.3 1.1.5.3.2.5.4.7.6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+                <a href="https://www.instagram.com/hrsavicheva/" target="_blank" aria-label="Instagram">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4.5" y="4.5" width="15" height="15" rx="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M15.75 8.25h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 8.75a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
             </div>
         </div>
         <div class="nav-bottom">
@@ -394,12 +309,13 @@
                 <div class="hero-subtitle">Карьерный консультант · HR-эксперт · Бизнес-тренер</div>
                 <div class="hero-text">
                     <p>Помогаю компаниям находить и развивать персонал, а людям — строить карьеру и повышать доход. 24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.</p>
-                    <p><strong>Для бизнеса:</strong> подбор, онбординг, тренинги, аудит HR-процессов. <strong>Для людей:</strong> резюме, подготовка к интервью, стратегия роста.</p>
+                    <p><strong>Для бизнеса</strong> — подбор, онбординг, тренинги, аудит HR-процессов.<br>
+<strong>Для специалистов</strong> — резюме, подготовка к интервью, стратегия роста.</p>
                 </div>
                 <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a>
-                <div class="small-note">Работаю с профессионалами от Junior до Top-менеджеров и с бизнесом любого масштаба.</div>
+                <div class="small-note">Работаю с профессионалами от Junior до C-level и с бизнесом любого масштаба.</div>
             </div>
-            <div class="hero-image"><img src="photo.jpg" alt="Виктория Любачева" onerror="this.src='https://placehold.co/500x600?text=Фото+Виктории'"></div>
+            <div class="hero-image"><img src="https://imgproxy.gamma.app/resize/quality:80/resizing_type:fit/width:1200/https://cdn.gamma.app/h43z0t34xqsn732/c5739a202eb749bfb502ae757110df49/original/ya.jfif" alt="Виктория Любачева" onerror="this.src='https://placehold.co/500x600?text=Фото+Виктории'"></div>
         </div>
     </section>
 
@@ -408,10 +324,22 @@
         <div class="container">
             <h2 class="section-title">Мои экспертные роли</h2>
             <div class="roles-grid">
-                <div class="role-card"><h3>🧑 Карьерный консультант</h3><p>Индивидуальные стратегии, резюме, подготовка к интервью, повышение дохода. Продайте себя дорого.</p></div>
-                <div class="role-card"><h3>🏢 HR-эксперт для организаций</h3><p>Подбор персонала, онбординг, УТП, аудит HR-процессов. Закрываю вакансии с гарантией.</p></div>
-                <div class="role-card"><h3>💬 HR-эксперт для людей</h3><p>Консультации по трудовым отношениям, карьерные карты, переговоры с работодателем.</p></div>
-                <div class="role-card"><h3>🎓 Бизнес-тренер (команды и лично)</h3><p>Тренинги для команд и индивидуальный коучинг для руководителей. Развиваю навыки, которые приносят прибыль.</p></div>
+                <div class="role-card">
+                    <h3>🧑 Карьерный консультант</h3>
+                    <p>Индивидуальные стратегии, резюме, подготовка к интервью, повышение дохода. Продайте себя дорого.</p>
+                </div>
+                <div class="role-card">
+                    <h3>🏢 HR-эксперт для организаций</h3>
+                    <p>Подбор персонала, онбординг, УТП, аудит HR-процессов. Закрываю вакансии с гарантией.</p>
+                </div>
+                <div class="role-card">
+                    <h3>💬 HR-эксперт для людей</h3>
+                    <p>Консультации по трудовым отношениям, карьерные карты, переговоры с работодателем.</p>
+                </div>
+                <div class="role-card">
+                    <h3>🎓 Бизнес-тренер (команды и лично)</h3>
+                    <p>Тренинги для команд и индивидуальный коучинг для руководителей. Развиваю навыки, которые приносят прибыль.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -420,13 +348,19 @@
     <section class="section-light" id="services">
         <div class="container">
             <div class="services-flex">
-                <div class="service-card"><h3>🏢 HR для бизнеса</h3><p>Подбор персонала (Junior → C-level), онбординг, оценка, аутсорсинг подбора, кадровый аудит.</p></div>
+                <div class="service-card">
+                    <h3>🏢 HR для бизнеса</h3>
+                    <p>Подбор персонала (Junior → C-level), онбординг, оценка, аутсорсинг подбора, кадровый аудит.</p>
+                </div>
                 <div class="service-card">
                     <h3>🧑 Карьерный консалтинг</h3>
-                    <p>Карьерная стратегия, резюме, подготовка к интервью, тренинг «Продай себя дорого», переговоры о зарплате.</p>
+                    <p>Карьерная стратегия, упаковка резюме, подготовка к интервью и переговоры о зарплате. Помогаю заявить о ценности и получить достойный оффер.</p>
                     <a href="#" class="btn-secondary" style="margin-top: 16px; display: inline-block;" onclick="alert('Скачивание программы тренинга: добавьте ссылку на PDF')">📘 Скачать программу тренинга (PDF)</a>
                 </div>
-                <div class="service-card"><h3>🎓 Бизнес-тренинг и коучинг</h3><p>Корпоративные тренинги (до 25 чел.), мастер-классы, стратегические сессии, индивидуальный коучинг топ-менеджеров.</p></div>
+                <div class="service-card">
+                    <h3>🎓 Бизнес-тренинг и коучинг</h3>
+                    <p>Корпоративные тренинги (до 25 чел.), мастер-классы, стратегические сессии, индивидуальный коучинг топ-менеджеров.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -436,11 +370,26 @@
         <div class="container">
             <h2 class="section-title">Цифры, подтверждающие экспертизу</h2>
             <div class="stats-grid">
-                <div class="stat-item"><div class="stat-number">1000+</div><div class="stat-label">закрытых вакансий</div></div>
-                <div class="stat-item"><div class="stat-number">1300+</div><div class="stat-label">кандидатов повысили доход</div></div>
-                <div class="stat-item"><div class="stat-number">10 000+</div><div class="stat-label">проведённых интервью</div></div>
-                <div class="stat-item"><div class="stat-number">500+</div><div class="stat-label">карьерных консультаций</div></div>
-                <div class="stat-item"><div class="stat-number">30+</div><div class="stat-label">тренингов за 2025 год</div></div>
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">закрытых вакансий</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1300+</div>
+                    <div class="stat-label">кандидатов повысили доход</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">10 000+</div>
+                    <div class="stat-label">проведённых интервью</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">карьерных консультаций</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">тренингов за 2025 год</div>
+                </div>
             </div>
         </div>
     </section>
@@ -450,10 +399,22 @@
         <div class="container">
             <h2 class="section-title">Почему мне доверяют компании и специалисты?</h2>
             <div class="benefits-grid">
-                <div class="benefit-card"><h4>🌱 Junior → Middle</h4><p>Помогаю начинающим найти первую работу и заложить фундамент роста.</p></div>
-                <div class="benefit-card"><h4>📈 Middle → Senior</h4><p>Разбираюсь, где вас недооценивают, готовлю к переходу на новый уровень.</p></div>
-                <div class="benefit-card"><h4>🏆 Senior/Lead → Executive</h4><p>Упаковываю опыт так, чтобы вас искали хедхантеры.</p></div>
-                <div class="benefit-card"><h4>🤝 Бизнес-системность</h4><p>Отбираю топ-5 кандидатов под бюджет и культуру компании, сокращаю время найма в 2 раза.</p></div>
+                <div class="benefit-card">
+                    <h4>🌱 Junior → Middle</h4>
+                    <p>Помогаю начинающим найти первую работу и заложить фундамент роста.</p>
+                </div>
+                <div class="benefit-card">
+                    <h4>📈 Middle → Senior</h4>
+                    <p>Разбираюсь, где вас недооценивают, готовлю к переходу на новый уровень.</p>
+                </div>
+                <div class="benefit-card">
+                    <h4>🏆 Senior/Lead → Executive</h4>
+                    <p>Упаковываю опыт так, чтобы вас искали хедхантеры.</p>
+                </div>
+                <div class="benefit-card">
+                    <h4>🤝 Бизнес-системность</h4>
+                    <p>Отбираю топ-5 кандидатов под бюджет и культуру компании, сокращаю время найма в 2 раза.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -574,9 +535,12 @@
         <div class="container contact-block">
             <h2 class="section-title">Остались вопросы? Напишите или позвоните</h2>
             <div class="contact-line">📧 <a href="mailto:hrlubacheva@mail.ru">hrlubacheva@mail.ru</a></div>
-            <div class="contact-line">📱 <a href="https://t.me/HrLubacheva" target="_blank">@HrLubacheva</a></div>
+            <div class="contact-line">📱 <a href="https://t.me/HrLubacheva" target="_blank">Telegram: @HrLubacheva</a></div>
+            <div class="contact-line">📌 <a href="https://www.instagram.com/hrsavicheva/" target="_blank">Instagram: @hrsavicheva</a></div>
+            <div class="contact-line">📌 <a href="https://www.facebook.com/hrsavicheva/" target="_blank">Facebook: @hrsavicheva</a></div>
             <div class="contact-line">📞 <a href="tel:+79217916655">+7 921 791-66-55</a></div>
-            <div style="margin-top: 32px;"><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a></div>
+            <div class="contact-line" style="font-size:0.95rem; color: #A7BCC9; margin-top: 8px;">Ищите сначала @HrLubacheva, если не нашли — @hrsavicheva, если и этого нет — звоните.</div>
+            <div style="margin-top: 24px;"><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a></div>
         </div>
     </section>
 </main>
@@ -704,7 +668,7 @@
             else if (answers[1] === "Junior / начинающий") rec = "Вам нужна карьерная стратегия + упаковка резюме. Покажу, как выделиться без опыта.";
             else if (answers[1] === "Middle / опытный") rec = "Тренинг «Продай себя дорого» и переговоры о зарплате. Вы получите +30% к доходу.";
             else rec = "Сопровождение до оффера + подготовка к интервью с топ-менеджерами. Работаем на повышение статуса.";
-            document.getElementById('quizResult').innerHTML = `<strong>🎯 Рекомендация:</strong> ${rec}<br><br><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Обсудить в Telegram</a>`;
+            document.getElementById('quizResult').innerHTML = `<strong>🎯 Рекомендация:</strong> ${rec}<br><br><a href="https://t.me/hrsavicheva" class="btn-primary" target="_blank">Обсудить в Telegram</a>`;
             document.getElementById('quizResult').style.display = 'block';
         });
     }
@@ -739,4 +703,4 @@
     faders.forEach(el => { el.classList.add('fade-up'); obs.observe(el); });
 </script>
 </body>
-</html>
+</html>>

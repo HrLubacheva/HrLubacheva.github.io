@@ -7,7 +7,6 @@ import sys
 
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 START_PORT = 8080
-BIND_HOST = "127.0.0.1"
 
 
 def get_free_port(start_port):
@@ -15,7 +14,7 @@ def get_free_port(start_port):
     while True:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             try:
-                s.bind((BIND_HOST, port))
+                s.bind(('', port))
                 return port
             except OSError:
                 port += 1
@@ -50,7 +49,7 @@ if __name__ == "__main__":
 
     webbrowser.open(f"http://localhost:{port}")
 
-    with socketserver.TCPServer((BIND_HOST, port), Handler) as httpd:
+    with socketserver.TCPServer(("", port), Handler) as httpd:
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
