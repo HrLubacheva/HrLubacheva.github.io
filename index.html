@@ -7,250 +7,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            color-scheme: light;
-            --bg: #F4F7FB;
-            --surface: #FFFFFF;
-            --surface-soft: #F8FAFE;
-            --surface-strong: #EAF2FB;
-            --text: #12263F;
-            --text-muted: #5C6E87;
-            --text-inverse: #FFFFFF;
-            --primary: #2D6A9F;
-            --primary-strong: #1D4D7A;
-            --accent: #F9A826;
-            --border: #E4E9F2;
-            --shadow: 0 18px 50px rgba(17, 40, 82, 0.08);
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            scroll-behavior: smooth;
-            min-height: 100vh;
-        }
-        a { color: inherit; }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
-        .navbar {
-            position: sticky;
-            top: 0;
-            background: rgba(255,255,255,0.96);
-            backdrop-filter: blur(18px);
-            border-bottom: 1px solid rgba(73, 95, 133, 0.08);
-            padding: 18px 0;
-            z-index: 100;
-        }
-        .nav-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 800;
-            font-size: 1.7rem;
-            text-decoration: none;
-            color: var(--text);
-        }
-        .logo-triangle {
-            width: 28px;
-            height: 28px;
-            background: var(--primary);
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        }
-        .logo-sub { font-size: 0.9rem; font-weight: 600; color: var(--primary); margin-left: 4px; }
-        .social-icons {
-            display: flex;
-            gap: 12px;
-        }
-        .social-icons a {
-            display: inline-flex;
-            width: 44px;
-            height: 44px;
-            border-radius: 16px;
-            background: rgba(45,106,159,0.08);
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
-            text-decoration: none;
-            color: var(--primary);
-        }
-        .social-icons a svg {
-            width: 22px;
-            height: 22px;
-            display: block;
-        }
-        .social-icons a:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-            color: var(--text-inverse);
-        }
-        .nav-bottom {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-            white-space: nowrap;
-        }
-        .nav-links {
-            display: inline-flex;
-            gap: 28px;
-            font-weight: 600;
-            padding-bottom: 4px;
-        }
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text);
-            transition: color 0.2s ease;
-            position: relative;
-            font-size: 1rem;
-            white-space: nowrap;
-        }
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.2s ease;
-        }
-        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
-        .nav-links a:hover { color: var(--primary); }
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-strong));
-            color: white;
-            padding: 14px 32px;
-            border-radius: 999px;
-            text-decoration: none;
-            font-weight: 700;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 16px 30px rgba(45, 106, 159, 0.16);
-        }
-        .btn-primary:hover { background: var(--primary-strong); transform: translateY(-2px); }
-        .btn-secondary {
-            display: inline-block;
-            background: transparent;
-            border: 1px solid rgba(45,106,159,0.28);
-            color: var(--primary);
-            padding: 10px 24px;
-            border-radius: 999px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.2s ease, color 0.2s ease;
-            cursor: pointer;
-        }
-        .btn-secondary:hover { background: var(--primary); color: white; }
-        section { padding: 82px 0; }
-        .section-dark { background: #12263F; color: white; }
-        .section-light { background: var(--surface-soft); }
-        .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 20px; letter-spacing: -0.03em; line-height: 1.05; }
-        .hero {
-            display: flex;
-            align-items: center;
-            gap: 60px;
-            flex-wrap: wrap;
-        }
-        .hero-content { flex: 1.2; min-width: 320px; }
-        .hero-image { flex: 0.8; text-align: center; min-width: 300px; }
-        .hero-image img { width: 100%; max-width: 420px; border-radius: 36px; box-shadow: var(--shadow); }
-        .hero-title {
-            font-size: clamp(2.6rem, 5vw, 3.8rem);
-            font-weight: 800;
-            line-height: 1.05;
-            margin-bottom: 18px;
-            background: linear-gradient(135deg, var(--text), var(--primary));
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-        .hero-subtitle {
-            font-size: 1.35rem;
-            font-weight: 600;
-            margin-bottom: 24px;
-            color: var(--primary);
-        }
-        .hero-text { font-size: 1.08rem; margin-bottom: 28px; color: var(--text-muted); max-width: 680px; }
-        .hero-text strong { color: var(--text); }
-        .small-note { margin-top: 20px; font-size: 0.95rem; color: var(--text-muted); border-left: 3px solid var(--primary); padding-left: 18px; }
-        .roles-grid, .process-grid { display: flex; flex-wrap: wrap; gap: 24px; margin: 40px 0; }
-        .role-card, .process-card, .service-card, .quiz-card, .checklist-card, .calendar-card, .stat-item, .benefit-card { background: var(--surface); }
-        .role-card, .process-card {
-            flex: 1;
-            border-radius: 28px;
-            padding: 30px;
-            box-shadow: 0 20px 50px rgba(17,40,82,0.06);
-            border: 1px solid rgba(226,232,240,0.85);
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-        }
-        .role-card:hover, .process-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(17,40,82,0.08); }
-        .process-card { text-align: center; }
-        .process-step { font-size: 2rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
-        .process-card h4 { font-size: 1.25rem; margin-bottom: 12px; color: var(--text); }
-        .service-card { background: var(--surface); border-radius: 28px; padding: 36px 32px; transition: transform 0.25s ease, box-shadow 0.25s ease; border: 1px solid rgba(226,232,240,0.85); flex: 1; }
-        .service-card:hover { transform: translateY(-6px); box-shadow: 0 24px 50px rgba(17,40,82,0.08); }
-        .stats-grid { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; margin: 56px 0 20px; }
-        .stat-item { flex: 1; text-align: center; padding: 24px 18px; background: var(--surface-soft); border-radius: 32px; border: 1px solid rgba(226,232,240,0.9); }
-        .stat-number { font-size: 3.5rem; font-weight: 800; color: var(--primary); }
-        .benefits-grid { display: flex; flex-wrap: wrap; gap: 30px; margin-top: 40px; }
-        .benefit-card { background: rgba(255,255,255,0.08); flex: 1; padding: 32px 26px; border-radius: 24px; border-left: 4px solid var(--primary); color: inherit; }
-        .calculator-tabs { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 32px; border-bottom: 1px solid rgba(226,232,240,0.9); padding-bottom: 16px; }
-        .tab-btn { background: none; border: none; padding: 12px 28px; font-size: 1.05rem; font-weight: 600; cursor: pointer; border-radius: 999px; transition: background 0.2s ease, color 0.2s ease; color: var(--text); }
-        .tab-btn.active { background: var(--primary); color: white; }
-        .tab-pane { display: none; }
-        .tab-pane.active { display: block; }
-        .calc-item { display: flex; justify-content: space-between; align-items: center; background: var(--surface-soft); padding: 18px 22px; border-radius: 60px; margin-bottom: 14px; flex-wrap: wrap; gap: 12px; border: 1px solid rgba(226,232,240,0.95); }
-        .add-service { margin-top: 20px; display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end; }
-        .add-service select, .add-service input { padding: 14px 18px; border-radius: 60px; border: 1px solid rgba(226,232,240,0.9); background: var(--surface-soft); font-size: 1rem; color: var(--text); min-width: 180px; }
-        .total-block { background: rgba(45,106,159,0.08); padding: 26px; border-radius: 32px; text-align: center; margin-top: 32px; border: 1px solid rgba(45,106,159,0.14); }
-        .total-price { font-size: 2.2rem; font-weight: 800; color: var(--primary); }
-        .quiz-card, .checklist-card, .calendar-card { background: var(--surface); border-radius: 28px; padding: 36px; box-shadow: var(--shadow); margin-top: 40px; }
-        .quiz-question { margin-bottom: 30px; }
-        .quiz-options { display: flex; flex-wrap: wrap; gap: 12px; }
-        .quiz-option { background: var(--surface-soft); border: 1px solid rgba(226,232,240,0.95); padding: 12px 22px; border-radius: 60px; cursor: pointer; transition: background 0.2s ease, color 0.2s ease; }
-        .quiz-option.selected { background: var(--primary); color: var(--text-inverse); border-color: rgba(45,106,159,0.4); }
-        .quiz-result { margin-top: 28px; padding: 24px; background: rgba(45,106,159,0.08); border-radius: 28px; display: none; border: 1px solid rgba(45,106,159,0.14); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-content { background: var(--surface); max-width: 520px; width: 92%; padding: 34px; border-radius: 34px; text-align: center; box-shadow: var(--shadow); }
-        .contact-block { text-align: center; max-width: 700px; margin: 0 auto; }
-        .contact-line { margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 12px; color: currentColor; }
-        .contact-line a { color: inherit; text-decoration: none; }
-        footer { text-align: center; padding: 32px; border-top: 1px solid rgba(226,232,240,0.9); font-size: 0.9rem; color: var(--text-muted); }
-        .fade-up { opacity: 0; transform: translateY(30px); transition: 0.7s ease; }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
-        @media (max-width: 768px) {
-            .container { padding: 0 16px; }
-            .navbar { padding: 8px 0; }
-            .nav-top { margin-bottom: 8px; }
-            .logo { font-size: 1.3rem; }
-            .logo-triangle { width: 20px; height: 20px; }
-            .social-icons a { width: 36px; height: 36px; }
-            .nav-links { gap: 20px; }
-            .nav-links a { font-size: 0.85rem; }
-            .hero-title { font-size: 2rem; }
-            .hero { flex-direction: column; gap: 30px; }
-            .section-title { font-size: 1.8rem; }
-            .roles-grid, .process-grid, .benefits-grid, .services-flex { flex-direction: column; }
-            .stats-grid { flex-direction: column; align-items: center; gap: 20px; }
-            .stat-number { font-size: 2.5rem; }
-            .btn-primary { width: 100%; justify-content: center; }
-            .calculator-tabs { gap: 8px; }
-            .tab-btn { padding: 8px 16px; font-size: 0.85rem; }
-            .add-service select, .add-service input { width: 100%; }
-            section { padding: 60px 0; }
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Yandex.Metrika counter (один экземпляр) -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109292129', 'ym');
+
+        ym(109292129, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109292129" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+
 </head>
 <body>
 <nav class="navbar">
@@ -262,19 +34,43 @@
             </a>
             <div class="social-icons">
                 <a href="https://t.me/HrLubacheva" target="_blank" aria-label="Telegram">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12l16.5-7.5L9 13.5l-2 6 6-4 4.5 4.5L21 4.5 3 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 12l16.5-7.5L9 13.5l-2 6 6-4 4.5 4.5L21 4.5 3 12Z" stroke="currentColor"
+                              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </a>
-                <a href="https://www.linkedin.com/in/%D0%B2%D0%B8%D0%BA%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D0%BB%D1%8E%D0%B1%D0%B0%D1%87%D0%B5%D0%B2%D0%B0-hrsavacheva-2a52847b/" target="_blank" aria-label="LinkedIn">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 7.5h4v12H4v-12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 4.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 12h3.5v1.5h.1c.5-.9 1.6-1.8 3.2-1.8 3.4 0 4 2.3 4 5.3v6h-4v-5.3c0-1.3 0-3-1.8-3-1.8 0-2 1.3-2 2.9V21.5h-4v-12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <a href="https://www.linkedin.com/in/%D0%B2%D0%B8%D0%BA%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D0%BB%D1%8E%D0%B1%D0%B0%D1%87%D0%B5%D0%B2%D0%B0-hrsavacheva-2a52847b/"
+                   target="_blank" aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 7.5h4v12H4v-12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                        <path d="M6 4.5c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2Z" stroke="currentColor"
+                              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10.5 12h3.5v1.5h.1c.5-.9 1.6-1.8 3.2-1.8 3.4 0 4 2.3 4 5.3v6h-4v-5.3c0-1.3 0-3-1.8-3-1.8 0-2 1.3-2 2.9V21.5h-4v-12Z"
+                              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </a>
                 <a href="https://www.facebook.com/hrsavicheva/" target="_blank" aria-label="Facebook">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 22.5V12H4.5V8.5h3V6.3c0-2.4 1.4-3.8 3.6-3.8 1 0 2 0 2 0v3.6h-1.4c-1 0-1.2.5-1.2 1.2V8.5h3l-.5 3.5h-2.5v10.5H7.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7.5 22.5V12H4.5V8.5h3V6.3c0-2.4 1.4-3.8 3.6-3.8 1 0 2 0 2 0v3.6h-1.4c-1 0-1.2.5-1.2 1.2V8.5h3l-.5 3.5h-2.5v10.5H7.5Z"
+                              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </a>
                 <a href="https://wa.me/79217916655" target="_blank" aria-label="WhatsApp">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 7.5a5.5 5.5 0 1 0-10.8 2.7L5 17l4.9-1.3a5.5 5.5 0 0 0 7.1-8.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.2 11.2c.5.7 1.5 1.2 2.3 1.4.5.1.8.1 1.2 0 .3-.1.6-.2.8-.3.2-.1.4-.1.5.1.1.2.1.4.1.6v.8c0 .2-.1.4-.3.6-.2.2-.7.7-1.4 1-.7.3-1.4.4-2.5.2-1.1-.2-2.8-1.1-4.2-2.9-1.5-1.8-1.3-3.7-.8-4.2.5-.5 1.1-.6 1.5-.6.3 0 .7 0 1 .1.3.1.8.3 1.1.5.3.2.5.4.7.6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17 7.5a5.5 5.5 0 1 0-10.8 2.7L5 17l4.9-1.3a5.5 5.5 0 0 0 7.1-8.2Z"
+                              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M11.2 11.2c.5.7 1.5 1.2 2.3 1.4.5.1.8.1 1.2 0 .3-.1.6-.2.8-.3.2-.1.4-.1.5.1.1.2.1.4.1.6v.8c0 .2-.1.4-.3.6-.2.2-.7.7-1.4 1-.7.3-1.4.4-2.5.2-1.1-.2-2.8-1.1-4.2-2.9-1.5-1.8-1.3-3.7-.8-4.2.5-.5 1.1-.6 1.5-.6.3 0 .7 0 1 .1.3.1.8.3 1.1.5.3.2.5.4.7.6Z"
+                              stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </a>
                 <a href="https://www.instagram.com/hrsavicheva/" target="_blank" aria-label="Instagram">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4.5" y="4.5" width="15" height="15" rx="4.5" stroke="currentColor" stroke-width="1.8"/><path d="M15.75 8.25h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M12 8.75a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4.5" y="4.5" width="15" height="15" rx="4.5" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M15.75 8.25h.01" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                        <path d="M12 8.75a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5Z" stroke="currentColor"
+                              stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </a>
             </div>
         </div>
@@ -296,9 +92,10 @@
             <h1 class="hero-title">Виктория Любачева</h1>
             <div class="hero-subtitle">Карьерный консультант · HR-эксперт · Бизнес-тренер</div>
             <div class="hero-text">
-                <p>Помогаю компаниям находить и развивать персонал, а людям — строить карьеру и повышать доход. 24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.</p>
+                <p>Помогаю компаниям находить и развивать персонал, а людям — строить карьеру и повышать доход. 24 года
+                    в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.</p>
                 <p><strong>Для бизнеса</strong> — подбор, онбординг, тренинги, аудит HR-процессов.<br>
-<strong>Для специалистов</strong> — резюме, подготовка к интервью, стратегия роста.</p>
+                    <strong>Для специалистов</strong> — резюме, подготовка к интервью, стратегия роста.</p>
             </div>
             <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a>
             <div class="small-note">Работаю с профессионалами от Junior до C-level и с бизнесом любого масштаба.</div>
@@ -402,9 +199,66 @@
     <div class="container">
         <h2 class="section-title">Как мы будем работать вместе</h2>
         <div style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-between;">
-            <div style="flex: 1;"><h3 style="margin-bottom: 24px;">📌 Карьерная консультация</h3><div class="process-grid" style="margin-top:0;"><div class="process-card"><div class="process-step">1</div><h4>Диагностика</h4><p>Разбор целей, точки А и Б.</p></div><div class="process-card"><div class="process-step">2</div><h4>Стратегия</h4><p>План: резюме, каналы поиска.</p></div><div class="process-card"><div class="process-step">3</div><h4>Интенсив</h4><p>Резюме, сопроводительные, интервью.</p></div><div class="process-card"><div class="process-step">4</div><h4>Сопровождение до оффера</h4><p>Переговоры и адаптация.</p></div></div></div>
-            <div style="flex: 1;"><h3 style="margin-bottom: 24px;">🏢 Подбор персонала</h3><div class="process-grid" style="margin-top:0;"><div class="process-card"><div class="process-step">1</div><h4>Аудит вакансии</h4><p>Профиль, культура, бюджет.</p></div><div class="process-card"><div class="process-step">2</div><h4>Поиск и скрининг</h4><p>Сортировка 100+ резюме.</p></div><div class="process-card"><div class="process-step">3</div><h4>Интервью и оценка</h4><p>Собеседования, рекомендации.</p></div><div class="process-card"><div class="process-step">4</div><h4>Гарантия найма</h4><p>Оффер, онбординг.</p></div></div></div>
-            <div style="flex: 1;"><h3 style="margin-bottom: 24px;">🎓 Тренинг «Продай себя дорого»</h3><div class="process-grid" style="margin-top:0;"><div class="process-card"><div class="process-step">1</div><h4>Самодиагностика</h4><p>Оценка навыков.</p></div><div class="process-card"><div class="process-step">2</div><h4>Резюме-бомба</h4><p>Правила, ключевые слова.</p></div><div class="process-card"><div class="process-step">3</div><h4>Интервью-игра</h4><p>Техника STAR, частые вопросы.</p></div><div class="process-card"><div class="process-step">4</div><h4>Торги за зарплату</h4><p>Как просить +30%.</p></div></div></div>
+            <div style="flex: 1;"><h3 style="margin-bottom: 24px;">📌 Карьерная консультация</h3>
+                <div class="process-grid" style="margin-top:0;">
+                    <div class="process-card">
+                        <div class="process-step">1</div>
+                        <h4>Диагностика</h4>
+                        <p>Разбор целей, точки А и Б.</p></div>
+                    <div class="process-card">
+                        <div class="process-step">2</div>
+                        <h4>Стратегия</h4>
+                        <p>План: резюме, каналы поиска.</p></div>
+                    <div class="process-card">
+                        <div class="process-step">3</div>
+                        <h4>Интенсив</h4>
+                        <p>Резюме, сопроводительные, интервью.</p></div>
+                    <div class="process-card">
+                        <div class="process-step">4</div>
+                        <h4>Сопровождение до оффера</h4>
+                        <p>Переговоры и адаптация.</p></div>
+                </div>
+            </div>
+            <div style="flex: 1;"><h3 style="margin-bottom: 24px;">🏢 Подбор персонала</h3>
+                <div class="process-grid" style="margin-top:0;">
+                    <div class="process-card">
+                        <div class="process-step">1</div>
+                        <h4>Аудит вакансии</h4>
+                        <p>Профиль, культура, бюджет.</p></div>
+                    <div class="process-card">
+                        <div class="process-step">2</div>
+                        <h4>Поиск и скрининг</h4>
+                        <p>Сортировка 100+ резюме.</p></div>
+                    <div class="process-card">
+                        <div class="process-step">3</div>
+                        <h4>Интервью и оценка</h4>
+                        <p>Собеседования, рекомендации.</p></div>
+                    <div class="process-card">
+                        <div class="process-step">4</div>
+                        <h4>Гарантия найма</h4>
+                        <p>Оффер, онбординг.</p></div>
+                </div>
+            </div>
+            <div style="flex: 1;"><h3 style="margin-bottom: 24px;">🎓 Тренинг «Продай себя дорого»</h3>
+                <div class="process-grid" style="margin-top:0;">
+                    <div class="process-card">
+                        <div class="process-step">1</div>
+                        <h4>Самодиагностика</h4>
+                        <p>Оценка навыков.</p></div>
+                    <div class="process-card">
+                        <div class="process-step">2</div>
+                        <h4>Резюме-бомба</h4>
+                        <p>Правила, ключевые слова.</p></div>
+                    <div class="process-card">
+                        <div class="process-step">3</div>
+                        <h4>Интервью-игра</h4>
+                        <p>Техника STAR, частые вопросы.</p></div>
+                    <div class="process-card">
+                        <div class="process-step">4</div>
+                        <h4>Торги за зарплату</h4>
+                        <p>Как просить +30%.</p></div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -504,15 +358,22 @@
         <h2 class="section-title">Остались вопросы? Напишите или позвоните</h2>
         <div class="contact-line">📧 <a href="mailto:hrlubacheva@mail.ru">hrlubacheva@mail.ru</a></div>
         <div class="contact-line">📱 <a href="https://t.me/HrLubacheva" target="_blank">Telegram: @HrLubacheva</a></div>
-        <div class="contact-line">📌 <a href="https://www.instagram.com/hrsavicheva/" target="_blank">Instagram: @hrsavicheva</a></div>
-        <div class="contact-line">📌 <a href="https://www.facebook.com/hrsavicheva/" target="_blank">Facebook: @hrsavicheva</a></div>
+        <div class="contact-line">📌 <a href="https://www.instagram.com/hrsavicheva/" target="_blank">Instagram:
+            @hrsavicheva</a></div>
+        <div class="contact-line">📌 <a href="https://www.facebook.com/hrsavicheva/" target="_blank">Facebook:
+            @hrsavicheva</a></div>
         <div class="contact-line">📞 <a href="tel:+79217916655">+7 921 791-66-55</a></div>
-        <div class="contact-line" style="font-size:0.95rem; color: #A7BCC9; margin-top: 8px;">Ищите сначала @HrLubacheva, если не нашли — @hrsavicheva, если и этого нет — звоните.</div>
-        <div style="margin-top: 24px;"><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a></div>
+        <div class="contact-line" style="font-size:0.95rem; color: #A7BCC9; margin-top: 8px;">Ищите сначала
+            @HrLubacheva, если не нашли — @hrsavicheva, если и этого нет — звоните.
+        </div>
+        <div style="margin-top: 24px;"><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в
+            Telegram</a></div>
     </div>
 </section>
 <footer>
-    <div class="container">© 2025 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер. <a href="#" id="privacyLink">Политика конфиденциальности</a></div>
+    <div class="container">© 2026 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер.
+        <a href="#"
+           id="privacyLink">Политика конфиденциальности</a></div>
 </footer>
 <!-- Модалка материалов -->
 <div id="checklistModal" class="modal">
