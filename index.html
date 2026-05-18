@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Виктория Любачева | Карьерный консультант · HR-эксперт · Бизнес-тренер</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: #FFFFFF;
+            color: #1A2C3E;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #E9EDF2;
+            padding: 12px 0;
+            z-index: 100;
+        }
+        /* Верхняя строка: логотип + иконки */
+        .nav-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+            font-size: 1.6rem;
+            text-decoration: none;
+            color: #1A2C3E;
+        }
+        .logo-triangle {
+            width: 26px;
+            height: 26px;
+            background: #2D6A9F;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+        .logo-sub { font-size: 0.85rem; font-weight: 500; color: #2D6A9F; margin-left: 4px; }
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+        .social-icons a {
+            display: inline-flex;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #F8FAFE;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            text-decoration: none;
+            font-size: 1.3rem;
+        }
+        .social-icons a:hover { background: #2D6A9F; transform: translateY(-2px); color: white; }
+        /* Нижняя строка: навигация с прокруткой */
+        .nav-bottom {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            white-space: nowrap;
+        }
+        .nav-links {
+            display: inline-flex;
+            gap: 28px;
+            font-weight: 500;
+            padding-bottom: 4px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: #1A2C3E;
+            transition: 0.2s;
+            position: relative;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #2D6A9F;
+            transition: 0.2s;
+        }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-links a:hover { color: #2D6A9F; }
+        /* Кнопки */
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #2D6A9F;
+            color: white;
+            padding: 14px 32px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover { background: #1E4A6F; transform: translateY(-2px); }
+        .btn-secondary {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid #2D6A9F;
+            color: #2D6A9F;
+            padding: 10px 24px;
+            border-radius: 60px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .btn-secondary:hover { background: #2D6A9F; color: white; }
+        /* Секции */
+        section { padding: 80px 0; }
+        .section-dark { background: #0F1A2C; color: white; }
+        .section-light { background: #F8FAFE; }
+        .section-title { font-size: 2.5rem; font-weight: 700; margin-bottom: 20px; letter-spacing: -0.02em; }
+        /* Герой */
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+        .hero-content { flex: 1.2; }
+        .hero-image { flex: 0.8; text-align: center; }
+        .hero-image img { width: 100%; max-width: 400px; border-radius: 32px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #1A2C3E, #2D6A9F);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+        .hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #2D6A9F;
+        }
+        .hero-text { font-size: 1.1rem; margin-bottom: 28px; color: #2C3E50; }
+        .small-note { margin-top: 20px; font-size: 0.9rem; color: #6B7F95; border-left: 3px solid #2D6A9F; padding-left: 18px; }
+        /* Роли, процессы */
+        .roles-grid, .process-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin: 40px 0;
+        }
+        .role-card, .process-card {
+            flex: 1;
+            background: white;
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            border: 1px solid #E9EDF2;
+            transition: 0.2s;
+        }
+        .role-card:hover, .process-card:hover { transform: translateY(-5px); box-shadow: 0 20px 35px -12px rgba(0,0,0,0.08); }
+        .process-card { text-align: center; }
+        .process-step { font-size: 2rem; font-weight: 800; color: #2D6A9F; margin-bottom: 12px; }
+        .process-card h4 { font-size: 1.3rem; margin-bottom: 12px; }
+        /* Услуги */
+        .services-flex { display: flex; gap: 30px; flex-wrap: wrap; }
+        .service-card {
+            background: white;
+            border-radius: 28px;
+            padding: 36px 32px;
+            transition: 0.2s;
+            border: 1px solid #E9EDF2;
+            flex: 1;
+        }
+        .service-card:hover { transform: translateY(-8px); }
+        /* Цифры */
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+            margin: 56px 0 20px;
+        }
+        .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 20px 12px;
+            background: #F8FAFE;
+            border-radius: 32px;
+        }
+        .stat-number { font-size: 3.5rem; font-weight: 800; color: #2D6A9F; }
+        /* Преимущества */
+        .benefits-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .benefit-card {
+            background: rgba(255,255,255,0.05);
+            flex: 1;
+            padding: 32px 24px;
+            border-radius: 24px;
+            border-left: 4px solid #2D6A9F;
+        }
+        /* Калькулятор */
+        .calculator-tabs {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #E9EDF2;
+            padding-bottom: 16px;
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 60px;
+            transition: 0.2s;
+            color: #2C3E50;
+        }
+        .tab-btn.active {
+            background: #2D6A9F;
+            color: white;
+        }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+        .calc-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F8FAFE;
+            padding: 16px 20px;
+            border-radius: 60px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .add-service {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .add-service select, .add-service input {
+            padding: 12px 16px;
+            border-radius: 60px;
+            border: 1px solid #E9EDF2;
+            background: #F8FAFE;
+            font-size: 1rem;
+        }
+        .total-block {
+            background: rgba(45,106,159,0.08);
+            padding: 24px;
+            border-radius: 32px;
+            text-align: center;
+            margin-top: 32px;
+        }
+        .total-price { font-size: 2.2rem; font-weight: 800; color: #2D6A9F; }
+        /* Квиз, чек-лист, календарь */
+        .quiz-card, .checklist-card, .calendar-card {
+            background: white;
+            border-radius: 28px;
+            padding: 32px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            margin-top: 40px;
+        }
+        .quiz-question { margin-bottom: 28px; }
+        .quiz-options { display: flex; flex-wrap: wrap; gap: 12px; }
+        .quiz-option {
+            background: #F8FAFE;
+            border: 1px solid #E9EDF2;
+            padding: 10px 20px;
+            border-radius: 60px;
+            cursor: pointer;
+        }
+        .quiz-option.selected {
+            background: #2D6A9F;
+            color: white;
+        }
+        .quiz-result {
+            margin-top: 28px;
+            padding: 20px;
+            background: rgba(45,106,159,0.08);
+            border-radius: 28px;
+            display: none;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            max-width: 500px;
+            width: 90%;
+            padding: 32px;
+            border-radius: 32px;
+            text-align: center;
+        }
+        .contact-block { text-align: center; max-width: 700px; margin: 0 auto; }
+        .contact-line { margin: 20px 0; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        footer { text-align: center; padding: 32px; border-top: 1px solid #E9EDF2; font-size: 0.85rem; }
+        .fade-up { opacity: 0; transform: translateY(30px); transition: 0.7s; }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+        /* Адаптивность для мобильных (уменьшаем, сохраняем две строки) */
+        @media (max-width: 768px) {
+            .container { padding: 0 16px; }
+            .navbar { padding: 8px 0; }
+            .nav-top { margin-bottom: 8px; }
+            .logo { font-size: 1.3rem; }
+            .logo-triangle { width: 20px; height: 20px; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 14px solid #2D6A9F; }
+            .social-icons a { width: 32px; height: 32px; font-size: 1.1rem; }
+            .nav-links { gap: 20px; }
+            .nav-links a { font-size: 0.85rem; }
+            .hero-title { font-size: 2rem; }
+            .hero { flex-direction: column; gap: 30px; }
+            .section-title { font-size: 1.8rem; }
+            .roles-grid, .process-grid, .benefits-grid, .services-flex { flex-direction: column; }
+            .stats-grid { flex-direction: column; align-items: center; gap: 20px; }
+            .stat-number { font-size: 2.5rem; }
+            .btn-primary { width: 100%; justify-content: center; }
+            .calculator-tabs { gap: 8px; }
+            .tab-btn { padding: 8px 16px; font-size: 0.85rem; }
+            .add-service select, .add-service input { width: 100%; }
+            section { padding: 60px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="container">
+        <div class="nav-top">
+            <a href="#" class="logo">
+                <div class="logo-triangle"></div>
+                <span>HR <span class="logo-sub">HrLubacheva</span></span>
+            </a>
+            <div class="social-icons">
+                <a href="https://t.me/HrLubacheva" target="_blank">📱</a>
+                <a href="#" target="_blank">📘</a>
+                <a href="#" target="_blank">💬</a>
+                <a href="#" target="_blank">📷</a>
+            </div>
+        </div>
+        <div class="nav-bottom">
+            <div class="nav-links">
+                <a href="#about">Обо мне</a>
+                <a href="#roles">Роли</a>
+                <a href="#services">Услуги</a>
+                <a href="#process">Процесс</a>
+                <a href="#calculator">Калькулятор</a>
+                <a href="#contacts">Контакты</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main>
+    <!-- ГЕРОЙ -->
+    <section>
+        <div class="container hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Виктория Любачева</h1>
+                <div class="hero-subtitle">Карьерный консультант · HR-эксперт · Бизнес-тренер</div>
+                <div class="hero-text">
+                    <p>Помогаю компаниям находить и развивать персонал, а людям — строить карьеру и повышать доход. 24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.</p>
+                    <p><strong>Для бизнеса:</strong> подбор, онбординг, тренинги, аудит HR-процессов. <strong>Для людей:</strong> резюме, подготовка к интервью, стратегия роста.</p>
+                </div>
+                <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a>
+                <div class="small-note">Работаю с профессионалами от Junior до Top-менеджеров и с бизнесом любого масштаба.</div>
+            </div>
+            <div class="hero-image"><img src="photo.jpg" alt="Виктория Любачева" onerror="this.src='https://placehold.co/500x600?text=Фото+Виктории'"></div>
+        </div>
+    </section>
+
+    <!-- 4 РОЛИ -->
+    <section id="roles">
+        <div class="container">
+            <h2 class="section-title">Мои экспертные роли</h2>
+            <div class="roles-grid">
+                <div class="role-card"><h3>🧑 Карьерный консультант</h3><p>Индивидуальные стратегии, резюме, подготовка к интервью, повышение дохода. Продайте себя дорого.</p></div>
+                <div class="role-card"><h3>🏢 HR-эксперт для организаций</h3><p>Подбор персонала, онбординг, УТП, аудит HR-процессов. Закрываю вакансии с гарантией.</p></div>
+                <div class="role-card"><h3>💬 HR-эксперт для людей</h3><p>Консультации по трудовым отношениям, карьерные карты, переговоры с работодателем.</p></div>
+                <div class="role-card"><h3>🎓 Бизнес-тренер (команды и лично)</h3><p>Тренинги для команд и индивидуальный коучинг для руководителей. Развиваю навыки, которые приносят прибыль.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- УСЛУГИ 3 КОЛОНКИ -->
+    <section class="section-light" id="services">
+        <div class="container">
+            <div class="services-flex">
+                <div class="service-card"><h3>🏢 HR для бизнеса</h3><p>Подбор персонала (Junior → C-level), онбординг, оценка, аутсорсинг подбора, кадровый аудит.</p></div>
+                <div class="service-card">
+                    <h3>🧑 Карьерный консалтинг</h3>
+                    <p>Карьерная стратегия, резюме, подготовка к интервью, тренинг «Продай себя дорого», переговоры о зарплате.</p>
+                    <a href="#" class="btn-secondary" style="margin-top: 16px; display: inline-block;" onclick="alert('Скачивание программы тренинга: добавьте ссылку на PDF')">📘 Скачать программу тренинга (PDF)</a>
+                </div>
+                <div class="service-card"><h3>🎓 Бизнес-тренинг и коучинг</h3><p>Корпоративные тренинги (до 25 чел.), мастер-классы, стратегические сессии, индивидуальный коучинг топ-менеджеров.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ЦИФРЫ -->
+    <section>
+        <div class="container">
+            <h2 class="section-title">Цифры, подтверждающие экспертизу</h2>
+            <div class="stats-grid">
+                <div class="stat-item"><div class="stat-number">1000+</div><div class="stat-label">закрытых вакансий</div></div>
+                <div class="stat-item"><div class="stat-number">1300+</div><div class="stat-label">кандидатов повысили доход</div></div>
+                <div class="stat-item"><div class="stat-number">10 000+</div><div class="stat-label">проведённых интервью</div></div>
+                <div class="stat-item"><div class="stat-number">500+</div><div class="stat-label">карьерных консультаций</div></div>
+                <div class="stat-item"><div class="stat-number">30+</div><div class="stat-label">тренингов за 2025 год</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ПРЕИМУЩЕСТВА -->
+    <section class="section-dark" id="about">
+        <div class="container">
+            <h2 class="section-title">Почему мне доверяют компании и специалисты?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card"><h4>🌱 Junior → Middle</h4><p>Помогаю начинающим найти первую работу и заложить фундамент роста.</p></div>
+                <div class="benefit-card"><h4>📈 Middle → Senior</h4><p>Разбираюсь, где вас недооценивают, готовлю к переходу на новый уровень.</p></div>
+                <div class="benefit-card"><h4>🏆 Senior/Lead → Executive</h4><p>Упаковываю опыт так, чтобы вас искали хедхантеры.</p></div>
+                <div class="benefit-card"><h4>🤝 Бизнес-системность</h4><p>Отбираю топ-5 кандидатов под бюджет и культуру компании, сокращаю время найма в 2 раза.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ПРОЦЕССЫ -->
+    <section id="process">
+        <div class="container">
+            <h2 class="section-title">Как мы будем работать вместе</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-between;">
+                <div style="flex: 1;"><h3 style="margin-bottom: 24px;">📌 Карьерная консультация</h3><div class="process-grid" style="margin-top:0;"><div class="process-card"><div class="process-step">1</div><h4>Диагностика</h4><p>Разбор целей, точки А и Б.</p></div><div class="process-card"><div class="process-step">2</div><h4>Стратегия</h4><p>План: резюме, каналы поиска.</p></div><div class="process-card"><div class="process-step">3</div><h4>Интенсив</h4><p>Резюме, сопроводительные, интервью.</p></div><div class="process-card"><div class="process-step">4</div><h4>Сопровождение до оффера</h4><p>Переговоры и адаптация.</p></div></div></div>
+                <div style="flex: 1;"><h3 style="margin-bottom: 24px;">🏢 Подбор персонала</h3><div class="process-grid" style="margin-top:0;"><div class="process-card"><div class="process-step">1</div><h4>Аудит вакансии</h4><p>Профиль, культура, бюджет.</p></div><div class="process-card"><div class="process-step">2</div><h4>Поиск и скрининг</h4><p>Сортировка 100+ резюме.</p></div><div class="process-card"><div class="process-step">3</div><h4>Интервью и оценка</h4><p>Собеседования, рекомендации.</p></div><div class="process-card"><div class="process-step">4</div><h4>Гарантия найма</h4><p>Оффер, онбординг.</p></div></div></div>
+                <div style="flex: 1;"><h3 style="margin-bottom: 24px;">🎓 Тренинг «Продай себя дорого»</h3><div class="process-grid" style="margin-top:0;"><div class="process-card"><div class="process-step">1</div><h4>Самодиагностика</h4><p>Оценка навыков.</p></div><div class="process-card"><div class="process-step">2</div><h4>Резюме-бомба</h4><p>Правила, ключевые слова.</p></div><div class="process-card"><div class="process-step">3</div><h4>Интервью-игра</h4><p>Техника STAR, частые вопросы.</p></div><div class="process-card"><div class="process-step">4</div><h4>Торги за зарплату</h4><p>Как просить +30%.</p></div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- КАЛЬКУЛЯТОР -->
+    <section id="calculator">
+        <div class="container">
+            <div class="quiz-card" style="margin-top:0;">
+                <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
+                <p>Выберите категорию, добавьте услуги. Скидка 5% при заказе 2+ позиций из любого раздела.</p>
+                <div class="calculator-tabs">
+                    <button class="tab-btn active" data-tab="business">🏢 Бизнесу</button>
+                    <button class="tab-btn" data-tab="individual">👤 Индивидуально</button>
+                    <button class="tab-btn" data-tab="trainings">🎓 Тренинги</button>
+                </div>
+                <div id="tab-business" class="tab-pane active">
+                    <div id="business-list"></div>
+                    <div class="add-service">
+                        <select id="business-select">
+                            <option value="60000">Подбор специалиста — 60 000 ₽</option>
+                            <option value="90000">Подбор руководителя — 90 000 ₽</option>
+                            <option value="120000">Хэдхантинг — от 120 000 ₽</option>
+                            <option value="250000">Онбординг — от 250 000 ₽</option>
+                            <option value="25000">УТП компании — 25 000 ₽</option>
+                        </select>
+                        <input type="number" id="business-qty" min="1" value="1" style="width:80px;">
+                        <button id="business-add" class="btn-primary" style="padding:10px 24px;">➕ Добавить</button>
+                    </div>
+                </div>
+                <div id="tab-individual" class="tab-pane">
+                    <div id="individual-list"></div>
+                    <div class="add-service">
+                        <select id="individual-select">
+                            <option value="7000">Индивидуальная консультация (1ч) — 7 000 ₽</option>
+                            <option value="3500">Экспресс-консультация (30мин) — 3 500 ₽</option>
+                            <option value="4000">Аудит резюме — 4 000 ₽</option>
+                            <option value="6000">Резюме специалиста — 6 000 ₽</option>
+                            <option value="9000">Резюме руководителя — 9 000 ₽</option>
+                            <option value="15000">CV на английском — 15 000 ₽</option>
+                            <option value="3000">Сопроводительное письмо — 3 000 ₽</option>
+                            <option value="5500">Тренинг «Продай себя дорого» — 5 500 ₽</option>
+                        </select>
+                        <input type="number" id="individual-qty" min="1" value="1" style="width:80px;">
+                        <button id="individual-add" class="btn-primary" style="padding:10px 24px;">➕ Добавить</button>
+                    </div>
+                    <div style="margin-top:20px; text-align:center;">
+                        <a href="#" class="btn-secondary" onclick="alert('Скачивание программы тренинга: добавьте ссылку на PDF')">📥 Скачать программу тренинга (PDF)</a>
+                    </div>
+                </div>
+                <div id="tab-trainings" class="tab-pane">
+                    <div id="trainings-list"></div>
+                    <div class="add-service">
+                        <select id="trainings-select">
+                            <option value="12000">Тренинг по запросу (до 25 чел.) — 12 000 ₽/час</option>
+                            <option value="30000">Мастер-класс (3ч, до 25 чел.) — 30 000 ₽</option>
+                            <option value="13000">Стратегическая сессия (до 12 чел.) — 13 000 ₽/час</option>
+                        </select>
+                        <input type="number" id="trainings-qty" min="1" value="1" style="width:80px;">
+                        <button id="trainings-add" class="btn-primary" style="padding:10px 24px;">➕ Добавить</button>
+                    </div>
+                </div>
+                <div class="total-block">
+                    <div>Общая стоимость (с учётом скидки):</div>
+                    <div class="total-price" id="totalPrice">0 ₽</div>
+                    <div id="discountInfo" class="small-text">Скидка 5% при заказе 2+ услуг</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- КВИЗ -->
+    <section id="quiz">
+        <div class="container">
+            <div class="quiz-card">
+                <h2 class="section-title">🧠 Квиз: «Ваш следующий карьерный шаг»</h2>
+                <div id="quizContainer"></div>
+                <div id="quizResult" class="quiz-result"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- БЕСПЛАТНЫЕ МАТЕРИАЛЫ -->
+    <section>
+        <div class="container">
+            <div class="checklist-card" style="text-align:center;">
+                <h2 class="section-title">📥 Бесплатные материалы</h2>
+                <p>Чек-лист «Идеальное резюме» + программа тренинга «Продай себя дорого»</p>
+                <button id="openChecklistModal" class="btn-primary">Получить материалы</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- КАЛЕНДАРЬ (заглушка) -->
+    <section id="calendar">
+        <div class="container">
+            <div class="calendar-card" style="text-align:center;">
+                <h2 class="section-title">📅 Бесплатная 20-минутная диагностика</h2>
+                <p>Разберём вашу ситуацию: для соискателя — что мешает получить оффер выше; для бизнеса — почему вакансия не закрывается.</p>
+                <button id="calendlyButton" class="btn-primary" onclick="alert('Для записи на консультацию настройте интеграцию с календарём (Calendly или Google Календарь).')">Выбрать время</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- КОНТАКТЫ -->
+    <section class="section-dark" id="contacts">
+        <div class="container contact-block">
+            <h2 class="section-title">Остались вопросы? Напишите или позвоните</h2>
+            <div class="contact-line">📧 <a href="mailto:hrlubacheva@mail.ru">hrlubacheva@mail.ru</a></div>
+            <div class="contact-line">📱 <a href="https://t.me/HrLubacheva" target="_blank">@HrLubacheva</a></div>
+            <div class="contact-line">📞 <a href="tel:+79217916655">+7 921 791-66-55</a></div>
+            <div style="margin-top: 32px;"><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a></div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">© 2025 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер. <a href="#" id="privacyLink">Политика конфиденциальности</a></div>
+</footer>
+
+<!-- Модалка материалов -->
+<div id="checklistModal" class="modal">
+    <div class="modal-content">
+        <h3>Скачать материалы</h3>
+        <p>Введите email, и мы отправим ссылки на чек-лист и программу тренинга</p>
+        <input type="email" id="checklistEmail" placeholder="Ваш email" required>
+        <button id="downloadBothBtn" class="btn-primary">Скачать оба материала</button>
+        <div style="margin-top: 16px;">
+            <a href="#" class="btn-secondary" style="margin-right: 8px;" onclick="alert('Добавьте ссылку на PDF чек-листа')">📄 Чек-лист (PDF)</a>
+            <a href="#" class="btn-secondary" onclick="alert('Добавьте ссылку на PDF программы тренинга')">📘 Программа тренинга (PDF)</a>
+        </div>
+        <button id="closeModalBtn" style="margin-top: 20px; background: none; border: none; cursor: pointer;">Закрыть</button>
+    </div>
+</div>
+
+<!-- Модалка политики -->
+<div id="privacyModal" class="modal">
+    <div class="modal-content">
+        <h3>Политика конфиденциальности</h3>
+        <p>Мы собираем только те данные, которые вы добровольно предоставляете (имя, email, телефон). Данные используются для связи и предоставления услуг. Мы не передаём данные третьим лицам.</p>
+        <button id="closePrivacyModal" class="btn-primary">Закрыть</button>
+    </div>
+</div>
+
+<script>
+    // Плавная прокрутка
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                e.preventDefault();
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // ---------- КАЛЬКУЛЯТОР ----------
+    let cart = [];
+    function renderCart() {
+        let total = 0, qty = 0;
+        cart.forEach(i => { total += i.price * i.qty; qty += i.qty; });
+        let final = total;
+        if (qty >= 2) final = total * 0.95;
+        document.getElementById('totalPrice').innerText = Math.round(final).toLocaleString() + ' ₽';
+        let discountDiv = document.getElementById('discountInfo');
+        if (qty >= 2) discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — вы экономите ${Math.round(total*0.05)} ₽`;
+        else discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
+        const businessDiv = document.getElementById('business-list');
+        const individualDiv = document.getElementById('individual-list');
+        const trainingsDiv = document.getElementById('trainings-list');
+        businessDiv.innerHTML = ''; individualDiv.innerHTML = ''; trainingsDiv.innerHTML = '';
+        cart.forEach((item, idx) => {
+            const div = document.createElement('div'); div.className = 'calc-item';
+            div.innerHTML = `<div>${item.name} × ${item.qty}</div><div>${(item.price * item.qty).toLocaleString()} ₽ <button class="remove-item" data-idx="${idx}">✖</button></div>`;
+            if (item.cat === 'business') businessDiv.appendChild(div);
+            else if (item.cat === 'individual') individualDiv.appendChild(div);
+            else trainingsDiv.appendChild(div);
+        });
+        document.querySelectorAll('.remove-item').forEach(btn => btn.addEventListener('click', (e) => { cart.splice(parseInt(btn.dataset.idx), 1); renderCart(); }));
+    }
+    function add(cat, selectId, qtyId) {
+        const select = document.getElementById(selectId);
+        const price = parseInt(select.value);
+        const name = select.options[select.selectedIndex].text.replace(/ — .*/, '');
+        const quantity = parseInt(document.getElementById(qtyId).value);
+        if (isNaN(quantity) || quantity < 1) return;
+        const existing = cart.find(i => i.name === name && i.cat === cat);
+        if (existing) existing.qty += quantity;
+        else cart.push({ name, price, qty: quantity, cat });
+        renderCart();
+    }
+    document.getElementById('business-add').addEventListener('click', () => add('business', 'business-select', 'business-qty'));
+    document.getElementById('individual-add').addEventListener('click', () => add('individual', 'individual-select', 'individual-qty'));
+    document.getElementById('trainings-add').addEventListener('click', () => add('trainings', 'trainings-select', 'trainings-qty'));
+
+    const tabs = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.tab-pane');
+    tabs.forEach(btn => btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        panes.forEach(p => p.classList.remove('active'));
+        document.getElementById(`tab-${tab}`).classList.add('active');
+    }));
+
+    // ---------- КВИЗ ----------
+    const quizQuestions = [
+        { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
+        { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"] },
+        { text: "3. Как быстро нужен результат?", options: ["Вчера", "1–2 месяца", "3–6 месяцев", "Планирую постепенно"] },
+        { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности"] },
+        { text: "5. Бюджет на консультацию/подбор?", options: ["До 5000 ₽", "5000–15000 ₽", "15000–50000 ₽", "Выше 50000 ₽"] }
+    ];
+    let answers = [null,null,null,null,null];
+    function renderQuiz() {
+        let html = '';
+        quizQuestions.forEach((q, idx) => {
+            html += `<div class="quiz-question"><p>${q.text}</p><div class="quiz-options" data-q="${idx}">`;
+            q.options.forEach(opt => { html += `<div class="quiz-option ${answers[idx]===opt?'selected':''}" data-opt="${opt}">${opt}</div>`; });
+            html += `</div></div>`;
+        });
+        html += `<button id="submitQuizBtn" class="btn-primary">Узнать рекомендацию</button>`;
+        document.getElementById('quizContainer').innerHTML = html;
+        document.querySelectorAll('.quiz-option').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const qIdx = parseInt(el.parentElement.dataset.q);
+                answers[qIdx] = el.dataset.opt;
+                renderQuiz();
+            });
+        });
+        document.getElementById('submitQuizBtn')?.addEventListener('click', () => {
+            if (answers.includes(null)) { alert('Ответьте на все вопросы'); return; }
+            let rec = "Рекомендуем начать с индивидуальной консультации по карьерной стратегии.";
+            if (answers[0].includes("Подбираю сотрудников")) rec = "Для бизнеса: начните с бесплатной диагностики вакансии. Я подберу кандидатов за 28 дней.";
+            else if (answers[1] === "Junior / начинающий") rec = "Вам нужна карьерная стратегия + упаковка резюме. Покажу, как выделиться без опыта.";
+            else if (answers[1] === "Middle / опытный") rec = "Тренинг «Продай себя дорого» и переговоры о зарплате. Вы получите +30% к доходу.";
+            else rec = "Сопровождение до оффера + подготовка к интервью с топ-менеджерами. Работаем на повышение статуса.";
+            document.getElementById('quizResult').innerHTML = `<strong>🎯 Рекомендация:</strong> ${rec}<br><br><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Обсудить в Telegram</a>`;
+            document.getElementById('quizResult').style.display = 'block';
+        });
+    }
+    renderQuiz();
+
+    // Модалка материалов
+    const modal = document.getElementById('checklistModal');
+    const openModal = document.getElementById('openChecklistModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const downloadBoth = document.getElementById('downloadBothBtn');
+    openModal.onclick = () => modal.style.display = 'flex';
+    closeModalBtn.onclick = () => modal.style.display = 'none';
+    downloadBoth.onclick = () => {
+        const email = document.getElementById('checklistEmail').value;
+        if (!email || !email.includes('@')) { alert('Введите корректный email'); return; }
+        alert(`Материалы будут отправлены на ${email}. Спасибо!\n(Добавьте реальные ссылки на PDF)`);
+        modal.style.display = 'none';
+    };
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+
+    // Политика конфиденциальности
+    const privacyModal = document.getElementById('privacyModal');
+    const privacyLink = document.getElementById('privacyLink');
+    const closePrivacy = document.getElementById('closePrivacyModal');
+    privacyLink.onclick = (e) => { e.preventDefault(); privacyModal.style.display = 'flex'; };
+    closePrivacy.onclick = () => privacyModal.style.display = 'none';
+    window.onclick = (e) => { if (e.target === privacyModal) privacyModal.style.display = 'none'; };
+
+    // Анимации при скролле
+    const faders = document.querySelectorAll('.role-card, .service-card, .stat-item, .benefit-card, .process-card, .quiz-card, .checklist-card, .calendar-card');
+    const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.15 });
+    faders.forEach(el => { el.classList.add('fade-up'); obs.observe(el); });
+</script>
+</body>
+</html>
