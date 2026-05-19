@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Идеальное резюме — чек-лист</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: #F4F7FB;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .presentation-container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .slide {
+            padding: 40px 32px;
+            display: none;
+            animation: fade 0.3s ease;
+        }
+        .slide.active {
+            display: block;
+        }
+        @keyframes fade {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            color: #12263F;
+        }
+        h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #2D6A9F;
+        }
+        ul, .checklist {
+            list-style: none;
+            padding-left: 0;
+        }
+        li {
+            margin-bottom: 12px;
+            padding-left: 28px;
+            position: relative;
+            line-height: 1.4;
+        }
+        li::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 32px;
+            background: #F8FAFE;
+            border-top: 1px solid #E4E9F2;
+        }
+        button {
+            background: #2D6A9F;
+            color: white;
+            border: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #1D4D7A;
+        }
+        button:disabled {
+            opacity: 0.4;
+            cursor: default;
+            background: #2D6A9F;
+        }
+        .page-indicator {
+            font-size: 0.85rem;
+            color: #5C6E87;
+            background: #EAF2FB;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+        @media (max-width: 600px) {
+            .slide {
+                padding: 28px 20px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            h2 {
+                font-size: 1.2rem;
+            }
+            button {
+                padding: 6px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="presentation-container">
+    <div class="slide active" data-index="0">
+        <h1>📄 Идеальное резюме</h1>
+        <h2>Чек-лист для соискателя</h2>
+        <p style="margin-bottom: 24px;">Проверьте своё резюме по 6 ключевым шагам.</p>
+        <p>➡️ Нажимайте «Далее» или используйте стрелки на клавиатуре</p>
+    </div>
+    <div class="slide" data-index="1">
+        <h2>1. Структура и формат</h2>
+        <ul>
+            <li>Длина: 1–2 страницы (опыт до 10 лет – 1 страница)</li>
+            <li>Шрифт: Arial, Calibri, Inter, размер 10–12 pt</li>
+            <li>Формат: PDF, имя файла: Имя_Фамилия_Резюме.pdf</li>
+            <li>Поля 2–2.5 см, достаточно воздуха между блоками</li>
+            <li>Не более 2–3 цветов, читаемо в ч/б</li>
+        </ul>
+    </div>
+    <div class="slide" data-index="2">
+        <h2>2. Обязательные блоки</h2>
+        <ul>
+            <li>Контактная информация: ФИО, должность, телефон, email, город</li>
+            <li>О себе / ключевые компетенции (2–4 предложения + навыки списком)</li>
+            <li>Опыт работы: обратный хронологический, достижения с цифрами</li>
+            <li>Образование и курсы</li>
+            <li>Ключевые навыки (технические, языки, софт-скиллы)</li>
+            <li>Дополнительно: права, командировки, хобби (по желанию)</li>
+        </ul>
+    </div>
+    <div class="slide" data-index="3">
+        <h2>3. Навыки для ATS</h2>
+        <ul>
+            <li>Включайте ключевые слова из вакансии</li>
+            <li>Избегайте таблиц, колонок, изображений, логотипов</li>
+            <li>Не используйте маркированные списки внутри абзацев</li>
+            <li>Название должности в резюме = название в вакансии</li>
+            <li>Файл не зашифрован</li>
+        </ul>
+    </div>
+    <div class="slide" data-index="4">
+        <h2>4. Визуальные и языковые фишки</h2>
+        <ul>
+            <li>Глаголы действия в начале каждого пункта (разработал, внедрил, увеличил)</li>
+            <li>Конкретика и цифры («увеличил продажи на 20%»)</li>
+            <li>Единый стиль дат, названий компаний</li>
+            <li>Отсутствие орфографических ошибок</li>
+            <li>Убрать личную информацию (паспорт, адрес, фото в неформальном стиле)</li>
+        </ul>
+    </div>
+    <div class="slide" data-index="5">
+        <h2>5. Финальное тестирование</h2>
+        <ul>
+            <li>Проверка на мобильном устройстве</li>
+            <li>Чтение вслух – нет длинных фраз</li>
+            <li>Тест в ATS-симуляторе (по желанию)</li>
+            <li>Все ссылки рабочие</li>
+        </ul>
+    </div>
+    <div class="slide" data-index="6">
+        <h2>🎯 Бонус: шаблоны для достижений</h2>
+        <ul>
+            <li>«Что сделал → как измерил»: «Автоматизировал отчётность, сократив время на 5 часов в неделю»</li>
+            <li>«Что улучшил → на сколько %»: «Повысил конверсию откликов с 5% до 12%»</li>
+        </ul>
+        <p style="margin-top: 24px;">Готово! Желаем успехов в поиске работы.</p>
+    </div>
+    <div class="controls">
+        <button id="prevBtn" disabled>◀ Назад</button>
+        <span class="page-indicator" id="pageIndicator">1 / 7</span>
+        <button id="nextBtn">Далее ▶</button>
+    </div>
+</div>
+<script>
+    const slides = document.querySelectorAll('.slide');
+    let current = 0;
+    const total = slides.length;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === index);
+        });
+        document.getElementById('prevBtn').disabled = (index === 0);
+        document.getElementById('nextBtn').disabled = (index === total - 1);
+        document.getElementById('pageIndicator').innerText = `${index+1} / ${total}`;
+    }
+
+    function next() {
+        if (current < total - 1) {
+            current++;
+            showSlide(current);
+        }
+    }
+    function prev() {
+        if (current > 0) {
+            current--;
+            showSlide(current);
+        }
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', next);
+    document.getElementById('prevBtn').addEventListener('click', prev);
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') next();
+        if (e.key === 'ArrowLeft') prev();
+    });
+
+    showSlide(0);
+</script>
+</body>
+</html>
