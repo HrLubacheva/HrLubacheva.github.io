@@ -435,6 +435,35 @@
         setTimeout(() => toast.remove(), duration);
     }
 
+    // ---------- Маска для телефона (красивый ввод) ----------
+    function formatPhoneNumber(input) {
+        let digits = input.replace(/\D/g, '');
+        if (digits.startsWith('8')) {
+            digits = '7' + digits.slice(1);
+        }
+        if (!digits.startsWith('7')) {
+            digits = '7' + digits;
+        }
+        if (digits.length > 11) digits = digits.slice(0, 11);
+
+        let formatted = '';
+        if (digits.length === 0) return '';
+        formatted = '+7';
+        if (digits.length > 1) {
+            formatted += ' ' + digits.slice(1, 4);
+        }
+        if (digits.length >= 5) {
+            formatted += ' ' + digits.slice(4, 7);
+        }
+        if (digits.length >= 8) {
+            formatted += ' ' + digits.slice(7, 9);
+        }
+        if (digits.length >= 10) {
+            formatted += ' ' + digits.slice(9, 11);
+        }
+        return formatted;
+    }
+
     // ---------- Плавная прокрутка ----------
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -516,7 +545,7 @@
         if (activePane) activePane.classList.add('active');
     }));
 
-    // ---------- КВИЗ (с отдельными столбцами) ----------
+    // ---------- КВИЗ С ДВУМЯ ВАРИАНТАМИ ----------
     const quizQuestions = [
         { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
         { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"] },
@@ -712,25 +741,17 @@
     const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.15 });
     faders.forEach(el => { el.classList.add('fade-up'); obs.observe(el); });
 
-    // ---------- ФОРМА ОБРАТНОГО ЗВОНКА (автодобавление +7, фильтрация ввода) ----------
+    // ---------- ФОРМА ОБРАТНОГО ЗВОНКА С МАСКОЙ ТЕЛЕФОНА ----------
     const phoneInput = document.getElementById('callbackPhone');
     if (phoneInput) {
-        // Фильтрация ввода: разрешаем только цифры, "+" в начале, дефисы и пробелы — но для простоты удаляем всё кроме цифр и плюса
         phoneInput.addEventListener('input', function(e) {
-            let val = this.value;
-            // Удаляем всё, кроме цифр и плюса
-            val = val.replace(/[^\d+]/g, '');
-            // Если плюс не в начале — удаляем все плюсы, кроме возможного первого
-            if (val.indexOf('+') > 0) {
-                val = val.replace(/\+/g, '');
-            }
-            // Если есть плюс в начале, оставляем только один плюс, остальное цифры
-            if (val.startsWith('+')) {
-                val = '+' + val.slice(1).replace(/\D/g, '');
+            let rawValue = this.value.replace(/\D/g, '');
+            let masked = formatPhoneNumber(rawValue);
+            if (masked) {
+                this.value = masked;
             } else {
-                val = val.replace(/\D/g, '');
+                this.value = '';
             }
-            this.value = val;
         });
     }
 
@@ -739,40 +760,31 @@
         callbackForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('callbackName').value.trim();
-            let phone = document.getElementById('callbackPhone').value.trim();
+            let phoneField = document.getElementById('callbackPhone').value.trim();
             const comment = document.getElementById('callbackComment').value.trim() || 'Не указано';
 
-            if (!name || !phone) {
+            if (!name || !phoneField) {
                 alert('Пожалуйста, заполните имя и номер телефона.');
                 return;
             }
 
-            // Оставляем только цифры
-            let digits = phone.replace(/\D/g, '');
-
+            let digits = phoneField.replace(/\D/g, '');
             if (digits.length === 0) {
                 alert('Введите номер телефона');
                 return;
             }
-
-            // Если начинается с 8, заменяем на 7
-            if (digits[0] === '8') {
+            if (digits.startsWith('8')) {
                 digits = '7' + digits.slice(1);
             }
-
-            // Если не начинается с 7, добавляем 7 в начало
             if (!digits.startsWith('7')) {
                 digits = '7' + digits;
             }
-
-            // Проверяем длину: должно быть 11 цифр (7 + 10)
             if (digits.length !== 11) {
                 alert('Номер должен содержать 10 цифр после кода страны. Пример: 9123456789');
                 return;
             }
 
-            // Красивый формат для отображения
-            const formatted = '+' + digits[0] + ' ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
+            const formattedForDisplay = '+7 ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
 
             const formData = {
                 formType: 'Обратный звонок',
@@ -782,7 +794,7 @@
                 quizAnswers: '-'
             };
             sendDataToSheet(formData);
-            showToast(`✅ Спасибо, ${name}! Мы перезвоним вам на ${formatted}`, 4000);
+            showToast(`✅ Спасибо, ${name}! Мы перезвоним вам на ${formattedForDisplay}`, 4000);
             callbackForm.reset();
         });
     }
