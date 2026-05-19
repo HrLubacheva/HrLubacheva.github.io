@@ -838,4 +838,17 @@ footer {
     .modal-content .btn-secondary {
         width: 100%;
     }
+
+
+}
+
+/* Адаптация квиза на мобильных */
+@media (max-width: 700px) {
+    .quiz-card > div[style*="display: flex"] {
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+    .quiz-card .choose-option {
+        width: 100%;
+    }
 }
