@@ -1,26 +1,18 @@
-<!-- Модалка материалов (улучшенная, с чекбоксами) -->
+<!-- Модалка материалов -->
 <div id="checklistModal" class="modal">
     <div class="modal-content">
         <h3>📥 Скачать бесплатные материалы</h3>
         <p>Выберите, что хотите получить, и укажите email</p>
-
         <div class="modal-checkbox-group">
-            <label>
-                <input type="checkbox" id="checklistCheck" value="checklist" checked> 📄 Чек-лист «Идеальное резюме» (PDF)
-            </label>
-            <label>
-                <input type="checkbox" id="trainingCheck" value="training" checked> 📘 Программа тренинга «Продай себя дорого» (PDF)
-            </label>
+            <label><input type="checkbox" id="checklistCheck" value="checklist" checked> 📄 Чек-лист «Идеальное резюме» (PDF)</label>
+            <label><input type="checkbox" id="trainingCheck" value="training" checked> 📘 Программа тренинга «Продай себя дорого» (PDF)</label>
         </div>
-
         <input type="email" id="checklistEmail" placeholder="Ваш email" required>
         <button id="downloadBothBtn" class="btn-primary">📧 Скачать выбранное</button>
-
         <div class="button-group">
             <a href="#" class="btn-secondary" id="singleChecklistBtn">📄 Только чек-лист</a>
             <a href="#" class="btn-secondary" id="singleTrainingBtn">📘 Только программу</a>
         </div>
-
         <button id="closeModalBtn">Закрыть</button>
     </div>
 </div>
@@ -34,7 +26,54 @@
 </div>
 
 <script>
-    // Плавная прокрутка
+    // ---------- User ID ----------
+    function getOrCreateUserId() {
+        let userId = localStorage.getItem('hr_user_id');
+        if (!userId) {
+            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+            localStorage.setItem('hr_user_id', userId);
+        }
+        return userId;
+    }
+
+    // ---------- Отправка в Google Sheets ----------
+    function sendDataToSheet(data) {
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDIPClTwDfqSi87QgLxyzNE0RiizcGlEAQzdQOy-fOE3QNjupsN6kc1AjYEbTJd1-Wrw/exec';
+        const userId = getOrCreateUserId();
+        data.userId = userId;
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(data)
+        })
+        .then(() => console.log('✅ Отправлено, userId:', userId))
+        .catch(error => console.error('❌ Ошибка:', error));
+    }
+
+    // ---------- Красивое всплывающее уведомление (toast) ----------
+    function showToast(message, duration = 3000) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = 'rgba(0,0,0,0.85)';
+        toast.style.color = '#fff';
+        toast.style.padding = '12px 24px';
+        toast.style.borderRadius = '40px';
+        toast.style.fontSize = '1rem';
+        toast.style.zIndex = '9999';
+        toast.style.fontFamily = 'Inter, sans-serif';
+        toast.style.backdropFilter = 'blur(8px)';
+        toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), duration);
+    }
+
+    // ---------- Плавная прокрутка ----------
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
@@ -47,7 +86,7 @@
         });
     });
 
-    // КАЛЬКУЛЯТОР
+    // ---------- КАЛЬКУЛЯТОР ----------
     let cart = [];
     function renderCart() {
         let total = 0, qty = 0;
@@ -115,7 +154,7 @@
         if (activePane) activePane.classList.add('active');
     }));
 
-    // КВИЗ
+    // ---------- КВИЗ (отдельные столбцы) ----------
     const quizQuestions = [
         { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
         { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"] },
@@ -124,42 +163,120 @@
         { text: "5. Бюджет на консультацию/подбор?", options: ["До 5000 ₽", "5000–15000 ₽", "15000–50000 ₽", "Выше 50000 ₽"] }
     ];
     let answers = [null,null,null,null,null];
+    let quizState = 'questions';
+
+    function generateTwoOptions(answersArray) {
+        const role = answersArray[0];
+        const level = answersArray[1];
+        const urgency = answersArray[2];
+        const budget = answersArray[4];
+        let optionA = "Индивидуальная карьерная стратегия + полное сопровождение (резюме, подготовка, переговоры до оффера).";
+        let optionB = "Тренинг «Продай себя дорого» + самоподготовка по материалам.";
+        if (role === "Подбираю сотрудников") {
+            optionA = "HR-аудит и закрытие одной вакансии под ключ (гарантия 28 дней).";
+            optionB = "Бесплатная диагностика вакансии + консультация по поиску.";
+        } else if (level === "Junior / начинающий") {
+            optionA = "Пошаговая стратегия поиска работы + упаковка резюме.";
+            optionB = "Мастер-класс «Как выделиться без опыта» (групповой).";
+        } else if (level === "Middle / опытный") {
+            optionA = "Интенсив «Продай себя дорого» (индивидуально, разбор резюме и интервью).";
+            optionB = "Групповой тренинг по переговорам о зарплате + чек-листы.";
+        } else if (level === "Senior / ведущий" || level === "Lead / руководитель") {
+            optionA = "Executive-коучинг и подготовка к собеседованиям с топ-менеджерами.";
+            optionB = "Карьерная сессия (2 часа) по позиционированию на рынке.";
+        }
+        if (urgency === "Вчера") {
+            optionA = "Экспресс-подготовка за 3 дня: резюме, сопроводительные, интервью.";
+            optionB = "Чек-лист быстрого поиска + самодиагностика.";
+        }
+        if (budget === "До 5000 ₽") {
+            optionB = optionB + " (стоимость до 5000 ₽)";
+        } else if (budget === "Выше 50000 ₽") {
+            optionA = optionA + " с персональным куратором на месяц.";
+        }
+        return [optionA, optionB];
+    }
+
     function renderQuiz() {
-        let html = '';
-        quizQuestions.forEach((q, idx) => {
-            html += `<div class="quiz-question"><p>${q.text}</p><div class="quiz-options" data-q="${idx}">`;
-            q.options.forEach(opt => { html += `<div class="quiz-option ${answers[idx]===opt?'selected':''}" data-opt="${opt}">${opt}</div>`; });
-            html += `</div></div>`;
-        });
-        html += `<button id="submitQuizBtn" class="btn-primary">Узнать рекомендацию</button>`;
-        const quizContainer = document.getElementById('quizContainer');
-        if (quizContainer) quizContainer.innerHTML = html;
-        document.querySelectorAll('.quiz-option').forEach(el => {
-            el.addEventListener('click', (e) => {
-                const parent = el.parentElement;
-                const qIdx = parseInt(parent.dataset.q);
-                answers[qIdx] = el.dataset.opt;
-                renderQuiz();
+        if (quizState === 'questions') {
+            let html = '';
+            quizQuestions.forEach((q, idx) => {
+                html += `<div class="quiz-question"><p>${q.text}</p><div class="quiz-options" data-q="${idx}">`;
+                q.options.forEach(opt => { html += `<div class="quiz-option ${answers[idx]===opt?'selected':''}" data-opt="${opt}">${opt}</div>`; });
+                html += `</div></div>`;
             });
-        });
-        const submitBtn = document.getElementById('submitQuizBtn');
-        if (submitBtn) submitBtn.addEventListener('click', () => {
-            if (answers.includes(null)) { alert('Ответьте на все вопросы'); return; }
-            let rec = "Рекомендуем начать с индивидуальной консультации по карьерной стратегии.";
-            if (answers[0].includes("Подбираю сотрудников")) rec = "Для бизнеса: начните с бесплатной диагностики вакансии. Я подберу кандидатов за 28 дней.";
-            else if (answers[1] === "Junior / начинающий") rec = "Вам нужна карьерная стратегия + упаковка резюме. Покажу, как выделиться без опыта.";
-            else if (answers[1] === "Middle / опытный") rec = "Тренинг «Продай себя дорого» и переговоры о зарплате. Вы получите +30% к доходу.";
-            else rec = "Сопровождение до оффера + подготовка к интервью с топ-менеджерами. Работаем на повышение статуса.";
-            const quizResult = document.getElementById('quizResult');
-            if (quizResult) {
-                quizResult.innerHTML = `<strong>🎯 Рекомендация:</strong> ${rec}<br><br><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Обсудить в Telegram</a>`;
-                quizResult.style.display = 'block';
+            html += `<button id="submitQuizBtn" class="btn-primary">Показать варианты</button>`;
+            const quizContainer = document.getElementById('quizContainer');
+            if (quizContainer) quizContainer.innerHTML = html;
+            document.querySelectorAll('.quiz-option').forEach(el => {
+                el.addEventListener('click', (e) => {
+                    const parent = el.parentElement;
+                    const qIdx = parseInt(parent.dataset.q);
+                    answers[qIdx] = el.dataset.opt;
+                    renderQuiz();
+                });
+            });
+            const submitBtn = document.getElementById('submitQuizBtn');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    if (answers.includes(null)) {
+                        alert('Ответьте на все вопросы');
+                        return;
+                    }
+                    quizState = 'choice';
+                    renderQuiz();
+                });
             }
-        });
+        } else if (quizState === 'choice') {
+            const options = generateTwoOptions(answers);
+            const html = `
+                <p style="font-weight: 600; margin-bottom: 20px;">Какой вариант вам больше подходит?</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+                    <div style="flex: 1; min-width: 200px; background: var(--surface-soft); border-radius: 28px; padding: 24px; text-align: left;">
+                        <h4>📌 Вариант 1</h4>
+                        <p>${options[0]}</p>
+                        <button class="btn-primary choose-option" data-choice="1">Выбрать этот</button>
+                    </div>
+                    <div style="flex: 1; min-width: 200px; background: var(--surface-soft); border-radius: 28px; padding: 24px; text-align: left;">
+                        <h4>📌 Вариант 2</h4>
+                        <p>${options[1]}</p>
+                        <button class="btn-primary choose-option" data-choice="2">Выбрать этот</button>
+                    </div>
+                </div>
+            `;
+            const quizContainer = document.getElementById('quizContainer');
+            if (quizContainer) quizContainer.innerHTML = html;
+            document.querySelectorAll('.choose-option').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const chosen = e.target.getAttribute('data-choice');
+                    const chosenText = chosen === '1' ? options[0] : options[1];
+                    const formData = {
+                        formType: 'Квиз',
+                        name: '',
+                        phone: '',
+                        comment: `Выбран вариант ${chosen}: ${chosenText}`,
+                        quizAnswers: answers.map((a,i)=>`${quizQuestions[i].text} — ${a}`).join('\n'),
+                        q1: answers[0],
+                        q2: answers[1],
+                        q3: answers[2],
+                        q4: answers[3],
+                        q5: answers[4],
+                        chosenVariant: `${chosen}: ${chosenText}`
+                    };
+                    sendDataToSheet(formData);
+                    const quizResult = document.getElementById('quizResult');
+                    if (quizResult) {
+                        quizResult.innerHTML = `<strong>✅ Вы выбрали вариант ${chosen}:</strong><br>${chosenText}<br><br><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Обсудить в Telegram</a>`;
+                        quizResult.style.display = 'block';
+                    }
+                    if (quizContainer) quizContainer.innerHTML = '<p>Спасибо! Результат ниже.</p>';
+                });
+            });
+        }
     }
     renderQuiz();
 
-    // Модалка материалов
+    // ---------- Модалка материалов ----------
     const modal = document.getElementById('checklistModal');
     const openModal = document.getElementById('openChecklistModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -167,7 +284,7 @@
     const singleChecklistBtn = document.getElementById('singleChecklistBtn');
     const singleTrainingBtn = document.getElementById('singleTrainingBtn');
 
-    function sendMaterials(email, checklist, training) {
+    function sendMaterialsCallback(email, checklist, training) {
         if (!email || !email.includes('@')) {
             alert('Введите корректный email');
             return false;
@@ -176,47 +293,51 @@
         if (checklist) message += 'Чек-лист, ';
         if (training) message += 'Программа тренинга, ';
         message = message.slice(0, -2);
-        alert(message + '\n(Добавьте реальную отправку на почту или ссылки на файлы)');
+        alert(message + '\n(Добавьте реальную отправку на почту или ссылки на файлы)'); // пока alert, можно заменить на toast позже
+        const formData = {
+            formType: 'Запрос материалов',
+            name: email,
+            phone: '',
+            comment: `Запросил: чек-лист=${checklist}, тренинг=${training}`,
+            quizAnswers: '-'
+        };
+        sendDataToSheet(formData);
         return true;
     }
 
     if (openModal) openModal.onclick = () => { if (modal) modal.style.display = 'flex'; };
     if (closeModalBtn) closeModalBtn.onclick = () => { if (modal) modal.style.display = 'none'; };
-
     if (downloadBoth) {
         downloadBoth.onclick = () => {
             const email = document.getElementById('checklistEmail').value;
             const checklist = document.getElementById('checklistCheck').checked;
             const training = document.getElementById('trainingCheck').checked;
-            if (sendMaterials(email, checklist, training)) {
+            if (sendMaterialsCallback(email, checklist, training)) {
                 if (modal) modal.style.display = 'none';
             }
         };
     }
-
     if (singleChecklistBtn) {
         singleChecklistBtn.onclick = (e) => {
             e.preventDefault();
             const email = document.getElementById('checklistEmail').value;
-            if (sendMaterials(email, true, false)) {
+            if (sendMaterialsCallback(email, true, false)) {
                 if (modal) modal.style.display = 'none';
             }
         };
     }
-
     if (singleTrainingBtn) {
         singleTrainingBtn.onclick = (e) => {
             e.preventDefault();
             const email = document.getElementById('checklistEmail').value;
-            if (sendMaterials(email, false, true)) {
+            if (sendMaterialsCallback(email, false, true)) {
                 if (modal) modal.style.display = 'none';
             }
         };
     }
-
     window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
 
-    // Политика конфиденциальности
+    // ---------- Политика конфиденциальности ----------
     const privacyModal = document.getElementById('privacyModal');
     const privacyLink = document.getElementById('privacyLink');
     const closePrivacy = document.getElementById('closePrivacyModal');
@@ -224,12 +345,12 @@
     if (closePrivacy) closePrivacy.onclick = () => { if (privacyModal) privacyModal.style.display = 'none'; };
     window.onclick = (e) => { if (e.target === privacyModal) privacyModal.style.display = 'none'; };
 
-    // Анимации при скролле
+    // ---------- Анимации ----------
     const faders = document.querySelectorAll('.role-card, .service-card, .stat-item, .benefit-card, .process-card, .quiz-card, .checklist-card, .calendar-card');
     const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.15 });
     faders.forEach(el => { el.classList.add('fade-up'); obs.observe(el); });
 
-    // Форма обратного звонка
+    // ---------- ФОРМА ОБРАТНОГО ЗВОНКА (с красивым тостом) ----------
     const callbackForm = document.getElementById('callbackForm');
     if (callbackForm) {
         callbackForm.addEventListener('submit', function(e) {
@@ -242,40 +363,33 @@
                 alert('Пожалуйста, заполните имя и номер телефона.');
                 return;
             }
-
             const phoneDigits = phone.replace(/\D/g, '');
             if (phoneDigits.length < 10) {
                 alert('Введите корректный номер телефона (не менее 10 цифр).');
                 return;
             }
 
-            alert(`Спасибо, ${name}! Мы перезвоним вам на ${phone}.\nВаш комментарий: ${comment}\n\n(Функция отправки временно в режиме тестирования)`);
+            const formData = {
+                formType: 'Обратный звонок',
+                name: name,
+                phone: phone,
+                comment: comment,
+                quizAnswers: '-'
+            };
+            sendDataToSheet(formData);
+            showToast(`✅ Спасибо, ${name}! Мы перезвоним вам на ${phone}.`, 4000);
             callbackForm.reset();
         });
     }
 
-    // Копирование в буфер для элементов с классами copyable-phone и copyable-text
+    // ---------- Копирование в буфер (с использованием showToast) ----------
     document.querySelectorAll('.copyable-phone, .copyable-text').forEach(el => {
         el.addEventListener('click', function(e) {
             e.stopPropagation();
             const textToCopy = this.getAttribute('data-copy');
             if (!textToCopy) return;
             navigator.clipboard.writeText(textToCopy).then(() => {
-                const toast = document.createElement('div');
-                toast.textContent = '✅ Скопировано!';
-                toast.style.position = 'fixed';
-                toast.style.bottom = '20px';
-                toast.style.left = '50%';
-                toast.style.transform = 'translateX(-50%)';
-                toast.style.backgroundColor = 'rgba(0,0,0,0.8)';
-                toast.style.color = '#fff';
-                toast.style.padding = '10px 20px';
-                toast.style.borderRadius = '40px';
-                toast.style.fontSize = '0.9rem';
-                toast.style.zIndex = '9999';
-                toast.style.fontFamily = 'Inter, sans-serif';
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 2000);
+                showToast('✅ Скопировано!');
             }).catch(err => {
                 console.error('Ошибка копирования:', err);
                 alert('Не удалось скопировать. Попробуйте вручную.');
