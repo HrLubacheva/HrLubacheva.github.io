@@ -1,9 +1,25 @@
 <section id="calendar">
     <div class="container">
         <div class="calendar-card" style="text-align:center;">
-            <h2 class="section-title">📅 Бесплатная 20-минутная диагностика</h2>
+            <h2 class="section-title">📞 Бесплатная 20-минутная диагностика</h2>
             <p>Разберём вашу ситуацию: для соискателя — что мешает получить оффер выше; для бизнеса — почему вакансия не закрывается.</p>
-            <button id="calendlyButton" class="btn-primary" onclick="alert('Для записи на консультацию настройте интеграцию с календарём (Calendly или Google Календарь).')">Выбрать время</button>
+
+            <form id="callbackForm" style="max-width: 500px; margin: 32px auto 0;">
+                <div style="margin-bottom: 20px;">
+                    <input type="text" id="callbackName" placeholder="Ваше имя" required
+                           style="width: 100%; padding: 14px 20px; border-radius: 60px; border: 1px solid var(--border); background: var(--surface-soft); font-size: 1rem;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <input type="tel" id="callbackPhone" placeholder="Номер телефона" required
+                           style="width: 100%; padding: 14px 20px; border-radius: 60px; border: 1px solid var(--border); background: var(--surface-soft); font-size: 1rem;">
+                </div>
+                <div style="margin-bottom: 24px;">
+                    <textarea id="callbackComment" rows="3" placeholder="Удобное время для звонка или дополнительная информация"
+                              style="width: 100%; padding: 14px 20px; border-radius: 28px; border: 1px solid var(--border); background: var(--surface-soft); font-size: 1rem; resize: vertical;"></textarea>
+                </div>
+                <button type="submit" class="btn-primary" style="width: auto; padding: 14px 36px;">Заказать звонок</button>
+            </form>
+            <p style="margin-top: 20px; font-size: 0.85rem; color: var(--text-muted);">После отправки мы свяжемся с вами в рабочее время.</p>
         </div>
     </div>
 </section>
