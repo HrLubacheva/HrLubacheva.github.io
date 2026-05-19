@@ -548,94 +548,88 @@ section {
 }
 
 .modal-content {
+    position: relative;
     background: var(--surface);
-    max-width: 800px;
+    max-width: 500px;
     width: 90%;
-    padding: 48px 40px;
+    padding: 40px 32px;
     border-radius: 36px;
     text-align: center;
     box-shadow: 0 30px 60px rgba(0,0,0,0.3);
 }
 
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 24px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+    color: var(--primary);
+}
+
 .modal-content h3 {
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-bottom: 12px;
 }
 
 .modal-content p {
-    font-size: 1.1rem;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
     color: var(--text-muted);
 }
 
 .modal-checkbox-group {
     text-align: left;
-    margin: 20px 0;
+    margin: 16px 0;
 }
 
 .modal-checkbox-group label {
-    font-size: 1.1rem;
-    margin-bottom: 16px;
     display: flex;
     align-items: center;
+    margin-bottom: 12px;
     cursor: pointer;
 }
 
-.modal-checkbox-group input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
-    margin-right: 14px;
-    cursor: pointer;
+.modal-checkbox-group input {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
     accent-color: var(--primary);
 }
 
 .modal-content input[type="email"] {
     width: 100%;
-    padding: 18px 24px;
-    font-size: 1.2rem;
+    padding: 14px 20px;
+    font-size: 1rem;
     border-radius: 60px;
-    border: 2px solid var(--border);
+    border: 1px solid var(--border);
     background: var(--surface-soft);
-    margin-bottom: 28px;
-    transition: all 0.2s ease;
+    margin-bottom: 20px;
+    transition: border-color 0.2s ease;
 }
 
 .modal-content input[type="email"]:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 4px rgba(45,106,159,0.2);
-    background: var(--surface);
 }
 
 .modal-content .btn-primary {
     width: 100%;
     justify-content: center;
-    margin-bottom: 24px;
-    font-size: 1.1rem;
-    padding: 16px;
+    margin-bottom: 16px;
 }
 
-.modal-content .button-group {
+.button-group {
     display: flex;
     flex-wrap: wrap;
+    gap: 12px;
     justify-content: center;
-    gap: 16px;
-    margin-top: 8px;
-}
-
-.modal-content .btn-secondary {
-    padding: 12px 24px;
-    font-size: 1rem;
-}
-
-#closeModalBtn {
-    margin-top: 28px;
-    background: none;
-    border: none;
-    color: var(--text-muted);
-    cursor: pointer;
-    font-size: 1rem;
-    text-decoration: underline;
 }
 
 /* Форма обратного звонка */
@@ -828,22 +822,6 @@ footer {
     .modal-content h3 {
         font-size: 1.6rem;
     }
-    .modal-content input[type="email"] {
-        padding: 14px 18px;
-        font-size: 1rem;
-    }
-    .modal-content .btn-primary {
-        padding: 14px;
-    }
-    .modal-content .btn-secondary {
-        width: 100%;
-    }
-
-
-}
-
-/* Адаптация квиза на мобильных */
-@media (max-width: 700px) {
     .quiz-card > div[style*="display: flex"] {
         flex-direction: column !important;
         gap: 20px !important;
