@@ -1,14 +1,14 @@
-<!-- Модалка материалов (увеличенная, с чекбоксами) -->
+<!-- Модалка материалов (улучшенная, с чекбоксами) -->
 <div id="checklistModal" class="modal">
     <div class="modal-content">
         <h3>📥 Скачать бесплатные материалы</h3>
         <p>Выберите, что хотите получить, и укажите email</p>
 
-        <div style="text-align: left; margin: 20px 0;">
-            <label style="display: block; margin-bottom: 12px; cursor: pointer;">
+        <div class="modal-checkbox-group">
+            <label>
                 <input type="checkbox" id="checklistCheck" value="checklist" checked> 📄 Чек-лист «Идеальное резюме» (PDF)
             </label>
-            <label style="display: block; margin-bottom: 12px; cursor: pointer;">
+            <label>
                 <input type="checkbox" id="trainingCheck" value="training" checked> 📘 Программа тренинга «Продай себя дорого» (PDF)
             </label>
         </div>
@@ -16,9 +16,9 @@
         <input type="email" id="checklistEmail" placeholder="Ваш email" required>
         <button id="downloadBothBtn" class="btn-primary">📧 Скачать выбранное</button>
 
-        <div class="button-group" style="margin-top: 12px;">
-            <a href="#" class="btn-secondary" id="singleChecklistBtn" style="display: inline-block;">📄 Только чек-лист</a>
-            <a href="#" class="btn-secondary" id="singleTrainingBtn" style="display: inline-block;">📘 Только программу</a>
+        <div class="button-group">
+            <a href="#" class="btn-secondary" id="singleChecklistBtn">📄 Только чек-лист</a>
+            <a href="#" class="btn-secondary" id="singleTrainingBtn">📘 Только программу</a>
         </div>
 
         <button id="closeModalBtn">Закрыть</button>
@@ -159,7 +159,7 @@
     }
     renderQuiz();
 
-    // Модалка материалов (улучшенная с чекбоксами)
+    // Модалка материалов
     const modal = document.getElementById('checklistModal');
     const openModal = document.getElementById('openChecklistModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -167,7 +167,6 @@
     const singleChecklistBtn = document.getElementById('singleChecklistBtn');
     const singleTrainingBtn = document.getElementById('singleTrainingBtn');
 
-    // Функция отправки выбранных материалов
     function sendMaterials(email, checklist, training) {
         if (!email || !email.includes('@')) {
             alert('Введите корректный email');
@@ -230,7 +229,7 @@
     const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.15 });
     faders.forEach(el => { el.classList.add('fade-up'); obs.observe(el); });
 
-        // Обработка формы обратного звонка
+    // Форма обратного звонка
     const callbackForm = document.getElementById('callbackForm');
     if (callbackForm) {
         callbackForm.addEventListener('submit', function(e) {
@@ -244,23 +243,19 @@
                 return;
             }
 
-            // Валидация телефона (простая: минимум 10 цифр)
             const phoneDigits = phone.replace(/\D/g, '');
             if (phoneDigits.length < 10) {
                 alert('Введите корректный номер телефона (не менее 10 цифр).');
                 return;
             }
 
-            // Здесь можно отправить данные на сервер или на почту
-            // Пока просто покажем сообщение
             alert(`Спасибо, ${name}! Мы перезвоним вам на ${phone}.\nВаш комментарий: ${comment}\n\n(Функция отправки временно в режиме тестирования)`);
             callbackForm.reset();
         });
     }
 
-
-    // Копирование в буфер (только для @HrLubacheva)
-    document.querySelectorAll('.copyable').forEach(el => {
+    // Копирование в буфер для элементов с классами copyable-phone и copyable-text
+    document.querySelectorAll('.copyable-phone, .copyable-text').forEach(el => {
         el.addEventListener('click', function(e) {
             e.stopPropagation();
             const textToCopy = this.getAttribute('data-copy');
