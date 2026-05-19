@@ -29,14 +29,7 @@ def main():
         print(f"3. Создаём коммит: {commit_msg}")
         run_cmd(f'git commit -m "{commit_msg}"')
 
-    print("4. Скачиваем свежие изменения из удалённого репозитория...")
-    # Делаем pull с автоматическим слиянием (без конфликтов, если они простые)
-    pull_result = run_cmd("git pull --no-edit", check=False)
-    if pull_result.returncode != 0:
-        print("⚠️  Не удалось выполнить git pull. Проверьте соединение или разрешите конфликты вручную.")
-        sys.exit(pull_result.returncode)
-
-    print("5. Отправляем изменения на GitHub...")
+    print("4. Отправляем изменения на GitHub...")
     run_cmd("git push")
 
     print("✅ Готово! Сайт обновлён. Через 1-2 минуты изменения появятся на https://hrlubacheva.github.io/")
