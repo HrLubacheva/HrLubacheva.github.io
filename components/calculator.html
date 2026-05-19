@@ -3,11 +3,15 @@
         <div class="quiz-card" style="margin-top:0;">
             <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
             <p>Выберите категорию, добавьте услуги. Скидка 5% при заказе 2+ позиций из любого раздела.</p>
+
             <div class="calculator-tabs">
                 <button class="tab-btn active" data-tab="business">🏢 Бизнесу</button>
                 <button class="tab-btn" data-tab="individual">👤 Индивидуально</button>
-                <button class="tab-btn" data-tab="trainings">🎓 Тренинги</button>
+                <button class="tab-btn" data-tab="corporate">🎓 Тренинги для бизнеса</button>
+                <button class="tab-btn" data-tab="group">👥 Групповые тренинги</button>
             </div>
+
+            <!-- Бизнесу -->
             <div id="tab-business" class="tab-pane active">
                 <div id="business-list"></div>
                 <div class="add-service">
@@ -22,6 +26,8 @@
                     <button id="business-add" class="btn-primary" style="padding:10px 24px;">➕ Добавить</button>
                 </div>
             </div>
+
+            <!-- Индивидуально -->
             <div id="tab-individual" class="tab-pane">
                 <div id="individual-list"></div>
                 <div class="add-service">
@@ -33,7 +39,7 @@
                         <option value="9000">Резюме руководителя — 9 000 ₽</option>
                         <option value="15000">CV на английском — 15 000 ₽</option>
                         <option value="3000">Сопроводительное письмо — 3 000 ₽</option>
-                        <option value="5500">Тренинг «Продай себя дорого» (включая АТС и ИИ) — 5 500 ₽</option>
+                        <option value="7000">Индивидуальный тренинг «Продай себя дорого» — 7 000 ₽</option>
                     </select>
                     <input type="number" id="individual-qty" min="1" value="1" style="width:80px;">
                     <button id="individual-add" class="btn-primary" style="padding:10px 24px;">➕ Добавить</button>
@@ -42,18 +48,33 @@
                     <a href="#" class="btn-secondary" onclick="alert('Скачивание программы тренинга: добавьте ссылку на PDF')">📥 Скачать программу тренинга (PDF)</a>
                 </div>
             </div>
-            <div id="tab-trainings" class="tab-pane">
-                <div id="trainings-list"></div>
+
+            <!-- Тренинги для бизнеса (корпоративные) -->
+            <div id="tab-corporate" class="tab-pane">
+                <div id="corporate-list"></div>
                 <div class="add-service">
-                    <select id="trainings-select">
+                    <select id="corporate-select">
                         <option value="12000">Тренинг по запросу (до 25 чел.) — 12 000 ₽/час</option>
                         <option value="30000">Мастер-класс (3ч, до 25 чел.) — 30 000 ₽</option>
                         <option value="13000">Стратегическая сессия (до 12 чел.) — 13 000 ₽/час</option>
                     </select>
-                    <input type="number" id="trainings-qty" min="1" value="1" style="width:80px;">
-                    <button id="trainings-add" class="btn-primary" style="padding:10px 24px;">➕ Добавить</button>
+                    <input type="number" id="corporate-qty" min="1" value="1" style="width:80px;">
+                    <button id="corporate-add" class="btn-primary" style="padding:10px 24px;">➕ Добавить</button>
                 </div>
             </div>
+
+            <!-- Групповые тренинги (для физических лиц) -->
+            <div id="tab-group" class="tab-pane">
+                <div id="group-list"></div>
+                <div class="add-service">
+                    <select id="group-select">
+                        <option value="5500">Групповой тренинг «Продай себя дорого» (5–10 чел.) — 5 500 ₽/чел</option>
+                    </select>
+                    <input type="number" id="group-qty" min="1" value="1" style="width:80px;">
+                    <button id="group-add" class="btn-primary" style="padding:10px 24px;">➕ Добавить</button>
+                </div>
+            </div>
+
             <div class="total-block">
                 <div>Общая стоимость (с учётом скидки):</div>
                 <div class="total-price" id="totalPrice">0 ₽</div>
