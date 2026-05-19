@@ -1,4 +1,4 @@
-<!-- Модалка материалов (сбор email + скачивание) -->
+<!-- Модалка материалов (сбор email + открытие PDF) -->
 <div id="checklistModal" class="modal">
     <div class="modal-content">
         <h3>📥 Скачать бесплатные материалы</h3>
@@ -8,7 +8,7 @@
             <label><input type="checkbox" id="trainingCheck" value="training" checked> 📘 Программа тренинга «Продай себя дорого» (PDF)</label>
         </div>
         <input type="email" id="checklistEmail" placeholder="Ваш email" required>
-        <button id="downloadBothBtn" class="btn-primary">📧 Скачать выбранное</button>
+        <button id="downloadBothBtn" class="btn-primary">📧 Открыть выбранное</button>
         <div class="button-group">
             <a href="#" class="btn-secondary" id="singleChecklistBtn">📄 Только чек-лист</a>
             <a href="#" class="btn-secondary" id="singleTrainingBtn">📘 Только программу</a>
@@ -291,7 +291,7 @@
     }
     renderQuiz();
 
-    // ---------- Модалка материалов (сохранение email + скачивание) ----------
+    // ---------- Модалка материалов (сохранение email + открытие PDF в новой вкладке) ----------
     const modal = document.getElementById('checklistModal');
     const openModal = document.getElementById('openChecklistModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -299,16 +299,7 @@
     const singleChecklistBtn = document.getElementById('singleChecklistBtn');
     const singleTrainingBtn = document.getElementById('singleTrainingBtn');
 
-    function downloadFile(url) {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = '';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
-
-    function saveEmailAndDownload(email, checklist, training) {
+    function saveEmailAndOpen(email, checklist, training) {
         if (!email || !email.includes('@')) {
             alert('Введите корректный email');
             return false;
@@ -322,9 +313,9 @@
         };
         sendDataToSheet(formData);
 
-        if (checklist) downloadFile('assets/docs/checklist.pdf');
-        if (training) downloadFile('assets/docs/training_program.pdf');
-        showToast('✅ Материалы скачиваются! Email сохранён.', 3000);
+        if (checklist) window.open('assets/docs/checklist.pdf', '_blank');
+        if (training) window.open('assets/docs/training_program.pdf', '_blank');
+        showToast('✅ Email сохранён. Файлы открываются в новой вкладке.', 3000);
         return true;
     }
 
@@ -335,7 +326,7 @@
             const email = document.getElementById('checklistEmail').value;
             const checklist = document.getElementById('checklistCheck').checked;
             const training = document.getElementById('trainingCheck').checked;
-            if (saveEmailAndDownload(email, checklist, training)) {
+            if (saveEmailAndOpen(email, checklist, training)) {
                 if (modal) modal.style.display = 'none';
             }
         };
@@ -344,7 +335,7 @@
         singleChecklistBtn.onclick = (e) => {
             e.preventDefault();
             const email = document.getElementById('checklistEmail').value;
-            if (saveEmailAndDownload(email, true, false)) {
+            if (saveEmailAndOpen(email, true, false)) {
                 if (modal) modal.style.display = 'none';
             }
         };
@@ -353,7 +344,7 @@
         singleTrainingBtn.onclick = (e) => {
             e.preventDefault();
             const email = document.getElementById('checklistEmail').value;
-            if (saveEmailAndDownload(email, false, true)) {
+            if (saveEmailAndOpen(email, false, true)) {
                 if (modal) modal.style.display = 'none';
             }
         };

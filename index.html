@@ -262,11 +262,12 @@
                     <button id="individual-add" class="btn-primary add-service-btn">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section">
-                    <a href="#" class="btn-secondary" onclick="alert('Скачивание программы тренинга: добавьте ссылку на PDF')">📥 Скачать программу тренинга (PDF)</a>
+                    <a href="assets/docs/checklist.pdf" class="btn-secondary" target="_blank">📄 Скачать чек-лист (PDF)</a>
+                    <a href="assets/docs/training_program.pdf" class="btn-secondary" target="_blank" style="margin-left: 10px;">📘 Скачать программу тренинга (PDF)</a>
                 </div>
             </div>
 
-            <!-- Тренинги для бизнеса -->
+            <!-- Тренинги для бизнеса (корпоративные) -->
             <div id="tab-corporate" class="tab-pane">
                 <div id="corporate-list"></div>
                 <div class="add-service">
@@ -291,7 +292,8 @@
                     <button id="group-add" class="btn-primary add-service-btn">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section">
-                    <a href="#" class="btn-secondary" onclick="alert('Скачивание программы тренинга: добавьте ссылку на PDF')">📥 Скачать программу тренинга (PDF)</a>
+                    <a href="assets/docs/checklist.pdf" class="btn-secondary" target="_blank">📄 Скачать чек-лист (PDF)</a>
+                    <a href="assets/docs/training_program.pdf" class="btn-secondary" target="_blank" style="margin-left: 10px;">📘 Скачать программу тренинга (PDF)</a>
                 </div>
             </div>
 
@@ -317,7 +319,10 @@
         <div class="checklist-card">
             <h2 class="section-title">📥 Бесплатные материалы</h2>
             <p>Чек-лист «Идеальное резюме» + программа тренинга «Продай себя дорого»</p>
-            <button id="openChecklistModal" class="btn-primary">Получить материалы</button>
+            <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                <a href="assets/docs/checklist.pdf" class="btn-primary" target="_blank">📄 Открыть чек-лист</a>
+                <a href="assets/docs/training_program.pdf" class="btn-primary" target="_blank">📘 Открыть программу тренинга</a>
+            </div>
         </div>
     </div>
 </section>
@@ -360,7 +365,7 @@
         <a href="#"
            id="privacyLink">Политика конфиденциальности</a></div>
 </footer>
-<!-- Модалка материалов (сбор email + скачивание) -->
+<!-- Модалка материалов (сбор email + открытие PDF) -->
 <div id="checklistModal" class="modal">
     <div class="modal-content">
         <h3>📥 Скачать бесплатные материалы</h3>
@@ -370,7 +375,7 @@
             <label><input type="checkbox" id="trainingCheck" value="training" checked> 📘 Программа тренинга «Продай себя дорого» (PDF)</label>
         </div>
         <input type="email" id="checklistEmail" placeholder="Ваш email" required>
-        <button id="downloadBothBtn" class="btn-primary">📧 Скачать выбранное</button>
+        <button id="downloadBothBtn" class="btn-primary">📧 Открыть выбранное</button>
         <div class="button-group">
             <a href="#" class="btn-secondary" id="singleChecklistBtn">📄 Только чек-лист</a>
             <a href="#" class="btn-secondary" id="singleTrainingBtn">📘 Только программу</a>
@@ -653,7 +658,7 @@
     }
     renderQuiz();
 
-    // ---------- Модалка материалов (сохранение email + скачивание) ----------
+    // ---------- Модалка материалов (сохранение email + открытие PDF в новой вкладке) ----------
     const modal = document.getElementById('checklistModal');
     const openModal = document.getElementById('openChecklistModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -661,16 +666,7 @@
     const singleChecklistBtn = document.getElementById('singleChecklistBtn');
     const singleTrainingBtn = document.getElementById('singleTrainingBtn');
 
-    function downloadFile(url) {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = '';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
-
-    function saveEmailAndDownload(email, checklist, training) {
+    function saveEmailAndOpen(email, checklist, training) {
         if (!email || !email.includes('@')) {
             alert('Введите корректный email');
             return false;
@@ -684,9 +680,9 @@
         };
         sendDataToSheet(formData);
 
-        if (checklist) downloadFile('assets/docs/checklist.pdf');
-        if (training) downloadFile('assets/docs/training_program.pdf');
-        showToast('✅ Материалы скачиваются! Email сохранён.', 3000);
+        if (checklist) window.open('assets/docs/checklist.pdf', '_blank');
+        if (training) window.open('assets/docs/training_program.pdf', '_blank');
+        showToast('✅ Email сохранён. Файлы открываются в новой вкладке.', 3000);
         return true;
     }
 
@@ -697,7 +693,7 @@
             const email = document.getElementById('checklistEmail').value;
             const checklist = document.getElementById('checklistCheck').checked;
             const training = document.getElementById('trainingCheck').checked;
-            if (saveEmailAndDownload(email, checklist, training)) {
+            if (saveEmailAndOpen(email, checklist, training)) {
                 if (modal) modal.style.display = 'none';
             }
         };
@@ -706,7 +702,7 @@
         singleChecklistBtn.onclick = (e) => {
             e.preventDefault();
             const email = document.getElementById('checklistEmail').value;
-            if (saveEmailAndDownload(email, true, false)) {
+            if (saveEmailAndOpen(email, true, false)) {
                 if (modal) modal.style.display = 'none';
             }
         };
@@ -715,7 +711,7 @@
         singleTrainingBtn.onclick = (e) => {
             e.preventDefault();
             const email = document.getElementById('checklistEmail').value;
-            if (saveEmailAndDownload(email, false, true)) {
+            if (saveEmailAndOpen(email, false, true)) {
                 if (modal) modal.style.display = 'none';
             }
         };
