@@ -2,7 +2,7 @@
 import subprocess
 import sys
 from datetime import datetime
-from build import build_index
+from build import build_index, build_page, PAGES_DIR
 
 def run_cmd(cmd, check=True):
     """Выполняет команду в командной строке.
@@ -14,8 +14,11 @@ def run_cmd(cmd, check=True):
     return result
 
 def main():
-    print("1. Сборка index.html из компонентов...")
-    build_index()
+    print("1. Сборка всех страниц из компонентов...")
+    build_index()                                    # главная страница
+    build_page("blog.html", PAGES_DIR, "blog-content.html")
+    build_page("about.html", PAGES_DIR, "about-content.html")
+    build_page("clients.html", PAGES_DIR, "clients-content.html")
 
     print("2. Добавляем все изменения в Git...")
     run_cmd("git add .")
@@ -30,7 +33,6 @@ def main():
         run_cmd(f'git commit -m "{commit_msg}"')
 
     print("4. Скачиваем свежие изменения из удалённого репозитория...")
-    # Делаем pull с автоматическим слиянием (без конфликтов, если они простые)
     pull_result = run_cmd("git pull --no-edit", check=False)
     if pull_result.returncode != 0:
         print("⚠️  Не удалось выполнить git pull. Проверьте соединение или разрешите конфликты вручную.")
