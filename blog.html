@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta property="og:title" content="Виктория Любачева | Карьерный консультант">
     <meta property="og:description" content="Помогаю компаниям и специалистам достигать карьерных целей. Бесплатная диагностика.">
-<meta property="og:image" content="https://hrlubacheva.github.io/assets/images/img.png">
+    <meta property="og:image" content="https://hrlubacheva.github.io/assets/images/img.png">
     <meta property="og:url" content="https://hrlubacheva.github.io/">
     <meta property="og:type" content="website">
     <link rel="canonical" href="https://hrlubacheva.github.io/">
@@ -94,7 +94,7 @@
                 <a href="blog.html">Блог</a>
                 <a href="about.html">Обо мне</a>
                 <a href="clients.html">Клиенты</a>
-                <a href="#contacts">Контакты</a>
+                <a href="index.html#contacts">Контакты</a>
             </div>
         </div>
     </div>
@@ -705,7 +705,16 @@
         });
     }
     setActiveNavLink();
-
+    // ---------- Плавная прокрутка для якорей с других страниц ----------
+    if (window.location.hash) {
+        const hash = window.location.hash;
+        const targetElement = document.querySelector(hash);
+        if (targetElement) {
+            setTimeout(() => {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        }
+    }
 </script>
 </body>
 </html>

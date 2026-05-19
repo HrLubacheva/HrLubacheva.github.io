@@ -540,7 +540,16 @@
         });
     }
     setActiveNavLink();
-
+    // ---------- Плавная прокрутка для якорей с других страниц ----------
+    if (window.location.hash) {
+        const hash = window.location.hash;
+        const targetElement = document.querySelector(hash);
+        if (targetElement) {
+            setTimeout(() => {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        }
+    }
 </script>
 </body>
 </html>
