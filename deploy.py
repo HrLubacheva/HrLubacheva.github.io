@@ -15,22 +15,29 @@ def run_cmd(cmd, check=True):
 
 def main():
     print("1. Сборка index.html из компонентов...")
-    build_index()   # создаём актуальный index.html
+    build_index()
 
     print("2. Добавляем все изменения в Git...")
-    run_cmd("git add .")   # добавляем все изменённые файлы
+    run_cmd("git add .")
 
-    # Проверяем, есть ли реальные изменения для коммита
+    # Проверяем, есть ли изменения для коммита
     status = run_cmd("git status --porcelain", check=False)
     if not status.stdout.strip():
         print("Нет изменений для коммита. Возможно, сайт уже актуален.")
     else:
         commit_msg = f"Автообновление сайта {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         print(f"3. Создаём коммит: {commit_msg}")
-        run_cmd(f'git commit -m "{commit_msg}"')   # фиксируем изменения
+        run_cmd(f'git commit -m "{commit_msg}"')
 
-    print("4. Отправляем изменения на GitHub...")
-    run_cmd("git push")   # загружаем на удалённый репозиторий
+    print("4. Скачиваем свежие изменения из удалённого репозитория...")
+    # Делаем pull с автоматическим слиянием (без конфликтов, если они простые)
+    pull_result = run_cmd("git pull --no-edit", check=False)
+    if pull_result.returncode != 0:
+        print("⚠️  Не удалось выполнить git pull. Проверьте соединение или разрешите конфликты вручную.")
+        sys.exit(pull_result.returncode)
+
+    print("5. Отправляем изменения на GitHub...")
+    run_cmd("git push")
 
     print("✅ Готово! Сайт обновлён. Через 1-2 минуты изменения появятся на https://hrlubacheva.github.io/")
 
