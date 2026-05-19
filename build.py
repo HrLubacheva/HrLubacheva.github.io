@@ -1,38 +1,38 @@
 import os
 
-# Папка с компонентами и итоговый файл
-COMPONENTS_DIR = "components"
-OUTPUT_FILE = "index.html"
+# Папки с компонентами
+COMMON_DIR = "components/common"
+SECTIONS_DIR = "components/sections"
 
-def read_component(name):
-    """Читает содержимое файла компонента из папки components."""
-    path = os.path.join(COMPONENTS_DIR, name)
+def read_component(dir_path, name):
+    """Читает содержимое файла компонента из указанной папки."""
+    path = os.path.join(dir_path, name)
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
 def build_index():
-    """Собирает все компоненты в один index.html в правильном порядке."""
-    parts = [
-        read_component("_head.html"),
-        read_component("navbar.html"),
-        read_component("hero.html"),
-        read_component("roles.html"),
-        read_component("services.html"),
-        read_component("stats.html"),
-        read_component("benefits.html"),
-        read_component("process.html"),
-        read_component("calculator.html"),
-        read_component("quiz.html"),
-        read_component("freebies.html"),
-        read_component("calendar.html"),
-        read_component("contacts.html"),
-        read_component("footer.html"),
-        read_component("scripts.html")
+    """Собирает главную страницу из секций."""
+    sections_order = [
+        "hero.html", "roles.html", "services.html", "stats.html",
+        "benefits.html", "process.html", "calculator.html", "quiz.html",
+        "freebies.html", "calendar.html", "contacts.html"
     ]
-    # Объединяем части через перенос строки и записываем в файл
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+    sections_content = []
+    for section in sections_order:
+        sections_content.append(read_component(SECTIONS_DIR, section))
+
+    full_content = "\n".join(sections_content)
+
+    parts = [
+        read_component(COMMON_DIR, "_head.html"),
+        read_component(COMMON_DIR, "navbar.html"),
+        full_content,
+        read_component(COMMON_DIR, "footer.html"),
+        read_component("components", "scripts.html")   # ← исправлено: ищем в components/
+    ]
+    with open("index.html", "w", encoding="utf-8") as f:
         f.write("\n".join(parts))
-    print(f"✅ Собрано {OUTPUT_FILE}")
+    print("✅ Собрано index.html")
 
 if __name__ == "__main__":
     build_index()
