@@ -1,7 +1,6 @@
-<!-- Модалка материалов (сбор email + открытие PDF) -->
+<!-- Модалка материалов (сбор email + скачивание) -->
 <div id="checklistModal" class="modal">
     <div class="modal-content">
-        <span class="modal-close" id="closeModalBtn">&times;</span>
         <h3>📥 Скачать бесплатные материалы</h3>
         <p>Введите email, чтобы получить чек-лист и программу тренинга</p>
         <div class="modal-checkbox-group">
@@ -9,17 +8,17 @@
             <label><input type="checkbox" id="trainingCheck" value="training" checked> 📘 Программа тренинга «Продай себя дорого» (PDF)</label>
         </div>
         <input type="email" id="checklistEmail" placeholder="Ваш email" required>
-        <button id="downloadBothBtn" class="btn-primary">📧 Открыть выбранное</button>
+        <button id="downloadBothBtn" class="btn-primary">📧 Скачать выбранное</button>
         <div class="button-group">
-            <button class="btn-secondary" id="singleChecklistBtn">📄 Только чек-лист</button>
-            <button class="btn-secondary" id="singleTrainingBtn">📘 Только программу</button>
+            <a href="#" class="btn-secondary" id="singleChecklistBtn">📄 Только чек-лист</a>
+            <a href="#" class="btn-secondary" id="singleTrainingBtn">📘 Только программу</a>
         </div>
+        <button id="closeModalBtn">Закрыть</button>
     </div>
 </div>
 
 <div id="privacyModal" class="modal">
     <div class="modal-content">
-        <span class="modal-close" id="closePrivacyModalBtn">&times;</span>
         <h3>Политика конфиденциальности</h3>
         <p>Мы собираем только те данные, которые вы добровольно предоставляете (имя, email, телефон). Данные используются для связи и предоставления услуг. Мы не передаём данные третьим лицам.</p>
         <button id="closePrivacyModal" class="btn-primary">Закрыть</button>
@@ -37,7 +36,7 @@
         return userId;
     }
 
-    // ---------- Отправка в Google Sheets ----------
+    // ---------- Отправка в Google Sheets (новый URL) ----------
     function sendDataToSheet(data) {
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUUIy_I9Z0qXBQmYMQmwCpkjVAdGemxl6k9DZiVF9djhI_w7Th7fMGaCbVNI-EyDnnBQ/exec';
         const userId = getOrCreateUserId();
@@ -53,15 +52,23 @@
         .catch(error => console.error('❌ Ошибка:', error));
     }
 
-    // ---------- Уведомление (toast) ----------
+    // ---------- Красивое уведомление (toast) ----------
     function showToast(message, duration = 3000) {
-        let toast = document.querySelector('.custom-toast');
-        if (toast) toast.remove();
-
-        toast = document.createElement('div');
-        toast.className = 'custom-toast';
+        const toast = document.createElement('div');
         toast.textContent = message;
-        toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:12px 24px;border-radius:40px;font-size:1rem;z-index:9999;font-family:Inter,sans-serif;backdrop-filter:blur(8px);box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = 'rgba(0,0,0,0.85)';
+        toast.style.color = '#fff';
+        toast.style.padding = '12px 24px';
+        toast.style.borderRadius = '40px';
+        toast.style.fontSize = '1rem';
+        toast.style.zIndex = '9999';
+        toast.style.fontFamily = 'Inter, sans-serif';
+        toast.style.backdropFilter = 'blur(8px)';
+        toast.style.boxShadow = '0 4px 12px rgba(0,0,0,0.2)';
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), duration);
     }
@@ -98,42 +105,34 @@
     // ---------- КАЛЬКУЛЯТОР ----------
     let cart = [];
     function renderCart() {
-        requestAnimationFrame(() => {
-            let total = 0, qty = 0;
-            cart.forEach(i => { total += i.price * i.qty; qty += i.qty; });
-            let final = total;
-            if (qty >= 2) final = total * 0.95;
+        let total = 0, qty = 0;
+        cart.forEach(i => { total += i.price * i.qty; qty += i.qty; });
+        let final = total;
+        if (qty >= 2) final = total * 0.95;
+        document.getElementById('totalPrice').innerText = Math.round(final).toLocaleString() + ' ₽';
+        let discountDiv = document.getElementById('discountInfo');
+        if (qty >= 2) discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — вы экономите ${Math.round(total*0.05)} ₽`;
+        else discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
 
-            const totalEl = document.getElementById('totalPrice');
-            if (totalEl) totalEl.innerText = Math.round(final).toLocaleString() + ' ₽';
+        const businessDiv = document.getElementById('business-list');
+        const individualDiv = document.getElementById('individual-list');
+        const corporateDiv = document.getElementById('corporate-list');
+        const groupDiv = document.getElementById('group-list');
 
-            const discountDiv = document.getElementById('discountInfo');
-            if (discountDiv) {
-                if (qty >= 2) discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — вы экономите ${Math.round(total*0.05)} ₽`;
-                else discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
-            }
+        if (businessDiv) businessDiv.innerHTML = '';
+        if (individualDiv) individualDiv.innerHTML = '';
+        if (corporateDiv) corporateDiv.innerHTML = '';
+        if (groupDiv) groupDiv.innerHTML = '';
 
-            const businessDiv = document.getElementById('business-list');
-            const individualDiv = document.getElementById('individual-list');
-            const corporateDiv = document.getElementById('corporate-list');
-            const groupDiv = document.getElementById('group-list');
-
-            if (businessDiv) businessDiv.innerHTML = '';
-            if (individualDiv) individualDiv.innerHTML = '';
-            if (corporateDiv) corporateDiv.innerHTML = '';
-            if (groupDiv) groupDiv.innerHTML = '';
-
-            cart.forEach((item, idx) => {
-                const div = document.createElement('div'); div.className = 'calc-item';
-                div.innerHTML = `<div>${item.name} × ${item.qty}</div><div>${(item.price * item.qty).toLocaleString()} ₽ <button class="remove-item" data-idx="${idx}" style="background:none;border:none;color:red;cursor:pointer;font-size:1.2rem;">✖</button></div>`;
-                if (item.cat === 'business' && businessDiv) businessDiv.appendChild(div);
-                else if (item.cat === 'individual' && individualDiv) individualDiv.appendChild(div);
-                else if (item.cat === 'corporate' && corporateDiv) corporateDiv.appendChild(div);
-                else if (item.cat === 'group' && groupDiv) groupDiv.appendChild(div);
-            });
-
-            document.querySelectorAll('.remove-item').forEach(btn => btn.addEventListener('click', (e) => { cart.splice(parseInt(btn.dataset.idx), 1); renderCart(); }));
+        cart.forEach((item, idx) => {
+            const div = document.createElement('div'); div.className = 'calc-item';
+            div.innerHTML = `<div>${item.name} × ${item.qty}</div><div>${(item.price * item.qty).toLocaleString()} ₽ <button class="remove-item" data-idx="${idx}">✖</button></div>`;
+            if (item.cat === 'business' && businessDiv) businessDiv.appendChild(div);
+            else if (item.cat === 'individual' && individualDiv) individualDiv.appendChild(div);
+            else if (item.cat === 'corporate' && corporateDiv) corporateDiv.appendChild(div);
+            else if (item.cat === 'group' && groupDiv) groupDiv.appendChild(div);
         });
+        document.querySelectorAll('.remove-item').forEach(btn => btn.addEventListener('click', (e) => { cart.splice(parseInt(btn.dataset.idx), 1); renderCart(); }));
     }
 
     function add(cat, selectId, qtyId) {
@@ -170,7 +169,7 @@
         if (activePane) activePane.classList.add('active');
     }));
 
-    // ---------- КВИЗ ----------
+    // ---------- КВИЗ С ДВУМЯ ВАРИАНТАМИ (адаптивный) ----------
     const quizQuestions = [
         { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
         { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"] },
@@ -214,9 +213,6 @@
     }
 
     function renderQuiz() {
-        const quizContainer = document.getElementById('quizContainer');
-        if (!quizContainer) return;
-
         if (quizState === 'questions') {
             let html = '';
             quizQuestions.forEach((q, idx) => {
@@ -225,8 +221,8 @@
                 html += `</div></div>`;
             });
             html += `<button id="submitQuizBtn" class="btn-primary">Показать варианты</button>`;
-            quizContainer.innerHTML = html;
-
+            const quizContainer = document.getElementById('quizContainer');
+            if (quizContainer) quizContainer.innerHTML = html;
             document.querySelectorAll('.quiz-option').forEach(el => {
                 el.addEventListener('click', (e) => {
                     const parent = el.parentElement;
@@ -235,7 +231,6 @@
                     renderQuiz();
                 });
             });
-
             const submitBtn = document.getElementById('submitQuizBtn');
             if (submitBtn) {
                 submitBtn.addEventListener('click', () => {
@@ -264,8 +259,8 @@
                     </div>
                 </div>
             `;
-            quizContainer.innerHTML = html;
-
+            const quizContainer = document.getElementById('quizContainer');
+            if (quizContainer) quizContainer.innerHTML = html;
             document.querySelectorAll('.choose-option').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const chosen = e.target.getAttribute('data-choice');
@@ -296,7 +291,7 @@
     }
     renderQuiz();
 
-    // ---------- Модалка материалов ----------
+    // ---------- Модалка материалов (сохранение email + скачивание) ----------
     const modal = document.getElementById('checklistModal');
     const openModal = document.getElementById('openChecklistModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -304,7 +299,16 @@
     const singleChecklistBtn = document.getElementById('singleChecklistBtn');
     const singleTrainingBtn = document.getElementById('singleTrainingBtn');
 
-    function saveEmailAndOpen(email, checklist, training) {
+    function downloadFile(url) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function saveEmailAndDownload(email, checklist, training) {
         if (!email || !email.includes('@')) {
             alert('Введите корректный email');
             return false;
@@ -318,9 +322,9 @@
         };
         sendDataToSheet(formData);
 
-        if (checklist) window.open('assets/docs/checklist.pdf', '_blank');
-        if (training) window.open('assets/docs/training_program.pdf', '_blank');
-        showToast('✅ Email сохранён. Файлы открываются в новой вкладке.', 3000);
+        if (checklist) downloadFile('assets/docs/checklist.pdf');
+        if (training) downloadFile('assets/docs/training_program.pdf');
+        showToast('✅ Материалы скачиваются! Email сохранён.', 3000);
         return true;
     }
 
@@ -331,23 +335,25 @@
             const email = document.getElementById('checklistEmail').value;
             const checklist = document.getElementById('checklistCheck').checked;
             const training = document.getElementById('trainingCheck').checked;
-            if (saveEmailAndOpen(email, checklist, training)) {
+            if (saveEmailAndDownload(email, checklist, training)) {
                 if (modal) modal.style.display = 'none';
             }
         };
     }
     if (singleChecklistBtn) {
-        singleChecklistBtn.onclick = () => {
+        singleChecklistBtn.onclick = (e) => {
+            e.preventDefault();
             const email = document.getElementById('checklistEmail').value;
-            if (saveEmailAndOpen(email, true, false)) {
+            if (saveEmailAndDownload(email, true, false)) {
                 if (modal) modal.style.display = 'none';
             }
         };
     }
     if (singleTrainingBtn) {
-        singleTrainingBtn.onclick = () => {
+        singleTrainingBtn.onclick = (e) => {
+            e.preventDefault();
             const email = document.getElementById('checklistEmail').value;
-            if (saveEmailAndOpen(email, false, true)) {
+            if (saveEmailAndDownload(email, false, true)) {
                 if (modal) modal.style.display = 'none';
             }
         };
@@ -357,11 +363,8 @@
     // ---------- Политика конфиденциальности ----------
     const privacyModal = document.getElementById('privacyModal');
     const privacyLink = document.getElementById('privacyLink');
-    const closePrivacyBtn = document.getElementById('closePrivacyModalBtn');
     const closePrivacy = document.getElementById('closePrivacyModal');
-
     if (privacyLink) privacyLink.onclick = (e) => { e.preventDefault(); if (privacyModal) privacyModal.style.display = 'flex'; };
-    if (closePrivacyBtn) closePrivacyBtn.onclick = () => { if (privacyModal) privacyModal.style.display = 'none'; };
     if (closePrivacy) closePrivacy.onclick = () => { if (privacyModal) privacyModal.style.display = 'none'; };
     window.onclick = (e) => { if (e.target === privacyModal) privacyModal.style.display = 'none'; };
 
@@ -370,7 +373,7 @@
     const obs = new IntersectionObserver((entries) => { entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } }); }, { threshold: 0.15 });
     faders.forEach(el => { el.classList.add('fade-up'); obs.observe(el); });
 
-    // ---------- ФОРМА ОБРАТНОГО ЗВОНКА (с debounce) ----------
+    // ---------- ФОРМА ОБРАТНОГО ЗВОНКА ----------
     const phoneInput = document.getElementById('callbackPhone');
     if (phoneInput) {
         phoneInput.addEventListener('input', function(e) {
@@ -380,36 +383,25 @@
             else this.value = '';
         });
     }
-
     const callbackForm = document.getElementById('callbackForm');
-    let isSubmitting = false;
-
     if (callbackForm) {
         callbackForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            if (isSubmitting) return;
-            isSubmitting = true;
-
             const name = document.getElementById('callbackName').value.trim();
             let phoneField = document.getElementById('callbackPhone').value.trim();
             const comment = document.getElementById('callbackComment').value.trim() || 'Не указано';
-
             if (!name || !phoneField) {
                 alert('Пожалуйста, заполните имя и номер телефона.');
-                isSubmitting = false;
                 return;
             }
-
             let digits = phoneField.replace(/\D/g, '');
+            if (digits.length === 0) { alert('Введите номер телефона'); return; }
             if (digits.startsWith('8')) digits = '7' + digits.slice(1);
             if (!digits.startsWith('7')) digits = '7' + digits;
-
             if (digits.length !== 11) {
-                alert('Номер должен содержать 10 цифр после +7. Пример: 9123456789');
-                isSubmitting = false;
+                alert('Номер должен содержать 10 цифр после кода страны. Пример: 9123456789');
                 return;
             }
-
             const formattedForDisplay = '+7 ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
             const formData = {
                 formType: 'Обратный звонок',
@@ -421,8 +413,6 @@
             sendDataToSheet(formData);
             showToast(`✅ Спасибо, ${name}! Мы перезвоним вам на ${formattedForDisplay}`, 4000);
             callbackForm.reset();
-
-            setTimeout(() => { isSubmitting = false; }, 2000);
         });
     }
 
@@ -440,116 +430,6 @@
             });
         });
     });
-
-        // ---------- Аккордеон для FAQ ----------
-    document.querySelectorAll('.faq-question').forEach(question => {
-        question.addEventListener('click', () => {
-            const item = question.parentElement;
-            item.classList.toggle('open');
-        });
-    });
-
-    // ---------- Аккордеон для деталей услуг ----------
-    document.querySelectorAll('.service-details-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-target');
-            const details = document.getElementById(targetId);
-            if (details) {
-                details.classList.toggle('open');
-                btn.textContent = details.classList.contains('open') ? 'Скрыть детали' : 'Подробнее';
-            }
-        });
-    });
-        // ---------- Cookie-баннер ----------
-    const cookieConsent = document.getElementById('cookieConsent');
-    const acceptBtn = document.getElementById('acceptCookies');
-    const cookiePrivacy = document.getElementById('cookiePrivacyLink');
-
-    // Проверяем, соглашался ли пользователь ранее
-    if (!localStorage.getItem('cookieConsentAccepted')) {
-        setTimeout(() => {
-            cookieConsent.classList.add('show');
-        }, 1000);
-    }
-
-    if (acceptBtn) {
-        acceptBtn.addEventListener('click', () => {
-            localStorage.setItem('cookieConsentAccepted', 'true');
-            cookieConsent.classList.remove('show');
-        });
-    }
-
-    if (cookiePrivacy) {
-        cookiePrivacy.addEventListener('click', (e) => {
-            e.preventDefault();
-            const privacyModal = document.getElementById('privacyModal');
-            if (privacyModal) privacyModal.style.display = 'flex';
-        });
-    }
-
-        // ---------- Умная навигация (скрытие на мобильных при скролле вниз) ----------
-    const navbar = document.getElementById('navbar');
-    if (navbar) {
-        let lastScrollY = window.scrollY;
-        let isMobile = window.innerWidth <= 768;
-
-        function handleScroll() {
-            // Проверяем мобильное устройство при каждом событии (на случай поворота экрана)
-            isMobile = window.innerWidth <= 768;
-            if (!isMobile) {
-                // На десктопе не скрываем
-                navbar.classList.remove('hide');
-                return;
-            }
-
-            const currentScrollY = window.scrollY;
-            if (currentScrollY > lastScrollY && currentScrollY > 80) {
-                // Прокрутка вниз – скрываем
-                navbar.classList.add('hide');
-            } else if (currentScrollY < lastScrollY) {
-                // Прокрутка вверх – показываем
-                navbar.classList.remove('hide');
-            }
-            lastScrollY = currentScrollY;
-        }
-
-        window.addEventListener('scroll', handleScroll);
-        window.addEventListener('resize', () => {
-            isMobile = window.innerWidth <= 768;
-            if (!isMobile) {
-                navbar.classList.remove('hide');
-            }
-        });
-    }
-
-    // ---------- Подсветка активной ссылки в навигации ----------
-    function setActiveNavLink() {
-        const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-        const links = document.querySelectorAll('.nav-links a');
-        links.forEach(link => {
-            const href = link.getAttribute('href');
-            if (href === currentPath || (currentPath === 'index.html' && href === 'index.html')) {
-                link.classList.add('active');
-            } else if (currentPath !== 'index.html' && href === 'index.html') {
-                link.classList.remove('active');
-            } else if (href === currentPath) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
-    }
-    setActiveNavLink();
-    // ---------- Плавная прокрутка для якорей с других страниц ----------
-    if (window.location.hash) {
-        const hash = window.location.hash;
-        const targetElement = document.querySelector(hash);
-        if (targetElement) {
-            setTimeout(() => {
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 500);
-        }
-    }
 </script>
 </body>
 </html>

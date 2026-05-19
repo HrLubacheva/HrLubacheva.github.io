@@ -548,88 +548,94 @@ section {
 }
 
 .modal-content {
-    position: relative;
     background: var(--surface);
-    max-width: 500px;
+    max-width: 800px;
     width: 90%;
-    padding: 40px 32px;
+    padding: 48px 40px;
     border-radius: 36px;
     text-align: center;
     box-shadow: 0 30px 60px rgba(0,0,0,0.3);
 }
 
-.modal-close {
-    position: absolute;
-    top: 16px;
-    right: 24px;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    color: var(--text-muted);
-    transition: color 0.2s ease;
-}
-
-.modal-close:hover {
-    color: var(--primary);
-}
-
 .modal-content h3 {
-    font-size: 1.8rem;
+    font-size: 2rem;
     margin-bottom: 12px;
 }
 
 .modal-content p {
-    margin-bottom: 20px;
+    font-size: 1.1rem;
+    margin-bottom: 28px;
     color: var(--text-muted);
 }
 
 .modal-checkbox-group {
     text-align: left;
-    margin: 16px 0;
+    margin: 20px 0;
 }
 
 .modal-checkbox-group label {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
     display: flex;
     align-items: center;
-    margin-bottom: 12px;
     cursor: pointer;
 }
 
-.modal-checkbox-group input {
-    width: 20px;
-    height: 20px;
-    margin-right: 12px;
+.modal-checkbox-group input[type="checkbox"] {
+    width: 24px;
+    height: 24px;
+    margin-right: 14px;
+    cursor: pointer;
     accent-color: var(--primary);
 }
 
 .modal-content input[type="email"] {
     width: 100%;
-    padding: 14px 20px;
-    font-size: 1rem;
+    padding: 18px 24px;
+    font-size: 1.2rem;
     border-radius: 60px;
-    border: 1px solid var(--border);
+    border: 2px solid var(--border);
     background: var(--surface-soft);
-    margin-bottom: 20px;
-    transition: border-color 0.2s ease;
+    margin-bottom: 28px;
+    transition: all 0.2s ease;
 }
 
 .modal-content input[type="email"]:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 4px rgba(45,106,159,0.2);
+    background: var(--surface);
 }
 
 .modal-content .btn-primary {
     width: 100%;
     justify-content: center;
-    margin-bottom: 16px;
+    margin-bottom: 24px;
+    font-size: 1.1rem;
+    padding: 16px;
 }
 
-.button-group {
+.modal-content .button-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
     justify-content: center;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.modal-content .btn-secondary {
+    padding: 12px 24px;
+    font-size: 1rem;
+}
+
+#closeModalBtn {
+    margin-top: 28px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: underline;
 }
 
 /* Форма обратного звонка */
@@ -822,455 +828,27 @@ footer {
     .modal-content h3 {
         font-size: 1.6rem;
     }
+    .modal-content input[type="email"] {
+        padding: 14px 18px;
+        font-size: 1rem;
+    }
+    .modal-content .btn-primary {
+        padding: 14px;
+    }
+    .modal-content .btn-secondary {
+        width: 100%;
+    }
+
+
+}
+
+/* Адаптация квиза на мобильных */
+@media (max-width: 700px) {
     .quiz-card > div[style*="display: flex"] {
         flex-direction: column !important;
         gap: 20px !important;
     }
     .quiz-card .choose-option {
         width: 100%;
-    }
-}
-
-/* Фото клиентов и преимуществ */
-.hero-clients-photo img,
-.benefits-grid + div img {
-    display: block;
-    margin: 0 auto;
-    object-fit: cover;
-}
-
-@media (max-width: 768px) {
-    .hero-clients-photo img,
-    .benefits-grid + div img {
-        max-width: 100%;
-        height: auto;
-    }
-}
-
-
-/* FAQ аккордеон */
-.faq-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 20px;
-}
-.faq-item {
-    background: var(--surface-soft);
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid var(--border);
-}
-.faq-question {
-    padding: 18px 24px;
-    font-weight: 600;
-    font-size: 1.05rem;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--surface-soft);
-    transition: background 0.2s;
-}
-.faq-question:hover {
-    background: var(--surface-strong);
-}
-.faq-question::after {
-    content: "+";
-    font-size: 1.4rem;
-    font-weight: 400;
-    transition: transform 0.2s;
-}
-.faq-item.open .faq-question::after {
-    content: "−";
-}
-.faq-answer {
-    padding: 0 24px;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease, padding 0.3s ease;
-    background: var(--surface);
-    color: var(--text-muted);
-    line-height: 1.5;
-}
-.faq-item.open .faq-answer {
-    padding: 0 24px 20px 24px;
-    max-height: 300px;
-}
-
-/* Подарочный сертификат */
-.gift-card {
-    background: linear-gradient(135deg, var(--surface-soft), var(--surface));
-    border-radius: 48px;
-    padding: 48px 32px;
-    text-align: center;
-    border: 1px solid rgba(45,106,159,0.15);
-}
-.gift-card .section-title {
-    margin-bottom: 16px;
-}
-
-/* Кейсы */
-.cases-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    margin-top: 20px;
-}
-.case-card {
-    flex: 1;
-    min-width: 260px;
-    background: var(--surface);
-    border-radius: 28px;
-    padding: 32px;
-    box-shadow: var(--shadow);
-    border: 1px solid rgba(226,232,240,0.85);
-    transition: transform 0.2s;
-}
-.case-card:hover {
-    transform: translateY(-4px);
-}
-.case-quote {
-    font-size: 4rem;
-    line-height: 1;
-    color: var(--primary);
-    opacity: 0.4;
-    margin-bottom: 8px;
-}
-.case-text {
-    font-size: 0.95rem;
-    margin-bottom: 20px;
-    color: var(--text-muted);
-    line-height: 1.5;
-}
-.case-result {
-    font-size: 0.9rem;
-    color: var(--text);
-    border-top: 1px solid var(--border);
-    padding-top: 16px;
-    margin-top: 8px;
-}
-
-/* Детали услуг (аккордеон) */
-.service-details-btn {
-    margin-top: 16px;
-    background: none;
-    border: 1px solid var(--border);
-    padding: 8px 16px;
-    border-radius: 40px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: 0.2s;
-    color: var(--primary);
-    font-weight: 500;
-}
-.service-details-btn:hover {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-}
-.service-details {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    margin-top: 12px;
-    background: var(--surface-soft);
-    border-radius: 20px;
-    padding: 0 16px;
-}
-.service-details.open {
-    max-height: 300px;
-    padding: 16px;
-}
-.service-details ul {
-    margin: 0;
-    padding-left: 20px;
-}
-.service-details li {
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    color: var(--text-muted);
-}
-
-/* Cookie-баннер */
-.cookie-consent {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(18, 38, 63, 0.95);
-    backdrop-filter: blur(8px);
-    color: white;
-    padding: 16px 20px;
-    z-index: 10000;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    transform: translateY(100%);
-    transition: transform 0.4s ease;
-}
-
-.cookie-consent.show {
-    transform: translateY(0);
-}
-
-.cookie-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-}
-
-.cookie-content p {
-    margin: 0;
-    font-size: 0.9rem;
-    flex: 2;
-    color: #f0f4f8;
-}
-
-.cookie-buttons {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.btn-small {
-    padding: 8px 20px;
-    font-size: 0.85rem;
-}
-
-.btn-small.btn-primary {
-    background: var(--primary);
-}
-
-.btn-small.btn-primary:hover {
-    background: var(--primary-strong);
-}
-
-.btn-small.btn-secondary {
-    background: transparent;
-    border-color: rgba(255,255,255,0.3);
-    color: white;
-}
-
-.btn-small.btn-secondary:hover {
-    background: rgba(255,255,255,0.1);
-    border-color: rgba(255,255,255,0.5);
-}
-
-@media (max-width: 700px) {
-    .cookie-content {
-        flex-direction: column;
-        text-align: center;
-    }
-    .cookie-buttons {
-        justify-content: center;
-    }
-}
-/* Страница блога */
-.section-subtitle {
-    text-align: center;
-    font-size: 1.1rem;
-    color: var(--text-muted);
-    margin-bottom: 32px;
-}
-
-.blog-filter {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin-bottom: 40px;
-}
-
-.filter-btn {
-    background: var(--surface-soft);
-    border: 1px solid var(--border);
-    padding: 8px 20px;
-    border-radius: 40px;
-    cursor: pointer;
-    transition: 0.2s;
-    font-size: 0.9rem;
-}
-
-.filter-btn.active,
-.filter-btn:hover {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-}
-
-.blog-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-}
-
-.blog-card {
-    background: var(--surface);
-    border-radius: 28px;
-    padding: 28px;
-    width: calc(33% - 30px);
-    min-width: 260px;
-    box-shadow: var(--shadow);
-    transition: transform 0.2s;
-    border: 1px solid rgba(226,232,240,0.85);
-}
-
-.blog-card:hover {
-    transform: translateY(-4px);
-}
-
-.blog-tag {
-    display: inline-block;
-    background: var(--surface-soft);
-    padding: 4px 12px;
-    border-radius: 40px;
-    font-size: 0.75rem;
-    margin-bottom: 16px;
-    color: var(--primary);
-}
-
-.blog-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 12px;
-}
-
-.blog-card p {
-    color: var(--text-muted);
-    margin-bottom: 20px;
-    line-height: 1.5;
-}
-
-.blog-link {
-    color: var(--primary);
-    font-weight: 600;
-    text-decoration: none;
-}
-
-/* Страница "Обо мне" */
-.about-header {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-    align-items: center;
-    margin-bottom: 40px;
-}
-
-.about-photo {
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: var(--shadow);
-}
-
-.about-text {
-    flex: 1;
-}
-
-.certificates-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-    margin-top: 40px;
-}
-
-.cert-card {
-    background: var(--surface-soft);
-    border-radius: 24px;
-    padding: 28px;
-    text-align: center;
-    width: calc(25% - 30px);
-    min-width: 200px;
-    border: 1px solid var(--border);
-}
-
-.cert-icon {
-    font-size: 3rem;
-    margin-bottom: 16px;
-}
-
-.cert-card h4 {
-    margin-bottom: 8px;
-}
-
-.cert-card p {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-}
-
-/* Страница клиентов */
-.clients-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    justify-content: center;
-    margin: 40px 0;
-}
-
-.client-logo {
-    width: calc(33% - 30px);
-    min-width: 180px;
-    background: var(--surface-soft);
-    border-radius: 24px;
-    padding: 20px;
-    text-align: center;
-    transition: transform 0.2s;
-}
-
-.logo-placeholder {
-    font-size: 1rem;
-    color: var(--primary);
-    font-weight: 500;
-}
-
-.client-logo:hover {
-    transform: scale(1.02);
-}
-
-.clients-note {
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 20px;
-}
-
-@media (max-width: 768px) {
-    .blog-card,
-    .cert-card,
-    .client-logo {
-        width: calc(50% - 30px);
-    }
-}
-
-@media (max-width: 480px) {
-    .blog-card,
-    .cert-card,
-    .client-logo {
-        width: 100%;
-    }
-    .about-photo {
-        width: 180px;
-        height: 180px;
-        margin: 0 auto;
-        display: block;
-    }
-    .about-header {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-
-/* Умная навигация – скрытие на мобильных при скролле вниз */
-@media (max-width: 768px) {
-    .navbar {
-        transition: transform 0.3s ease-in-out;
-    }
-    .navbar.hide {
-        transform: translateY(-100%);
     }
 }

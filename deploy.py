@@ -5,6 +5,8 @@ from datetime import datetime
 from build import build_index
 
 def run_cmd(cmd, check=True):
+    """Выполняет команду в командной строке.
+       Если check=True и команда завершилась с ошибкой, завершает скрипт."""
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if check and result.returncode != 0:
         print(f"Ошибка при выполнении: {cmd}\n{result.stderr}")
@@ -18,6 +20,7 @@ def main():
     print("2. Добавляем все изменения в Git...")
     run_cmd("git add .")
 
+    # Проверяем, есть ли изменения для коммита
     status = run_cmd("git status --porcelain", check=False)
     if not status.stdout.strip():
         print("Нет изменений для коммита. Возможно, сайт уже актуален.")
@@ -27,6 +30,7 @@ def main():
         run_cmd(f'git commit -m "{commit_msg}"')
 
     print("4. Скачиваем свежие изменения из удалённого репозитория...")
+    # Делаем pull с автоматическим слиянием (без конфликтов, если они простые)
     pull_result = run_cmd("git pull --no-edit", check=False)
     if pull_result.returncode != 0:
         print("⚠️  Не удалось выполнить git pull. Проверьте соединение или разрешите конфликты вручную.")
