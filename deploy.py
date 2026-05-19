@@ -29,7 +29,10 @@ def main():
         print(f"3. Создаём коммит: {commit_msg}")
         run_cmd(f'git commit -m "{commit_msg}"')
 
-    print("4. Отправляем изменения на GitHub...")
+    print("4. Скачиваем свежие изменения из удалённого репозитория...")
+    run_cmd("git pull --no-edit", check=False)
+
+    print("5. Отправляем изменения на GitHub...")
     run_cmd("git push")
 
     print("✅ Готово! Сайт обновлён. Через 1-2 минуты изменения появятся на https://hrlubacheva.github.io/")
