@@ -830,3 +830,19 @@ footer {
         width: 100%;
     }
 }
+
+/* Фото клиентов и преимуществ */
+.hero-clients-photo img,
+.benefits-grid + div img {
+    display: block;
+    margin: 0 auto;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .hero-clients-photo img,
+    .benefits-grid + div img {
+        max-width: 100%;
+        height: auto;
+    }
+}
