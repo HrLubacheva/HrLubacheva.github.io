@@ -440,6 +440,26 @@
             });
         });
     });
+
+        // ---------- Аккордеон для FAQ ----------
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.parentElement;
+            item.classList.toggle('open');
+        });
+    });
+
+    // ---------- Аккордеон для деталей услуг ----------
+    document.querySelectorAll('.service-details-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const details = document.getElementById(targetId);
+            if (details) {
+                details.classList.toggle('open');
+                btn.textContent = details.classList.contains('open') ? 'Скрыть детали' : 'Подробнее';
+            }
+        });
+    });
 </script>
 </body>
 </html>

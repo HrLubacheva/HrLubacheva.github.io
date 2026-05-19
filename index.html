@@ -123,20 +123,57 @@
             <div class="service-card">
                 <h3>🏢 HR для бизнеса</h3>
                 <p>Подбор персонала (Junior → C-level), онбординг, оценка, аутсорсинг подбора, кадровый аудит.</p>
+                <button class="service-details-btn" data-target="business-details">Подробнее</button>
+                <div id="business-details" class="service-details">
+                    <ul>
+                        <li>Подбор специалистов и руководителей</li>
+                        <li>Адаптация и онбординг</li>
+                        <li>Аудит HR-процессов</li>
+                        <li>Разработка УТП компании как работодателя</li>
+                    </ul>
+                </div>
             </div>
             <div class="service-card">
                 <h3>🧑 Карьерный консалтинг</h3>
                 <p>Карьерная стратегия, упаковка резюме, подготовка к интервью и переговоры о зарплате. Помогаю заявить о ценности и получить достойный оффер.</p>
                 <p><strong>➕</strong> Изучаем АТС и ботов. Стратегия обхода ИИ-фильтров.</p>
                 <a href="assets/docs/training_program.pdf" class="btn-secondary" target="_blank">📘 Открыть программу тренинга (PDF)</a>
+                <button class="service-details-btn" data-target="career-details">Подробнее</button>
+                <div id="career-details" class="service-details">
+                    <ul>
+                        <li>Карьерная стратегия под ваш запрос</li>
+                        <li>Упаковка резюме и LinkedIn-профиля</li>
+                        <li>Подготовка к собеседованию (техника STAR)</li>
+                        <li>Переговоры о зарплате и условиях</li>
+                        <li>Сопровождение до оффера</li>
+                    </ul>
+                </div>
             </div>
             <div class="service-card">
                 <h3>🎓 Бизнес-тренинг, обучение персонала и коучинг</h3>
                 <p>Корпоративные тренинги (до 25 чел.), обучение сотрудников, мастер-классы, стратегические сессии, индивидуальный коучинг топ-менеджеров.</p>
+                <button class="service-details-btn" data-target="training-details">Подробнее</button>
+                <div id="training-details" class="service-details">
+                    <ul>
+                        <li>Тренинги по продажам, переговорам, управлению</li>
+                        <li>Обучение персонала под задачи бизнеса</li>
+                        <li>Коучинг первых лиц и руководителей</li>
+                        <li>Стратегические сессии для команд</li>
+                    </ul>
+                </div>
             </div>
             <div class="service-card">
                 <h3>🎯 Профориентация</h3>
                 <p>Для взрослых и подростков. Помогаю определиться с профессией, направлением развития, выбрать путь, который принесёт удовлетворение и доход.</p>
+                <button class="service-details-btn" data-target="prof-details">Подробнее</button>
+                <div id="prof-details" class="service-details">
+                    <ul>
+                        <li>Для кого: взрослые и подростки от 14 лет</li>
+                        <li>Что входит: 2 встречи, тесты, анализ рынка, итоговый отчёт с рекомендациями</li>
+                        <li>Результат: понимание «куда двигаться», список подходящих профессий, план обучения</li>
+                        <li>Также провожу профориентацию для взрослых с запросом «хочу сменить сферу»</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -172,6 +209,28 @@
         </div>
     </div>
 </section>
+<section id="cases">
+    <div class="container">
+        <h2 class="section-title">📌 Истории успеха</h2>
+        <div class="cases-grid">
+            <div class="case-card">
+                <div class="case-quote">“</div>
+                <p class="case-text">Иван, 32 года, из логистики в IT-менеджмент. Пришёл с запросом: «хочу больше денег и удалёнку». Мы сделали карьерную диагностику, переписали резюме под IT-сферу, отрепетировали интервью.</p>
+                <p class="case-result"><strong>Результат:</strong> оффер через 1.5 месяца, зарплата +70%.</p>
+            </div>
+            <div class="case-card">
+                <div class="case-quote">“</div>
+                <p class="case-text">Екатерина, 28 лет, бухгалтер → аналитик данных. Сомневалась, стоит ли менять профессию. После профориентации и 3 консультаций составила план обучения, переписала резюме и получила первую работу в аналитике.</p>
+                <p class="case-result"><strong>Результат:</strong> смена сферы за 4 месяца, доход вырос на 50%.</p>
+            </div>
+            <div class="case-card">
+                <div class="case-quote">“</div>
+                <p class="case-text">Дмитрий, 41 год, руководитель отдела → директор по развитию. Нужна была стратегия роста внутри компании. Мы проработали его сильные стороны, подготовили презентацию для собственников.</p>
+                <p class="case-result"><strong>Результат:</strong> повышение через 2 месяца, расширение зоны ответственности.</p>
+            </div>
+        </div>
+    </div>
+</section>
 <section class="section-dark" id="about">
     <div class="container">
         <h2 class="section-title">Почему мне доверяют компании и специалисты?</h2>
@@ -202,8 +261,12 @@
 <section id="process">
     <div class="container">
         <h2 class="section-title">Как мы будем работать вместе</h2>
-        <p style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">В процессе совместной работы вы обретаете ясность в своих целях и находите устойчивую опору в себе для их достижения.</p>
-
+        <p style="text-align: center; margin-bottom: 20px; font-size: 1.1rem;">В процессе совместной работы вы обретаете ясность в своих целях и находите устойчивую опору в себе для их достижения.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-bottom: 40px;">
+            <div style="background: var(--surface-soft); border-radius: 60px; padding: 8px 20px; font-size: 0.9rem;">✅ Перестанете сомневаться в своём пути</div>
+            <div style="background: var(--surface-soft); border-radius: 60px; padding: 8px 20px; font-size: 0.9rem;">✅ Получите чёткий план с конкретными сроками</div>
+            <div style="background: var(--surface-soft); border-radius: 60px; padding: 8px 20px; font-size: 0.9rem;">✅ Почувствуете уверенность перед любым собеседованием</div>
+        </div>
         <div class="process-row">
             <div class="process-col">
                 <h3 class="process-title">📌 Карьерная консультация</h3>
@@ -350,7 +413,7 @@
             <!-- Презентация – теперь просто ссылка, не iframe -->
             <div style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 30px;">
                 <h3 style="margin-bottom: 20px; font-size: 1.5rem;">Презентация тренинга «Продай себя дорого»</h3>
-                <a href="assets/docs/presentation.pdf" class="btn-primary" target="_blank">📽️ Открыть презентацию (PDF)</a>
+                <a href="assets/docs/training_program.pdf" class="btn-primary" target="_blank">📽️ Открыть презентацию (PDF)</a>
                 <p style="margin-top: 12px; font-size: 0.85rem; color: var(--text-muted);">Презентация откроется в новом окне – можно читать, скачать или распечатать.</p>
             </div>
         </div>
@@ -376,6 +439,55 @@
                     <img src="assets/images/img3.jpg" alt="Виктория Любачева" style="width: 100%; max-width: 280px; border-radius: 32px; box-shadow: var(--shadow);">
                     <p style="margin-top: 12px; font-size: 0.85rem; color: var(--text-muted);">Помогу найти лучшее решение</p>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="faq">
+    <div class="container">
+        <div class="quiz-card">
+            <h2 class="section-title">❓ Часто спрашивают</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-question">Чем вы отличаетесь от других HR-консультантов?</div>
+                    <div class="faq-answer">Я не просто даю советы, а работаю на результат: более 1500 человек нашли работу с моей помощью. Составляю пошаговый план с конкретными сроками и инструментами. Вы всегда знаете, что делать дальше.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Гарантируете ли вы трудоустройство?</div>
+                    <div class="faq-answer">Я даю инструменты, стратегию и поддержку. Но конечный результат зависит от вашей активности. Если вы будете выполнять шаги из плана — результат будет. Моя гарантия — качество моей работы и честность.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Как проходит консультация?</div>
+                    <div class="faq-answer">Онлайн в удобное время (Zoom, Telegram, WhatsApp). После записи вы получаете материалы и план действий. Всё конфиденциально.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Можно ли оплатить частями?</div>
+                    <div class="faq-answer">Да, по договорённости. Напишите в Telegram — подберём удобный вариант.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Что взять с собой на консультацию?</div>
+                    <div class="faq-answer">Текущее резюме (если есть), список ваших достижений и 2–3 вопроса, которые волнуют больше всего. Остальное сделаем вместе.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Как подготовиться к карьерной сессии?</div>
+                    <div class="faq-answer">Определите ключевые задачи, которые хотите решить, и желаемый результат. Если не знаете — помогу сформулировать на первой встрече.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="certificates">
+    <div class="container">
+        <div class="gift-card">
+            <div style="text-align: center;">
+                <span style="font-size: 3rem;">🎁</span>
+                <h2 class="section-title" style="margin-bottom: 16px;">Подарочный сертификат</h2>
+                <p style="max-width: 600px; margin: 0 auto 24px;">Осмысленный подарок для друзей и коллег. Сертификат можно привязать к любой из услуг — от профориентации до полного карьерного сопровождения.</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;">
+                    <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Заказать сертификат в Telegram</a>
+                    <a href="https://wa.me/79217916655" class="btn-secondary" target="_blank">Узнать детали в WhatsApp</a>
+                </div>
+                <p style="margin-top: 20px; font-size: 0.85rem; color: var(--text-muted);">Номинал — на ваш выбор. Сертификат высылается в электронном виде.</p>
             </div>
         </div>
     </div>
@@ -843,6 +955,26 @@
                 console.error('Ошибка копирования:', err);
                 alert('Не удалось скопировать. Попробуйте вручную.');
             });
+        });
+    });
+
+        // ---------- Аккордеон для FAQ ----------
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const item = question.parentElement;
+            item.classList.toggle('open');
+        });
+    });
+
+    // ---------- Аккордеон для деталей услуг ----------
+    document.querySelectorAll('.service-details-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const targetId = btn.getAttribute('data-target');
+            const details = document.getElementById(targetId);
+            if (details) {
+                details.classList.toggle('open');
+                btn.textContent = details.classList.contains('open') ? 'Скрыть детали' : 'Подробнее';
+            }
         });
     });
 </script>

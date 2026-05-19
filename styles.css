@@ -846,3 +846,148 @@ footer {
         height: auto;
     }
 }
+
+
+/* FAQ аккордеон */
+.faq-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+}
+.faq-item {
+    background: var(--surface-soft);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+}
+.faq-question {
+    padding: 18px 24px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--surface-soft);
+    transition: background 0.2s;
+}
+.faq-question:hover {
+    background: var(--surface-strong);
+}
+.faq-question::after {
+    content: "+";
+    font-size: 1.4rem;
+    font-weight: 400;
+    transition: transform 0.2s;
+}
+.faq-item.open .faq-question::after {
+    content: "−";
+}
+.faq-answer {
+    padding: 0 24px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background: var(--surface);
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+.faq-item.open .faq-answer {
+    padding: 0 24px 20px 24px;
+    max-height: 300px;
+}
+
+/* Подарочный сертификат */
+.gift-card {
+    background: linear-gradient(135deg, var(--surface-soft), var(--surface));
+    border-radius: 48px;
+    padding: 48px 32px;
+    text-align: center;
+    border: 1px solid rgba(45,106,159,0.15);
+}
+.gift-card .section-title {
+    margin-bottom: 16px;
+}
+
+/* Кейсы */
+.cases-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 20px;
+}
+.case-card {
+    flex: 1;
+    min-width: 260px;
+    background: var(--surface);
+    border-radius: 28px;
+    padding: 32px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(226,232,240,0.85);
+    transition: transform 0.2s;
+}
+.case-card:hover {
+    transform: translateY(-4px);
+}
+.case-quote {
+    font-size: 4rem;
+    line-height: 1;
+    color: var(--primary);
+    opacity: 0.4;
+    margin-bottom: 8px;
+}
+.case-text {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+.case-result {
+    font-size: 0.9rem;
+    color: var(--text);
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: 8px;
+}
+
+/* Детали услуг (аккордеон) */
+.service-details-btn {
+    margin-top: 16px;
+    background: none;
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
+    color: var(--primary);
+    font-weight: 500;
+}
+.service-details-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+.service-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    margin-top: 12px;
+    background: var(--surface-soft);
+    border-radius: 20px;
+    padding: 0 16px;
+}
+.service-details.open {
+    max-height: 300px;
+    padding: 16px;
+}
+.service-details ul {
+    margin: 0;
+    padding-left: 20px;
+}
+.service-details li {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}

@@ -19,12 +19,15 @@ def build_index():
         read_component("roles.html"),
         read_component("services.html"),
         read_component("stats.html"),
+        read_component("cases.html"),           # новый
         read_component("benefits.html"),
         read_component("process.html"),
         read_component("calculator.html"),
         read_component("quiz.html"),
         read_component("freebies.html"),
         read_component("calendar.html"),
+        read_component("faq.html"),             # новый
+        read_component("certificates.html"),    # новый
         read_component("contacts.html"),
         read_component("footer.html"),
         read_component("scripts.html")
