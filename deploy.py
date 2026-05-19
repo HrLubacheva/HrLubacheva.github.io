@@ -2,11 +2,9 @@
 import subprocess
 import sys
 from datetime import datetime
-from build import build_index, build_page, PAGES_DIR
+from build import build_index
 
 def run_cmd(cmd, check=True):
-    """Выполняет команду в командной строке.
-       Если check=True и команда завершилась с ошибкой, завершает скрипт."""
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
     if check and result.returncode != 0:
         print(f"Ошибка при выполнении: {cmd}\n{result.stderr}")
@@ -14,16 +12,12 @@ def run_cmd(cmd, check=True):
     return result
 
 def main():
-    print("1. Сборка всех страниц из компонентов...")
-    build_index()                                    # главная страница
-    build_page("blog.html", PAGES_DIR, "blog-content.html")
-    build_page("about.html", PAGES_DIR, "about-content.html")
-    build_page("clients.html", PAGES_DIR, "clients-content.html")
+    print("1. Сборка index.html из компонентов...")
+    build_index()
 
     print("2. Добавляем все изменения в Git...")
     run_cmd("git add .")
 
-    # Проверяем, есть ли изменения для коммита
     status = run_cmd("git status --porcelain", check=False)
     if not status.stdout.strip():
         print("Нет изменений для коммита. Возможно, сайт уже актуален.")
