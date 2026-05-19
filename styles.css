@@ -1264,3 +1264,13 @@ footer {
         text-align: center;
     }
 }
+
+/* Умная навигация – скрытие на мобильных при скролле вниз */
+@media (max-width: 768px) {
+    .navbar {
+        transition: transform 0.3s ease-in-out;
+    }
+    .navbar.hide {
+        transform: translateY(-100%);
+    }
+}

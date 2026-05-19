@@ -69,7 +69,7 @@
 
 </head>
 <body>
-<nav class="navbar">
+<nav class="navbar" id="navbar">
     <div class="container">
         <div class="nav-top">
             <a href="index.html" class="logo">
@@ -619,6 +619,60 @@
             if (privacyModal) privacyModal.style.display = 'flex';
         });
     }
+
+        // ---------- Умная навигация (скрытие на мобильных при скролле вниз) ----------
+    const navbar = document.getElementById('navbar');
+    if (navbar) {
+        let lastScrollY = window.scrollY;
+        let isMobile = window.innerWidth <= 768;
+
+        function handleScroll() {
+            // Проверяем мобильное устройство при каждом событии (на случай поворота экрана)
+            isMobile = window.innerWidth <= 768;
+            if (!isMobile) {
+                // На десктопе не скрываем
+                navbar.classList.remove('hide');
+                return;
+            }
+
+            const currentScrollY = window.scrollY;
+            if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                // Прокрутка вниз – скрываем
+                navbar.classList.add('hide');
+            } else if (currentScrollY < lastScrollY) {
+                // Прокрутка вверх – показываем
+                navbar.classList.remove('hide');
+            }
+            lastScrollY = currentScrollY;
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('resize', () => {
+            isMobile = window.innerWidth <= 768;
+            if (!isMobile) {
+                navbar.classList.remove('hide');
+            }
+        });
+    }
+
+    // ---------- Подсветка активной ссылки в навигации ----------
+    function setActiveNavLink() {
+        const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+        const links = document.querySelectorAll('.nav-links a');
+        links.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === currentPath || (currentPath === 'index.html' && href === 'index.html')) {
+                link.classList.add('active');
+            } else if (currentPath !== 'index.html' && href === 'index.html') {
+                link.classList.remove('active');
+            } else if (href === currentPath) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    }
+    setActiveNavLink();
 
 </script>
 </body>
