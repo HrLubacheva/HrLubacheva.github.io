@@ -863,3 +863,119 @@ section[id] {
         scroll-margin-top: 120px;
     }
 }
+/* Пунктирная граница для редактируемых элементов в режиме редактирования */
+.edit-mode-active h1,
+.edit-mode-active h2,
+.edit-mode-active h3,
+.edit-mode-active p,
+.edit-mode-active .hero-subtitle,
+.edit-mode-active .hero-text,
+.edit-mode-active .small-note,
+.edit-mode-active .contact-line,
+.edit-mode-active .stat-label,
+.edit-mode-active .stat-number,
+.edit-mode-active .benefit-card p,
+.edit-mode-active .role-card p,
+.edit-mode-active .service-card p,
+.edit-mode-active .process-card p,
+.edit-mode-active img,
+.edit-mode-active .service-card,
+.edit-mode-active .role-card,
+.edit-mode-active .benefit-card,
+.edit-mode-active .process-card,
+.edit-mode-active .calc-item,
+.edit-mode-active .total-price {
+    outline: 1px dashed var(--primary);
+    outline-offset: 2px;
+    cursor: pointer;
+    transition: outline 0.1s ease;
+}
+
+.edit-mode-active img:hover,
+.edit-mode-active .service-card:hover,
+.edit-mode-active .role-card:hover {
+    outline-width: 2px;
+}
+
+/* Пунктирные рамки для всех контейнеров в режиме редактирования */
+.edit-mode-active .container,
+.edit-mode-active section,
+.edit-mode-active .hero,
+.edit-mode-active .hero-content,
+.edit-mode-active .hero-image,
+.edit-mode-active .roles-grid,
+.edit-mode-active .role-card,
+.edit-mode-active .services-flex,
+.edit-mode-active .service-card,
+.edit-mode-active .stats-grid,
+.edit-mode-active .stat-item,
+.edit-mode-active .benefits-grid,
+.edit-mode-active .benefit-card,
+.edit-mode-active .process-row,
+.edit-mode-active .process-col,
+.edit-mode-active .process-grid,
+.edit-mode-active .process-card,
+.edit-mode-active .quiz-card,
+.edit-mode-active .checklist-card,
+.edit-mode-active .calendar-card,
+.edit-mode-active .callback-form,
+.edit-mode-active .contact-block,
+.edit-mode-active .contact-line,
+.edit-mode-active .footer,
+.edit-mode-active .modal-content,
+.edit-mode-active .calculator-tabs,
+.edit-mode-active .tab-pane,
+.edit-mode-active .add-service,
+.edit-mode-active .total-block,
+.edit-mode-active .faq-grid,
+.edit-mode-active .faq-item,
+.edit-mode-active .gift-card,
+.edit-mode-active .cases-grid,
+.edit-mode-active .case-card,
+.edit-mode-active .clients-grid,
+.edit-mode-active .client-logo,
+.edit-mode-active .certificates-grid,
+.edit-mode-active .cert-card,
+.edit-mode-active .about-header,
+.edit-mode-active .about-text,
+.edit-mode-active .process-title {
+    outline: 1px dashed rgba(45, 106, 159, 0.3);
+    outline-offset: 2px;
+    transition: outline 0.1s ease;
+}
+
+.edit-mode-active section:hover,
+.edit-mode-active .container:hover,
+.edit-mode-active .role-card:hover,
+.edit-mode-active .service-card:hover,
+.edit-mode-active .process-card:hover {
+    outline: 2px dashed var(--primary);
+}
+
+/* Редактор квиза */
+.quiz-edit-panel table {
+    background: var(--surface);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.quiz-edit-panel th {
+    background: var(--surface-strong);
+    font-weight: 600;
+}
+
+.quiz-edit-panel td {
+    vertical-align: middle;
+}
+
+.quiz-edit-option-text:hover {
+    background: var(--surface-strong);
+}
+
+.quiz-edit-question {
+    transition: all 0.2s ease;
+}
+
+.quiz-edit-question:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
