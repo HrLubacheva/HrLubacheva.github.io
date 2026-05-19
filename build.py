@@ -19,17 +19,18 @@ def build_index():
         read_component("roles.html"),
         read_component("services.html"),
         read_component("stats.html"),
-        read_component("cases.html"),           # новый
+        read_component("cases.html"),
         read_component("benefits.html"),
         read_component("process.html"),
         read_component("calculator.html"),
         read_component("quiz.html"),
         read_component("freebies.html"),
         read_component("calendar.html"),
-        read_component("faq.html"),             # новый
-        read_component("certificates.html"),    # новый
+        read_component("faq.html"),
+        read_component("certificates.html"),
         read_component("contacts.html"),
         read_component("footer.html"),
+        read_component("cookie-consent.html"),  # новый компонент
         read_component("scripts.html")
     ]
     # Объединяем части через перенос строки и записываем в файл

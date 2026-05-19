@@ -460,6 +460,33 @@
             }
         });
     });
+        // ---------- Cookie-баннер ----------
+    const cookieConsent = document.getElementById('cookieConsent');
+    const acceptBtn = document.getElementById('acceptCookies');
+    const cookiePrivacy = document.getElementById('cookiePrivacyLink');
+
+    // Проверяем, соглашался ли пользователь ранее
+    if (!localStorage.getItem('cookieConsentAccepted')) {
+        setTimeout(() => {
+            cookieConsent.classList.add('show');
+        }, 1000);
+    }
+
+    if (acceptBtn) {
+        acceptBtn.addEventListener('click', () => {
+            localStorage.setItem('cookieConsentAccepted', 'true');
+            cookieConsent.classList.remove('show');
+        });
+    }
+
+    if (cookiePrivacy) {
+        cookiePrivacy.addEventListener('click', (e) => {
+            e.preventDefault();
+            const privacyModal = document.getElementById('privacyModal');
+            if (privacyModal) privacyModal.style.display = 'flex';
+        });
+    }
+
 </script>
 </body>
 </html>
