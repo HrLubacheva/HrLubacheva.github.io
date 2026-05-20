@@ -15,6 +15,22 @@ def run_cmd(cmd, check=True, env=None):
     return result
 
 
+def check_git_status():
+    """Проверяет статус Git репозитория."""
+    print("\n📋 Проверка статуса Git...")
+
+    # Проверяем, есть ли изменения
+    status = run_cmd("git status --porcelain", check=False)
+    if status.stdout.strip():
+        print("   Изменения найдены:")
+        for line in status.stdout.strip().split('\n'):
+            print(f"     {line}")
+        return True
+    else:
+        print("   Нет изменений для коммита")
+        return False
+
+
 def setup_git_credentials():
     """Настройка GitHub токена для аутентификации."""
     print("\n🔐 Настройка аутентификации GitHub...")
@@ -29,6 +45,12 @@ def setup_git_credentials():
 
     # Проверяем remote URL
     remote_url = run_cmd("git config --get remote.origin.url", check=False).stdout.strip()
+
+    if not remote_url:
+        print("   ⚠️ Удалённый репозиторий не настроен!")
+        print("   Добавьте репозиторий командой:")
+        print("   git remote add origin https://github.com/hrlubacheva/hrlubacheva.github.io.git")
+        return False
 
     if remote_url.startswith("https://"):
         print(f"   📡 Используется HTTPS: {remote_url}")
@@ -79,22 +101,36 @@ def main():
     print("🚀 Деплой на GitHub")
     print("=" * 60)
 
+    # Проверяем, что мы в правильной директории
+    if not os.path.exists("build.py") or not os.path.exists("components"):
+        print("\n❌ Ошибка: Запустите скрипт из корневой папки проекта!")
+        print("   cd C:\\TEST\\GIT\\hrLubacheva.github.io")
+        sys.exit(1)
+
     print("\n1. Сборка index.html из компонентов...")
-    build_index()
+    try:
+        build_index()
+    except Exception as e:
+        print(f"   ❌ Ошибка сборки: {e}")
+        sys.exit(1)
 
     print("\n2. Добавляем все изменения в Git...")
-    run_cmd("git add .")
+    run_cmd("git add .", check=False)
 
     # Проверяем, есть ли изменения
-    status = run_cmd("git status --porcelain", check=False)
-    if not status.stdout.strip():
-        print("   Нет изменений для коммита.")
-        # Создаём пустой коммит, чтобы триггерить деплой при необходимости
-        run_cmd('git commit --allow-empty -m "Триггер деплоя"', check=False)
+    has_changes = check_git_status()
+
+    if not has_changes:
+        print("\n   Создаём пустой коммит для триггера деплоя...")
+        run_cmd('git commit --allow-empty -m "🔄 Триггер деплоя"', check=False)
     else:
-        commit_msg = f"Автообновление сайта {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        commit_msg = f"✨ Автообновление сайта {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
         print(f"\n3. Создаём коммит: {commit_msg}")
-        run_cmd(f'git commit -m "{commit_msg}"')
+        result = run_cmd(f'git commit -m "{commit_msg}"', check=False)
+        if result.returncode != 0:
+            print("   ⚠️ Не удалось создать коммит")
+            if "nothing to commit" in result.stderr:
+                print("   Действительно нет изменений, продолжаем...")
 
     # Настройка аутентификации
     setup_git_credentials()
@@ -105,6 +141,7 @@ def main():
         print("   ⚠️ Не удалось выполнить git pull, продолжаем...")
         if "Authentication failed" in pull_result.stderr:
             print("   ❌ Ошибка аутентификации! Проверьте токен или SSH ключи")
+            print("   Запустите ещё раз и введите правильный токен")
 
     print("\n5. Отправляем изменения на GitHub в ветку main...")
     push_result = run_cmd("git push origin main", check=False)
@@ -115,8 +152,10 @@ def main():
         push_result = run_cmd("git push --force-with-lease origin main", check=False)
 
         if push_result.returncode != 0:
-            print("\n   ❌ PUSH НЕ УДАЛСЯ!")
-            print("   Возможные причины:")
+            print("\n" + "=" * 60)
+            print("   ❌ PUSH НЕ УДАЛСЯ!")
+            print("=" * 60)
+            print("\n   Возможные причины:")
             print("   1. Неправильный токен (нужен Personal Access Token)")
             print("   2. Нет прав на запись в репозиторий")
             print("   3. Проблемы с сетью")
@@ -124,6 +163,10 @@ def main():
             print("   - Получите токен: https://github.com/settings/tokens")
             print("   - Права токена: repo, workflow")
             print("   - Затем запустите заново: python deploy.py")
+            print("\n   Или настройте SSH ключи:")
+            print("   - ssh-keygen -t ed25519 -C 'your-email@example.com'")
+            print("   - Добавьте ключ в GitHub: settings/keys")
+            print("   - git remote set-url origin git@github.com:hrlubacheva/hrlubacheva.github.io.git")
             sys.exit(1)
 
     print("\n" + "=" * 60)

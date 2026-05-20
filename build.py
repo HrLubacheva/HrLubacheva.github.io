@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
 import os
 
 # Папки с компонентами
 COMMON_DIR = "components/common"
 SECTIONS_DIR = "components/sections"
+EDITOR_DIR = "components/common/scripts/editor"
+
 
 def read_component(dir_path, name):
     """Читает содержимое файла компонента из указанной папки."""
@@ -10,29 +13,99 @@ def read_component(dir_path, name):
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
+
+def ensure_editor_files():
+    """Проверяет, что все файлы админ-панели на месте."""
+    editor_files = [
+        "config.js",
+        "state.js",
+        "utils.js",
+        "token.js",
+        "styles.js",
+        "ui.js",
+        "slides-panel.js",
+        "text-editor.js",
+        "image-editor.js",
+        "drag-drop.js",
+        "elements.js",
+        "main.js"
+    ]
+
+    missing = []
+    for f in editor_files:
+        path = os.path.join(EDITOR_DIR, f)
+        if not os.path.exists(path):
+            missing.append(f)
+
+    if missing:
+        print(f"⚠️ ВНИМАНИЕ: Отсутствуют файлы админ-панели: {', '.join(missing)}")
+        print("   Админ-панель может работать некорректно")
+        return False
+    return True
+
+
 def build_index():
-    """Собирает главную страницу из секций."""
+    """Собирает главную страницу из компонентов."""
     sections_order = [
         "hero.html", "roles.html", "services.html", "stats.html",
         "benefits.html", "process.html", "calculator.html", "quiz.html",
         "freebies.html", "calendar.html", "contacts.html"
     ]
     sections_content = []
+
     for section in sections_order:
-        sections_content.append(read_component(SECTIONS_DIR, section))
+        section_path = os.path.join(SECTIONS_DIR, section)
+        if os.path.exists(section_path):
+            sections_content.append(read_component(SECTIONS_DIR, section))
+        else:
+            print(f"⚠️ Файл не найден: {section_path}")
+            sections_content.append(f"<!-- Секция {section} не найдена -->")
 
     full_content = "\n".join(sections_content)
 
-    parts = [
-        read_component(COMMON_DIR, "_head.html"),
-        read_component(COMMON_DIR, "navbar.html"),
-        full_content,
-        read_component(COMMON_DIR, "footer.html"),
-        read_component("components", "scripts.html")   # ← исправлено: ищем в components/
-    ]
+    # Проверяем наличие файлов компонентов
+    head_path = os.path.join(COMMON_DIR, "_head.html")
+    navbar_path = os.path.join(COMMON_DIR, "navbar.html")
+    footer_path = os.path.join(COMMON_DIR, "footer.html")
+    scripts_path = os.path.join("components", "scripts.html")
+
+    parts = []
+
+    if os.path.exists(head_path):
+        parts.append(read_component(COMMON_DIR, "_head.html"))
+    else:
+        parts.append("<!-- _head.html не найден -->")
+        print(f"⚠️ Файл не найден: {head_path}")
+
+    if os.path.exists(navbar_path):
+        parts.append(read_component(COMMON_DIR, "navbar.html"))
+    else:
+        parts.append("<!-- navbar.html не найден -->")
+        print(f"⚠️ Файл не найден: {navbar_path}")
+
+    parts.append(full_content)
+
+    if os.path.exists(footer_path):
+        parts.append(read_component(COMMON_DIR, "footer.html"))
+    else:
+        parts.append("<!-- footer.html не найден -->")
+        print(f"⚠️ Файл не найден: {footer_path}")
+
+    if os.path.exists(scripts_path):
+        parts.append(read_component("components", "scripts.html"))
+    else:
+        parts.append("<!-- scripts.html не найден -->")
+        print(f"⚠️ Файл не найден: {scripts_path}")
+
+    # Создаём index.html
     with open("index.html", "w", encoding="utf-8") as f:
         f.write("\n".join(parts))
+
     print("✅ Собрано index.html")
+
+    # Проверяем наличие файлов админ-панели
+    ensure_editor_files()
+
 
 if __name__ == "__main__":
     build_index()

@@ -5,6 +5,7 @@ import re
 import os
 from build import build_index
 
+
 def run_cmd(cmd, check=True):
     """Выполняет команду, возвращает результат."""
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
@@ -12,6 +13,7 @@ def run_cmd(cmd, check=True):
         print(f"Ошибка: {cmd}\n{result.stderr}")
         sys.exit(result.returncode)
     return result
+
 
 def extract_section(html, section_name):
     """Извлекает содержимое секции из index.html."""
@@ -35,12 +37,14 @@ def extract_section(html, section_name):
             return match.group(1).strip()
     return None
 
+
 def ensure_dir(filepath):
     """Создаёт папку для файла, если её нет."""
     directory = os.path.dirname(filepath)
     if directory and not os.path.exists(directory):
         os.makedirs(directory)
         print(f"📁 Создана папка: {directory}")
+
 
 def sync_components():
     """Извлекает секции из index.html и сохраняет их в components/sections/"""
@@ -89,17 +93,50 @@ def sync_components():
     print(f"📊 Итог: обновлено {success_count} из {len(sections_map)} секций")
     return success_count > 0
 
+
+def check_editor_files():
+    """Проверяет наличие всех файлов админ-панели."""
+    editor_dir = "components/common/scripts/editor"
+    required_files = [
+        "config.js", "state.js", "utils.js", "token.js", "styles.js",
+        "ui.js", "slides-panel.js", "text-editor.js", "image-editor.js",
+        "drag-drop.js", "elements.js", "main.js"
+    ]
+
+    missing = []
+    for f in required_files:
+        if not os.path.exists(os.path.join(editor_dir, f)):
+            missing.append(f)
+
+    if missing:
+        print(f"\n⚠️ ВНИМАНИЕ: Отсутствуют файлы админ-панели: {', '.join(missing)}")
+        print("   Админ-панель может работать некорректно!")
+        return False
+    else:
+        print("\n✅ Все файлы админ-панели на месте")
+        return True
+
+
 def main():
     print("=" * 50)
     print("🔄 СИНХРОНИЗАЦИЯ С GITHUB")
     print("=" * 50)
+
+    # Проверяем, что мы в правильной директории
+    if not os.path.exists("build.py") or not os.path.exists("components"):
+        print("\n❌ Ошибка: Запустите скрипт из корневой папки проекта!")
+        print("   cd C:\\TEST\\GIT\\hrLubacheva.github.io")
+        sys.exit(1)
+
+    # Проверка наличия файлов админ-панели
+    check_editor_files()
 
     # 1. git pull
     print("\n1. Скачиваем изменения из удалённого репозитория...")
     pull_result = run_cmd("git pull --no-edit", check=False)
     if pull_result.returncode != 0:
         print("⚠️ Не удалось выполнить git pull. Проверьте соединение с интернетом.")
-        # Не выходим, пробуем продолжить с локальным файлом
+        print("   Продолжаем с локальными файлами...")
     else:
         print("✅ git pull выполнен успешно.")
 
@@ -121,8 +158,11 @@ def main():
     print("\n" + "=" * 50)
     print("🎉 СИНХРОНИЗАЦИЯ ЗАВЕРШЕНА!")
     print("=" * 50)
-    print("\nТеперь ваши локальные компоненты синхронизированы с сайтом.")
-    print("Можете запустить: python server.py")
+    print("\n📝 Что делать дальше:")
+    print("   1. Запустите локальный сервер: python server.py")
+    print("   2. Проверьте работу админ-панели: нажмите ✏️ Редактировать")
+    print("   3. Для публикации на GitHub: python deploy.py")
+
 
 if __name__ == "__main__":
     main()
