@@ -619,3 +619,52 @@ kbd {
     0%, 100% { opacity: 0.5; }
     50% { opacity: 1; }
 }
+
+/* Режим редактирования - подсветка блоков */
+body.edit-mode-active {
+    cursor: default;
+}
+
+/* Кнопки редактора НЕ должны выделяться */
+.editor-toolbar button,
+.editor-toolbar .tool-btn,
+.editor-toolbar .tab-btn,
+.editor-toolbar .action-btn,
+.editor-toolbar .exit-btn,
+.property-panel button,
+.slides-panel button,
+#editorToggle,
+.editor-toggle-btn {
+    outline: none !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+.editor-toolbar button:hover,
+.editor-toolbar .tool-btn:hover,
+#editorToggle:hover {
+    transform: scale(1.02);
+}
+
+/* Защита от выделения элементов редактора */
+.editor-toolbar,
+.editor-toolbar *,
+.property-panel,
+.property-panel *,
+.slides-panel,
+.slides-panel *,
+#editorToggle {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Анимация для выделенного блока */
+.selected-block {
+    animation: blockPulse 0.5s ease;
+}
+
+@keyframes blockPulse {
+    0% { outline-color: #ff9800; outline-width: 2px; }
+    50% { outline-color: #ff5722; outline-width: 4px; }
+    100% { outline-color: #ff9800; outline-width: 3px; }
+}

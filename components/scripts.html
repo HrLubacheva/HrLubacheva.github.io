@@ -26,13 +26,13 @@
     </div>
 </div>
 
-<!-- Подключение стилей редактора (исправленный путь) -->
+<!-- Подключение стилей редактора (исправленный путь - через папку ui) -->
 <script>
     if (!window.editorStylesLoaded) {
         window.editorStylesLoaded = true;
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = 'components/common/scripts/editor/styles.css';
+        link.href = 'components/common/scripts/editor/ui/styles.css';
         document.head.appendChild(link);
     }
 </script>

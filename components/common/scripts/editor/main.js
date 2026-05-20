@@ -14,17 +14,195 @@ import { deleteSelectedBlock } from './actions/delete.js';
 let toggleBtn = null;
 let isInitialized = false;
 
+// Получить HTML без редактора (чистая версия сайта)
+function getCleanHTML() {
+    // Сохраняем текущий режим
+    const wasEditMode = state.isEditMode;
+
+    // Временно выключаем режим редактирования если он включён
+    if (wasEditMode) {
+        // Убираем классы редактора
+        document.querySelectorAll('.editable-object').forEach(el => {
+            el.classList.remove('editable-object', 'selected');
+        });
+        document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+            el.removeAttribute('contenteditable');
+        });
+        // Убираем кнопку редактора
+        if (toggleBtn) toggleBtn.style.display = 'none';
+    }
+
+    // Клонируем документ
+    const clone = document.documentElement.cloneNode(true);
+
+    // Удаляем из клона все следы редактора
+    const cloneDoc = clone;
+
+    // Удаляем кнопку редактора
+    const cloneToggle = cloneDoc.querySelector('#editorToggle');
+    if (cloneToggle) cloneToggle.remove();
+
+    // Удаляем панели редактора
+    const cloneToolbar = cloneDoc.querySelector('.editor-toolbar');
+    if (cloneToolbar) cloneToolbar.remove();
+
+    const clonePropertyPanel = cloneDoc.querySelector('.property-panel');
+    if (clonePropertyPanel) clonePropertyPanel.remove();
+
+    const cloneSlidesPanel = cloneDoc.querySelector('.slides-panel');
+    if (cloneSlidesPanel) cloneSlidesPanel.remove();
+
+    const cloneHint = cloneDoc.querySelector('.editor-hint');
+    if (cloneHint) cloneHint.remove();
+
+    const cloneGrid = cloneDoc.querySelector('.editor-grid-overlay');
+    if (cloneGrid) cloneGrid.remove();
+
+    const cloneToast = cloneDoc.querySelector('.editor-toast');
+    if (cloneToast) cloneToast.remove();
+
+    // Убираем классы редактора со всех элементов
+    cloneDoc.querySelectorAll('.editable-object').forEach(el => {
+        el.classList.remove('editable-object', 'selected', 'locked');
+    });
+
+    // Убираем contenteditable
+    cloneDoc.querySelectorAll('[contenteditable="true"]').forEach(el => {
+        el.removeAttribute('contenteditable');
+    });
+
+    // Убираем кнопки удаления и блокировки
+    cloneDoc.querySelectorAll('.element-delete-btn, .element-lock-btn, .resize-handle, .image-resize-handle, .resize-handles').forEach(el => {
+        el.remove();
+    });
+
+    // Убираем модалки редактора
+    cloneDoc.querySelectorAll('.editor-modal-overlay, .object-context-menu, .format-float-bar').forEach(el => {
+        el.remove();
+    });
+
+    // Восстанавливаем режим
+    if (wasEditMode) {
+        if (toggleBtn) toggleBtn.style.display = 'flex';
+    }
+
+    return '<!DOCTYPE html>\n' + cloneDoc.outerHTML;
+}
+
+// Сохраняем оригинальную функцию saveToGitHub из actions/save.js
+// Переопределяем её для сохранения чистой версии
+async function saveCleanToGitHub() {
+    const { saveToGitHub: originalSave } = await import('../actions/save.js');
+
+    // Сохраняем оригинальный HTML
+    const originalHTML = document.documentElement.outerHTML;
+
+    // Подменяем на чистую версию
+    const cleanHTML = getCleanHTML();
+
+    // Временно подменяем document
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = cleanHTML;
+    const tempDoc = tempDiv;
+
+    // Сохраняем через оригинальную функцию с подменой
+    try {
+        // Используем fetch напрямую для сохранения чистой версии
+        const { CONFIG } = await import('../core/config.js');
+        const token = localStorage.getItem('github_token_hrlubacheva');
+
+        if (!token) {
+            showToast('❌ Нет токена GitHub');
+            return;
+        }
+
+        const content = btoa(unescape(encodeURIComponent(cleanHTML)));
+
+        let sha = null;
+        const getUrl = `https://api.github.com/repos/${CONFIG.REPO_OWNER}/${CONFIG.REPO_NAME}/contents/${CONFIG.FILE_PATH}`;
+        const getResponse = await fetch(getUrl, {
+            headers: { 'Authorization': `token ${token}` }
+        });
+
+        if (getResponse.ok) {
+            const data = await getResponse.json();
+            sha = data.sha;
+        }
+
+        const updateResponse = await fetch(getUrl, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: `Сохранение сайта ${new Date().toLocaleString()}`,
+                content: content,
+                sha: sha,
+                branch: CONFIG.BRANCH
+            })
+        });
+
+        if (updateResponse.ok) {
+            showToast('✅ Сохранено! Сайт обновится через 1-2 минуты');
+        } else {
+            const error = await updateResponse.json();
+            showToast('❌ Ошибка: ' + (error.message || 'Неизвестная ошибка'));
+        }
+    } catch (err) {
+        showToast('⚠️ Ошибка: ' + err.message);
+        // Скачиваем бекап чистой версии
+        const blob = new Blob([cleanHTML], { type: 'text/html' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `index_backup_${new Date().toISOString().slice(0, 19)}.html`;
+        link.click();
+        showToast('📥 Бекап сохранён локально');
+    }
+}
+
 export function initEditor() {
     if (isInitialized) return;
     isInitialized = true;
 
     console.log('🎨 Запуск редактора...');
 
-    // Создаём кнопку включения
+    // Создаём кнопку включения слева сверху
     toggleBtn = document.createElement('button');
     toggleBtn.id = 'editorToggle';
     toggleBtn.innerHTML = '✏️ Редактировать';
     toggleBtn.className = 'editor-toggle-btn';
+
+    // Стили для кнопки слева сверху
+    toggleBtn.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 10001;
+        background: linear-gradient(135deg, #2D6A9F, #1D4D7A);
+        color: white;
+        border: none;
+        border-radius: 40px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'Inter', sans-serif;
+    `;
+    toggleBtn.onmouseenter = () => {
+        toggleBtn.style.transform = 'scale(1.05)';
+        toggleBtn.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
+    };
+    toggleBtn.onmouseleave = () => {
+        toggleBtn.style.transform = 'scale(1)';
+        toggleBtn.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+    };
+
     document.body.appendChild(toggleBtn);
 
     toggleBtn.addEventListener('click', () => {
@@ -39,12 +217,10 @@ export function initEditor() {
     document.addEventListener('keydown', (e) => {
         if (!state.isEditMode) return;
 
-        // Delete - удалить
         if (e.key === 'Delete') {
             e.preventDefault();
             deleteSelectedBlock();
         }
-        // Ctrl+D - дублировать
         if (e.ctrlKey && e.key === 'd') {
             e.preventDefault();
             duplicateSelectedBlock();
@@ -56,6 +232,7 @@ function enableEditMode() {
     state.isEditMode = true;
     toggleBtn.classList.add('active');
     toggleBtn.innerHTML = '🔴 Выйти';
+    toggleBtn.style.background = 'linear-gradient(135deg, #dc3545, #b02a37)';
 
     // Создаём интерфейс
     createToolbar();
@@ -67,7 +244,6 @@ function enableEditMode() {
         el.classList.add('editable-object');
         el.addEventListener('click', (e) => {
             e.stopPropagation();
-            // Не выделяем заблокированные
             if (el.classList.contains('locked')) return;
             selectElement(el);
         });
@@ -81,14 +257,19 @@ function enableEditMode() {
         });
     });
 
+    // Переопределяем сохранение на GitHub
+    const saveBtn = document.getElementById('saveToGitBtn');
+    if (saveBtn) {
+        const oldClick = saveBtn.onclick;
+        saveBtn.onclick = () => saveCleanToGitHub();
+    }
+
     // Инициализируем функции
     initDragDrop();
     initTextEditing();
     initHistory();
 
-    // Сохраняем начальное состояние
     saveToHistory();
-
     showHint();
     showToast('✨ Режим редактирования включён');
 }
@@ -97,6 +278,7 @@ export function disableEditMode() {
     state.isEditMode = false;
     toggleBtn.classList.remove('active');
     toggleBtn.innerHTML = '✏️ Редактировать';
+    toggleBtn.style.background = 'linear-gradient(135deg, #2D6A9F, #1D4D7A)';
 
     // Удаляем панели
     hideToolbar();
@@ -122,22 +304,35 @@ export function disableEditMode() {
 function showHint() {
     const hint = document.createElement('div');
     hint.className = 'editor-hint';
+    hint.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: white;
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        z-index: 10000;
+        font-size: 12px;
+        max-width: 260px;
+        font-family: 'Inter', sans-serif;
+        transition: opacity 0.5s;
+    `;
     hint.innerHTML = `
-        <div class="hint-header">💡 Быстрые советы</div>
-        <div class="hint-content">
-            <div>✏️ <strong>Двойной клик</strong> — редактировать текст</div>
-            <div>🖼️ <strong>ПКМ по фото</strong> — изменить форму/заменить</div>
-            <div>📌 <strong>Перетаскивание</strong> — включите в настройках</div>
-            <div>⌨️ <strong>Ctrl+Z/Y</strong> — отмена/возврат</div>
-            <div>🗑️ <strong>Delete</strong> — удалить блок</div>
-            <div>🔒 <strong>Замок</strong> — блокировка блока</div>
-        </div>
+        <div style="font-weight:700; margin-bottom:10px;">💡 Быстрые советы</div>
+        <div>✏️ <strong>Двойной клик</strong> — редактировать текст</div>
+        <div>🖼️ <strong>ПКМ по фото</strong> — изменить форму/заменить</div>
+        <div>📌 <strong>Перетаскивание</strong> — включите в настройках</div>
+        <div>⌨️ <strong>Ctrl+Z/Y</strong> — отмена/возврат</div>
+        <div>🗑️ <strong>Delete</strong> — удалить блок</div>
+        <div>🔒 <strong>Замок</strong> — блокировка блока</div>
+        <div>🎬 <strong>PowerPoint режим</strong> — создавайте слайды</div>
     `;
     document.body.appendChild(hint);
     setTimeout(() => {
         hint.style.opacity = '0';
         setTimeout(() => hint.remove(), 500);
-    }, 8000);
+    }, 10000);
 }
 
 function showImageContextMenu(e, img) {
@@ -204,28 +399,14 @@ if (document.readyState === 'loading') {
     initEditor();
 }
 
-// ---------- Главная инициализация ----------
+// ---------- Главная инициализация сайта ----------
 document.addEventListener('DOMContentLoaded', () => {
-    // Инициализация калькулятора
     if (typeof initCalculator === 'function') initCalculator();
-
-    // Инициализация квиза
     if (typeof renderQuiz === 'function') renderQuiz();
-
-    // Инициализация модалок
     if (typeof initModal === 'function') initModal();
-
-    // Инициализация формы обратного звонка
     if (typeof initCallbackForm === 'function') initCallbackForm();
-
-    // Инициализация анимаций
     if (typeof initAnimations === 'function') initAnimations();
-
-    // Инициализация плавной прокрутки
     if (typeof initSmoothScroll === 'function') initSmoothScroll();
-
-    // Инициализация копирования
     if (typeof initCopyButtons === 'function') initCopyButtons();
-
     console.log('✅ Сайт инициализирован');
 });

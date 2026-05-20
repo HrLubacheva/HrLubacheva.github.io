@@ -919,3 +919,13 @@ section[id] {
         min-width: auto;
     }
 }
+
+/* PowerPoint режим */
+.slide-object[contenteditable="true"]:focus {
+    outline: 2px solid #2D6A9F;
+    background: rgba(45,106,159,0.05);
+}
+.slide-wrapper { transition: transform 0.2s; }
+.slide-wrapper:hover { transform: scale(1.01); }
+.slide-object.selected { animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { outline-color: #ff9800; } 50% { outline-color: #ff5722; } }
