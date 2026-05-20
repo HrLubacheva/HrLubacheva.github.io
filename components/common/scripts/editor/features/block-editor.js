@@ -1,4 +1,4 @@
-// ========== УНИВЕРСАЛЬНЫЙ РЕДАКТОР ЛЮБЫХ БЛОКОВ ==========
+// ========== УНИВЕРСАЛЬНЫЙ РЕДАКТОР ТЕКСТА И ФОТО ==========
 import { showToast } from '../core/utils.js';
 import { saveToHistory } from '../core/history.js';
 
@@ -61,11 +61,40 @@ function addStyles() {
             min-width: 50px;
             display: inline-block;
         }
+        /* Панель форматирования */
+        .format-toolbar {
+            position: fixed;
+            background: white;
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            gap: 6px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            z-index: 10002;
+            border: 1px solid #e0e0e0;
+        }
+        .format-toolbar button {
+            background: none;
+            border: none;
+            padding: 6px 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .format-toolbar button:hover {
+            background: #f0f0f0;
+        }
+        .format-toolbar .separator {
+            width: 1px;
+            background: #ddd;
+            margin: 0 4px;
+        }
         /* Защита элементов редактора */
         .editor-toolbar, .editor-toolbar *,
         .slides-panel, .slides-panel *,
         #editorToggle,
-        .resize-marker {
+        .resize-marker,
+        .format-toolbar {
             pointer-events: auto !important;
         }
     `;
@@ -80,6 +109,7 @@ function isProtectedElement(element) {
         '.resize-marker',
         '#editorToggle', '.editor-toggle-btn',
         '.slides-panel', '.slides-panel *',
+        '.format-toolbar', '.format-toolbar *',
         'button', '.btn-primary', '.btn-secondary',
         '.tab-btn', '.tool-btn', '.action-btn', '.exit-btn'
     ];
@@ -104,10 +134,10 @@ function getBlock(element) {
     return null;
 }
 
-// Показать маркеры изменения размера
-function showResizeMarkers(block) {
+// Показать маркеры изменения размера (только для фото)
+function showResizeMarkers(img) {
     hideResizeMarkers();
-    const rect = block.getBoundingClientRect();
+    const rect = img.getBoundingClientRect();
     const markers = [
         { name: 'se', left: rect.left + rect.width - 6, top: rect.top + rect.height - 6, cursor: 'se-resize' },
         { name: 'sw', left: rect.left - 6, top: rect.top + rect.height - 6, cursor: 'sw-resize' },
@@ -124,7 +154,7 @@ function showResizeMarkers(block) {
         marker.addEventListener('mousedown', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            startResize(e, block, m.name);
+            startResize(e, img, m.name);
         });
         document.body.appendChild(marker);
     });
@@ -136,10 +166,10 @@ function hideResizeMarkers() {
     sizeIndicator = null;
 }
 
-function startResize(e, block, handle) {
+function startResize(e, img, handle) {
     isResizing = true;
     currentHandle = handle;
-    const rect = block.getBoundingClientRect();
+    const rect = img.getBoundingClientRect();
     dragStartX = e.clientX;
     dragStartY = e.clientY;
     startWidth = rect.width;
@@ -186,12 +216,57 @@ function stopResize() {
     document.removeEventListener('mouseup', stopResize);
 }
 
+// Показать панель форматирования
+let formatToolbar = null;
+
+function showFormatToolbar(element, rect) {
+    hideFormatToolbar();
+
+    formatToolbar = document.createElement('div');
+    formatToolbar.className = 'format-toolbar';
+    formatToolbar.style.left = rect.left + 'px';
+    formatToolbar.style.top = (rect.top - 50) + 'px';
+    formatToolbar.innerHTML = `
+        <button data-cmd="bold" title="Жирный (Ctrl+B)"><b>Ж</b></button>
+        <button data-cmd="italic" title="Курсив (Ctrl+I)"><i>К</i></button>
+        <button data-cmd="underline" title="Подчёркнутый (Ctrl+U)"><u>Ч</u></button>
+        <span class="separator"></span>
+        <button data-cmd="justifyLeft" title="По левому краю">◀</button>
+        <button data-cmd="justifyCenter" title="По центру">◀▶</button>
+        <button data-cmd="justifyRight" title="По правому краю">▶</button>
+        <span class="separator"></span>
+        <button data-cmd="insertUnorderedList" title="Маркированный список">•</button>
+        <button data-cmd="insertOrderedList" title="Нумерованный список">1.</button>
+    `;
+
+    formatToolbar.querySelectorAll('[data-cmd]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cmd = btn.dataset.cmd;
+            document.execCommand(cmd, false, null);
+            element.focus();
+            saveToHistory();
+            showToast(`✅ Форматирование применено`);
+        });
+    });
+
+    document.body.appendChild(formatToolbar);
+}
+
+function hideFormatToolbar() {
+    if (formatToolbar) {
+        formatToolbar.remove();
+        formatToolbar = null;
+    }
+}
+
 // Выделение блока
 function selectBlock(block) {
     if (selectedBlock === block) return;
     if (selectedBlock) {
         selectedBlock.classList.remove('selected');
         hideResizeMarkers();
+        hideFormatToolbar();
     }
     selectedBlock = block;
     selectedBlock.classList.add('selected');
@@ -205,22 +280,33 @@ function clearSelection() {
     if (selectedBlock) {
         selectedBlock.classList.remove('selected');
         hideResizeMarkers();
+        hideFormatToolbar();
         selectedBlock = null;
     }
 }
 
-// Сделать любой элемент редактируемым
+// Сделать любой элемент редактируемым с сохранением форматирования
 function makeEditable(element) {
     if (!element) return;
     if (element.contentEditable === 'true') return;
 
+    // Сохраняем оригинальное форматирование
+    const originalHTML = element.innerHTML;
+
     element.contentEditable = 'true';
     element.focus();
+
+    // Показываем панель форматирования
+    const rect = element.getBoundingClientRect();
+    showFormatToolbar(element, rect);
 
     // Сохраняем при потере фокуса
     const saveOnBlur = () => {
         element.contentEditable = 'false';
         element.removeEventListener('blur', saveOnBlur);
+        hideFormatToolbar();
+
+        // Сохраняем изменения в историю
         saveToHistory();
         showToast('✅ Текст сохранён');
     };
@@ -232,14 +318,27 @@ function makeEditable(element) {
             e.preventDefault();
             document.execCommand('insertLineBreak');
         }
-    }, { once: true });
+        // Ctrl+B, Ctrl+I, Ctrl+U для форматирования
+        if (e.ctrlKey && e.key === 'b') {
+            e.preventDefault();
+            document.execCommand('bold');
+        }
+        if (e.ctrlKey && e.key === 'i') {
+            e.preventDefault();
+            document.execCommand('italic');
+        }
+        if (e.ctrlKey && e.key === 'u') {
+            e.preventDefault();
+            document.execCommand('underline');
+        }
+    });
 }
 
 // Инициализация
 export function initBlockEditor() {
     addStyles();
 
-    // Все редактируемые блоки: текст, карточки, заголовки, параграфы, списки
+    // Все редактируемые блоки
     const allBlocks = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, .role-card, .service-card, .benefit-card, .process-card, .stat-item, .quiz-card, .checklist-card, .calendar-card, .hero-content, .hero-text, .contact-line, img');
 
     allBlocks.forEach(block => {
@@ -252,11 +351,11 @@ export function initBlockEditor() {
         if (isProtectedElement(e.target)) return;
 
         const block = getBlock(e.target);
-        if (block && !e.target.closest('.resize-marker')) {
+        if (block && !e.target.closest('.resize-marker') && !e.target.closest('.format-toolbar')) {
             e.preventDefault();
             e.stopPropagation();
             selectBlock(block);
-        } else if (!e.target.closest('.resize-marker')) {
+        } else if (!e.target.closest('.resize-marker') && !e.target.closest('.format-toolbar')) {
             clearSelection();
         }
     });
@@ -266,7 +365,6 @@ export function initBlockEditor() {
         if (!document.body.classList.contains('block-edit-mode')) return;
         if (isProtectedElement(e.target)) return;
 
-        // Находим редактируемый элемент
         let target = e.target;
         const editableTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'SPAN', 'DIV', 'A', 'TD', 'TH'];
 
@@ -292,6 +390,7 @@ export function disableBlockEditMode() {
     document.querySelectorAll('[contenteditable="true"]').forEach(el => {
         el.contentEditable = 'false';
     });
+    hideFormatToolbar();
     showToast('✨ Режим редактирования выключен');
 }
 

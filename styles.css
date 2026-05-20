@@ -929,3 +929,29 @@ section[id] {
 .slide-wrapper:hover { transform: scale(1.01); }
 .slide-object.selected { animation: pulse 1s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { outline-color: #ff9800; } 50% { outline-color: #ff5722; } }
+
+/* Плавное скрытие/показ шапки на мобильных */
+.navbar {
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Для мобильных устройств */
+@media (max-width: 768px) {
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(255,255,255,0.98);
+        backdrop-filter: blur(10px);
+    }
+
+    /* Отступ для контента, чтобы не перекрывался шапкой */
+    body {
+        padding-top: 80px;
+    }
+
+    body:has(.navbar[style*="translateY(-100%)"]) {
+        padding-top: 0;
+    }
+}
