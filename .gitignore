@@ -1,60 +1,22 @@
-# Виртуальное окружение (если случайно окажется здесь)
+# Python (локальные инструменты)
+build.py
+server.py
+deploy.py
+sync.py
+clear_token.py
 .venv/
-venv/
-ENV/
-env/
-
-# Python кэш и байт-код
 __pycache__/
-*.py[cod]
-*.so
-
-# Логи и временные файлы
-*.log
-*.tmp
-*.bak
-
-# Файлы IDE
-.vscode/
-.idea/
-*.swp
-
-# Файлы операционной системы
-.DS_Store
-Thumbs.db
-
-# Локальный сервер (если вы используете local_server.py вместо server.py)
-# Рекомендуется переименовать local_server.py в server.py и оставить в репозитории,
-# но если хотите игнорировать — раскомментируйте:
-# local_server.py
-
-# Сгенерированный index.html — не игнорируем, он нужен для GitHub Pages.
-# Иногда его добавляют в .gitignore, если генерируют перед каждым деплоем,
-# но у вас он уже в репозитории, так что оставляем.
-
-# Файлы резервных копий, создаваемые редакторами
-*~
-*.backup
-
-# Сгенерированные или временные файлы в папках assets
-assets/docs/*.tmp
-assets/images/*.tmp
-
-# Python
-__pycache__/
-*.py[cod]
-*.so
-.Python
-.venv/
-venv/
+*.pyc
 
 # IDE
-.idea/
 .vscode/
+.idea/
 
-# Secrets (важно!)
-config.py
-.secrets
-*credentials*
-*.key
-*.pem
+# Бекапы
+index_backup_*.html
+
+# Лишние фото
+assets/images/upload_*.png
+
+# Секреты
+.env
