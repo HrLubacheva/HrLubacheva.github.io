@@ -1,6 +1,11 @@
 // ---------- Главная инициализация сайта ----------
+let mainInitialized = false;
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Инициализация калькулятора
+    if (mainInitialized) return;
+    mainInitialized = true;
+
+    // Инициализация калькулятора (один раз)
     if (typeof initCalculator === 'function') {
         initCalculator();
         console.log('✅ Калькулятор инициализирован');

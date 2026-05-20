@@ -1,5 +1,6 @@
 // ---------- Калькулятор услуг ----------
 let cart = [];
+let calculatorInitialized = false;
 
 function renderCart() {
     let total = 0, qty = 0;
@@ -43,11 +44,14 @@ function renderCart() {
     });
 
     document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.addEventListener('click', (e) => {
+        // Удаляем старые обработчики, чтобы не было дублирования
+        btn.removeEventListener('click', btn._handler);
+        btn._handler = (e) => {
             const idx = parseInt(btn.dataset.idx);
             cart.splice(idx, 1);
             renderCart();
-        });
+        };
+        btn.addEventListener('click', btn._handler);
     });
 }
 
@@ -58,34 +62,78 @@ function addToCart(cat, selectId, qtyId) {
     const name = select.options[select.selectedIndex].text.replace(/ — .*/, '');
     const quantity = parseInt(document.getElementById(qtyId).value);
     if (isNaN(quantity) || quantity < 1) return;
+
     const existing = cart.find(i => i.name === name && i.cat === cat);
-    if (existing) existing.qty += quantity;
-    else cart.push({ name, price, qty: quantity, cat });
+    if (existing) {
+        existing.qty += quantity;
+    } else {
+        cart.push({ name, price, qty: quantity, cat });
+    }
     renderCart();
 }
 
 function initCalculator() {
+    // Защита от двойной инициализации
+    if (calculatorInitialized) {
+        console.log('Калькулятор уже инициализирован');
+        return;
+    }
+    calculatorInitialized = true;
+
+    // Удаляем старые обработчики, если они есть
     const businessAdd = document.getElementById('business-add');
     const individualAdd = document.getElementById('individual-add');
     const corporateAdd = document.getElementById('corporate-add');
     const groupAdd = document.getElementById('group-add');
 
-    if (businessAdd) businessAdd.addEventListener('click', () => addToCart('business', 'business-select', 'business-qty'));
-    if (individualAdd) individualAdd.addEventListener('click', () => addToCart('individual', 'individual-select', 'individual-qty'));
-    if (corporateAdd) corporateAdd.addEventListener('click', () => addToCart('corporate', 'corporate-select', 'corporate-qty'));
-    if (groupAdd) groupAdd.addEventListener('click', () => addToCart('group', 'group-select', 'group-qty'));
+    // Создаём новые обработчики с защитой от дублирования
+    const businessHandler = () => addToCart('business', 'business-select', 'business-qty');
+    const individualHandler = () => addToCart('individual', 'individual-select', 'individual-qty');
+    const corporateHandler = () => addToCart('corporate', 'corporate-select', 'corporate-qty');
+    const groupHandler = () => addToCart('group', 'group-select', 'group-qty');
 
+    if (businessAdd) {
+        businessAdd.removeEventListener('click', businessAdd._handler);
+        businessAdd._handler = businessHandler;
+        businessAdd.addEventListener('click', businessAdd._handler);
+    }
+    if (individualAdd) {
+        individualAdd.removeEventListener('click', individualAdd._handler);
+        individualAdd._handler = individualHandler;
+        individualAdd.addEventListener('click', individualAdd._handler);
+    }
+    if (corporateAdd) {
+        corporateAdd.removeEventListener('click', corporateAdd._handler);
+        corporateAdd._handler = corporateHandler;
+        corporateAdd.addEventListener('click', corporateAdd._handler);
+    }
+    if (groupAdd) {
+        groupAdd.removeEventListener('click', groupAdd._handler);
+        groupAdd._handler = groupHandler;
+        groupAdd.addEventListener('click', groupAdd._handler);
+    }
+
+    // Инициализация табов (тоже с защитой)
     const tabs = document.querySelectorAll('.calculator-tabs .tab-btn');
     const panes = document.querySelectorAll('.tab-pane');
-    tabs.forEach(btn => btn.addEventListener('click', () => {
-        const tab = btn.dataset.tab;
-        tabs.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        panes.forEach(p => p.classList.remove('active'));
-        const activePane = document.getElementById(`tab-${tab}`);
-        if (activePane) activePane.classList.add('active');
-    }));
+
+    tabs.forEach(btn => {
+        btn.removeEventListener('click', btn._tabHandler);
+        btn._tabHandler = () => {
+            const tab = btn.dataset.tab;
+            tabs.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            panes.forEach(p => p.classList.remove('active'));
+            const activePane = document.getElementById(`tab-${tab}`);
+            if (activePane) activePane.classList.add('active');
+        };
+        btn.addEventListener('click', btn._tabHandler);
+    });
+
+    console.log('✅ Калькулятор инициализирован');
 }
 
 // Экспортируем для глобального доступа
 window.initCalculator = initCalculator;
+window.addToCart = addToCart;
+window.renderCart = renderCart;
