@@ -68,3 +68,20 @@
             <div id="tab-group" class="tab-pane">
                 <div id="group-list"></div>
                 <div class="add-service">
+                    <select id="group-select">
+                        <option value="5000">Групповой тренинг (до 10 чел.) — 5 000 ₽/чел</option>
+                        <option value="4000">Групповой тренинг (11-20 чел.) — 4 000 ₽/чел</option>
+                        <option value="3500">Групповой тренинг (21+ чел.) — 3 500 ₽/чел</option>
+                    </select>
+                    <input type="number" id="group-qty" min="1" value="1" class="calc-qty">
+                    <button id="group-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                </div>
+            </div>
+
+            <div class="total-block">
+                <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
+                <div id="discountInfo" class="discount-info"></div>
+            </div>
+        </div>
+    </div>
+</section>

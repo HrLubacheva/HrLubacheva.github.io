@@ -310,6 +310,23 @@
             <div id="tab-group" class="tab-pane">
                 <div id="group-list"></div>
                 <div class="add-service">
+                    <select id="group-select">
+                        <option value="5000">Групповой тренинг (до 10 чел.) — 5 000 ₽/чел</option>
+                        <option value="4000">Групповой тренинг (11-20 чел.) — 4 000 ₽/чел</option>
+                        <option value="3500">Групповой тренинг (21+ чел.) — 3 500 ₽/чел</option>
+                    </select>
+                    <input type="number" id="group-qty" min="1" value="1" class="calc-qty">
+                    <button id="group-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                </div>
+            </div>
+
+            <div class="total-block">
+                <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
+                <div id="discountInfo" class="discount-info"></div>
+            </div>
+        </div>
+    </div>
+</section>
 <section id="quiz">
     <div class="container">
         <div class="quiz-card">
@@ -400,13 +417,13 @@
     </div>
 </div>
 
-<!-- Подключение стилей редактора (однократно) -->
+<!-- Подключение стилей редактора (исправленный путь) -->
 <script>
     if (!window.editorStylesLoaded) {
         window.editorStylesLoaded = true;
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = 'components/common/scripts/editor/ui/styles.css';
+        link.href = 'components/common/scripts/editor/styles.css';
         document.head.appendChild(link);
     }
 </script>
@@ -422,6 +439,6 @@
 <script src="components/common/scripts/main.js"></script>
 
 <!-- АДМИН-ПАНЕЛЬ (ДОЛЖНА БЫТЬ ПОСЛЕДНЕЙ) -->
-<script type="module" src="components/common/scripts/editor/main.js?v=1779299047"></script>
+<script type="module" src="components/common/scripts/editor/main.js?v=1779300236"></script>
 </body>
 </html>

@@ -4,9 +4,20 @@ function initCallbackForm() {
     if (phoneInput) {
         phoneInput.addEventListener('input', function(e) {
             let rawValue = this.value.replace(/\D/g, '');
-            let masked = formatPhoneNumber(rawValue);
-            if (masked) this.value = masked;
-            else this.value = '';
+            if (typeof formatPhoneNumber === 'function') {
+                let masked = formatPhoneNumber(rawValue);
+                if (masked) this.value = masked;
+                else this.value = '';
+            } else {
+                // fallback если функция не загружена
+                if (rawValue.length > 11) rawValue = rawValue.slice(0, 11);
+                let formatted = '+7';
+                if (rawValue.length > 1) formatted += ' ' + rawValue.slice(1, 4);
+                if (rawValue.length >= 5) formatted += ' ' + rawValue.slice(4, 7);
+                if (rawValue.length >= 8) formatted += ' ' + rawValue.slice(7, 9);
+                if (rawValue.length >= 10) formatted += ' ' + rawValue.slice(9, 11);
+                this.value = formatted;
+            }
         });
     }
 
@@ -24,7 +35,8 @@ function initCallbackForm() {
             const comment = document.getElementById('callbackComment').value.trim() || 'Не указано';
 
             if (!name || !phoneField) {
-                alert('Пожалуйста, заполните имя и номер телефона.');
+                if (typeof showToast === 'function') showToast('❌ Заполните имя и телефон');
+                else alert('Пожалуйста, заполните имя и номер телефона.');
                 isSubmitting = false;
                 return;
             }
@@ -34,7 +46,8 @@ function initCallbackForm() {
             if (!digits.startsWith('7')) digits = '7' + digits;
 
             if (digits.length !== 11) {
-                alert('Номер должен содержать 10 цифр после +7. Пример: 9123456789');
+                if (typeof showToast === 'function') showToast('❌ Некорректный номер телефона');
+                else alert('Номер должен содержать 10 цифр после +7');
                 isSubmitting = false;
                 return;
             }
@@ -47,11 +60,24 @@ function initCallbackForm() {
                 comment: comment,
                 quizAnswers: '-'
             };
-            sendDataToSheet(formData);
-            showToast(`✅ Спасибо, ${name}! Мы перезвоним вам на ${formattedForDisplay}`, 4000);
-            callbackForm.reset();
 
+            if (typeof sendDataToSheet === 'function') {
+                sendDataToSheet(formData);
+            } else {
+                console.log('Данные формы:', formData);
+            }
+
+            if (typeof showToast === 'function') {
+                showToast(`✅ Спасибо, ${name}! Мы перезвоним вам на ${formattedForDisplay}`, 4000);
+            } else {
+                alert(`Спасибо, ${name}! Мы перезвоним вам на ${formattedForDisplay}`);
+            }
+
+            callbackForm.reset();
             setTimeout(() => { isSubmitting = false; }, 2000);
         });
     }
 }
+
+// Экспортируем для глобального доступа
+window.initCallbackForm = initCallbackForm;
