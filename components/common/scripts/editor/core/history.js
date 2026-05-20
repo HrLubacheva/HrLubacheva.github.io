@@ -1,4 +1,3 @@
-// ========== УПРАВЛЕНИЕ ИСТОРИЕЙ (UNDO/REDO) ==========
 import { state } from './state.js';
 import { showToast } from './utils.js';
 
@@ -14,8 +13,7 @@ export function saveToHistory() {
         const snapshot = { html: document.documentElement.outerHTML, timestamp: Date.now() };
         state.history.push(snapshot);
         if (state.history.length > 50) state.history.shift();
-        else state.historyIndex = state.history.length - 1;
-        updateButtons();
+        state.historyIndex = state.history.length - 1;
     }, 100);
 }
 
@@ -27,7 +25,6 @@ function restoreSnapshot(snapshot) {
     const newBody = temp.querySelector('body');
     if (newBody) {
         document.body.innerHTML = newBody.innerHTML;
-        // Перезапустить скрипты
         document.body.querySelectorAll('script').forEach(oldScript => {
             const newScript = document.createElement('script');
             if (oldScript.src) newScript.src = oldScript.src;
@@ -56,13 +53,6 @@ export function redo() {
     }
     state.historyIndex++;
     restoreSnapshot(state.history[state.historyIndex]);
-}
-
-function updateButtons() {
-    const undoBtn = document.getElementById('undoBtn');
-    const redoBtn = document.getElementById('redoBtn');
-    if (undoBtn) undoBtn.disabled = state.historyIndex <= 0;
-    if (redoBtn) redoBtn.disabled = state.historyIndex >= state.history.length - 1;
 }
 
 export function initHistory() {

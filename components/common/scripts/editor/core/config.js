@@ -1,4 +1,3 @@
-// ========== КОНФИГУРАЦИЯ ==========
 export const CONFIG = {
     REPO_OWNER: 'hrlubacheva',
     REPO_NAME: 'hrlubacheva.github.io',
