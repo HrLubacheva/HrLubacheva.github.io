@@ -7,5 +7,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initAnimations();
     initSmoothScroll();
     initCopyButtons();
-
+    initEditor();
 });
