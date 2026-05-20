@@ -39,3 +39,22 @@ Thumbs.db
 # Сгенерированные или временные файлы в папках assets
 assets/docs/*.tmp
 assets/images/*.tmp
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+
+# Secrets (важно!)
+config.py
+.secrets
+*credentials*
+*.key
+*.pem
