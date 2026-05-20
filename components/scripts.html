@@ -26,6 +26,17 @@
     </div>
 </div>
 
+<!-- Подключение стилей редактора (однократно) -->
+<script>
+    if (!window.editorStylesLoaded) {
+        window.editorStylesLoaded = true;
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'components/common/scripts/editor/ui/styles.css';
+        document.head.appendChild(link);
+    }
+</script>
+
 <script src="components/common/scripts/core.js"></script>
 <script src="components/common/scripts/calculator.js"></script>
 <script src="components/common/scripts/quiz.js"></script>
@@ -34,7 +45,9 @@
 <script src="components/common/scripts/animations.js"></script>
 <script src="components/common/scripts/navigation.js"></script>
 <script src="components/common/scripts/copy.js"></script>
-<script type="module" src="components/common/scripts/editor.js"></script>
 <script src="components/common/scripts/main.js"></script>
+
+<!-- АДМИН-ПАНЕЛЬ (ДОЛЖНА БЫТЬ ПОСЛЕДНЕЙ) -->
+<script type="module" src="components/common/scripts/editor/main.js"></script>
 </body>
 </html>

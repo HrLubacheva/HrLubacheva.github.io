@@ -863,3 +863,59 @@ section[id] {
     }
 }
 
+/* ===== СТИЛИ ДЛЯ БЛОКОВ РЕДАКТОРА ===== */
+.editor-text-block,
+.editor-photo-block,
+.editor-video-block,
+.editor-card-block,
+.editor-button-block,
+.editor-divider-block {
+    transition: all 0.2s ease;
+}
+
+.editor-text-block:hover,
+.editor-photo-block:hover,
+.editor-video-block:hover,
+.editor-card-block:hover,
+.editor-button-block:hover,
+.editor-divider-block:hover {
+    transform: translateY(-2px);
+}
+
+/* Бесплатные материалы в столбик */
+.freebies-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.freebies-buttons .btn-primary {
+    width: auto;
+    min-width: 280px;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+    .editor-text-block,
+    .editor-photo-block,
+    .editor-video-block,
+    .editor-card-block,
+    .editor-button-block,
+    .editor-divider-block {
+        margin: 15px 0;
+    }
+
+    .photo-card-inner img,
+    .video-card-inner video {
+        border-radius: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .freebies-buttons .btn-primary {
+        width: 100%;
+        min-width: auto;
+    }
+}

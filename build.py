@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import time
 
 # Папки с компонентами
 COMMON_DIR = "components/common"
@@ -15,19 +16,21 @@ def read_component(dir_path, name):
 
 
 def ensure_editor_files():
-    """Проверяет, что все файлы админ-панели на месте."""
+    """Проверяет, что все файлы админ-панели на месте (новая структура)."""
     editor_files = [
-        "config.js",
-        "state.js",
-        "utils.js",
-        "token.js",
-        "styles.js",
-        "ui.js",
-        "slides-panel.js",
-        "text-editor.js",
-        "image-editor.js",
-        "drag-drop.js",
-        "elements.js",
+        # core
+        "core/config.js", "core/state.js", "core/history.js", "core/utils.js",
+        # actions
+        "actions/save.js", "actions/add.js", "actions/delete.js", "actions/duplicate.js",
+        # blocks
+        "blocks/base.js", "blocks/text-block.js", "blocks/photo-block.js", "blocks/video-block.js",
+        "blocks/card-block.js", "blocks/button-block.js", "blocks/divider-block.js",
+        # features
+        "features/selection.js", "features/lock.js", "features/resize.js",
+        "features/dragndrop.js", "features/text-edit.js",
+        # ui
+        "ui/toolbar.js", "ui/panels.js", "ui/property-panel.js", "ui/styles.css",
+        # main
         "main.js"
     ]
 
@@ -41,6 +44,7 @@ def ensure_editor_files():
         print(f"⚠️ ВНИМАНИЕ: Отсутствуют файлы админ-панели: {', '.join(missing)}")
         print("   Админ-панель может работать некорректно")
         return False
+    print("✅ Все файлы админ-панели на месте")
     return True
 
 
@@ -92,7 +96,14 @@ def build_index():
         print(f"⚠️ Файл не найден: {footer_path}")
 
     if os.path.exists(scripts_path):
-        parts.append(read_component("components", "scripts.html"))
+        scripts_content = read_component("components", "scripts.html")
+        # Добавляем версию для editor.js
+        version = int(time.time())
+        scripts_content = scripts_content.replace(
+            'src="components/common/scripts/editor/main.js"',
+            f'src="components/common/scripts/editor/main.js?v={version}"'
+        )
+        parts.append(scripts_content)
     else:
         parts.append("<!-- scripts.html не найден -->")
         print(f"⚠️ Файл не найден: {scripts_path}")

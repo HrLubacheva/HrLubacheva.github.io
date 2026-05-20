@@ -18,9 +18,9 @@ def run_cmd(cmd, check=True):
 def extract_section(html, section_name):
     """Извлекает содержимое секции из index.html."""
     patterns = {
-        'hero': r'(<section>\s*<div class="container hero">.*?</div>\s*</section>)',
-        'roles': r'(<section id="roles">.*?</section>)',
-        'services': r'(<section class="section-light" id="services">.*?</section>)',
+        'hero': r'(<section class="section" data-section-type="hero">.*?</section>)',
+        'roles': r'(<section class="section" data-section-type="roles" id="roles">.*?</section>)',
+        'services': r'(<section class="section section-light" data-section-type="services" id="services">.*?</section>)',
         'stats': r'(<section>\s*<div class="container">\s*<h2 class="section-title">Цифры, подтверждающие экспертизу</h2>.*?</div>\s*</section>)',
         'benefits': r'(<section class="section-dark" id="about">.*?</section>)',
         'process': r'(<section id="process">.*?</section>)',
@@ -95,12 +95,19 @@ def sync_components():
 
 
 def check_editor_files():
-    """Проверяет наличие всех файлов админ-панели."""
+    """Проверяет наличие всех файлов админ-панели (новая структура)."""
     editor_dir = "components/common/scripts/editor"
     required_files = [
-        "config.js", "state.js", "utils.js", "token.js", "styles.js",
-        "ui.js", "slides-panel.js", "text-editor.js", "image-editor.js",
-        "drag-drop.js", "elements.js", "main.js"
+        # core
+        "core/config.js", "core/state.js", "core/history.js", "core/utils.js",
+        # actions
+        "actions/elements.js", "actions/save.js",
+        # features
+        "features/drag-drop.js", "features/image-editor.js", "features/text-editor.js",
+        # ui
+        "ui/panels.js", "ui/styles.js", "ui/toolbar.js",
+        # main
+        "main.js", "styles-editor.css"
     ]
 
     missing = []
@@ -119,7 +126,7 @@ def check_editor_files():
 
 def main():
     print("=" * 50)
-    print("🔄 СИНХРОНИЗАЦИЯ С GITHUB")
+    print("🔄 СИНХРОНИЗАЦИЯ")
     print("=" * 50)
 
     # Проверяем, что мы в правильной директории
@@ -131,23 +138,14 @@ def main():
     # Проверка наличия файлов админ-панели
     check_editor_files()
 
-    # 1. git pull
-    print("\n1. Скачиваем изменения из удалённого репозитория...")
-    pull_result = run_cmd("git pull --no-edit", check=False)
-    if pull_result.returncode != 0:
-        print("⚠️ Не удалось выполнить git pull. Проверьте соединение с интернетом.")
-        print("   Продолжаем с локальными файлами...")
-    else:
-        print("✅ git pull выполнен успешно.")
-
-    # 2. Извлечение компонентов из index.html
-    print("\n2. Извлекаем компоненты из index.html...")
+    # 1. Извлечение компонентов из index.html
+    print("\n1. Извлекаем компоненты из index.html...")
     if not sync_components():
         print("⚠️ Не удалось синхронизировать компоненты. Возможно, index.html отсутствует.")
         print("   Запустите сначала: python build.py")
 
-    # 3. Пересборка index.html
-    print("\n3. Пересобираем index.html из компонентов...")
+    # 2. Пересборка index.html
+    print("\n2. Пересобираем index.html из компонентов...")
     try:
         build_index()
         print("✅ Пересборка завершена.")

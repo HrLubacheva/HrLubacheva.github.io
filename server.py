@@ -6,6 +6,7 @@ import webbrowser
 import os
 import sys
 from build import build_index
+import time
 
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 START_PORT = 8080
@@ -28,6 +29,13 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
+    def end_headers(self):
+        # Добавляем заголовки против кэширования
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        self.send_header('Pragma', 'no-cache')
+        self.send_header('Expires', '0')
+        super().end_headers()
+
     def do_GET(self):
         # При запросе главной страницы пересобираем index.html
         if self.path == "/" or self.path == "/index.html":
@@ -38,14 +46,24 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             except Exception as e:
                 print(f"❌ Ошибка сборки: {e}")
 
+        # Для JS файлов добавляем версию для обхода кэша
+        if self.path.endswith('.js'):
+            # Проверяем, есть ли уже ?v= в пути
+            if '?v=' not in self.path:
+                # Перенаправляем на версию с временной меткой
+                timestamp = int(time.time())
+                new_path = f"{self.path}?v={timestamp}"
+                self.send_response(301)
+                self.send_header('Location', new_path)
+                self.end_headers()
+                return
+
         try:
             return super().do_GET()
         except (ConnectionAbortedError, BrokenPipeError, ConnectionResetError):
-            # Клиент разорвал соединение – просто игнорируем
             pass
 
     def log_message(self, format, *args):
-        # Кастомное логирование
         print(f"📡 {args[0] if args else format}")
 
 
@@ -77,6 +95,7 @@ def main():
         print("   - Нажмите ✏️ Редактировать для включения админ-панели")
         print("   - Двойной клик по тексту для редактирования")
         print("   - ПКМ по фото для изменения формы")
+        print("   - При обновлении страницы используйте Ctrl+F5 (полное обновление)")
         print("\n⏎ Ctrl+C для остановки.\n")
 
         webbrowser.open(f"http://127.0.0.1:{port}")
