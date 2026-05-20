@@ -1,4 +1,4 @@
-// ========== МИНИМАЛЬНЫЙ РЕДАКТОР ==========
+// ========== УНИВЕРСАЛЬНЫЙ РЕДАКТОР ЛЮБЫХ БЛОКОВ ==========
 import { showToast } from '../core/utils.js';
 import { saveToHistory } from '../core/history.js';
 
@@ -9,9 +9,10 @@ let startWidth, startHeight;
 let currentHandle = null;
 let sizeIndicator = null;
 
-const MIN_WIDTH = 50;
-const MIN_HEIGHT = 50;
+const MIN_WIDTH = 40;
+const MIN_HEIGHT = 40;
 
+// Стили
 function addStyles() {
     if (document.getElementById('block-editor-styles')) return;
     const style = document.createElement('style');
@@ -25,7 +26,6 @@ function addStyles() {
         }
         body.block-edit-mode img.editable-block.selected {
             outline: 3px solid #ff9800 !important;
-            cursor: pointer;
         }
         .resize-marker {
             position: fixed;
@@ -53,27 +53,32 @@ function addStyles() {
             z-index: 10001;
             pointer-events: none;
         }
-        body.block-edit-mode p[contenteditable="true"],
-        body.block-edit-mode h1[contenteditable="true"],
-        body.block-edit-mode h2[contenteditable="true"],
-        body.block-edit-mode h3[contenteditable="true"],
-        body.block-edit-mode h4[contenteditable="true"] {
+        body.block-edit-mode [contenteditable="true"] {
             outline: 2px solid #2D6A9F !important;
             background: rgba(45,106,159,0.05);
             padding: 8px;
             border-radius: 8px;
+            min-width: 50px;
+            display: inline-block;
+        }
+        /* Защита элементов редактора */
+        .editor-toolbar, .editor-toolbar *,
+        .slides-panel, .slides-panel *,
+        #editorToggle,
+        .resize-marker {
+            pointer-events: auto !important;
         }
     `;
     document.head.appendChild(style);
 }
 
-function isEditorElement(element) {
+// Защищённые элементы редактора
+function isProtectedElement(element) {
     if (!element) return true;
     const protectedSelectors = [
         '.editor-toolbar', '.editor-toolbar *',
         '.resize-marker',
         '#editorToggle', '.editor-toggle-btn',
-        '.property-panel', '.property-panel *',
         '.slides-panel', '.slides-panel *',
         'button', '.btn-primary', '.btn-secondary',
         '.tab-btn', '.tool-btn', '.action-btn', '.exit-btn'
@@ -86,6 +91,7 @@ function isEditorElement(element) {
     return false;
 }
 
+// Найти редактируемый блок
 function getBlock(element) {
     if (!element) return null;
     let current = element;
@@ -98,9 +104,10 @@ function getBlock(element) {
     return null;
 }
 
-function showResizeMarkers(img) {
+// Показать маркеры изменения размера
+function showResizeMarkers(block) {
     hideResizeMarkers();
-    const rect = img.getBoundingClientRect();
+    const rect = block.getBoundingClientRect();
     const markers = [
         { name: 'se', left: rect.left + rect.width - 6, top: rect.top + rect.height - 6, cursor: 'se-resize' },
         { name: 'sw', left: rect.left - 6, top: rect.top + rect.height - 6, cursor: 'sw-resize' },
@@ -117,7 +124,7 @@ function showResizeMarkers(img) {
         marker.addEventListener('mousedown', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            startResize(e, img, m.name);
+            startResize(e, block, m.name);
         });
         document.body.appendChild(marker);
     });
@@ -129,10 +136,10 @@ function hideResizeMarkers() {
     sizeIndicator = null;
 }
 
-function startResize(e, img, handle) {
+function startResize(e, block, handle) {
     isResizing = true;
     currentHandle = handle;
-    const rect = img.getBoundingClientRect();
+    const rect = block.getBoundingClientRect();
     dragStartX = e.clientX;
     dragStartY = e.clientY;
     startWidth = rect.width;
@@ -179,6 +186,7 @@ function stopResize() {
     document.removeEventListener('mouseup', stopResize);
 }
 
+// Выделение блока
 function selectBlock(block) {
     if (selectedBlock === block) return;
     if (selectedBlock) {
@@ -187,6 +195,7 @@ function selectBlock(block) {
     }
     selectedBlock = block;
     selectedBlock.classList.add('selected');
+    // Показываем маркеры только для изображений
     if (block.tagName === 'IMG') {
         showResizeMarkers(block);
     }
@@ -200,16 +209,50 @@ function clearSelection() {
     }
 }
 
+// Сделать любой элемент редактируемым
+function makeEditable(element) {
+    if (!element) return;
+    if (element.contentEditable === 'true') return;
+
+    element.contentEditable = 'true';
+    element.focus();
+
+    // Сохраняем при потере фокуса
+    const saveOnBlur = () => {
+        element.contentEditable = 'false';
+        element.removeEventListener('blur', saveOnBlur);
+        saveToHistory();
+        showToast('✅ Текст сохранён');
+    };
+    element.addEventListener('blur', saveOnBlur, { once: true });
+
+    // Enter для переноса строки (не закрывает редактирование)
+    element.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            document.execCommand('insertLineBreak');
+        }
+    }, { once: true });
+}
+
+// Инициализация
 export function initBlockEditor() {
     addStyles();
-    const allBlocks = document.querySelectorAll('img, p, h1, h2, h3, h4');
+
+    // Все редактируемые блоки: текст, карточки, заголовки, параграфы, списки
+    const allBlocks = document.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, .role-card, .service-card, .benefit-card, .process-card, .stat-item, .quiz-card, .checklist-card, .calendar-card, .hero-content, .hero-text, .contact-line, img');
+
     allBlocks.forEach(block => {
         block.classList.add('editable-block');
     });
+
+    // Клик для выделения
     document.addEventListener('click', (e) => {
         if (!document.body.classList.contains('block-edit-mode')) return;
+        if (isProtectedElement(e.target)) return;
+
         const block = getBlock(e.target);
-        if (block && !isEditorElement(e.target) && !e.target.closest('.resize-marker')) {
+        if (block && !e.target.closest('.resize-marker')) {
             e.preventDefault();
             e.stopPropagation();
             selectBlock(block);
@@ -217,17 +260,21 @@ export function initBlockEditor() {
             clearSelection();
         }
     });
+
+    // Двойной клик для редактирования ЛЮБОГО текстового блока
     document.addEventListener('dblclick', (e) => {
         if (!document.body.classList.contains('block-edit-mode')) return;
-        const block = getBlock(e.target);
-        if (block && (block.tagName === 'P' || block.tagName === 'H1' || block.tagName === 'H2' || block.tagName === 'H3' || block.tagName === 'H4')) {
-            block.contentEditable = 'true';
-            block.focus();
-            block.addEventListener('blur', () => {
-                block.contentEditable = 'false';
-                saveToHistory();
-                showToast('✅ Текст сохранён');
-            }, { once: true });
+        if (isProtectedElement(e.target)) return;
+
+        // Находим редактируемый элемент
+        let target = e.target;
+        const editableTags = ['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'SPAN', 'DIV', 'A', 'TD', 'TH'];
+
+        if (editableTags.includes(target.tagName) || target.closest('.role-card, .service-card, .benefit-card, .process-card, .stat-item, .quiz-card, .checklist-card, .calendar-card, .hero-content, .hero-text, .contact-line')) {
+            const editableElement = target.tagName === 'DIV' && !target.innerText ? target.querySelector('p, h1, h2, h3, h4, li') || target : target;
+            makeEditable(editableElement);
+            e.preventDefault();
+            e.stopPropagation();
         }
     });
 }
@@ -235,11 +282,18 @@ export function initBlockEditor() {
 export function enableBlockEditMode() {
     document.body.classList.add('block-edit-mode');
     showToast('🎨 Режим редактирования включён');
-    showToast('✏️ Двойной клик по тексту | 📏 Тяните за углы фото');
+    showToast('✏️ Двойной клик по любому тексту | 📏 Тяните за углы фото');
 }
 
 export function disableBlockEditMode() {
     document.body.classList.remove('block-edit-mode');
     clearSelection();
+    // Закрываем все активные редакторы
+    document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+        el.contentEditable = 'false';
+    });
     showToast('✨ Режим редактирования выключен');
 }
+
+export function toggleGrid() {}
+export function toggleSnap() {}
