@@ -27,7 +27,11 @@ const urlsToCache = [
   '/styles.css',
   '/components/common/scripts/core.js',
   '/components/common/scripts/public-main.js',
-  '/assets/images/img_1.jpg'
+  '/assets/images/img_1.jpg',
+  '/assets/docs/checklist.pdf',
+  '/assets/docs/training_program.pdf',
+  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap',
+  'https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2'
 ];
 
 self.addEventListener('install', event => {{
@@ -48,7 +52,19 @@ self.addEventListener('activate', event => {{
 
 self.addEventListener('fetch', event => {{
   event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
+    caches.match(event.request).then(response => {{
+      if (response) return response;
+      // Для всех остальных запросов используем сеть, но сохраняем в кеш
+      return fetch(event.request).then(networkResponse => {{
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {{
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then(cache => {{
+            cache.put(event.request, responseToCache);
+          }});
+        }}
+        return networkResponse;
+      }});
+    }})
   );
 }});
 '''

@@ -1,26 +1,14 @@
-# Python (локальные инструменты)
-# build.py
-# server.py
-# deploy.py
-# sync.py
-# clear_token.py
-../.venv/
+.venv/
 __pycache__/
 *.pyc
-
-# IDE
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.log
+*.db
+*.sqlite3
+.DS_Store
 .vscode/
 .idea/
-
-# Бекапы
-index_backup_*.html
-
-# Лишние фото
-assets/images/upload_*.png
-
-# Секреты
-.env
-
-.DS_Store
-*.log
-project_analysis.json
