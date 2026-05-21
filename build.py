@@ -51,17 +51,13 @@ def minify_css(css):
 
 
 def minify_js(js):
-    """Минификация JavaScript"""
-    js = re.sub(r'//.*?$|/\*.*?\*/', '', js, flags=re.MULTILINE | re.DOTALL)
-    js = re.sub(r'\s+', ' ', js)
-    js = re.sub(r'\s*([=<>!+\-*/%&|])\s*', r'\1', js)
-    js = re.sub(r'\s*,\s*', ',', js)
-    js = re.sub(r'\s*;\s*', ';', js)
-    return js.strip()
+    """Минификация JavaScript - ВРЕМЕННО ОТКЛЮЧЕНА (возвращаем как есть)"""
+    # Возвращаем JS без изменений, чтобы не ломать код
+    return js
 
 
 def bundle_js(js_files, output_path):
-    """Объединение JS файлов в один бандл"""
+    """Объединение JS файлов в один бандл (без минификации)"""
     if not js_files:
         return False
 
@@ -76,7 +72,8 @@ def bundle_js(js_files, output_path):
                 bundled.append(f.read())
 
     if bundled and any_changed:
-        result = minify_js('\n'.join(bundled))
+        # Просто объединяем без минификации
+        result = '\n'.join(bundled)
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(result)
         return True
