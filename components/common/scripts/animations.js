@@ -1,46 +1,10 @@
-// ========== ПЛАВНЫЕ АНИМАЦИИ ДЛЯ САЙТА ==========
+// animations.js - улучшенная версия
 (function() {
     'use strict';
 
-    function isEditorMode() {
-        return window.location.pathname.includes('editor.html') ||
-               window.AUTO_EDITOR === true ||
-               document.body.classList.contains('block-edit-mode');
-    }
-
     function initAnimations() {
-        // В режиме редактора — показываем ВСЕ блоки мгновенно, без анимаций
-        if (isEditorMode()) {
-            console.log('🎨 Режим редактора — анимации отключены, все блоки видны');
-
-            // Находим все элементы с fade-up и сразу делаем видимыми
-            const fadeElements = document.querySelectorAll('.fade-up');
-            fadeElements.forEach(function(el) {
-                el.classList.add('visible');
-                el.style.opacity = '1';
-                el.style.transform = 'none';
-                el.style.transition = 'none';
-            });
-
-            // Также убираем анимацию у всех элементов, которые могли её иметь
-            const allAnimated = document.querySelectorAll('[class*="fade"], [class*="scale"], [class*="slide"]');
-            allAnimated.forEach(function(el) {
-                el.style.opacity = '1';
-                el.style.transform = 'none';
-                el.style.transition = 'none';
-            });
-
-            return;
-        }
-
-        // Для публичного сайта — обычные анимации
-        const selectors = [
-            '.role-card', '.service-card', '.stat-item', '.benefit-card',
-            '.process-card', '.quiz-card', '.checklist-card', '.calendar-card',
-            '.hero-content', '.hero-image', '.section-title', '.contact-block'
-        ];
-
-        const animatedElements = document.querySelectorAll(selectors.join(','));
+        // Все элементы с классами анимаций
+        const animatedElements = document.querySelectorAll('.fade-up, .fade-left, .fade-right, .scale-in');
 
         if (animatedElements.length === 0) {
             console.log('⚠️ Элементы для анимации не найдены');
@@ -49,51 +13,69 @@
 
         console.log('✨ Найдено элементов для анимации:', animatedElements.length);
 
-        // Добавляем класс fade-up если его нет
+        // Сбрасываем стили перед анимацией
         animatedElements.forEach(function(el) {
-            if (!el.classList.contains('fade-up')) {
-                el.classList.add('fade-up');
-            }
-            // Сбрасываем visible, чтобы анимация повторилась
+            el.style.opacity = '';
+            el.style.transform = '';
+            el.style.transitionDelay = '';
             el.classList.remove('visible');
         });
 
-        // Настройки Intersection Observer
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -30px 0px'
-        };
+        // Плавные задержки для карточек (эффект волны)
+        const grids = ['.roles-grid', '.services-flex', '.benefits-grid', '.process-grid', '.stats-grid'];
 
+        grids.forEach(function(selector) {
+            const grid = document.querySelector(selector);
+            if (grid) {
+                const cards = Array.from(grid.children);
+                const totalCards = cards.length;
+
+                cards.forEach(function(card, index) {
+                    // Более плавное нарастание: первые быстрее, последние с большей задержкой
+                    const delay = (index / totalCards) * 0.3;
+                    card.style.transitionDelay = delay + 's';
+                });
+            }
+        });
+
+        // Отдельные элементы с классами задержек
+        document.querySelectorAll('.delay-1, .delay-2, .delay-3, .delay-4, .delay-5, .delay-6').forEach(function(el) {
+            // классы уже есть в CSS
+        });
+
+        // Настройки Intersection Observer с более чувствительным порогом
         const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
+            entries.forEach(function(entry, index) {
                 if (entry.isIntersecting) {
+                    // Маленькая задержка для более плавного появления
                     setTimeout(function() {
                         entry.target.classList.add('visible');
-                    }, 50);
+                    }, index * 20); // Каскадное появление
                     observer.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, {
+            threshold: 0.15, // Чуть ниже для более раннего появления
+            rootMargin: '0px 0px -30px 0px' // Немного раньше срабатывает
+        });
 
         // Запускаем наблюдение
         animatedElements.forEach(function(el) {
             observer.observe(el);
         });
 
-        // Добавляем последовательные задержки для элементов внутри гридов
-        document.querySelectorAll('.roles-grid .role-card, .services-flex .service-card, .benefits-grid .benefit-card, .process-grid .process-card, .stats-grid .stat-item').forEach(function(el, idx) {
-            var delay = (idx % 4) * 0.1;
-            el.style.transitionDelay = delay + 's';
-        });
+        // Форсируем показ для элементов, которые уже в видимой области
+        setTimeout(function() {
+            animatedElements.forEach(function(el) {
+                const rect = el.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                if (rect.top < windowHeight - 100) {
+                    el.classList.add('visible');
+                }
+            });
+        }, 200);
 
-        console.log('✅ Анимации инициализированы');
-    }
-
-    // Запускаем после полной загрузки DOM
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAnimations);
-    } else {
-        initAnimations();
+        console.log('✅ Плавные анимации инициализированы');
     }
 
     window.initAnimations = initAnimations;

@@ -86,29 +86,25 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZJJ2SE117"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-
         function gtag() {
             dataLayer.push(arguments);
         }
-
         gtag('js', new Date());
         gtag('config', 'G-QZJJ2SE117');
     </script>
 
-    <!-- Скрипт для плавного появления страницы -->
+    <!-- Скрипт для плавного появления страницы (шапка сначала) -->
     <script>
         (function () {
             function showPage() {
                 document.body.classList.add('loaded');
             }
-
-            // Даём странице немного времени на рендер
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function () {
-                    setTimeout(showPage, 100);
+                    setTimeout(showPage, 50);
                 });
             } else {
-                setTimeout(showPage, 100);
+                setTimeout(showPage, 50);
             }
         })();
     </script>

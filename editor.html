@@ -86,29 +86,25 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZJJ2SE117"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-
         function gtag() {
             dataLayer.push(arguments);
         }
-
         gtag('js', new Date());
         gtag('config', 'G-QZJJ2SE117');
     </script>
 
-    <!-- Скрипт для плавного появления страницы -->
+    <!-- Скрипт для плавного появления страницы (шапка сначала) -->
     <script>
         (function () {
             function showPage() {
                 document.body.classList.add('loaded');
             }
-
-            // Даём странице немного времени на рендер
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function () {
-                    setTimeout(showPage, 100);
+                    setTimeout(showPage, 50);
                 });
             } else {
-                setTimeout(showPage, 100);
+                setTimeout(showPage, 50);
             }
         })();
     </script>
@@ -245,7 +241,7 @@ body {
     color: #F9A826 !important;
 }
 
-/* ========== АНИМАЦИЯ ПОЯВЛЕНИЯ СТРАНИЦЫ ========== */
+/* ========== АНИМАЦИЯ ПОЯВЛЕНИЯ СТРАНИЦЫ (ШАПКА → КОНТЕНТ) ========== */
 body {
     opacity: 0;
     transform: translateY(12px);
@@ -261,32 +257,39 @@ body.loaded {
     filter: blur(0);
 }
 
-.navbar,
+/* Шапка появляется первой */
+.navbar {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease-out,
+                transform 0.5s ease-out;
+}
+
+body.loaded .navbar {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0s;
+}
+
+/* Hero-контент появляется после шапки */
 .hero-content,
 .hero-image {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
     transition: opacity 0.6s ease-out,
                 transform 0.6s ease-out;
 }
 
-body.loaded .navbar,
-body.loaded .hero-content,
+body.loaded .hero-content {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+}
+
 body.loaded .hero-image {
     opacity: 1;
     transform: translateY(0);
-}
-
-body.loaded .navbar {
-    transition-delay: 0.05s;
-}
-
-body.loaded .hero-content {
-    transition-delay: 0.1s;
-}
-
-body.loaded .hero-image {
-    transition-delay: 0.15s;
+    transition-delay: 0.3s;
 }
 
 /* ========== АНИМАЦИИ ПРИ СКРОЛЛЕ ========== */
@@ -364,7 +367,8 @@ a:visited {
                 <div class="small-note">Работаю с профессионалами от Junior до C-level и с бизнесом любого масштаба.</div>
             </div>
             <div class="hero-image cell-image fade-up" data-cell-type="image">
-                <img src="assets/images/img_1.jpg" alt="Виктория Любачева" class="" loading="lazy" fetchpriority="high" style="">
+                <img src="assets/images/img_1.jpg" alt="Виктория Любачева"
+                     style="width: 100%; height: auto; max-width: 420px; object-fit: contain; display: block; margin-left: -20px;">
             </div>
         </div>
     </div>
@@ -376,24 +380,24 @@ a:visited {
         </div>
         <div class="roles-grid cells-grid" data-grid-type="cards">
             <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3 class="">🧑&nbsp;Карьерный консультант</h3>
-                <p class="" contenteditable="false"><br>Индивидуальные стратегии, резюме, подготовка к интервью, повышение дохода. Продайте себя дорого.</p>
+                <h3>🧑 Карьерный консультант</h3>
+                <p>Индивидуальные стратегии, резюме, подготовка к интервью, повышение дохода. Продайте себя дорого.</p>
             </div>
             <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3 class="">🏢&nbsp;HR‑эксперт для организаций</h3>
-                <p class="" contenteditable="false"><br>Подбор персонала, онбординг, УТП, аудит HR-процессов. Закрываю вакансии с гарантией.</p>
+                <h3>🏢 HR‑эксперт для организаций</h3>
+                <p>Подбор персонала, онбординг, УТП, аудит HR-процессов. Закрываю вакансии с гарантией.</p>
             </div>
             <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3 class="">💬&nbsp;HR‑эксперт для людей</h3>
-                <p class="" contenteditable="false"><br>Консультации по трудовым отношениям, карьерные карты, переговоры с работодателем.</p>
+                <h3>💬 HR‑эксперт для людей</h3>
+                <p>Консультации по трудовым отношениям, карьерные карты, переговоры с работодателем.</p>
             </div>
             <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3 class="" contenteditable="false">🎓&nbsp;Бизнес‑тренер&nbsp;</h3>
-                <p class="" contenteditable="false"><br>Тренинги для команд и индивидуальный коучинг для руководителей. Развиваю навыки, которые приносят прибыль.</p>
+                <h3>🎓 Бизнес‑тренер</h3>
+                <p>Тренинги для команд и индивидуальный коучинг для руководителей. Развиваю навыки, которые приносят прибыль.</p>
             </div>
             <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3 class="">🧠&nbsp;Психолог</h3>
-                <p class="" contenteditable="false"><br>Помогаю найти себя, разобраться в своей жизни, определить цели и реализацию. Выявляю истинные ценности и жизненные ориентиры.</p>
+                <h3>🧠 Психолог</h3>
+                <p>Помогаю найти себя, разобраться в своей жизни, определить цели и реализацию. Выявляю истинные ценности и жизненные ориентиры.</p>
             </div>
         </div>
     </div>
@@ -405,22 +409,22 @@ a:visited {
         </div>
         <div class="services-flex cells-grid" data-grid-type="cards">
             <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3 class="">🏢&nbsp;HR для бизнеса</h3>
-                <p class="" contenteditable="false"><br>Подбор персонала (Junior → C-level), онбординг, оценка, аутсорсинг подбора, кадровый аудит.</p>
+                <h3>🏢 HR для бизнеса</h3>
+                <p>Подбор персонала (Junior → C-level), онбординг, оценка, аутсорсинг подбора, кадровый аудит.</p>
             </div>
-            <div class="service-card cell-card fade-up" data-cell-type="card" contenteditable="false">
-                <h3 class="">🧑&nbsp;Карьерный консалтинг</h3>
-                <p class=""><br>Карьерная стратегия, упаковка резюме, подготовка к интервью и переговоры о зарплате. Помогаю заявить о ценности и получить достойный оффер.</p>
-                <p class=""><strong>➕</strong> Изучаем АТС и ботов. Стратегия обхода ИИ-фильтров.</p>
+            <div class="service-card cell-card fade-up" data-cell-type="card">
+                <h3>🧑 Карьерный консалтинг</h3>
+                <p>Карьерная стратегия, упаковка резюме, подготовка к интервью и переговоры о зарплате. Помогаю заявить о ценности и получить достойный оффер.</p>
+                <p><strong>➕</strong> Изучаем АТС и ботов. Стратегия обхода ИИ-фильтров.</p>
                 <a href="assets/docs/training_program.pdf" class="btn-secondary" target="_blank">📘 Скачать программу тренинга (PDF)</a>
             </div>
             <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3 class="" contenteditable="false">🎓&nbsp;Бизнес‑тренинги, обучение и коучинг персонала</h3>
-                <p class="" contenteditable="false"><br>Корпоративные тренинги (до 25 чел.), обучение сотрудников, мастер-классы, стратегические сессии, индивидуальный коучинг топ-менеджеров.</p>
+                <h3>🎓 Бизнес‑тренинги, обучение и коучинг персонала</h3>
+                <p>Корпоративные тренинги (до 25 чел.), обучение сотрудников, мастер-классы, стратегические сессии, индивидуальный коучинг топ-менеджеров.</p>
             </div>
             <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3 class="">🎯&nbsp;Профориентация</h3>
-                <p class="" contenteditable="false"><br>Для взрослых и подростков. Помогаю определиться с профессией, направлением развития, выбрать путь, который принесёт удовлетворение и доход.</p>
+                <h3>🎯 Профориентация</h3>
+                <p>Для взрослых и подростков. Помогаю определиться с профессией, направлением развития, выбрать путь, который принесёт удовлетворение и доход.</p>
             </div>
         </div>
     </div>
@@ -450,7 +454,7 @@ a:visited {
                 <div class="stat-label">составила резюме</div>
             </div>
             <div class="stat-item fade-up">
-                <div class="stat-number" contenteditable="false">35+</div>
+                <div class="stat-number">35+</div>
                 <div class="stat-label">тренингов за 2025 год</div>
             </div>
         </div>
@@ -461,20 +465,20 @@ a:visited {
         <h2 class="section-title">Почему мне доверяют компании и специалисты?</h2>
         <div class="benefits-grid">
             <div class="benefit-card fade-up">
-                <h4 class="">🌱&nbsp;Junior → Middle</h4>
-                <p class="">Помогаю начинающим найти первую работу и заложить фундамент роста.</p>
+                <h4>🌱 Junior → Middle</h4>
+                <p>Помогаю начинающим найти первую работу и заложить фундамент роста.</p>
             </div>
             <div class="benefit-card fade-up">
-                <h4 class="">📈&nbsp;Middle → Senior</h4>
-                <p class="">Разбираюсь, где вас недооценивают, готовлю к переходу на новый уровень.</p>
+                <h4>📈 Middle → Senior</h4>
+                <p>Разбираюсь, где вас недооценивают, готовлю к переходу на новый уровень.</p>
             </div>
             <div class="benefit-card fade-up">
-                <h4 class="">🏆&nbsp;Senior/Lead → Executive</h4>
-                <p class="" contenteditable="false">Упаковываю опыт так, чтобы Вас искали хедхантеры.</p>
+                <h4>🏆 Senior/Lead → Executive</h4>
+                <p>Упаковываю опыт так, чтобы Вас искали хедхантеры.</p>
             </div>
             <div class="benefit-card fade-up">
-                <h4 class="">🤝&nbsp;Бизнес-системность</h4>
-                <p class="">Отбираю топ-5 кандидатов под бюджет и культуру компании, сокращаю время найма в 2 раза.</p>
+                <h4>🤝 Бизнес-системность</h4>
+                <p>Отбираю топ-5 кандидатов под бюджет и культуру компании, сокращаю время найма в 2 раза.</p>
             </div>
         </div>
     </div>
@@ -482,30 +486,30 @@ a:visited {
 <section id="process">
     <div class="container">
         <h2 class="section-title">Как мы будем работать вместе</h2>
-        <p style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;" class="">В процессе совместной работы вы обретаете ясность в своих целях и находите устойчивую опору в себе для их достижения.</p>
+        <p style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">В процессе совместной работы вы обретаете ясность в своих целях и находите устойчивую опору в себе для их достижения.</p>
         <div class="process-row">
             <div class="process-col">
                 <h3 class="process-title">📌 Карьерная консультация</h3>
                 <div class="process-grid">
                     <div class="process-card fade-up">
                         <div class="process-step">1</div>
-                        <h4 class="">Диагностика</h4>
-                        <p class="">Разбор целей, точки А и Б.</p>
+                        <h4>Диагностика</h4>
+                        <p>Разбор целей, точки А и Б.</p>
                     </div>
                     <div class="process-card fade-up">
                         <div class="process-step">2</div>
-                        <h4 class="">Стратегия</h4>
-                        <p class="">План: резюме, каналы поиска.</p>
+                        <h4>Стратегия</h4>
+                        <p>План: резюме, каналы поиска.</p>
                     </div>
                     <div class="process-card fade-up">
                         <div class="process-step">3</div>
-                        <h4 class="">Интенсив</h4>
-                        <p class="">Резюме, сопроводительные, интервью.</p>
+                        <h4>Интенсив</h4>
+                        <p>Резюме, сопроводительные, интервью.</p>
                     </div>
                     <div class="process-card fade-up">
                         <div class="process-step">4</div>
-                        <h4 class="">Сопровождение до оффера</h4>
-                        <p class="">Переговоры и адаптация.</p>
+                        <h4>Сопровождение до оффера</h4>
+                        <p>Переговоры и адаптация.</p>
                     </div>
                 </div>
             </div>
@@ -514,23 +518,23 @@ a:visited {
                 <div class="process-grid">
                     <div class="process-card fade-up">
                         <div class="process-step">1</div>
-                        <h4 class="">Аудит вакансии</h4>
-                        <p class="">Профиль, культура, бюджет.</p>
+                        <h4>Аудит вакансии</h4>
+                        <p>Профиль, культура, бюджет.</p>
                     </div>
                     <div class="process-card fade-up">
                         <div class="process-step">2</div>
-                        <h4 class="">Поиск и скрининг</h4>
-                        <p class="">Сортировка 100+ резюме.</p>
+                        <h4>Поиск и скрининг</h4>
+                        <p>Сортировка 100+ резюме.</p>
                     </div>
                     <div class="process-card fade-up">
                         <div class="process-step">3</div>
-                        <h4 class="">Интервью и оценка</h4>
-                        <p class="">Собеседования, рекомендации.</p>
+                        <h4>Интервью и оценка</h4>
+                        <p>Собеседования, рекомендации.</p>
                     </div>
                     <div class="process-card fade-up">
                         <div class="process-step">4</div>
-                        <h4 class="">Гарантия найма</h4>
-                        <p class="">Оффер, онбординг.</p>
+                        <h4>Гарантия найма</h4>
+                        <p>Оффер, онбординг.</p>
                     </div>
                 </div>
             </div>
@@ -540,33 +544,33 @@ a:visited {
             <div class="process-grid">
                 <div class="process-card fade-up">
                     <div class="process-step">1</div>
-                    <h4 class="">Самодиагностика</h4>
-                    <p class="">Оценка навыков.</p>
+                    <h4>Самодиагностика</h4>
+                    <p>Оценка навыков.</p>
                 </div>
                 <div class="process-card fade-up">
                     <div class="process-step">2</div>
-                    <h4 class="">Резюме-бомба</h4>
-                    <p class="">Правила, ключевые слова.</p>
+                    <h4>Резюме-бомба</h4>
+                    <p>Правила, ключевые слова.</p>
                 </div>
                 <div class="process-card fade-up">
                     <div class="process-step">3</div>
-                    <h4 class="">Интервью-игра</h4>
-                    <p class="">Техника STAR, частые вопросы.</p>
+                    <h4>Интервью-игра</h4>
+                    <p>Техника STAR, частые вопросы.</p>
                 </div>
                 <div class="process-card fade-up">
                     <div class="process-step">4</div>
-                    <h4 class="">Торги за зарплату</h4>
-                    <p class="">Как просить +30%.</p>
+                    <h4>Торги за зарплату</h4>
+                    <p>Как просить +30%.</p>
                 </div>
                 <div class="process-card fade-up">
                     <div class="process-step">5</div>
-                    <h4 class="">Изучаем АТС и ботов</h4>
-                    <p class="">Как работают системы отбора.</p>
+                    <h4>Изучаем АТС и ботов</h4>
+                    <p>Как работают системы отбора.</p>
                 </div>
                 <div class="process-card fade-up">
                     <div class="process-step">6</div>
-                    <h4 class="">Стратегия обхода ИИ</h4>
-                    <p class="">Адаптация под автоматические фильтры.</p>
+                    <h4>Стратегия обхода ИИ</h4>
+                    <p>Адаптация под автоматические фильтры.</p>
                 </div>
             </div>
         </div>

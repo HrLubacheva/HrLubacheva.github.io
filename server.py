@@ -5,7 +5,6 @@ import socket
 import webbrowser
 import os
 import sys
-from build import build_page
 
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
@@ -28,27 +27,42 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
 
     def end_headers(self):
+        # Отключаем кеширование для разработки
         self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
         super().end_headers()
 
-    def do_GET(self):
-        if self.path == "/" or self.path == "/index.html":
-            print("🔄 Пересборка index.html...")
-            try:
-                build_page(editor_mode=False)
-                print("✅ Пересборка завершена")
-            except Exception as e:
-                print(f"❌ Ошибка сборки: {e}")
-        return super().do_GET()
+    # УБИРАЕМ автосборку — она ломает соединения
+    # def do_GET(self):
+    #     if self.path == "/" or self.path == "/index.html":
+    #         print("🔄 Пересборка index.html...")
+    #         try:
+    #             build_page(editor_mode=False)
+    #             print("✅ Пересборка завершена")
+    #         except Exception as e:
+    #             print(f"❌ Ошибка сборки: {e}")
+    #     return super().do_GET()
 
 
 def main():
     if not os.path.exists("build.py") or not os.path.exists("components"):
         print("❌ Запустите из корневой папки проекта")
         sys.exit(1)
+
+    # Сначала собираем страницы один раз
+    print("📦 Первичная сборка...")
+    try:
+        from build import build_page
+        build_page(editor_mode=False)
+        build_page(editor_mode=True)
+        print("✅ Сборка завершена")
+    except Exception as e:
+        print(f"❌ Ошибка сборки: {e}")
+        sys.exit(1)
+
     port = get_free_port()
     with socketserver.TCPServer(("127.0.0.1", port), Handler) as httpd:
         print(f"\n🚀 Сервер запущен: http://127.0.0.1:{port}")
+        print("💡 Файлы собраны один раз. При изменениях запустите сборку вручную: python build.py")
         webbrowser.open(f"http://127.0.0.1:{port}")
         try:
             httpd.serve_forever()
