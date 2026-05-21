@@ -1,10 +1,10 @@
 # Python (локальные инструменты)
-build.py
-server.py
-deploy.py
-sync.py
-clear_token.py
-.venv/
+# build.py
+# server.py
+# deploy.py
+# sync.py
+# clear_token.py
+../.venv/
 __pycache__/
 *.pyc
 
@@ -20,3 +20,7 @@ assets/images/upload_*.png
 
 # Секреты
 .env
+
+.DS_Store
+*.log
+project_analysis.json

@@ -16,9 +16,13 @@ export function showToast(message, duration = 3000) {
         font-size: 14px;
         z-index: 10002;
         font-family: 'Inter', sans-serif;
+        white-space: nowrap;
     `;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), duration);
+    if (duration > 0) {
+        setTimeout(() => toast.remove(), duration);
+    }
+    return toast;
 }
 
 export function escapeHtml(str) {
