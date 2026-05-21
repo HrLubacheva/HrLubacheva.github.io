@@ -1,6 +1,6 @@
 /* styles-public.css - все стили после первого экрана */
 
-/* ========== ПЕРЕМЕННЫЕ И БАЗОВЫЕ НАСТРОЙКИ ========== */
+/* ========== ПЕРЕМЕННЫЕ ========== */
 :root {
     --surface-soft: #F8FAFE;
     --surface-strong: #EAF2FB;
@@ -9,7 +9,44 @@
     --primary-strong: #1D4D7A;
     --border: #E4E9F2;
     --shadow: 0 18px 50px rgba(17, 40, 82, 0.08);
-    --transition-smooth: cubic-bezier(0.2, 0.9, 0.4, 1.1);
+
+    /* Анимации */
+    --anim-duration-fast: 0.4s;
+    --anim-duration-base: 0.6s;
+    --anim-duration-slow: 0.8s;
+    --anim-ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --anim-ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --anim-ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --anim-offset-small: 15px;
+    --anim-offset-base: 30px;
+    --anim-offset-large: 45px;
+}
+
+/* ========== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ HERO ========== */
+.hero-subtitle {
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: var(--primary);
+}
+
+.hero-text {
+    font-size: 1.08rem;
+    margin-bottom: 28px;
+    color: var(--text-muted);
+    max-width: 680px;
+}
+
+.hero-text strong {
+    color: var(--text);
+}
+
+.small-note {
+    margin-top: 20px;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    border-left: 3px solid var(--primary);
+    padding-left: 18px;
 }
 
 /* ========== СОЦИАЛЬНЫЕ ИКОНКИ ========== */
@@ -26,7 +63,7 @@
     background: rgba(45, 106, 159, 0.08);
     align-items: center;
     justify-content: center;
-    transition: transform 0.3s var(--transition-smooth), background 0.3s var(--transition-smooth);
+    transition: transform 0.3s var(--anim-ease-smooth), background 0.3s var(--anim-ease-smooth);
     color: var(--primary);
 }
 
@@ -60,7 +97,7 @@
 .nav-links a {
     position: relative;
     font-size: 1rem;
-    transition: color 0.3s var(--transition-smooth);
+    transition: color 0.3s var(--anim-ease-smooth);
 }
 
 .nav-links a::after {
@@ -71,7 +108,7 @@
     width: 0;
     height: 2px;
     background: var(--primary);
-    transition: width 0.3s var(--transition-smooth);
+    transition: width 0.3s var(--anim-ease-smooth);
 }
 
 .nav-links a:hover::after,
@@ -99,7 +136,7 @@
     padding: 10px 24px;
     border-radius: 999px;
     font-weight: 600;
-    transition: all 0.3s var(--transition-smooth);
+    transition: all 0.3s var(--anim-ease-smooth);
     cursor: pointer;
 }
 
@@ -116,14 +153,6 @@ section {
 
 .section-light {
     background: var(--surface-soft);
-}
-
-.section-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 20px;
-    letter-spacing: -0.03em;
-    line-height: 1.05;
 }
 
 /* ========== КАРТОЧКИ И ГРИДЫ ========== */
@@ -153,12 +182,13 @@ section {
     padding: 30px;
     box-shadow: 0 20px 50px rgba(17, 40, 82, 0.06);
     border: 1px solid rgba(226, 232, 240, 0.85);
-    transition: all 0.4s var(--transition-smooth);
+    transition: transform var(--anim-duration-fast) var(--anim-ease-smooth),
+                box-shadow var(--anim-duration-fast) var(--anim-ease-smooth);
 }
 
 .role-card:hover,
 .process-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-6px);
     box-shadow: 0 25px 55px rgba(17, 40, 82, 0.12);
 }
 
@@ -191,11 +221,12 @@ section {
     border-radius: 28px;
     padding: 36px 32px;
     border: 1px solid rgba(226, 232, 240, 0.85);
-    transition: all 0.4s var(--transition-smooth);
+    transition: transform var(--anim-duration-fast) var(--anim-ease-smooth),
+                box-shadow var(--anim-duration-fast) var(--anim-ease-smooth);
 }
 
 .service-card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-5px);
     box-shadow: 0 24px 50px rgba(17, 40, 82, 0.08);
 }
 
@@ -215,11 +246,12 @@ section {
     background: var(--surface-soft);
     border-radius: 32px;
     border: 1px solid rgba(226, 232, 240, 0.9);
-    transition: all 0.4s var(--transition-smooth);
+    transition: transform var(--anim-duration-fast) var(--anim-ease-smooth),
+                box-shadow var(--anim-duration-fast) var(--anim-ease-smooth);
 }
 
 .stat-item:hover {
-    transform: translateY(-5px);
+    transform: translateY(-4px);
     box-shadow: 0 15px 40px rgba(17, 40, 82, 0.1);
 }
 
@@ -243,7 +275,8 @@ section {
     padding: 32px 26px;
     border-radius: 24px;
     border-left: 4px solid var(--primary);
-    transition: all 0.4s var(--transition-smooth);
+    transition: transform var(--anim-duration-fast) var(--anim-ease-smooth),
+                background var(--anim-duration-fast) var(--anim-ease-smooth);
 }
 
 .benefit-card:hover {
@@ -269,7 +302,7 @@ section {
     font-weight: 600;
     cursor: pointer;
     border-radius: 999px;
-    transition: all 0.3s var(--transition-smooth);
+    transition: all 0.3s var(--anim-ease-smooth);
     color: var(--text);
 }
 
@@ -289,7 +322,7 @@ section {
 
 .tab-pane.active {
     display: block;
-    animation: fadeIn 0.5s var(--transition-smooth);
+    animation: fadeIn 0.5s var(--anim-ease-smooth);
 }
 
 @keyframes fadeIn {
@@ -314,7 +347,8 @@ section {
     flex-wrap: wrap;
     gap: 12px;
     border: 1px solid rgba(226, 232, 240, 0.95);
-    transition: all 0.3s var(--transition-smooth);
+    transition: transform 0.3s var(--anim-ease-smooth),
+                border-color 0.3s var(--anim-ease-smooth);
 }
 
 .calc-item:hover {
@@ -339,7 +373,7 @@ section {
     font-size: 1rem;
     color: var(--text);
     min-width: 180px;
-    transition: all 0.3s var(--transition-smooth);
+    transition: all 0.3s var(--anim-ease-smooth);
 }
 
 .add-service select:focus,
@@ -369,7 +403,8 @@ section {
     text-align: center;
     margin-top: 32px;
     border: 1px solid rgba(45, 106, 159, 0.14);
-    transition: all 0.3s var(--transition-smooth);
+    transition: transform 0.3s var(--anim-ease-smooth),
+                background 0.3s var(--anim-ease-smooth);
 }
 
 .total-block:hover {
@@ -412,7 +447,7 @@ section {
     padding: 12px 22px;
     border-radius: 60px;
     cursor: pointer;
-    transition: all 0.3s var(--transition-smooth);
+    transition: all 0.3s var(--anim-ease-smooth);
 }
 
 .quiz-option:hover {
@@ -433,7 +468,7 @@ section {
     border-radius: 28px;
     display: none;
     border: 1px solid rgba(45, 106, 159, 0.14);
-    animation: slideUp 0.5s var(--transition-smooth);
+    animation: slideUp 0.5s var(--anim-ease-smooth);
 }
 
 @keyframes slideUp {
@@ -460,7 +495,7 @@ section {
     align-items: center;
     justify-content: center;
     backdrop-filter: blur(4px);
-    animation: fadeIn 0.3s var(--transition-smooth);
+    animation: fadeIn 0.3s var(--anim-ease-smooth);
 }
 
 .modal-content {
@@ -471,7 +506,7 @@ section {
     border-radius: 36px;
     text-align: center;
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
-    animation: scaleIn 0.4s var(--transition-smooth);
+    animation: scaleIn 0.4s var(--anim-ease-smooth);
 }
 
 @keyframes scaleIn {
@@ -525,7 +560,7 @@ section {
     border: 2px solid var(--border);
     background: var(--surface-soft);
     margin-bottom: 28px;
-    transition: all 0.3s var(--transition-smooth);
+    transition: all 0.3s var(--anim-ease-smooth);
 }
 
 .modal-content input[type="email"]:focus {
@@ -571,7 +606,7 @@ section {
     border: 1px solid var(--border);
     background: var(--surface-soft);
     margin-bottom: 20px;
-    transition: all 0.3s var(--transition-smooth);
+    transition: all 0.3s var(--anim-ease-smooth);
 }
 
 .callback-form textarea {
@@ -617,7 +652,7 @@ section {
     cursor: pointer;
     text-decoration: underline;
     text-decoration-style: dotted;
-    transition: color 0.3s var(--transition-smooth);
+    transition: color 0.3s var(--anim-ease-smooth);
 }
 
 .copyable-phone:hover {
@@ -626,7 +661,7 @@ section {
 
 .copyable-text {
     cursor: pointer;
-    transition: color 0.3s var(--transition-smooth);
+    transition: color 0.3s var(--anim-ease-smooth);
 }
 
 .copyable-text:hover {
@@ -696,7 +731,7 @@ footer {
     padding: 15px 20px;
     font-size: 14px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    animation: slideUp 0.5s var(--transition-smooth);
+    animation: slideUp 0.5s var(--anim-ease-smooth);
 }
 
 .cookie-consent__inner {
@@ -740,66 +775,91 @@ footer {
     color: var(--primary-strong);
 }
 
-/* ========== ОСНОВНЫЕ АНИМАЦИИ ПРИ СКРОЛЛЕ ========== */
-.fade-up {
+/* ========== ПРОФЕССИОНАЛЬНЫЕ АНИМАЦИИ ПРИ СКРОЛЛЕ ========== */
+
+/* Базовое состояние для всех анимируемых элементов */
+.fade-up, .fade-left, .fade-right, .scale-in {
     opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s var(--transition-smooth),
-                transform 0.8s var(--transition-smooth);
+    transition: opacity var(--anim-duration-base) var(--anim-ease-smooth),
+                transform var(--anim-duration-base) var(--anim-ease-smooth);
     will-change: opacity, transform;
 }
 
-.fade-up.visible {
+/* Видимое состояние */
+.fade-up.visible, .fade-left.visible,
+.fade-right.visible, .scale-in.visible {
     opacity: 1 !important;
-    transform: translateY(0) !important;
+    transform: translate(0, 0) scale(1) !important;
 }
 
+/* Hero-элементы — меньше смещения, быстрее */
+.hero-title.fade-up,
+.hero-subtitle.fade-up {
+    transform: translateY(var(--anim-offset-small));
+    transition-duration: var(--anim-duration-fast);
+}
+
+/* Заголовки секций */
+.section-title.fade-up {
+    transform: translateY(20px);
+    transition-duration: var(--anim-duration-base);
+}
+
+/* Названия процессов */
+.process-title.fade-up {
+    transform: translateY(20px);
+    transition-duration: var(--anim-duration-base);
+}
+
+/* Карточки — больше смещения, медленнее */
+.role-card.fade-up,
+.service-card.fade-up,
+.benefit-card.fade-up,
+.process-card.fade-up {
+    transform: translateY(var(--anim-offset-large));
+    transition-duration: var(--anim-duration-slow);
+}
+
+/* Статистика — больше смещения, быстрее */
+.stat-item.fade-up {
+    transform: translateY(var(--anim-offset-large));
+    transition-duration: var(--anim-duration-fast);
+}
+
+/* Боковые анимации */
 .fade-left {
-    opacity: 0;
-    transform: translateX(-40px);
-    transition: opacity 0.7s var(--transition-smooth),
-                transform 0.7s var(--transition-smooth);
-    will-change: opacity, transform;
-}
-
-.fade-left.visible {
-    opacity: 1 !important;
-    transform: translateX(0) !important;
+    transform: translateX(calc(-1 * var(--anim-offset-base)));
 }
 
 .fade-right {
-    opacity: 0;
-    transform: translateX(40px);
-    transition: opacity 0.7s var(--transition-smooth),
-                transform 0.7s var(--transition-smooth);
-    will-change: opacity, transform;
+    transform: translateX(var(--anim-offset-base));
 }
 
-.fade-right.visible {
-    opacity: 1 !important;
-    transform: translateX(0) !important;
-}
-
+/* Scale-in для акцентов */
 .scale-in {
-    opacity: 0;
     transform: scale(0.95);
-    transition: opacity 0.6s var(--transition-smooth),
-                transform 0.6s var(--transition-smooth);
-    will-change: opacity, transform;
+    transition-duration: var(--anim-duration-fast);
 }
 
-.scale-in.visible {
-    opacity: 1 !important;
-    transform: scale(1) !important;
-}
+/* Умные задержки */
+.delay-1 { transition-delay: 0.05s; }
+.delay-2 { transition-delay: 0.1s; }
+.delay-3 { transition-delay: 0.15s; }
+.delay-4 { transition-delay: 0.2s; }
+.delay-5 { transition-delay: 0.25s; }
+.delay-6 { transition-delay: 0.3s; }
+.delay-7 { transition-delay: 0.35s; }
+.delay-8 { transition-delay: 0.4s; }
 
-/* ========== ЗАДЕРЖКИ ДЛЯ АНИМАЦИЙ ========== */
-.delay-1 { transition-delay: 0.05s !important; }
-.delay-2 { transition-delay: 0.1s !important; }
-.delay-3 { transition-delay: 0.15s !important; }
-.delay-4 { transition-delay: 0.2s !important; }
-.delay-5 { transition-delay: 0.25s !important; }
-.delay-6 { transition-delay: 0.3s !important; }
+/* Увеличенные задержки для ПК */
+@media (min-width: 769px) {
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.14s; }
+    .delay-3 { transition-delay: 0.2s; }
+    .delay-4 { transition-delay: 0.26s; }
+    .delay-5 { transition-delay: 0.32s; }
+    .delay-6 { transition-delay: 0.38s; }
+}
 
 /* ========== ПАРАЛЛАКС ========== */
 .section-parallax {
@@ -807,10 +867,9 @@ footer {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    transition: transform 0.1s ease-out;
 }
 
-/* ========== БУРГЕР-МЕНЮ (МОБИЛЬНАЯ ВЕРСИЯ) ========== */
+/* ========== БУРГЕР-МЕНЮ ========== */
 .burger-menu {
     display: none;
     flex-direction: column;
@@ -822,14 +881,14 @@ footer {
     cursor: pointer;
     padding: 0;
     z-index: 101;
-    transition: all 0.3s var(--transition-smooth);
+    transition: all 0.3s var(--anim-ease-smooth);
 }
 
 .burger-menu span {
     width: 100%;
     height: 2px;
     background: var(--text);
-    transition: all 0.3s var(--transition-smooth);
+    transition: all 0.3s var(--anim-ease-smooth);
     border-radius: 2px;
 }
 
@@ -862,7 +921,7 @@ footer {
     gap: 12px;
     font-family: 'Inter', sans-serif;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.3s var(--transition-smooth);
+    animation: fadeIn 0.3s var(--anim-ease-smooth);
 }
 
 .loading-spinner {
@@ -882,6 +941,23 @@ footer {
 
 .loading-text {
     font-size: 14px;
+}
+
+/* ========== ПРЕДОТВРАЩАЕМ МЕРЦАНИЕ ДЛЯ ТЕХ, КТО НЕ ЛЮБИТ АНИМАЦИИ ========== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .fade-up, .fade-left, .fade-right, .scale-in,
+    .hero-title, .hero-subtitle, .section-title,
+    .role-card, .service-card, .stat-item {
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }
 
 /* ========== МЕДИА-ЗАПРОСЫ (МОБИЛЬНЫЕ) ========== */
@@ -915,7 +991,7 @@ footer {
         height: calc(100vh - 70px);
         background: rgba(255, 255, 255, 0.98);
         backdrop-filter: blur(10px);
-        transition: left 0.3s var(--transition-smooth);
+        transition: left 0.3s var(--anim-ease-smooth);
         z-index: 99;
         overflow-y: auto;
         padding: 20px;
@@ -1003,6 +1079,36 @@ footer {
 
     .modal-content .btn-secondary {
         width: 100%;
+    }
+
+    /* Мобильные анимации — быстрее и меньше смещение */
+    .fade-up, .fade-left, .fade-right, .scale-in {
+        transition-duration: 0.45s;
+    }
+
+    .role-card.fade-up,
+    .service-card.fade-up,
+    .benefit-card.fade-up {
+        transform: translateY(25px);
+    }
+
+    .fade-left {
+        transform: translateX(-25px);
+    }
+
+    .fade-right {
+        transform: translateX(25px);
+    }
+
+    .scale-in {
+        transform: scale(0.96);
+    }
+
+    /* На мобильных без задержек */
+    .delay-1, .delay-2, .delay-3,
+    .delay-4, .delay-5, .delay-6,
+    .delay-7, .delay-8 {
+        transition-delay: 0s;
     }
 }
 

@@ -1,17 +1,18 @@
-// public-main.js - исправленная версия
+// public-main.js - публичные инициализации
 document.addEventListener('DOMContentLoaded', function () {
-    // ВАЖНО: Сначала запускаем анимации!
-    if (typeof initAnimations === 'function') {
-        console.log('🎬 Запуск анимаций...');
-        initAnimations();
-    }
+    // Запускаем анимации с небольшой задержкой для стабильности
+    setTimeout(function() {
+        if (typeof initAnimations === 'function') {
+            console.log('🎬 Запуск анимаций...');
+            initAnimations();
+        }
+    }, 50);
 
-    // Потом инициализируем User ID и остальное
+    // Инициализируем User ID и остальное
     if (typeof initUserId === 'function') {
         initUserId().then(() => {
-            log('✅ User ID готов и передан в аналитику');
+            console.log('✅ User ID готов и передан в аналитику');
 
-            // Запускаем остальные инициализации (кроме анимаций)
             if (typeof initCalculator === 'function') initCalculator();
             if (typeof renderQuiz === 'function') renderQuiz();
             if (typeof initModal === 'function') initModal();
@@ -22,8 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
         });
     } else {
-        // Fallback, если User ID не инициализирован
-        log('⚠️ initUserId не найден, запускаем без User ID');
+        console.log('⚠️ initUserId не найден, запускаем без User ID');
         if (typeof initCalculator === 'function') initCalculator();
         if (typeof renderQuiz === 'function') renderQuiz();
         if (typeof initModal === 'function') initModal();
@@ -34,5 +34,5 @@ document.addEventListener('DOMContentLoaded', function () {
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
     }
 
-    log('✅ Сайт инициализирован (публичная версия)');
+    console.log('✅ Сайт инициализирован (публичная версия)');
 });
