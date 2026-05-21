@@ -27,7 +27,7 @@ const urlsToCache = [
   '/',
   '/styles.css',
   '/components/common/scripts/core.js',
-  '/components/common/scripts/main.js',
+  '/components/common/scripts/public-main.js',
   '/assets/images/img_1.jpg'
 ];
 
@@ -48,6 +48,7 @@ self.addEventListener('fetch', event => {{
     print(f"✅ Сгенерирован sw.js (версия {version})")
 
 def build_page(editor_mode=False):
+    # Синхронизируем секции из index.html (если он существует)
     if os.path.exists("index.html"):
         sync_components()
 
@@ -68,35 +69,26 @@ def build_page(editor_mode=False):
     head = read_component(COMMON_DIR, "_head.html")
     navbar = read_component(COMMON_DIR, "navbar.html")
     footer = read_component(COMMON_DIR, "footer.html")
-    scripts_content = read_component("components", "scripts.html")
 
     if editor_mode:
-        scripts_content = re.sub(r'<script src="components/common/scripts/main\.js"></script>', '', scripts_content)
-        scripts_content = re.sub(r'<script type="module" src="components/common/scripts/editor/main\.js"></script>', '', scripts_content)
-        if '</body>' in scripts_content:
-            scripts_content = scripts_content.replace(
-                '</body>',
-                '<script>window.AUTO_EDITOR = true;</script>\n<script type="module" src="components/common/scripts/editor/main.js"></script>\n</body>'
-            )
-        else:
-            scripts_content += '\n<script>window.AUTO_EDITOR = true;</script>\n<script type="module" src="components/common/scripts/editor/main.js"></script>'
+        scripts_content = read_component("components", "scripts-editor.html")
         out_file = "editor.html"
-        parts = [head, navbar, full_content, footer, scripts_content]
-        with open(out_file, "w", encoding="utf-8") as f:
-            f.write("\n".join(parts))
-        print(f"✅ Собрано {out_file}")
     else:
-        scripts_content = re.sub(r'<script type="module" src="components/common/scripts/editor/main\.js"></script>', '', scripts_content)
-        scripts_content = re.sub(r'<link[^>]*href="components/common/scripts/editor/ui/styles\.css"[^>]*>', '', scripts_content)
+        scripts_content = read_component("components", "scripts-public.html")
         out_file = "index.html"
-        parts = [head, navbar, full_content, footer, scripts_content]
-        full_html = "".join(parts)
+
+    parts = [head, navbar, full_content, footer, scripts_content]
+    full_html = "".join(parts)
+
+    if not editor_mode:
         full_html = minify_html(full_html)
-        with open(out_file, "w", encoding="utf-8") as f:
-            f.write(full_html)
-        print(f"✅ Собрано {out_file} (минифицирован)")
+
+    with open(out_file, "w", encoding="utf-8") as f:
+        f.write(full_html)
+
+    print(f"✅ Собрано {out_file}")
 
 if __name__ == "__main__":
-    generate_sw()          # сначала генерируем sw.js с новой версией
+    generate_sw()          # генерируем sw.js с новой версией
     build_page(editor_mode=False)
     build_page(editor_mode=True)
