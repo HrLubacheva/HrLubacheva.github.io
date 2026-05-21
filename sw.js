@@ -1,7 +1,7 @@
-// Service Worker v1779398709
-// Автообновление: 2026-05-22 00:25:09
+// Service Worker v1779399420
+// Автообновление: 2026-05-22 00:37:00
 
-const CACHE_NAME = 'hr-site-v1779398709';
+const CACHE_NAME = 'hr-site-v1779399420';
 const OFFLINE_URL = '/';
 const STORAGE_KEY = 'hr_user_id';
 
