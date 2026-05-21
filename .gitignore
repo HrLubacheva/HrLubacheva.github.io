@@ -1,3 +1,4 @@
+# Python
 .venv/
 __pycache__/
 *.pyc
@@ -9,6 +10,25 @@ venv/
 *.log
 *.db
 *.sqlite3
+
+# Редакторы
 .DS_Store
 .vscode/
 .idea/
+
+# Анализаторы (не нужны в репозитории)
+project_analyzer.py
+build_analyzer.py
+
+# Временные и бэкап файлы
+*.backup
+*.tmp
+*.bak
+
+# Локальные настройки
+.env
+.local
+
+# Собранные бандлы (ОПЦИОНАЛЬНО - читайте ниже)
+# bundle-public.js
+# bundle-editor.js
