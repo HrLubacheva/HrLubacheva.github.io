@@ -19,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles-public.css">
+    <link rel="stylesheet" href="styles-public.css">
     <link rel="preload" href="assets/images/img_1.jpg" as="image" fetchpriority="high">
 
     <!-- Schema.org для человека -->
@@ -51,6 +51,15 @@
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/109292129" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-73QCXBB7Y8"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-73QCXBB7Y8');
+    </script>
 </head>
 <body><nav class="navbar">
     <div class="container">
@@ -110,7 +119,6 @@
 <script src="components/common/scripts/navigation.js" defer></script>
 <script src="components/common/scripts/copy.js" defer></script>
 
-<!-- Редактор (включает кнопку, панели, сохранение) -->
-<script src="components/common/scripts/main.js" defer></script>
+<!-- Редактор (только один файл, без дублирования) -->
+<script src="components/common/scripts/editor/main.js" defer></script>
 <script>window.AUTO_EDITOR = true;</script>
-<script type="module" src="components/common/scripts/editor/main.js"></script>
