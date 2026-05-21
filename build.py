@@ -14,23 +14,6 @@ def read_component(dir_path, name):
         return f.read()
 
 
-def minify_html(html):
-    html = re.sub(r'<!--.*?-->', '', html, flags=re.DOTALL)
-    html = re.sub(r'>\s+<', '><', html)
-    html = re.sub(r'\n\s*\n', '\n', html)
-    html = re.sub(r'\s+=\s+', '=', html)
-    return html.strip()
-
-
-def minify_css(css):
-    css = re.sub(r'/\*.*?\*/', '', css, flags=re.DOTALL)
-    css = re.sub(r'\s+', ' ', css)
-    css = re.sub(r';\s*}', '}', css)
-    css = re.sub(r'{\s+', '{', css)
-    css = re.sub(r'}\s+', '}', css)
-    return css.strip()
-
-
 def generate_sw():
     version = int(time.time())
     sw_content = f'''// Service Worker v{version}
@@ -265,7 +248,6 @@ def build_page(editor_mode=False):
     if os.path.exists(critical_css_path):
         with open(critical_css_path, "r", encoding="utf-8") as f:
             critical_css = f.read()
-        critical_css = minify_css(critical_css)
         style_tag = f"<style>\n{critical_css}\n</style>"
         if "<style>" in head:
             head = re.sub(r'<style>.*?</style>', style_tag, head, flags=re.DOTALL)
@@ -282,18 +264,6 @@ def build_page(editor_mode=False):
 
     parts = [head, navbar, full_content, footer, cookie_banner, privacy_modal, scripts_content]
     full_html = "".join(parts)
-
-    if not editor_mode:
-        full_html = minify_html(full_html)
-
-    css_path = "styles-public.css"
-    if os.path.exists(css_path):
-        with open(css_path, "r", encoding="utf-8") as f:
-            css_content = f.read()
-        css_content = minify_css(css_content)
-        with open(css_path, "w", encoding="utf-8") as f:
-            f.write(css_content)
-        print("✅ Минифицирован styles-public.css")
 
     with open(out_file, "w", encoding="utf-8") as f:
         f.write(full_html)
