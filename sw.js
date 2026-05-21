@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hr-site-v1779382795';
+const CACHE_NAME = 'hr-site-v1779384651';
 const urlsToCache = [
   '/',
   '/styles-public.css',
