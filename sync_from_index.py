@@ -18,7 +18,7 @@ SECTION_MAP = {
     "roles": "roles.html",
     "services": "services.html",
     "stats": "stats.html",
-    "about": "benefits.html",        # секция about соответствует benefits.html
+    "about": "benefits.html",
     "process": "process.html",
     "calculator": "calculator.html",
     "quiz": "quiz.html",
@@ -30,13 +30,13 @@ SECTION_MAP = {
 def extract_sections_from_html(html_path):
     """Извлекает все секции <section id="..."> из HTML-файла и возвращает словарь {id: outer_html}"""
     with open(html_path, "r", encoding="utf-8") as f:
-        soup = BeautifulSoup(f.read(), "html.parser")
+        content = f.read()
+    soup = BeautifulSoup(content, "html.parser")
 
     sections = {}
     for section in soup.find_all("section", id=True):
         section_id = section.get("id")
         if section_id in SECTION_MAP:
-            # Сохраняем оригинальный HTML (без изменений)
             sections[section_id] = str(section)
             print(f"  • Найдена секция #{section_id}")
         else:

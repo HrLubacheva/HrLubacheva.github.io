@@ -9,7 +9,7 @@ function initCallbackForm() {
                 if (masked) this.value = masked;
                 else this.value = '';
             } else {
-                // fallback если функция не загружена
+                // fallback
                 if (rawValue.length > 11) rawValue = rawValue.slice(0, 11);
                 let formatted = '+7';
                 if (rawValue.length > 1) formatted += ' ' + rawValue.slice(1, 4);
@@ -28,6 +28,14 @@ function initCallbackForm() {
         callbackForm.addEventListener('submit', function(e) {
             e.preventDefault();
             if (isSubmitting) return;
+
+            const consentCheckbox = document.getElementById('callbackConsent');
+            if (!consentCheckbox || !consentCheckbox.checked) {
+                if (typeof showToast === 'function') showToast('❌ Подтвердите согласие на обработку данных');
+                else alert('Подтвердите согласие на обработку персональных данных');
+                return;
+            }
+
             isSubmitting = true;
 
             const name = document.getElementById('callbackName').value.trim();
@@ -58,7 +66,8 @@ function initCallbackForm() {
                 name: name,
                 phone: digits,
                 comment: comment,
-                quizAnswers: '-'
+                quizAnswers: '-',
+                consent: true
             };
 
             if (typeof sendDataToSheet === 'function') {
@@ -75,6 +84,16 @@ function initCallbackForm() {
 
             callbackForm.reset();
             setTimeout(() => { isSubmitting = false; }, 2000);
+        });
+    }
+
+    // Обработка ссылки на политику в форме
+    const privacyLinkForm = document.getElementById('privacyLinkForm');
+    if (privacyLinkForm) {
+        privacyLinkForm.addEventListener('click', (e) => {
+            e.preventDefault();
+            const privacyModal = document.getElementById('privacyModal');
+            if (privacyModal) privacyModal.style.display = 'flex';
         });
     }
 }

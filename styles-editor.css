@@ -460,3 +460,40 @@ body.block-edit-mode [contenteditable="true"] {
     max-width: 280px;
     font-family: 'Inter', sans-serif;
 }
+/* Адаптивность панели редактора на мобильных */
+@media (max-width: 768px) {
+    .editor-toolbar {
+        position: fixed;
+        bottom: 0;
+        top: auto;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+        border-bottom: none;
+        padding: 4px 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        font-size: 12px;
+    }
+    .toolbar-container {
+        display: inline-flex;
+        gap: 8px;
+    }
+    .toolbar-section {
+        display: inline-flex;
+        gap: 6px;
+    }
+    .tool-btn, .save-btn, .exit-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+    .property-panel, .slides-panel, .history-panel {
+        width: 90%;
+        left: 5%;
+        right: 5%;
+        top: 60px;
+        max-height: 80vh;
+    }
+    .editor-hint {
+        display: none;
+    }
+}
