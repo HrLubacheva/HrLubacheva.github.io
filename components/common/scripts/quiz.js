@@ -8,15 +8,8 @@ let variantsMatrix = [];
 const GOOGLE_SHEETS_QUIZ_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTDxpfQuCLTjJpiJHgK26zSt_S8a-1LtFUGZV0v1eSg2bHat_BMK6pP4RhXkF5aXPtl9AS9UDj4-a1a/pub?output=csv&gid=1216597339';
 const GOOGLE_SHEETS_MATRIX_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTDxpfQuCLTjJpiJHgK26zSt_S8a-1LtFUGZV0v1eSg2bHat_BMK6pP4RhXkF5aXPtl9AS9UDj4-a1a/pub?output=csv&gid=27728112';
 
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
+const CACHE_KEY_QUESTIONS = 'hr_quiz_questions';
+const CACHE_KEY_VARIANTS = 'hr_quiz_variants';
 
 const LOCAL_QUESTIONS = [
     { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
@@ -36,17 +29,22 @@ const LOCAL_VARIANTS = [
 ];
 
 async function loadQuizFromGoogleSheets() {
+    showLoading('Загрузка квиза...');
     try {
-        const response = await fetch(GOOGLE_SHEETS_QUIZ_URL);
-        const csvText = await response.text();
+        const csvText = await loadWithCache(CACHE_KEY_QUESTIONS, () => {
+            return fetchTextWithRetry(GOOGLE_SHEETS_QUIZ_URL, 3, 8000);
+        }, 10 * 60 * 1000);
+
         const rows = csvText.split('\n').filter(row => row.trim());
         if (rows.length < 2) throw new Error('Нет данных');
+
         const headers = rows[0].split(',').map(h => h.trim());
         const qIndex = headers.indexOf('question');
         const opt1Index = headers.indexOf('option1');
         const opt2Index = headers.indexOf('option2');
         const opt3Index = headers.indexOf('option3');
         const opt4Index = headers.indexOf('option4');
+
         const loadedQuestions = [];
         for (let i = 1; i < rows.length; i++) {
             const values = rows[i].split(',').map(v => v.trim());
@@ -61,23 +59,31 @@ async function loadQuizFromGoogleSheets() {
                 loadedQuestions.push({ text: question, options });
             }
         }
+
         if (loadedQuestions.length > 0) {
             quizQuestions = loadedQuestions;
         } else {
             throw new Error('Нет вопросов');
         }
+
     } catch (error) {
-        console.error('Ошибка, используем локальные:', error);
-        if (typeof showToast === 'function') showToast('⚠️ Не удалось загрузить квиз, используем локальные вопросы', 4000);
+        logError('Ошибка загрузки, используем локальные:', error);
+        showToast('⚠️ Не удалось загрузить вопросы. Используем локальные.', 4000);
         quizQuestions = LOCAL_QUESTIONS;
+    } finally {
+        hideLoading();
     }
 }
 
 async function loadVariantsMatrix() {
     if (variantsLoaded) return;
+
+    showLoading('Загрузка вариантов...');
     try {
-        const response = await fetch(GOOGLE_SHEETS_MATRIX_URL);
-        const csvText = await response.text();
+        const csvText = await loadWithCache(CACHE_KEY_VARIANTS, () => {
+            return fetchTextWithRetry(GOOGLE_SHEETS_MATRIX_URL, 3, 8000);
+        }, 10 * 60 * 1000);
+
         const rows = csvText.split('\n').filter(row => row.trim() && row.includes(','));
         if (rows.length > 0) {
             const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
@@ -111,11 +117,15 @@ async function loadVariantsMatrix() {
         } else {
             throw new Error('Нет данных');
         }
+
     } catch (error) {
-        console.error('Ошибка загрузки матрицы, используем локальную');
-        if (typeof showToast === 'function') showToast('⚠️ Ошибка загрузки рекомендаций, используем стандартные', 4000);
+        logError('Ошибка загрузки матрицы, используем локальную');
+        showToast('⚠️ Не удалось загрузить варианты. Используем локальные.', 4000);
         variantsMatrix = LOCAL_VARIANTS;
+    } finally {
+        hideLoading();
     }
+
     variantsLoaded = true;
 }
 
@@ -212,33 +222,46 @@ function showResult(variant) {
         btns[i].onclick = function() {
             const chosen = this.dataset.choice;
             const chosenText = this.dataset.text;
-            const formData = {
-                formType: 'Квиз',
-                quizAnswers: answers.map((a, idx) => `${quizQuestions[idx]?.text} — ${a}`).join('\n'),
-                chosenVariant: `${chosen}: ${chosenText}`
+
+            const sendQuizResult = (userId) => {
+                const formData = {
+                    formType: 'Квиз',
+                    quizAnswers: answers.map((a, idx) => `${quizQuestions[idx]?.text} — ${a}`).join('\n'),
+                    chosenVariant: `${chosen}: ${chosenText}`,
+                    userId: userId
+                };
+
+                if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
+
+                if (typeof gtag === 'function') {
+                    gtag('event', 'quiz_choice', {
+                        'event_category': 'quiz',
+                        'event_label': chosenText,
+                        'value': chosen
+                    });
+                }
+
+                const resultDiv = document.getElementById('quizResult');
+                if (resultDiv) {
+                    resultDiv.innerHTML = `<strong>✅ Вы выбрали вариант ${chosen}:</strong><br>${escapeHtml(chosenText)}<br><br><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">📱 Обсудить в Telegram</a>`;
+                    resultDiv.style.display = 'block';
+                }
+                container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
             };
-            if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
 
-            // Отправляем событие в GA4
-            if (typeof gtag === 'function') {
-                gtag('event', 'quiz_choice', {
-                    'event_category': 'quiz',
-                    'event_label': chosenText,
-                    'value': chosen
-                });
+            if (typeof currentUserId !== 'undefined' && currentUserId) {
+                sendQuizResult(currentUserId);
+            } else if (typeof getUserIdFromSW === 'function') {
+                getUserIdFromSW().then(userId => sendQuizResult(userId));
+            } else {
+                sendQuizResult('unknown');
             }
-
-            const resultDiv = document.getElementById('quizResult');
-            if (resultDiv) {
-                resultDiv.innerHTML = `<strong>✅ Вы выбрали вариант ${chosen}:</strong><br>${escapeHtml(chosenText)}<br><br><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">📱 Обсудить в Telegram</a>`;
-                resultDiv.style.display = 'block';
-            }
-            container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
         };
     }
 }
 
 let variantsLoaded = false;
+
 async function initQuiz() {
     if (quizInitialized) return;
     quizInitialized = true;
