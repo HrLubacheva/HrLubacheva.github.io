@@ -2,6 +2,7 @@
 import os
 import re
 import time
+from datetime import datetime
 
 COMMON_DIR = "components/common"
 SECTIONS_DIR = "components/sections"
@@ -19,7 +20,6 @@ def minify_html(html):
     return html.strip()
 
 def generate_sw():
-    """Генерирует sw.js с уникальной версией и удалением старых кешей"""
     version = int(time.time())
     sw_content = f'''const CACHE_NAME = 'hr-site-v{version}';
 const urlsToCache = [
@@ -74,6 +74,9 @@ def build_page(editor_mode=False):
     head = read_component(COMMON_DIR, "_head.html")
     navbar = read_component(COMMON_DIR, "navbar.html")
     footer = read_component(COMMON_DIR, "footer.html")
+    # Вставляем версию сборки
+    build_version = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
+    footer = footer.replace("{{VERSION}}", build_version)
 
     if editor_mode:
         scripts_content = read_component("components", "scripts-editor.html")

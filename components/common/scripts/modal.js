@@ -19,6 +19,15 @@ function saveEmailAndOpen(email, checklist, training) {
         quizAnswers: '-'
     };
     sendDataToSheet(formData);
+
+    // Отправляем событие в GA4
+    if (typeof gtag === 'function') {
+        gtag('event', 'download', {
+            'event_category': 'material',
+            'event_label': checklist && training ? 'both' : (checklist ? 'checklist' : 'training')
+        });
+    }
+
     if (checklist) window.open('assets/docs/checklist.pdf', '_blank');
     if (training) window.open('assets/docs/training_program.pdf', '_blank');
     showToast('✅ Email сохранён. Файлы открываются в новой вкладке.', 3000);

@@ -68,6 +68,7 @@ async function loadQuizFromGoogleSheets() {
         }
     } catch (error) {
         console.error('Ошибка, используем локальные:', error);
+        if (typeof showToast === 'function') showToast('⚠️ Не удалось загрузить квиз, используем локальные вопросы', 4000);
         quizQuestions = LOCAL_QUESTIONS;
     }
 }
@@ -112,6 +113,7 @@ async function loadVariantsMatrix() {
         }
     } catch (error) {
         console.error('Ошибка загрузки матрицы, используем локальную');
+        if (typeof showToast === 'function') showToast('⚠️ Ошибка загрузки рекомендаций, используем стандартные', 4000);
         variantsMatrix = LOCAL_VARIANTS;
     }
     variantsLoaded = true;
@@ -216,6 +218,16 @@ function showResult(variant) {
                 chosenVariant: `${chosen}: ${chosenText}`
             };
             if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
+
+            // Отправляем событие в GA4
+            if (typeof gtag === 'function') {
+                gtag('event', 'quiz_choice', {
+                    'event_category': 'quiz',
+                    'event_label': chosenText,
+                    'value': chosen
+                });
+            }
+
             const resultDiv = document.getElementById('quizResult');
             if (resultDiv) {
                 resultDiv.innerHTML = `<strong>✅ Вы выбрали вариант ${chosen}:</strong><br>${escapeHtml(chosenText)}<br><br><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">📱 Обсудить в Telegram</a>`;
@@ -226,6 +238,7 @@ function showResult(variant) {
     }
 }
 
+let variantsLoaded = false;
 async function initQuiz() {
     if (quizInitialized) return;
     quizInitialized = true;
@@ -234,7 +247,6 @@ async function initQuiz() {
     renderQuiz();
 }
 
-let variantsLoaded = false;
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => setTimeout(initQuiz, 100));
 } else {
