@@ -83,5 +83,37 @@ window.addEventListener('resize', function() {
     }
 });
 
+// ---------- Бургер-меню для мобильных ----------
+function initBurgerMenu() {
+    const burger = document.getElementById('burgerMenu');
+    const navBottom = document.getElementById('navBottom');
+
+    if (!burger || !navBottom) return;
+
+    burger.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navBottom.classList.toggle('open');
+        document.body.classList.toggle('menu-open');
+    });
+
+    // Закрываем меню при клике на ссылку
+    navBottom.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            burger.classList.remove('active');
+            navBottom.classList.remove('open');
+            document.body.classList.remove('menu-open');
+        });
+    });
+
+    // Закрываем меню при изменении размера окна (если стало > 768px)
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            burger.classList.remove('active');
+            navBottom.classList.remove('open');
+            document.body.classList.remove('menu-open');
+        }
+    });
+}
+
 // ВАЖНО: функции только объявлены, НЕ вызываются здесь.
 // Их вызов происходит из public-main.js или editor-main.js
