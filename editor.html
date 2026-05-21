@@ -52,15 +52,15 @@
     <noscript><div><img src="https://mc.yandex.ru/watch/109292129" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
     <!-- /Yandex.Metrika counter -->
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-73QCXBB7Y8"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-73QCXBB7Y8');
-    </script>
-</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QZJJ2SE117"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-QZJJ2SE117');
+</script>
 <body><nav class="navbar">
     <div class="container">
         <div class="nav-top">
@@ -104,9 +104,28 @@
 <section class="section-dark" id="contacts"><div class="container contact-block"><h2 class="section-title">Остались вопросы? Напишите или позвоните</h2><div class="contact-line">📧 <a href="mailto:hrlubacheva@mail.ru">hrlubacheva@mail.ru</a></div><div class="contact-line">📱 <a href="https://t.me/HrLubacheva" target="_blank">Telegram: @HrLubacheva</a></div><div class="contact-line">💬 <a href="https://wa.me/79217916655" target="_blank">WhatsApp: +7 921 791-66-55</a></div><div class="contact-line">📌 <a href="https://www.instagram.com/HrLubacheva/" target="_blank">Instagram: @HrLubacheva</a></div><div class="contact-line">
             📞 <span class="copyable-phone" data-copy="+79217916655">+7 921 791-66-55</span></div><div class="contact-line contact-search"><span class="copyable-text" data-copy="@HrLubacheva">🔍 Ищите @HrLubacheva</span></div><div class="contact-telegram-btn"><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a></div></div></section><footer>
     <div class="container">© 2026 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер.
-        <a href="#"
-           id="privacyLink">Политика конфиденциальности</a></div>
-</footer><!-- Стили редактора -->
+        <a href="#" id="privacyLink">Политика конфиденциальности</a>
+    </div>
+</footer>
+
+<!-- Баннер согласия на cookies -->
+<div id="cookieConsent" class="cookie-consent" style="display: none;">
+    <div class="cookie-consent__inner">
+        <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с <a href="#" id="cookiePrivacyLink">политикой конфиденциальности</a>.</p>
+        <button id="acceptCookies" class="btn-primary btn-small">Принять</button>
+        <button id="declineCookies" class="btn-secondary btn-small">Отклонить</button>
+    </div>
+</div>
+
+<!-- Модальное окно политики конфиденциальности -->
+<div id="privacyModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h3>Политика конфиденциальности</h3>
+        <p>Ваши данные используются только для связи с вами и не передаются третьим лицам.</p>
+        <p>Полный текст политики доступен <a href="https://hrlubacheva.github.io/privacy.html" target="_blank">по ссылке</a>.</p>
+        <button id="closePrivacyModalBtn" class="btn-secondary">Закрыть</button>
+    </div>
+</div><!-- Стили редактора -->
 <link rel="stylesheet" href="styles-editor.css">
 
 <!-- Публичные скрипты (нужны для работы калькулятора, квиза, форм) -->
@@ -118,7 +137,8 @@
 <script src="components/common/scripts/animations.js" defer></script>
 <script src="components/common/scripts/navigation.js" defer></script>
 <script src="components/common/scripts/copy.js" defer></script>
+<script src="components/common/scripts/cookie-consent.js" defer></script>
 
-<!-- Редактор (только один файл, без дублирования) -->
-<script src="components/common/scripts/editor/main.js" defer></script>
+<!-- Редактор (как модуль) -->
+<script type="module" src="components/common/scripts/editor/main.js" defer></script>
 <script>window.AUTO_EDITOR = true;</script>
