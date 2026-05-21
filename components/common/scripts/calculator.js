@@ -4,16 +4,7 @@ let calculatorInitialized = false;
 let servicesData = { business: [], individual: [], corporate: [], group: [] };
 
 const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTDxpfQuCLTjJpiJHgK26zSt_S8a-1LtFUGZV0v1eSg2bHat_BMK6pP4RhXkF5aXPtl9AS9UDj4-a1a/pub?output=csv';
-
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
+const CACHE_KEY_SERVICES = 'hr_services_data';
 
 function parsePrice(value) {
     if (!value) return 0;
@@ -24,11 +15,12 @@ function parsePrice(value) {
 }
 
 async function loadServicesFromGoogleSheets() {
-    if (typeof showToast === 'function') showToast('📥 Загрузка услуг...');
+    showLoading('Загрузка услуг...');
     try {
-        const response = await fetch(GOOGLE_SHEETS_CSV_URL);
-        if (!response.ok) throw new Error('Ошибка загрузки');
-        const csvText = await response.text();
+        const csvText = await loadWithCache(CACHE_KEY_SERVICES, () => {
+            return fetchTextWithRetry(GOOGLE_SHEETS_CSV_URL, 3, 8000);
+        }, 10 * 60 * 1000);
+
         const rows = [];
         const lines = csvText.split('\n');
         for (const line of lines) {
@@ -37,6 +29,7 @@ async function loadServicesFromGoogleSheets() {
             if (values.length >= 3 && values[0] && values[1] && values[2]) rows.push(values);
         }
         if (rows.length === 0) throw new Error('Нет данных');
+
         const headers = rows[0].map(h => h.toLowerCase());
         const colIndex = {
             category: headers.indexOf('category'),
@@ -45,6 +38,7 @@ async function loadServicesFromGoogleSheets() {
             sort: headers.indexOf('sort')
         };
         servicesData = { business: [], individual: [], corporate: [], group: [] };
+
         for (let i = 1; i < rows.length; i++) {
             const values = rows[i];
             const category = values[colIndex.category];
@@ -64,16 +58,19 @@ async function loadServicesFromGoogleSheets() {
                 }
             }
         }
+
         for (const cat in servicesData) {
             servicesData[cat].sort((a, b) => a.sort - b.sort);
         }
+
         updateSelectsFromData();
-        const total = Object.values(servicesData).reduce((sum, arr) => sum + arr.length, 0);
-        if (typeof showToast === 'function') showToast(`✅ Загружено ${total} услуг`);
+
     } catch (error) {
-        console.error('Ошибка загрузки:', error);
-        if (typeof showToast === 'function') showToast('⚠️ Ошибка загрузки услуг');
+        logError('Ошибка загрузки:', error);
+        showToast('⚠️ Не удалось загрузить услуги. Используем локальные данные.', 4000);
         loadLocalFallback();
+    } finally {
+        hideLoading();
     }
 }
 
@@ -185,6 +182,7 @@ async function initCalculator() {
     if (calculatorInitialized) return;
     calculatorInitialized = true;
     await loadServicesFromGoogleSheets();
+
     const handlers = [
         { btn: 'business-add', cat: 'business', select: 'business-select', qty: 'business-qty' },
         { btn: 'individual-add', cat: 'individual', select: 'individual-select', qty: 'individual-qty' },
@@ -199,6 +197,7 @@ async function initCalculator() {
             button.addEventListener('click', button._handler);
         }
     });
+
     const tabs = document.querySelectorAll('.calculator-tabs .tab-btn');
     const panes = document.querySelectorAll('.tab-pane');
     tabs.forEach(btn => {
@@ -213,7 +212,8 @@ async function initCalculator() {
         };
         btn.addEventListener('click', btn._tabHandler);
     });
-    console.log('✅ Калькулятор инициализирован');
+
+    log('✅ Калькулятор инициализирован');
 }
 
 window.initCalculator = initCalculator;
