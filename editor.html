@@ -116,15 +116,6 @@
     </div>
 </footer>
 
-<!-- Баннер согласия на cookies -->
-<div id="cookieConsent" class="cookie-consent" style="display: none;">
-    <div class="cookie-consent__inner">
-        <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с <a href="#" id="cookiePrivacyLink">политикой конфиденциальности</a>.</p>
-        <button id="acceptCookies" class="btn-primary btn-small">Принять</button>
-        <button id="declineCookies" class="btn-secondary btn-small">Отклонить</button>
-    </div>
-</div>
-
 <!-- Модальное окно политики конфиденциальности -->
 <div id="privacyModal" class="modal" style="display: none;">
     <div class="modal-content">
@@ -133,20 +124,4 @@
         <p>Полный текст политики доступен <a href="https://hrlubacheva.github.io/privacy.html" target="_blank">по ссылке</a>.</p>
         <button id="closePrivacyModalBtn" class="btn-secondary">Закрыть</button>
     </div>
-</div><!-- Стили редактора -->
-<link rel="stylesheet" href="styles-editor.css">
-
-<!-- Публичные скрипты (нужны для работы калькулятора, квиза, форм) -->
-<script src="components/common/scripts/core.js" defer></script>
-<script src="components/common/scripts/calculator.js" defer></script>
-<script src="components/common/scripts/quiz.js" defer></script>
-<script src="components/common/scripts/modal.js" defer></script>
-<script src="components/common/scripts/forms.js" defer></script>
-<script src="components/common/scripts/animations.js" defer></script>
-<script src="components/common/scripts/navigation.js" defer></script>
-<script src="components/common/scripts/copy.js" defer></script>
-<script src="components/common/scripts/cookie-consent.js" defer></script>
-
-<!-- Редактор (как модуль) -->
-<script type="module" src="components/common/scripts/editor/main.js" defer></script>
-<script>window.AUTO_EDITOR = true;</script>
+</div><script src="bundle-editor.js"></script>

@@ -1,9 +1,8 @@
-const CACHE_NAME = 'hr-site-v1779375186';
+const CACHE_NAME = 'hr-site-v1779381730';
 const urlsToCache = [
   '/',
   '/styles-public.css',
-  '/components/common/scripts/core.js',
-  '/components/common/scripts/public-main.js',
+  '/bundle-public.js',
   '/assets/images/img_1.jpg',
   '/assets/docs/checklist.pdf',
   '/assets/docs/training_program.pdf',
