@@ -54,7 +54,6 @@ self.addEventListener('fetch', event => {{
   event.respondWith(
     caches.match(event.request).then(response => {{
       if (response) return response;
-      // Для всех остальных запросов используем сеть, но сохраняем в кеш
       return fetch(event.request).then(networkResponse => {{
         if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {{
           const responseToCache = networkResponse.clone();
@@ -90,7 +89,6 @@ def build_page(editor_mode=False):
     head = read_component(COMMON_DIR, "_head.html")
     navbar = read_component(COMMON_DIR, "navbar.html")
     footer = read_component(COMMON_DIR, "footer.html")
-    # Вставляем версию сборки
     build_version = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
     footer = footer.replace("{{VERSION}}", build_version)
 

@@ -3,7 +3,6 @@ import subprocess
 import sys
 import os
 from datetime import datetime
-from build import build_page
 
 def run_cmd(cmd):
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
@@ -16,6 +15,7 @@ def main():
     print("🚀 Деплой на GitHub")
     print("=" * 60)
     print("\n1. Сборка index.html...")
+    from build import build_page
     build_page(editor_mode=False)
     print("\n2. Сборка editor.html...")
     build_page(editor_mode=True)

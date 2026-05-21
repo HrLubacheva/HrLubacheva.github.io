@@ -170,8 +170,8 @@ function addToCart(cat, selectId, qtyId) {
     const price = parseInt(select.value);
     const fullText = select.options[select.selectedIndex].text;
     const name = fullText.replace(/ — .*/, '');
-    const quantity = parseInt(document.getElementById(qtyId).value);
-    if (isNaN(quantity) || quantity < 1) return;
+    let quantity = parseInt(document.getElementById(qtyId).value);
+    if (isNaN(quantity) || quantity < 1) quantity = 1;
     const existing = cart.find(i => i.name === name && i.cat === cat);
     if (existing) {
         existing.qty += quantity;
