@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Очистка GitHub токена из git конфигурации и credential helper."""
+
 import subprocess
 
 def clear_token():

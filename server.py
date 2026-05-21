@@ -9,6 +9,7 @@ from build import build_page
 
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
+
 def get_free_port(start_port=8080):
     port = start_port
     while True:
@@ -21,12 +22,15 @@ def get_free_port(start_port=8080):
                 if port - start_port > 100:
                     raise RuntimeError("Не найден свободный порт")
 
+
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
+
     def end_headers(self):
         self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
         super().end_headers()
+
     def do_GET(self):
         if self.path == "/" or self.path == "/index.html":
             print("🔄 Пересборка index.html...")
@@ -36,6 +40,7 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             except Exception as e:
                 print(f"❌ Ошибка сборки: {e}")
         return super().do_GET()
+
 
 def main():
     if not os.path.exists("build.py") or not os.path.exists("components"):
@@ -50,6 +55,7 @@ def main():
         except KeyboardInterrupt:
             print("\n🛑 Сервер остановлен")
             sys.exit(0)
+
 
 if __name__ == "__main__":
     main()

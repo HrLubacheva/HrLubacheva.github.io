@@ -22,101 +22,12 @@
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
     <link rel="preload" href="assets/images/img_1.jpg" as="image" fetchpriority="high">
 
-    <!-- Критический CSS (встроен) -->
-    <style>
-        :root {
-            --bg: #F4F7FB;
-            --surface: #FFFFFF;
-            --text: #12263F;
-            --primary: #2D6A9F;
-            --accent: #F9A826;
-        }
-        * { margin:0; padding:0; box-sizing: border-box; }
-        body {
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            scroll-behavior: smooth;
-        }
-        .container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
-        .navbar {
-            position: sticky;
-            top: 0;
-            background: rgba(255,255,255,0.96);
-            backdrop-filter: blur(18px);
-            border-bottom: 1px solid rgba(73,95,133,0.08);
-            padding: 18px 0;
-            z-index: 100;
-        }
-        .nav-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 800;
-            font-size: 1.7rem;
-        }
-        .logo-triangle {
-            width: 28px;
-            height: 28px;
-            background: var(--primary);
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-        }
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, var(--primary), #1D4D7A);
-            color: white;
-            padding: 14px 32px;
-            border-radius: 999px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 16px 30px rgba(45,106,159,0.16);
-        }
-        .hero-grid {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 60px;
-        }
-        .hero-content { flex: 1.2; min-width: 280px; }
-        .hero-image { flex: 0.8; min-width: 280px; text-align: center; }
-        .hero-title {
-            font-size: clamp(2.6rem, 5vw, 3.8rem);
-            font-weight: 800;
-            line-height: 1.05;
-            background: linear-gradient(135deg, var(--text), var(--primary));
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-        }
-        .hero-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 36px;
-            box-shadow: 0 18px 50px rgba(17,40,82,0.08);
-        }
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
-        .fade-up.visible { opacity: 1; transform: translateY(0); }
-    </style>
-
-    <!-- Основные стили (загружаются асинхронно) -->
+    <!-- Критический CSS встраивается сборщиком -->
+    <!-- Основные стили -->
     <link rel="preload" href="styles-public.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="styles-public.css"></noscript>
 
-    <!-- Schema.org для человека -->
+    <!-- Schema.org -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -133,7 +44,7 @@
     }
     </script>
 
-    <!-- Yandex.Metrika counter -->
+    <!-- Yandex.Metrika -->
     <script type="text/javascript">
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -144,9 +55,8 @@
         ym(109292129, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/109292129" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-    <!-- /Yandex.Metrika counter -->
 
-    <!-- Google tag (gtag.js) -->
+    <!-- Google tag -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZJJ2SE117"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -154,4 +64,5 @@
       gtag('js', new Date());
       gtag('config', 'G-QZJJ2SE117');
     </script>
+</head>
 <body>

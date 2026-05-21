@@ -1,4 +1,5 @@
-/* critical.css – стили для первого экрана (копия встроенного в _head.html) */
+/* critical.css – только для первого экрана */
+
 :root {
     --bg: #F4F7FB;
     --surface: #FFFFFF;
@@ -6,7 +7,13 @@
     --primary: #2D6A9F;
     --accent: #F9A826;
 }
-* { margin:0; padding:0; box-sizing: border-box; }
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
     font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg);
@@ -14,7 +21,14 @@ body {
     line-height: 1.6;
     scroll-behavior: smooth;
 }
-.container { max-width: 1280px; margin: 0 auto; padding: 0 28px; }
+
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 28px;
+}
+
+/* Шапка (критически важна) */
 .navbar {
     position: sticky;
     top: 0;
@@ -24,25 +38,31 @@ body {
     padding: 18px 0;
     z-index: 100;
 }
+
 .nav-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 14px;
 }
+
 .logo {
     display: flex;
     align-items: center;
     gap: 10px;
     font-weight: 800;
     font-size: 1.7rem;
+    color: var(--text);
 }
+
 .logo-triangle {
     width: 28px;
     height: 28px;
     background: var(--primary);
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
 }
+
+/* Кнопка (критически важна) */
 .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -54,16 +74,33 @@ body {
     font-weight: 700;
     border: none;
     cursor: pointer;
-    box-shadow: 0 16px 30px rgba(45,106,159,0.16);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 35px rgba(45,106,159,0.2);
+}
+
+/* Hero секция (критически важна) */
 .hero-grid {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 60px;
 }
-.hero-content { flex: 1.2; min-width: 280px; }
-.hero-image { flex: 0.8; min-width: 280px; text-align: center; }
+
+.hero-content {
+    flex: 1.2;
+    min-width: 280px;
+}
+
+.hero-image {
+    flex: 0.8;
+    min-width: 280px;
+    text-align: center;
+}
+
 .hero-title {
     font-size: clamp(2.6rem, 5vw, 3.8rem);
     font-weight: 800;
@@ -73,11 +110,65 @@ body {
     -webkit-background-clip: text;
     color: transparent;
 }
+
 .hero-image img {
     max-width: 100%;
     height: auto;
     border-radius: 36px;
     box-shadow: 0 18px 50px rgba(17,40,82,0.08);
 }
-.fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* Анимация появления страницы */
+body {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(3px);
+    transition: opacity 1s cubic-bezier(0.2, 0.9, 0.4, 1.1),
+                transform 1s cubic-bezier(0.2, 0.9, 0.4, 1.1),
+                filter 1s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+body.loaded {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+.navbar,
+.hero-content,
+.hero-image {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1),
+                transform 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+body.loaded .navbar,
+body.loaded .hero-content,
+body.loaded .hero-image {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+body.loaded .navbar { transition-delay: 0.1s; }
+body.loaded .hero-content { transition-delay: 0.2s; }
+body.loaded .hero-image { transition-delay: 0.3s; }
+
+/* Анимации при скролле (критически важны для первого впечатления) */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s cubic-bezier(0.2, 0.9, 0.4, 1.1),
+                transform 1s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.fade-up.visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* Ссылки */
+a, a:link, a:visited {
+    color: inherit;
+    text-decoration: none;
+}
