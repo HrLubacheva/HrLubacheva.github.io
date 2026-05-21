@@ -55,7 +55,7 @@ async function saveCleanToGitHub() {
     }
     isSaving = true;
     let cleanHTML;
-    showToast('📤 Сохранение на GitHub...', 0); // бесконечный тост
+    showToast('📤 Сохранение на GitHub...', 0);
     try {
         const { CONFIG } = await import('./core/config.js');
         let token = localStorage.getItem('github_token_hrlubacheva');
@@ -65,7 +65,8 @@ async function saveCleanToGitHub() {
                 showToast('❌ Токен не введён');
                 return;
             }
-            localStorage.setItem('github_token_hrlubacheva', token);
+            const saveToken = confirm('Сохранить токен в браузере для следующих сеансов? (безопасно, если вы один используете этот компьютер)');
+            if (saveToken) localStorage.setItem('github_token_hrlubacheva', token);
         }
         cleanHTML = getCleanHTML();
         const content = btoa(unescape(encodeURIComponent(cleanHTML)));
@@ -230,13 +231,5 @@ export function initEditor() {
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initEditor);
 else initEditor();
 
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof initCalculator === 'function') initCalculator();
-    if (typeof renderQuiz === 'function') renderQuiz();
-    if (typeof initModal === 'function') initModal();
-    if (typeof initCallbackForm === 'function') initCallbackForm();
-    if (typeof initAnimations === 'function') initAnimations();
-    if (typeof initSmoothScroll === 'function') initSmoothScroll();
-    if (typeof initCopyButtons === 'function') initCopyButtons();
-    console.log('✅ Сайт инициализирован');
-});
+// ВАЖНО: публичные инициализации (калькулятор, квиз и т.д.) уже выполнены через public-main.js,
+// поэтому здесь они НЕ вызываются, чтобы избежать дублирования.

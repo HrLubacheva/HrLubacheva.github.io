@@ -2,7 +2,6 @@
 import os
 import re
 import time
-from sync import sync_components
 
 COMMON_DIR = "components/common"
 SECTIONS_DIR = "components/sections"
@@ -20,7 +19,7 @@ def minify_html(html):
     return html.strip()
 
 def generate_sw():
-    """Генерирует sw.js с уникальной версией на основе временной метки"""
+    """Генерирует sw.js с уникальной версией и удалением старых кешей"""
     version = int(time.time())
     sw_content = f'''const CACHE_NAME = 'hr-site-v{version}';
 const urlsToCache = [
@@ -37,6 +36,16 @@ self.addEventListener('install', event => {{
   );
 }});
 
+self.addEventListener('activate', event => {{
+  event.waitUntil(
+    caches.keys().then(keys => Promise.all(
+      keys.map(key => {{
+        if (key !== CACHE_NAME) return caches.delete(key);
+      }})
+    ))
+  );
+}});
+
 self.addEventListener('fetch', event => {{
   event.respondWith(
     caches.match(event.request).then(response => response || fetch(event.request))
@@ -48,10 +57,6 @@ self.addEventListener('fetch', event => {{
     print(f"✅ Сгенерирован sw.js (версия {version})")
 
 def build_page(editor_mode=False):
-    # Синхронизируем секции из index.html (если он существует)
-    if os.path.exists("index.html"):
-        sync_components()
-
     sections_order = [
         "hero.html", "roles.html", "services.html", "stats.html",
         "benefits.html", "process.html", "calculator.html", "quiz.html",
@@ -89,6 +94,6 @@ def build_page(editor_mode=False):
     print(f"✅ Собрано {out_file}")
 
 if __name__ == "__main__":
-    generate_sw()          # генерируем sw.js с новой версией
+    generate_sw()
     build_page(editor_mode=False)
     build_page(editor_mode=True)
