@@ -1,11 +1,37 @@
-// ---------- Калькулятор услуг (данные из Google Sheets) ----------
+/**
+ * Калькулятор стоимости услуг
+ * Загружает данные из Google Sheets и управляет корзиной
+ *
+ * @module calculator
+ */
+
+// ---------- Глобальные переменные ----------
+/**
+ * Корзина выбранных услуг
+ * @type {Array<{name: string, price: number, qty: number, cat: string}>}
+ */
 let cart = [];
+
+/**
+ * Флаг инициализации калькулятора
+ * @type {boolean}
+ */
 let calculatorInitialized = false;
+
+/**
+ * Данные услуг по категориям
+ * @type {Object.<string, Array<{service: string, price: number, sort: number}>>}
+ */
 let servicesData = { business: [], individual: [], corporate: [], group: [] };
 
 const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTDxpfQuCLTjJpiJHgK26zSt_S8a-1LtFUGZV0v1eSg2bHat_BMK6pP4RhXkF5aXPtl9AS9UDj4-a1a/pub?output=csv';
 const CACHE_KEY_SERVICES = 'hr_services_data';
 
+/**
+ * Парсит цену из строки (удаляет пробелы, заменяет запятую)
+ * @param {string} value - Строка с ценой
+ * @returns {number} Числовое значение цены
+ */
 function parsePrice(value) {
     if (!value) return 0;
     let cleaned = String(value).replace(/\s/g, '').replace(',', '.');
@@ -14,6 +40,10 @@ function parsePrice(value) {
     return isNaN(result) ? 0 : result;
 }
 
+/**
+ * Загружает услуги из Google Sheets CSV
+ * @returns {Promise<void>}
+ */
 async function loadServicesFromGoogleSheets() {
     showLoading('Загрузка услуг...');
     try {
@@ -74,6 +104,9 @@ async function loadServicesFromGoogleSheets() {
     }
 }
 
+/**
+ * Загружает локальные данные (fallback при ошибке сети)
+ */
 function loadLocalFallback() {
     servicesData = {
         business: [
@@ -107,6 +140,9 @@ function loadLocalFallback() {
     updateSelectsFromData();
 }
 
+/**
+ * Обновляет select-элементы из загруженных данных
+ */
 function updateSelectsFromData() {
     const selects = {
         'business-select': servicesData.business,
@@ -122,6 +158,10 @@ function updateSelectsFromData() {
     }
 }
 
+/**
+ * Отображает корзину и обновляет итоговую сумму
+ * Применяет скидку 5% при заказе 2+ услуг
+ */
 function renderCart() {
     let total = 0, qty = 0;
     cart.forEach(i => { total += i.price * i.qty; qty += i.qty; });
@@ -131,8 +171,11 @@ function renderCart() {
     if (totalEl) totalEl.innerText = Math.round(final).toLocaleString() + ' ₽';
     const discountDiv = document.getElementById('discountInfo');
     if (discountDiv) {
-        if (qty >= 2) discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — вы экономите ${Math.round(total*0.05)} ₽`;
-        else discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
+        if (qty >= 2) {
+            discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — вы экономите ${Math.round(total*0.05)} ₽`;
+        } else {
+            discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
+        }
     }
     const containers = {
         business: document.getElementById('business-list'),
@@ -161,6 +204,12 @@ function renderCart() {
     });
 }
 
+/**
+ * Добавляет услугу в корзину
+ * @param {string} cat - Категория ('business', 'individual', 'corporate', 'group')
+ * @param {string} selectId - ID элемента select с услугами
+ * @param {string} qtyId - ID элемента input с количеством
+ */
 function addToCart(cat, selectId, qtyId) {
     const select = document.getElementById(selectId);
     if (!select) return;
@@ -178,6 +227,10 @@ function addToCart(cat, selectId, qtyId) {
     renderCart();
 }
 
+/**
+ * Инициализирует калькулятор: загружает данные и настраивает обработчики
+ * @returns {Promise<void>}
+ */
 async function initCalculator() {
     if (calculatorInitialized) return;
     calculatorInitialized = true;
@@ -216,6 +269,7 @@ async function initCalculator() {
     log('✅ Калькулятор инициализирован');
 }
 
+// Экспортируем в глобальную область
 window.initCalculator = initCalculator;
 window.addToCart = addToCart;
 window.renderCart = renderCart;

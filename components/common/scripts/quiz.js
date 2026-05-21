@@ -1,8 +1,39 @@
-// ---------- Квиз с загрузкой из Google Sheets ----------
+/**
+ * Квиз для определения карьерного пути
+ * Загружает вопросы из Google Sheets и предлагает варианты на основе ответов
+ *
+ * @module quiz
+ */
+
+// ---------- Глобальные переменные ----------
+/**
+ * Массив вопросов квиза
+ * @type {Array<{text: string, options: string[]}>}
+ */
 let quizQuestions = [];
+
+/**
+ * Ответы пользователя
+ * @type {Array<string|null>}
+ */
 let answers = [];
+
+/**
+ * Состояние квиза ('questions' или 'choice')
+ * @type {string}
+ */
 let quizState = 'questions';
+
+/**
+ * Флаг инициализации квиза
+ * @type {boolean}
+ */
 let quizInitialized = false;
+
+/**
+ * Матрица вариантов ответов для подбора предложений
+ * @type {Array<Object>}
+ */
 let variantsMatrix = [];
 
 const GOOGLE_SHEETS_QUIZ_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTDxpfQuCLTjJpiJHgK26zSt_S8a-1LtFUGZV0v1eSg2bHat_BMK6pP4RhXkF5aXPtl9AS9UDj4-a1a/pub?output=csv&gid=1216597339';
@@ -28,6 +59,10 @@ const LOCAL_VARIANTS = [
       variantB: "Тренинг «Продай себя дорого» + самоподготовка" }
 ];
 
+/**
+ * Загружает вопросы из Google Sheets
+ * @returns {Promise<void>}
+ */
 async function loadQuizFromGoogleSheets() {
     showLoading('Загрузка квиза...');
     try {
@@ -75,6 +110,10 @@ async function loadQuizFromGoogleSheets() {
     }
 }
 
+/**
+ * Загружает матрицу вариантов из Google Sheets
+ * @returns {Promise<void>}
+ */
 async function loadVariantsMatrix() {
     if (variantsLoaded) return;
 
@@ -129,6 +168,11 @@ async function loadVariantsMatrix() {
     variantsLoaded = true;
 }
 
+/**
+ * Находит подходящий вариант на основе ответов пользователя
+ * @param {Array<string>} answersArr - Массив ответов
+ * @returns {Promise<{variantA: string, variantB: string}>}
+ */
 async function findVariant(answersArr) {
     if (!variantsLoaded) await loadVariantsMatrix();
     const user = {
@@ -151,6 +195,9 @@ async function findVariant(answersArr) {
     return { variantA: def.variantA, variantB: def.variantB };
 }
 
+/**
+ * Отрисовывает текущее состояние квиза
+ */
 function renderQuiz() {
     const container = document.getElementById('quizContainer');
     if (!container) return;
@@ -166,7 +213,9 @@ function renderQuiz() {
             for (let j = 0; j < q.options.length; j++) {
                 const opt = q.options[j];
                 const isSelected = answers[i] === opt;
-                html += `<div class="quiz-option ${isSelected ? 'selected' : ''}" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</div>`;
+                const optClass = isSelected ? 'selected' : '';
+                const escapedOpt = escapeHtml(opt);
+                html += `<div class="quiz-option ${optClass}" data-opt="${escapedOpt}">${escapedOpt}</div>`;
             }
             html += `</div></div>`;
         }
@@ -197,6 +246,10 @@ function renderQuiz() {
     }
 }
 
+/**
+ * Показывает результат квиза (два варианта)
+ * @param {{variantA: string, variantB: string}} variant - Варианты ответов
+ */
 function showResult(variant) {
     const container = document.getElementById('quizContainer');
     if (!container) return;
@@ -262,6 +315,10 @@ function showResult(variant) {
 
 let variantsLoaded = false;
 
+/**
+ * Инициализирует квиз
+ * @returns {Promise<void>}
+ */
 async function initQuiz() {
     if (quizInitialized) return;
     quizInitialized = true;
@@ -270,11 +327,13 @@ async function initQuiz() {
     renderQuiz();
 }
 
+// Автозапуск после загрузки DOM
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => setTimeout(initQuiz, 100));
 } else {
     setTimeout(initQuiz, 100);
 }
 
+// Экспорты
 window.renderQuiz = renderQuiz;
 window.initQuiz = initQuiz;

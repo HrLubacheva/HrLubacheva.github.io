@@ -1,10 +1,23 @@
-// components/common/scripts/editor/editor-core.js
-// Ядро редактора — работает с глобальными функциями из core.js
+/**
+ * Editor Core Module
+ * Управляет состоянием редактора, историей, выделением и блокировкой блоков
+ *
+ * @module editor-core
+ */
 
 (function() {
     'use strict';
 
-    // ========== СОСТОЯНИЕ РЕДАКТОРА ==========
+    /**
+     * Состояние редактора
+     * @namespace editorState
+     * @property {boolean} isEditMode - Режим редактирования активен
+     * @property {HTMLElement|null} selectedElement - Выделенный элемент
+     * @property {boolean} dragEnabled - Разрешено перетаскивание
+     * @property {Array} history - История изменений
+     * @property {number} historyIndex - Текущий индекс в истории
+     * @property {boolean} isUndoRedo - Флаг операции undo/redo
+     */
     window.editorState = {
         isEditMode: false,
         selectedElement: null,
@@ -14,13 +27,17 @@
         isUndoRedo: false
     };
 
-    // ========== ЗАЩИТА ЭЛЕМЕНТОВ ==========
+    /**
+     * Проверяет, является ли элемент защищённым (не должен редактироваться)
+     * @param {HTMLElement} element - Проверяемый элемент
+     * @returns {boolean} true если элемент защищён
+     */
     window.isProtectedElement = function(element) {
         if (!element) return true;
         const protectedSelectors = [
             '.editor-toolbar', '.editor-toolbar *',
             '.resize-marker', '.format-toolbar', '.property-panel',
-            '#editorToggle', '.slides-panel', '.history-panel'
+            '#editorToggleBtn', '.slides-panel', '.history-panel'
         ];
         for (const selector of protectedSelectors) {
             if (element.matches?.(selector) || element.closest?.(selector)) return true;
@@ -28,6 +45,11 @@
         return false;
     };
 
+    /**
+     * Находит родительский блок с классом 'editable-block'
+     * @param {HTMLElement} element - Стартовый элемент
+     * @returns {HTMLElement|null} Блок или null
+     */
     window.getBlock = function(element) {
         if (!element) return null;
         let current = element;
@@ -41,31 +63,37 @@
     // ========== ИСТОРИЯ (UNDO/REDO) ==========
     let saveTimeout = null;
 
+    /**
+     * Сохраняет текущее состояние DOM в историю
+     */
     window.saveToHistory = function() {
         if (window.editorState.isUndoRedo) return;
         if (saveTimeout) clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(() => {
+        saveTimeout = setTimeout(function() {
             if (window.editorState.historyIndex < window.editorState.history.length - 1) {
                 window.editorState.history = window.editorState.history.slice(0, window.editorState.historyIndex + 1);
             }
-            const snapshot = { html: document.documentElement.outerHTML, timestamp: Date.now() };
+            var snapshot = { html: document.documentElement.outerHTML, timestamp: Date.now() };
             window.editorState.history.push(snapshot);
             if (window.editorState.history.length > 50) window.editorState.history.shift();
             window.editorState.historyIndex = window.editorState.history.length - 1;
         }, 100);
     };
 
+    /**
+     * Восстанавливает состояние из снимка
+     * @param {Object} snapshot - Снимок состояния
+     */
     function restoreSnapshot(snapshot) {
         if (!snapshot) return;
         window.editorState.isUndoRedo = true;
-        const temp = document.createElement('div');
+        var temp = document.createElement('div');
         temp.innerHTML = snapshot.html;
-        const newBody = temp.querySelector('body');
+        var newBody = temp.querySelector('body');
         if (newBody) {
             document.body.innerHTML = newBody.innerHTML;
-            // Восстанавливаем скрипты
-            document.body.querySelectorAll('script').forEach(oldScript => {
-                const newScript = document.createElement('script');
+            document.body.querySelectorAll('script').forEach(function(oldScript) {
+                var newScript = document.createElement('script');
                 if (oldScript.src) {
                     newScript.src = oldScript.src;
                 } else {
@@ -76,28 +104,36 @@
             });
         }
         window.editorState.isUndoRedo = false;
-        window.showToast('✅ Состояние восстановлено');
+        if (window.showToast) window.showToast('✅ Состояние восстановлено');
     }
 
+    /**
+     * Отменяет последнее действие (Ctrl+Z)
+     */
     window.undo = function() {
         if (window.editorState.historyIndex <= 0) {
-            window.showToast('⚠️ Нет действий для отмены');
+            if (window.showToast) window.showToast('⚠️ Нет действий для отмены');
             return;
         }
         window.editorState.historyIndex--;
         restoreSnapshot(window.editorState.history[window.editorState.historyIndex]);
     };
 
+    /**
+     * Возвращает отменённое действие (Ctrl+Y)
+     */
     window.redo = function() {
         if (window.editorState.historyIndex >= window.editorState.history.length - 1) {
-            window.showToast('⚠️ Нет действий для возврата');
+            if (window.showToast) window.showToast('⚠️ Нет действий для возврата');
             return;
         }
         window.editorState.historyIndex++;
         restoreSnapshot(window.editorState.history[window.editorState.historyIndex]);
     };
 
-    // ========== ВЫДЕЛЕНИЕ БЛОКОВ ==========
+    /**
+     * Снимает выделение с текущего блока
+     */
     window.clearSelection = function() {
         if (window.editorState.selectedElement) {
             window.editorState.selectedElement.classList.remove('selected');
@@ -107,6 +143,10 @@
         if (window.hideFormatToolbar) window.hideFormatToolbar();
     };
 
+    /**
+     * Выделяет указанный блок
+     * @param {HTMLElement} element - Блок для выделения
+     */
     window.selectElement = function(element) {
         if (!element || window.editorState.selectedElement === element) return;
         window.clearSelection();
@@ -117,35 +157,45 @@
         }
     };
 
-    // ========== БЛОКИРОВКА БЛОКОВ ==========
+    /**
+     * Блокирует/разблокирует блок (запрещает редактирование)
+     * @param {HTMLElement} element - Блок для блокировки
+     */
     window.toggleBlockLock = function(element) {
         if (!element) return;
-        const wasLocked = element.classList.contains('locked');
+        var wasLocked = element.classList.contains('locked');
         if (wasLocked) {
             element.classList.remove('locked');
-            window.showToast('🔓 Блок разблокирован');
+            if (window.showToast) window.showToast('🔓 Блок разблокирован');
         } else {
             element.classList.add('locked');
             if (element.classList.contains('selected')) {
                 element.classList.remove('selected');
                 window.clearSelection();
             }
-            window.showToast('🔒 Блок заблокирован');
+            if (window.showToast) window.showToast('🔒 Блок заблокирован');
         }
         window.saveToHistory();
     };
 
+    /**
+     * Проверяет, заблокирован ли блок
+     * @param {HTMLElement} element - Проверяемый блок
+     * @returns {boolean}
+     */
     window.isBlockLocked = function(element) {
         return element?.classList?.contains('locked') || false;
     };
 
-    // ========== ИНИЦИАЛИЗАЦИЯ ИСТОРИИ ==========
+    /**
+     * Инициализирует систему истории (undo/redo)
+     */
     window.initEditorHistory = function() {
         window.editorState.history = [];
         window.editorState.historyIndex = -1;
         window.saveToHistory();
 
-        const observer = new MutationObserver(() => {
+        var observer = new MutationObserver(function() {
             if (window.editorState.isEditMode && !window.editorState.isUndoRedo) {
                 window.saveToHistory();
             }
@@ -158,7 +208,7 @@
             characterData: true
         });
 
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', function(e) {
             if (!window.editorState.isEditMode) return;
             if (e.ctrlKey && !e.shiftKey && e.key === 'z') {
                 e.preventDefault();
@@ -170,8 +220,8 @@
             }
         });
 
-        window.log('✅ editor-core: история инициализирована');
+        if (window.log) window.log('✅ editor-core: история инициализирована');
     };
 
-    window.log('✅ editor-core.js загружен');
+    if (window.log) window.log('✅ editor-core.js загружен');
 })();

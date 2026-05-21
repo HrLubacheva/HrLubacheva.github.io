@@ -1,5 +1,10 @@
 // ========== ОБЩИЕ УТИЛИТЫ ==========
 
+/**
+ * Экранирует HTML специальные символы
+ * @param {string} str - Исходная строка
+ * @returns {string} Экранированная строка
+ */
 function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -18,16 +23,25 @@ const IS_DEV = window.location.hostname === 'localhost' ||
 
 let originalConsoleLog = null;
 
+/**
+ * Логирование только в режиме разработки
+ */
 function log(...args) {
     if (IS_DEV) {
         console.log(...args);
     }
 }
 
+/**
+ * Логирование ошибок всегда
+ */
 function logError(...args) {
     console.error(...args);
 }
 
+/**
+ * Предупреждения только в режиме разработки
+ */
 function logWarn(...args) {
     if (IS_DEV) {
         console.warn(...args);
@@ -40,32 +54,58 @@ if (!IS_DEV) {
     console.log = function() {};
 }
 
-// Функции для ручного включения/выключения логов
+/**
+ * Включает логирование вручную
+ */
 window.enableLogs = function() {
     if (originalConsoleLog) {
         console.log = originalConsoleLog;
+        originalConsoleLog = null;
     } else {
-        console.log = function(...args) { originalConsoleLog(...args); };
+        console.log = function(...args) {
+            if (typeof console !== 'undefined') {
+                console.log(...args);
+            }
+        };
     }
     showToast('🔍 Логи включены', 2000);
 };
 
+/**
+ * Отключает логирование вручную
+ */
 window.disableLogs = function() {
+    if (originalConsoleLog === null) {
+        originalConsoleLog = console.log;
+    }
     console.log = function() {};
     showToast('🔇 Логи отключены', 2000);
 };
 
 // ========== USER ID (постоянный идентификатор) ==========
 
+/**
+ * Получает или создаёт локальный User ID
+ * @returns {string} User ID
+ */
 function getOrCreateLocalUserId() {
-    let userId = localStorage.getItem('hr_user_id');
-    if (!userId) {
-        userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
-        localStorage.setItem('hr_user_id', userId);
+    try {
+        let userId = localStorage.getItem('hr_user_id');
+        if (!userId) {
+            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+            localStorage.setItem('hr_user_id', userId);
+        }
+        return userId;
+    } catch(e) {
+        logWarn('localStorage недоступен, использую временный ID');
+        return 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
     }
-    return userId;
 }
 
+/**
+ * Получает User ID через Service Worker
+ * @returns {Promise<string>}
+ */
 function getUserIdFromSW() {
     return new Promise((resolve) => {
         if (!navigator.serviceWorker || !navigator.serviceWorker.controller) {
@@ -76,7 +116,9 @@ function getUserIdFromSW() {
         const channel = new MessageChannel();
         channel.port1.onmessage = (event) => {
             if (event.data && event.data.type === 'USER_ID') {
-                localStorage.setItem('hr_user_id', event.data.userId);
+                try {
+                    localStorage.setItem('hr_user_id', event.data.userId);
+                } catch(e) {}
                 resolve(event.data.userId);
             }
         };
@@ -94,20 +136,20 @@ function getUserIdFromSW() {
 
 let currentUserId = null;
 
+/**
+ * Инициализирует User ID и передаёт в аналитику
+ * @returns {Promise<string>}
+ */
 function initUserId() {
     return getUserIdFromSW().then(userId => {
         currentUserId = userId;
         log('👤 User ID инициализирован:', userId);
 
-        // Передаём User ID в Google Analytics
         if (typeof gtag === 'function') {
-            gtag('config', 'G-QZJJ2SE117', {
-                'user_id': userId
-            });
+            gtag('config', 'G-QZJJ2SE117', { 'user_id': userId });
             log('📊 User ID передан в Google Analytics:', userId);
         }
 
-        // Передаём User ID в Яндекс.Метрику
         if (typeof ym === 'function') {
             ym(109292129, 'setUserID', userId);
             log('📊 User ID передан в Яндекс.Метрику:', userId);
@@ -119,6 +161,14 @@ function initUserId() {
 
 // ========== FETCH С ТАЙМАУТОМ И ПОВТОРНЫМИ ПОПЫТКАМИ ==========
 
+/**
+ * Выполняет fetch с повторными попытками
+ * @param {string} url - URL запроса
+ * @param {object} options - Опции fetch
+ * @param {number} retries - Количество попыток
+ * @param {number} timeout - Таймаут в мс
+ * @returns {Promise<Response>}
+ */
 async function fetchWithRetry(url, options = {}, retries = 3, timeout = 10000) {
     let lastError = null;
 
@@ -153,6 +203,13 @@ async function fetchWithRetry(url, options = {}, retries = 3, timeout = 10000) {
     throw lastError;
 }
 
+/**
+ * Получает текст с повторными попытками
+ * @param {string} url - URL запроса
+ * @param {number} retries - Количество попыток
+ * @param {number} timeout - Таймаут в мс
+ * @returns {Promise<string>}
+ */
 async function fetchTextWithRetry(url, retries = 3, timeout = 10000) {
     const response = await fetchWithRetry(url, {}, retries, timeout);
     return response.text();
@@ -162,24 +219,38 @@ async function fetchTextWithRetry(url, retries = 3, timeout = 10000) {
 
 const CACHE_TTL = 10 * 60 * 1000; // 10 минут
 
+/**
+ * Загружает данные с кешированием
+ * @param {string} cacheKey - Ключ кеша
+ * @param {Function} fetchFn - Функция загрузки
+ * @param {number} ttl - Время жизни кеша в мс
+ * @returns {Promise<any>}
+ */
 async function loadWithCache(cacheKey, fetchFn, ttl = CACHE_TTL) {
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
-        try {
-            const { data, timestamp } = JSON.parse(cached);
-            if (Date.now() - timestamp < ttl) {
-                log(`📦 Кеш для ${cacheKey} (актуальный)`);
-                return data;
-            }
-            log(`📦 Кеш для ${cacheKey} (просрочен, загружаем новое)`);
-        } catch(e) {}
+    try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+            try {
+                const { data, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp < ttl) {
+                    log(`📦 Кеш для ${cacheKey} (актуальный)`);
+                    return data;
+                }
+                log(`📦 Кеш для ${cacheKey} (просрочен, загружаем новое)`);
+            } catch(e) {}
+        }
+    } catch(e) {
+        logWarn('localStorage недоступен, кеш не используется');
     }
 
     const data = await fetchFn();
-    localStorage.setItem(cacheKey, JSON.stringify({
-        data: data,
-        timestamp: Date.now()
-    }));
+
+    try {
+        localStorage.setItem(cacheKey, JSON.stringify({
+            data: data,
+            timestamp: Date.now()
+        }));
+    } catch(e) {}
 
     return data;
 }
@@ -190,6 +261,10 @@ let loadingIndicator = null;
 let loadingSpinnerStyle = null;
 let isLoadingActive = false;
 
+/**
+ * Показывает индикатор загрузки
+ * @param {string} message - Сообщение
+ */
 function showLoading(message = 'Загрузка...') {
     if (isLoadingActive) return;
     isLoadingActive = true;
@@ -241,6 +316,9 @@ function showLoading(message = 'Загрузка...') {
     document.body.appendChild(loadingIndicator);
 }
 
+/**
+ * Скрывает индикатор загрузки
+ */
 function hideLoading() {
     if (!isLoadingActive) return;
     isLoadingActive = false;
@@ -253,6 +331,10 @@ function hideLoading() {
 
 // ========== ОСНОВНЫЕ ФУНКЦИИ ==========
 
+/**
+ * Отправляет данные в Google Sheets
+ * @param {object} data - Данные для отправки
+ */
 function sendDataToSheet(data) {
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUUIy_I9Z0qXBQmYMQmwCpkjVAdGemxl6k9DZiVF9djhI_w7Th7fMGaCbVNI-EyDnnBQ/exec';
     const userId = currentUserId || getOrCreateLocalUserId();
@@ -268,6 +350,11 @@ function sendDataToSheet(data) {
     .catch(error => logError('❌ Ошибка:', error));
 }
 
+/**
+ * Показывает всплывающее уведомление
+ * @param {string} message - Текст уведомления
+ * @param {number} duration - Длительность в мс
+ */
 function showToast(message, duration = 3000) {
     let toast = document.querySelector('.custom-toast');
     if (toast) toast.remove();
@@ -280,6 +367,11 @@ function showToast(message, duration = 3000) {
     setTimeout(() => toast.remove(), duration);
 }
 
+/**
+ * Форматирует номер телефона
+ * @param {string} input - Входящая строка с номером
+ * @returns {string} Отформатированный номер
+ */
 function formatPhoneNumber(input) {
     let digits = input.replace(/\D/g, '');
     if (digits.startsWith('8')) digits = '7' + digits.slice(1);
