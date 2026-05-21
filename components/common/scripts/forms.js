@@ -9,7 +9,6 @@ function initCallbackForm() {
                 if (masked) this.value = masked;
                 else this.value = '';
             } else {
-                // fallback
                 if (rawValue.length > 11) rawValue = rawValue.slice(0, 11);
                 let formatted = '+7';
                 if (rawValue.length > 1) formatted += ' ' + rawValue.slice(1, 4);
@@ -61,29 +60,43 @@ function initCallbackForm() {
             }
 
             const formattedForDisplay = '+7 ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
-            const formData = {
-                formType: 'Обратный звонок',
-                name: name,
-                phone: digits,
-                comment: comment,
-                quizAnswers: '-',
-                consent: true
+
+            // Получаем User ID (асинхронно)
+            const sendForm = (userId) => {
+                const formData = {
+                    formType: 'Обратный звонок',
+                    name: name,
+                    phone: digits,
+                    comment: comment,
+                    quizAnswers: '-',
+                    consent: true,
+                    userId: userId
+                };
+
+                if (typeof sendDataToSheet === 'function') {
+                    sendDataToSheet(formData);
+                } else {
+                    log('Данные формы:', formData);
+                }
+
+                if (typeof showToast === 'function') {
+                    showToast(`✅ Спасибо, ${name}! Мы перезвоним вам на ${formattedForDisplay}`, 4000);
+                } else {
+                    alert(`Спасибо, ${name}! Мы перезвоним вам на ${formattedForDisplay}`);
+                }
+
+                callbackForm.reset();
+                setTimeout(() => { isSubmitting = false; }, 2000);
             };
 
-            if (typeof sendDataToSheet === 'function') {
-                sendDataToSheet(formData);
+            // Пытаемся получить User ID
+            if (typeof currentUserId !== 'undefined' && currentUserId) {
+                sendForm(currentUserId);
+            } else if (typeof getUserIdFromSW === 'function') {
+                getUserIdFromSW().then(userId => sendForm(userId));
             } else {
-                console.log('Данные формы:', formData);
+                sendForm('unknown');
             }
-
-            if (typeof showToast === 'function') {
-                showToast(`✅ Спасибо, ${name}! Мы перезвоним вам на ${formattedForDisplay}`, 4000);
-            } else {
-                alert(`Спасибо, ${name}! Мы перезвоним вам на ${formattedForDisplay}`);
-            }
-
-            callbackForm.reset();
-            setTimeout(() => { isSubmitting = false; }, 2000);
         });
     }
 
@@ -98,5 +111,23 @@ function initCallbackForm() {
     }
 }
 
+// Добавить обработку Enter в полях формы
+function initFormEnterSubmit() {
+    const form = document.getElementById('callbackForm');
+    if (!form) return;
+
+    const inputs = form.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn) submitBtn.click();
+            }
+        });
+    });
+}
+
 // Экспортируем для глобального доступа
 window.initCallbackForm = initCallbackForm;
+window.initFormEnterSubmit = initFormEnterSubmit;
