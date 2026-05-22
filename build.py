@@ -1,4 +1,5 @@
 import os
+import hashlib
 from datetime import datetime
 
 COMMON_DIR = "components/common"
@@ -20,17 +21,27 @@ def read_js_files(dir_path):
     files = sorted([f for f in os.listdir(dir_path) if f.endswith('.js')])
     return "\n".join(read_file(os.path.join(dir_path, f)) for f in files)
 
-def build_inline_page():
-    # Сборка CSS
+def content_hash(content):
+    return hashlib.md5(content.encode()).hexdigest()[:8]
+
+def build_css():
     common_css = read_css_files(os.path.join(COMMON_DIR, "css"))
     sections_css = read_css_files(os.path.join(SECTIONS_DIR, "css"))
     full_css = common_css + "\n" + sections_css
+    with open("styles.css", "w", encoding="utf-8") as f:
+        f.write(full_css)
+    print("✅ styles.css")
+    return full_css
 
-    # Сборка JS
+def build_js():
     js_dir = os.path.join(COMMON_DIR, "js")
     full_js = read_js_files(js_dir)
+    with open("scripts.js", "w", encoding="utf-8") as f:
+        f.write(full_js)
+    print("✅ scripts.js")
+    return full_js
 
-    # Сборка HTML-секций
+def build_page(css_hash, js_hash):
     section_files = sorted([f for f in os.listdir(SECTIONS_DIR) if f.endswith('.html')])
     sections_html = "\n".join(read_file(os.path.join(SECTIONS_DIR, f)) for f in section_files)
 
@@ -41,36 +52,23 @@ def build_inline_page():
     privacy = read_file(os.path.join(COMMON_DIR, "04_privacy-modal.html"))
     checklist = read_file(os.path.join(COMMON_DIR, "05_checklist-modal.html"))
 
-    # Вставляем версию в подвал
+    # Подставляем версию в подвал
     footer = footer.replace("{{VERSION}}", datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
 
-    # Удаляем ссылки на внешние CSS и JS (если они есть в head)
-    head = head.replace('<link rel="stylesheet" href="styles.css">', '')
-    # В head добавим встроенный CSS (вставляем после тега <style> или прямо в head)
-    # Проще: сразу после открывающего <head> вставим <style>...</style>
-    # И в конце body — <script>...</script>
+    # Заменяем ссылки на CSS и JS на версионированные
+    head = head.replace('<link rel="stylesheet" href="styles.css">', f'<link rel="stylesheet" href="styles.css?v={css_hash}">')
+    # Если в head нет такой строки, просто вставим нужную перед </head>
+    if '<link rel="stylesheet" href="styles.css?v=' not in head:
+        head = head.replace('</head>', f'<link rel="stylesheet" href="styles.css?v={css_hash}">\n</head>')
 
-    # Найдём позицию закрывающего </head>
-    head_close_pos = head.find('</head>')
-    if head_close_pos != -1:
-        head = head[:head_close_pos] + f'<style>\n{full_css}\n</style>\n' + head[head_close_pos:]
-
-    # Найдём позицию закрывающего </body>
-    # Мы будем добавлять скрипт перед закрывающим </body> в конце сборки
-    # Но проще: добавить в конец full_html, перед </body>
-
-    # Собираем основное тело
     body_content = navbar + sections_html + footer + cookie + privacy + checklist
+    script_tag = f'<script src="scripts.js?v={js_hash}" defer></script>'
 
-    # Вставляем скрипт перед </body>
-    body_with_script = body_content + f'<script>\n{full_js}\n</script>'
+    full_html = head + body_content + script_tag
 
-    full_html = head + body_with_script
-
-    # Записываем index.html
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(full_html)
-    print("✅ index.html (с встроенными CSS и JS)")
+    print("✅ index.html (с версионированием CSS/JS)")
 
 def generate_sitemap():
     today = datetime.now().strftime("%Y-%m-%d")
@@ -97,6 +95,10 @@ Sitemap: https://hrlubacheva.github.io/sitemap.xml
     print("✅ robots.txt")
 
 if __name__ == "__main__":
-    build_inline_page()
+    css_content = build_css()
+    js_content = build_js()
+    css_hash = content_hash(css_content)
+    js_hash = content_hash(js_content)
+    build_page(css_hash, js_hash)
     generate_sitemap()
     build_robots()
