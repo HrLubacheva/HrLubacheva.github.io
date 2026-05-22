@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /editor.html
 Sitemap: https://hrlubacheva.github.io/sitemap.xml

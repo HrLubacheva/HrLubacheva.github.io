@@ -1,0 +1,112 @@
+/* ========== Базовые переменные и сброс ========== */
+:root {
+    --primary: #2D6A9F;
+    --primary-dark: #1F4A6E;
+    --primary-light: #4A8BC2;
+    --secondary: #6c757d;
+    --dark-bg: #1a2a3a;
+    --light-bg: #f8f9fa;
+    --surface-soft: #ffffff;
+    --border: #e0e0e0;
+    --text-dark: #212529;
+    --text-light: #f8f9fa;
+    --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+    --shadow-md: 0 8px 24px rgba(0,0,0,0.1);
+    --shadow-lg: 0 20px 30px -12px rgba(0,0,0,0.15);
+    --radius-md: 16px;
+    --radius-lg: 28px;
+    --transition: all 0.25s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: #ffffff;
+    line-height: 1.5;
+    scroll-behavior: smooth;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ========== Типографика ========== */
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 48px;
+    color: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 32px;
+    }
+}
+
+/* ========== Кнопки ========== */
+.btn-primary, .btn-secondary {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    font-size: 1rem;
+}
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+.btn-primary:active {
+    transform: scale(0.97);
+}
+.btn-secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+.btn-secondary:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+}
+
+/* Секция с тёмным фоном (используется в benefits и contacts) */
+.section-dark {
+    background: var(--dark-bg);
+    color: var(--text-light);
+    padding: 60px 0;
+}
+.section-dark .section-title {
+    color: white;
+}
+.section-light {
+    background: var(--light-bg);
+    padding: 60px 0;
+}
+
+/* Общие карточки (для ролей, услуг, преимуществ, процессов, статистик) – 
+   эти стили будут дополнены в соответствующих секционных CSS */

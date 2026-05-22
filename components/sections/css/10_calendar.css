@@ -1,0 +1,13 @@
+.calendar-card {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    margin: 60px 0;
+    box-shadow: var(--shadow-md);
+}
+.callback-note {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    margin-top: 15px;
+    text-align: center;
+}

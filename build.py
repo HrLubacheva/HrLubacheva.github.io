@@ -1,45 +1,79 @@
-#!/usr/bin/env python3
 import os
 from datetime import datetime
 
 COMMON_DIR = "components/common"
 SECTIONS_DIR = "components/sections"
 
-def read_component(dir_path, name):
-    path = os.path.join(dir_path, name)
+def read_file(path):
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
-def build_page(editor_mode=False):   # параметр добавлен для совместимости, но не используется
-    sections_order = [
-        "hero.html", "roles.html", "services.html", "stats.html",
-        "benefits.html", "process.html", "calculator.html", "quiz.html",
-        "freebies.html", "calendar.html", "contacts.html"
-    ]
-    sections_content = []
-    for section in sections_order:
-        path = os.path.join(SECTIONS_DIR, section)
-        if os.path.exists(path):
-            sections_content.append(read_component(SECTIONS_DIR, section))
-        else:
-            sections_content.append(f"<!-- Секция {section} не найдена -->")
-    full_content = "\n".join(sections_content)
+def read_css_files(dir_path):
+    if not os.path.exists(dir_path):
+        return ""
+    files = sorted([f for f in os.listdir(dir_path) if f.endswith('.css')])
+    return "\n".join(read_file(os.path.join(dir_path, f)) for f in files)
 
-    head = read_component(COMMON_DIR, "_head.html")
-    navbar = read_component(COMMON_DIR, "navbar.html")
-    footer = read_component(COMMON_DIR, "footer.html")
-    cookie_banner = read_component(COMMON_DIR, "cookie-banner.html")
-    privacy_modal = read_component(COMMON_DIR, "privacy-modal.html")
-    scripts = read_component("components", "scripts-public.html")
+def build_css():
+    common_css = read_css_files(os.path.join(COMMON_DIR, "css"))
+    sections_css = read_css_files(os.path.join(SECTIONS_DIR, "css"))
+    with open("styles.css", "w", encoding="utf-8") as f:
+        f.write(common_css + "\n" + sections_css)
+    print("✅ styles.css")
 
-    build_version = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
-    footer = footer.replace("{{VERSION}}", build_version)
+def build_js():
+    js_dir = os.path.join(COMMON_DIR, "js")
+    files = sorted([f for f in os.listdir(js_dir) if f.endswith('.js')])
+    js_content = "\n".join(read_file(os.path.join(js_dir, f)) for f in files)
+    with open("scripts.js", "w", encoding="utf-8") as f:
+        f.write(js_content)
+    print("✅ scripts.js")
 
-    full_html = "".join([head, navbar, full_content, footer, cookie_banner, privacy_modal, scripts])
+def build_page():
+    section_files = sorted([f for f in os.listdir(SECTIONS_DIR) if f.endswith('.html')])
+    content = "\n".join(read_file(os.path.join(SECTIONS_DIR, f)) for f in section_files)
 
+    head = read_file(os.path.join(COMMON_DIR, "00_head.html"))
+    navbar = read_file(os.path.join(COMMON_DIR, "01_navbar.html"))
+    footer = read_file(os.path.join(COMMON_DIR, "02_footer.html"))
+    cookie = read_file(os.path.join(COMMON_DIR, "03_cookie-banner.html"))
+    privacy = read_file(os.path.join(COMMON_DIR, "04_privacy-modal.html"))
+    checklist = read_file(os.path.join(COMMON_DIR, "05_checklist-modal.html"))
+
+    footer = footer.replace("{{VERSION}}", datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
+
+    full = "".join([head, navbar, content, footer, cookie, privacy, checklist, '<script src="scripts.js" defer></script>'])
     with open("index.html", "w", encoding="utf-8") as f:
-        f.write(full_html)
-    print("✅ Собрано index.html (редактор выключен)")
+        f.write(full)
+    print("✅ index.html")
+
+def generate_sitemap():
+    today = datetime.now().strftime("%Y-%m-%d")
+    sitemap_content = f'''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>https://hrlubacheva.github.io/</loc>
+        <lastmod>{today}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+    </url>
+</urlset>'''
+    with open("sitemap.xml", "w", encoding="utf-8") as f:
+        f.write(sitemap_content)
+    print("✅ sitemap.xml")
+
+def build_robots():
+    robots_content = """User-agent: *
+Allow: /
+Sitemap: https://hrlubacheva.github.io/sitemap.xml
+"""
+    with open("robots.txt", "w", encoding="utf-8") as f:
+        f.write(robots_content)
+    print("✅ robots.txt")
 
 if __name__ == "__main__":
+    build_css()
+    build_js()
     build_page()
+    generate_sitemap()
+    build_robots()

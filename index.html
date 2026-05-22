@@ -23,8 +23,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="preload" href="assets/images/img_1.jpg" as="image" fetchpriority="high">
-
-    <!-- Единый файл стилей (вместо critical.css + styles-public.css) -->
     <link rel="stylesheet" href="styles.css">
 
     <!-- Schema.org -->
@@ -81,24 +79,27 @@
             dataLayer.push(arguments);
         }
         gtag('js', new Date());
+        gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'analytics_storage': 'denied',
+            'wait_for_update': 500
+        });
         gtag('config', 'G-QZJJ2SE117');
     </script>
 </head>
-<body><nav class="navbar">
+<body>
+<div id="top"></div><nav class="navbar">
     <div class="container">
         <div class="nav-top">
-            <a href="#" class="logo">
+            <a href="#top" class="logo">
                 <div class="logo-triangle"></div>
                 <span>HR <span class="logo-sub">HrLubacheva</span></span>
             </a>
-
-            <!-- Бургер-кнопка (только на мобильных) -->
             <button class="burger-menu" id="burgerMenu" aria-label="Меню">
                 <span></span>
                 <span></span>
                 <span></span>
             </button>
-
             <div class="social-icons">
                 <a href="https://t.me/HrLubacheva" target="_blank" aria-label="Telegram">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12l16.5-7.5L9 13.5l-2 6 6-4 4.5 4.5L21 4.5 3 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -126,19 +127,18 @@
     <div class="container">
         <div class="hero-grid">
             <div class="hero-content cell-text fade-up" data-cell-type="text">
-                <h1 class="hero-title" contenteditable="false">Виктория Любачева&nbsp;<br></h1>
+                <h1 class="hero-title">Виктория Любачева</h1>
                 <div class="hero-subtitle">Карьерный консультант · HR‑эксперт · Бизнес‑тренер · Психолог</div>
                 <div class="hero-text">
-                    <p class="" contenteditable="false">Помогаю компаниям находить и развивать персонал. Кандидатам — найти работу, построить карьеру и повысить свой доход. <br>24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.</p>
-                    <p class="" contenteditable="false"><strong>Для бизнеса</strong> — подбор, онбординг, тренинги, обучение и удержание персонала, аудит HR-процессов.<br><strong>Для специалистов и руководителей&nbsp;</strong>— резюме, подготовка к интервью, стратегия поиска работы, управление персоналом.</p>
+                    <p>Помогаю компаниям находить и развивать персонал. Кандидатам — найти работу, построить карьеру и повысить свой доход. <br>24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.</p>
+                    <p><strong>Для бизнеса</strong> — подбор, онбординг, тренинги, обучение и удержание персонала, аудит HR-процессов.<br><strong>Для специалистов и руководителей</strong> — резюме, подготовка к интервью, стратегия поиска работы, управление персоналом.</p>
                 </div>
                 <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a>
-                <div class="small-note" contenteditable="false">Мои клиенты — люди различных профессий и разных сфер бизнеса: специалисты, руководители и собственники бизнеса.</div>
+                <div class="small-note">Мои клиенты — люди различных профессий и разных сфер бизнеса: специалисты, руководители и собственники бизнеса.</div>
                 <div class="small-note">Работаю с профессионалами от Junior до C-level и с бизнесом любого масштаба.</div>
             </div>
             <div class="hero-image cell-image fade-up" data-cell-type="image">
-                <img src="assets/images/img_1.jpg" alt="Виктория Любачева"
-                     style="width: 100%; height: auto; max-width: 420px; object-fit: contain; display: block; margin-left: -20px;">
+                <img src="assets/images/img_1.jpg" alt="Виктория Любачева" style="width: 100%; height: auto; max-width: 420px; object-fit: contain; display: block; margin-left: -20px;">
             </div>
         </div>
     </div>
@@ -150,23 +150,23 @@
         </div>
         <div class="roles-grid cells-grid" data-grid-type="cards">
             <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>🧑&nbsp;Карьерный консультант</h3>
+                <h3>🧑 Карьерный консультант</h3>
                 <p>Индивидуальные стратегии, резюме, подготовка к интервью, повышение дохода. Продайте себя дорого.</p>
             </div>
             <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>🏢&nbsp;HR‑эксперт для организаций</h3>
+                <h3>🏢 HR‑эксперт для организаций</h3>
                 <p>Подбор персонала, онбординг, УТП, аудит HR-процессов. Закрываю вакансии с гарантией.</p>
             </div>
             <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>💬&nbsp;HR‑эксперт для людей</h3>
+                <h3>💬 HR‑эксперт для людей</h3>
                 <p>Консультации по трудовым отношениям, карьерные карты, переговоры с работодателем.</p>
             </div>
             <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>🎓&nbsp;Бизнес‑тренер</h3>
+                <h3>🎓 Бизнес‑тренер</h3>
                 <p>Тренинги для команд и индивидуальный коучинг для руководителей. Развиваю навыки, которые приносят прибыль.</p>
             </div>
             <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>🧠&nbsp;Психолог</h3>
+                <h3>🧠 Психолог</h3>
                 <p>Помогаю найти себя, разобраться в своей жизни, определить цели и реализацию. Выявляю истинные ценности и жизненные ориентиры.</p>
             </div>
         </div>
@@ -179,21 +179,21 @@
         </div>
         <div class="services-flex cells-grid" data-grid-type="cards">
             <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3>🏢&nbsp;HR для бизнеса</h3>
+                <h3>🏢 HR для бизнеса</h3>
                 <p>Подбор персонала (Junior → C-level), онбординг, оценка, аутсорсинг подбора, кадровый аудит.</p>
             </div>
             <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3>🧑&nbsp;Карьерный консалтинг</h3>
+                <h3>🧑 Карьерный консалтинг</h3>
                 <p>Карьерная стратегия, упаковка резюме, подготовка к интервью и переговоры о зарплате. Помогаю заявить о ценности и получить достойный оффер.</p>
                 <p><strong>➕</strong> Изучаем АТС и ботов. Стратегия обхода ИИ-фильтров.</p>
                 <a href="assets/docs/training_program.pdf" class="btn-secondary" target="_blank">📘 Скачать программу тренинга (PDF)</a>
             </div>
             <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3>🎓&nbsp;Бизнес‑тренинги, обучение и коучинг персонала</h3>
+                <h3>🎓 Бизнес‑тренинги, обучение и коучинг персонала</h3>
                 <p>Корпоративные тренинги (до 25 чел.), обучение сотрудников, мастер-классы, стратегические сессии, индивидуальный коучинг топ-менеджеров.</p>
             </div>
             <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3>🎯&nbsp;Профориентация</h3>
+                <h3>🎯 Профориентация</h3>
                 <p>Для взрослых и подростков. Помогаю определиться с профессией, направлением развития, выбрать путь, который принесёт удовлетворение и доход.</p>
             </div>
         </div>
@@ -204,15 +204,15 @@
         <h2 class="section-title fade-up">Цифры, подтверждающие экспертизу</h2>
         <div class="stats-grid">
             <div class="stat-item fade-up">
-                <div class="stat-number">1&nbsp;000+</div>
+                <div class="stat-number">1 000+</div>
                 <div class="stat-label">закрытых вакансий</div>
             </div>
             <div class="stat-item fade-up">
-                <div class="stat-number">1&nbsp;500+</div>
+                <div class="stat-number">1 500+</div>
                 <div class="stat-label">трудоустроила кандидатов</div>
             </div>
             <div class="stat-item fade-up">
-                <div class="stat-number">10&nbsp;000+</div>
+                <div class="stat-number">10 000+</div>
                 <div class="stat-label">проведённых интервью</div>
             </div>
             <div class="stat-item fade-up">
@@ -350,22 +350,22 @@
     <div class="container">
         <div class="quiz-card fade-up">
             <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
-            <p class="">Выберите категорию, добавьте услуги. Скидка 5% при заказе 2+ позиций из любого раздела.</p>
+            <p>Выберите категорию, добавьте услуги. Скидка 5% при заказе 2+ позиций из любого раздела.</p>
             <div class="calculator-tabs">
-                <button class="tab-btn active" data-tab="business">🏢&nbsp;Бизнесу</button>
-                <button class="tab-btn" data-tab="individual">👤&nbsp;Индивидуально</button>
-                <button class="tab-btn" data-tab="corporate">🎓&nbsp;Тренинги для бизнеса</button>
-                <button class="tab-btn" data-tab="group">👥&nbsp;Групповые тренинги</button>
+                <button class="tab-btn active" data-tab="business">🏢 Бизнесу</button>
+                <button class="tab-btn" data-tab="individual">👤 Индивидуально</button>
+                <button class="tab-btn" data-tab="corporate">🎓 Тренинги для бизнеса</button>
+                <button class="tab-btn" data-tab="group">👥 Групповые тренинги</button>
             </div>
             <div id="tab-business" class="tab-pane active">
                 <div id="business-list"></div>
                 <div class="add-service">
                     <select id="business-select">
-                        <option value="60000">Подбор специалиста — 60&nbsp;000 ₽</option>
-                        <option value="90000">Подбор руководителя — 90&nbsp;000 ₽</option>
-                        <option value="120000">Хэдхантинг — 120&nbsp;000 ₽</option>
-                        <option value="250000">Онбординг — 250&nbsp;000 ₽</option>
-                        <option value="25000">УТП компании — 25&nbsp;000 ₽</option>
+                        <option value="60000">Подбор специалиста — 60 000 ₽</option>
+                        <option value="90000">Подбор руководителя — 90 000 ₽</option>
+                        <option value="120000">Хэдхантинг — 120 000 ₽</option>
+                        <option value="250000">Онбординг — 250 000 ₽</option>
+                        <option value="25000">УТП компании — 25 000 ₽</option>
                     </select>
                     <input type="number" id="business-qty" min="1" value="1" class="calc-qty">
                     <button id="business-add" class="btn-primary add-service-btn">➕ Добавить</button>
@@ -375,14 +375,14 @@
                 <div id="individual-list"></div>
                 <div class="add-service">
                     <select id="individual-select">
-                        <option value="7000">Индивидуальная консультация (1ч) — 7&nbsp;000 ₽</option>
-                        <option value="3500">Экспресс-консультация (30мин) — 3&nbsp;500 ₽</option>
-                        <option value="4000">Аудит резюме — 4&nbsp;000 ₽</option>
-                        <option value="6000">Резюме специалиста — 6&nbsp;000 ₽</option>
-                        <option value="9000">Резюме руководителя — 9&nbsp;000 ₽</option>
-                        <option value="15000">CV на английском — 15&nbsp;000 ₽</option>
-                        <option value="3000">Сопроводительное письмо — 3&nbsp;000 ₽</option>
-                        <option value="14000">Индивидуальный тренинг «Продай себя дорого» — 14&nbsp;000 ₽</option>
+                        <option value="7000">Индивидуальная консультация (1ч) — 7 000 ₽</option>
+                        <option value="3500">Экспресс-консультация (30мин) — 3 500 ₽</option>
+                        <option value="4000">Аудит резюме — 4 000 ₽</option>
+                        <option value="6000">Резюме специалиста — 6 000 ₽</option>
+                        <option value="9000">Резюме руководителя — 9 000 ₽</option>
+                        <option value="15000">CV на английском — 15 000 ₽</option>
+                        <option value="3000">Сопроводительное письмо — 3 000 ₽</option>
+                        <option value="14000">Индивидуальный тренинг «Продай себя дорого» — 14 000 ₽</option>
                     </select>
                     <input type="number" id="individual-qty" min="1" value="1" class="calc-qty">
                     <button id="individual-add" class="btn-primary add-service-btn">➕ Добавить</button>
@@ -396,9 +396,9 @@
                 <div id="corporate-list"></div>
                 <div class="add-service">
                     <select id="corporate-select">
-                        <option value="12000">Тренинг по запросу (до 25 чел.) — 12&nbsp;000 ₽</option>
-                        <option value="13000">Стратегическая сессия (до 12 чел.) — 13&nbsp;000 ₽</option>
-                        <option value="30000">Мастер-класс (3ч. до 25 чел.) — 30&nbsp;000 ₽</option>
+                        <option value="12000">Тренинг по запросу (до 25 чел.) — 12 000 ₽</option>
+                        <option value="13000">Стратегическая сессия (до 12 чел.) — 13 000 ₽</option>
+                        <option value="30000">Мастер-класс (3ч. до 25 чел.) — 30 000 ₽</option>
                     </select>
                     <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty">
                     <button id="corporate-add" class="btn-primary add-service-btn">➕ Добавить</button>
@@ -408,9 +408,9 @@
                 <div id="group-list"></div>
                 <div class="add-service">
                     <select id="group-select">
-                        <option value="5500">Групповой тренинг (до 10 чел.) — 5&nbsp;500 ₽</option>
-                        <option value="5000">Групповой тренинг (11-20 чел.) — 5&nbsp;000 ₽</option>
-                        <option value="4500">Групповой тренинг (21+ чел.) — 4&nbsp;500 ₽</option>
+                        <option value="5500">Групповой тренинг (до 10 чел.) — 5 500 ₽</option>
+                        <option value="5000">Групповой тренинг (11-20 чел.) — 5 000 ₽</option>
+                        <option value="4500">Групповой тренинг (21+ чел.) — 4 500 ₽</option>
                     </select>
                     <input type="number" id="group-qty" min="1" value="1" class="calc-qty">
                     <button id="group-add" class="btn-primary add-service-btn">➕ Добавить</button>
@@ -427,54 +427,7 @@
     <div class="container">
         <div class="quiz-card fade-up">
             <h2 class="section-title">🧠 Квиз: «Ваш следующий карьерный шаг»</h2>
-            <div id="quizContainer">
-                <div class="quiz-question">
-                    <p class="">1. Ваша роль?</p>
-                    <div class="quiz-options" data-q="0">
-                        <div class="quiz-option " data-opt="Ищу работу">Ищу работу</div>
-                        <div class="quiz-option " data-opt="Хочу сменить профессию">Хочу сменить профессию</div>
-                        <div class="quiz-option " data-opt="Рост в текущей компании">Рост в текущей компании</div>
-                        <div class="quiz-option " data-opt="Подбираю сотрудников">Подбираю сотрудников</div>
-                    </div>
-                </div>
-                <div class="quiz-question">
-                    <p class="">2. Ваш текущий уровень?</p>
-                    <div class="quiz-options" data-q="1">
-                        <div class="quiz-option " data-opt="Junior / начинающий">Junior / начинающий</div>
-                        <div class="quiz-option " data-opt="Middle / опытный">Middle / опытный</div>
-                        <div class="quiz-option " data-opt="Senior / ведущий">Senior / ведущий</div>
-                        <div class="quiz-option " data-opt="Lead / руководитель">Lead / руководитель</div>
-                    </div>
-                </div>
-                <div class="quiz-question">
-                    <p class="">3. Как быстро нужен результат?</p>
-                    <div class="quiz-options" data-q="2">
-                        <div class="quiz-option " data-opt="Вчера">Вчера</div>
-                        <div class="quiz-option " data-opt="1–2 месяца">1–2 месяца</div>
-                        <div class="quiz-option " data-opt="3–6 месяцев">3–6 месяцев</div>
-                        <div class="quiz-option " data-opt="Планирую постепенно">Планирую постепенно</div>
-                    </div>
-                </div>
-                <div class="quiz-question">
-                    <p class="">4. Что для вас важнее всего?</p>
-                    <div class="quiz-options" data-q="3">
-                        <div class="quiz-option " data-opt="Зарплата">Зарплата</div>
-                        <div class="quiz-option " data-opt="Условия/удаленка">Условия/удаленка</div>
-                        <div class="quiz-option " data-opt="Карьерный рост">Карьерный рост</div>
-                        <div class="quiz-option " data-opt="Команда и ценности">Команда и ценности</div>
-                    </div>
-                </div>
-                <div class="quiz-question">
-                    <p class="">5. Бюджет на консультацию/подбор?</p>
-                    <div class="quiz-options" data-q="4">
-                        <div class="quiz-option " data-opt="До 5000 ₽">До 5&nbsp;000 ₽</div>
-                        <div class="quiz-option " data-opt="5000–15000 ₽">5&nbsp;000–15&nbsp;000 ₽</div>
-                        <div class="quiz-option " data-opt="15000–50000 ₽">15&nbsp;000–50&nbsp;000 ₽</div>
-                        <div class="quiz-option " data-opt="Выше 50000 ₽">Выше 50&nbsp;000 ₽</div>
-                    </div>
-                </div>
-                <button id="submitQuizBtn" class="btn-primary">Показать варианты</button>
-            </div>
+            <div id="quizContainer"></div>
             <div id="quizResult" class="quiz-result"></div>
         </div>
     </div>
@@ -529,31 +482,34 @@
         </div>
     </div>
 </section><footer>
-    <div class="container">© 2026 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер.
+    <div class="container">© 2026 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер. Версия: 22.05.2026 12:57:03
         <a href="#" id="privacyLink">Политика конфиденциальности</a>
     </div>
-</footer><!-- Баннер согласия на cookies -->
-<div id="cookieConsent" class="cookie-consent" style="display: none;">
+</footer><div id="cookieConsent" class="cookie-consent" style="display: none;">
     <div class="cookie-consent__inner">
         <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с <a href="#" id="cookiePrivacyLink">политикой конфиденциальности</a>.</p>
         <button id="acceptCookies" class="btn-primary btn-small">Принять</button>
         <button id="declineCookies" class="btn-secondary btn-small">Отклонить</button>
     </div>
-</div><!-- Модальное окно политики конфиденциальности -->
-<div id="privacyModal" class="modal" style="display: none;">
+</div><div id="privacyModal" class="modal" style="display: none;">
     <div class="modal-content">
         <h3>Политика конфиденциальности</h3>
         <p>Ваши данные используются только для связи с вами и не передаются третьим лицам.</p>
         <p>Полный текст политики доступен <a href="https://hrlubacheva.github.io/privacy.html" target="_blank">по ссылке</a>.</p>
         <button id="closePrivacyModalBtn" class="btn-secondary">Закрыть</button>
     </div>
-</div><script src="components/common/scripts/core.js" defer></script>
-<script src="components/common/scripts/calculator.js" defer></script>
-<script src="components/common/scripts/quiz.js" defer></script>
-<script src="components/common/scripts/modal.js" defer></script>
-<script src="components/common/scripts/forms.js" defer></script>
-<script src="components/common/scripts/animations.js" defer></script>
-<script src="components/common/scripts/navigation.js" defer></script>
-<script src="components/common/scripts/copy.js" defer></script>
-<script src="components/common/scripts/cookie-consent.js" defer></script>
-<script src="components/common/scripts/public-main.js" defer></script>
+</div><div id="checklistModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h3>📥 Получить бесплатные материалы</h3>
+        <p>Введите ваш email, и мы отправим чек-лист и программу тренинга.</p>
+        <input type="email" id="checklistEmail" placeholder="Ваш email" required style="width:100%; margin:15px 0; padding:12px; border-radius:40px; border:1px solid #ccc;">
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <label><input type="checkbox" id="checklistCheck" checked> Чек-лист «Идеальное резюме»</label>
+            <label><input type="checkbox" id="trainingCheck" checked> Программа тренинга</label>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button id="downloadBothBtn" class="btn-primary">Скачать оба</button>
+            <button id="closeModalBtn" class="btn-secondary">Закрыть</button>
+        </div>
+    </div>
+</div><script src="scripts.js" defer></script>
