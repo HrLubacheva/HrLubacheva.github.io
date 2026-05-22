@@ -2,7 +2,7 @@
 let cart = [];
 let calculatorInitialized = false;
 
-// Локальные данные услуг
+// Локальные данные услуг (ПОЛНАЯ ВЕРСИЯ)
 const LOCAL_SERVICES = {
     business: [
         { service: "Подбор специалиста", price: 60000, sort: 1 },
@@ -29,8 +29,7 @@ const LOCAL_SERVICES = {
     group: [
         { service: "Групповой тренинг (до 10 чел.)", price: 5500, sort: 1 },
         { service: "Групповой тренинг (11-20 чел.)", price: 5000, sort: 2 },
-        { service: "Групповой тренинг (21+ чел.)", price: 4500, sort: 3 },
-        { service: "Групповой тренинг онлайн", price: 4500, sort: 4 },
+        { service: "Групповой тренинг (21+ чел.)", price: 4500, sort: 3 }
     ]
 };
 
@@ -71,7 +70,12 @@ function renderCart() {
         if (!container) return;
         const div = document.createElement('div');
         div.className = 'calc-item';
-        div.innerHTML = `<div>${escapeHtml(item.name)} × ${item.qty}</div><div>${(item.price * item.qty).toLocaleString()} ₽ <button class="remove-item" data-idx="${idx}" style="background:none;border:none;color:red;cursor:pointer;font-size:1.2rem;">✖</button></div>`;
+        div.innerHTML = `
+            <div class="service-name">${escapeHtml(item.name)}</div>
+            <div class="service-price">${(item.price * item.qty).toLocaleString()} ₽</div>
+            <div class="service-qty">× ${item.qty}</div>
+            <div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>
+        `;
         container.appendChild(div);
     });
     document.querySelectorAll('.remove-item').forEach(btn => {

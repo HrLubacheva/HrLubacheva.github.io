@@ -129,7 +129,6 @@ body {
     gap: 15px;
     align-items: center;
 }
-
 .social-icons a {
     display: inline-flex;
     align-items: center;
@@ -137,12 +136,10 @@ body {
     color: var(--primary);
     transition: var(--transition);
 }
-
 .social-icons a:hover {
     transform: translateY(-2px);
     opacity: 0.8;
 }
-
 .social-icons svg {
     width: 24px;
     height: 24px;
@@ -245,13 +242,35 @@ body {
     margin-top: 15px;
 }
 .hero-image {
-    flex: 0.8;
+    flex: 1;
     text-align: center;
+}
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+}
+@media (min-width: 1024px) {
+    .hero-image img {
+        max-width: 480px;
+    }
 }
 @media (max-width: 768px) {
     .hero-grid {
         flex-direction: column;
         text-align: center;
+    }
+    .hero-image {
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+    .hero-image img {
+        max-width: 280px;
+        margin: 0 auto;
     }
     .hero-title {
         font-size: 2rem;
@@ -285,6 +304,8 @@ body {
     font-size: 2.5rem;
     font-weight: 800;
     color: var(--primary);
+    transition: all 0.2s ease;
+    display: inline-block;
 }
 .stat-label {
     font-size: 1rem;
@@ -332,7 +353,6 @@ body {
 
 .benefit-card {
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(0px);
     border-radius: var(--radius-lg);
     padding: 32px 28px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
@@ -432,44 +452,229 @@ body {
     from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
 }
+
+/* Шапка таблицы услуг */
+.services-header {
+    display: grid;
+    grid-template-columns: 1fr 100px 80px 40px;
+    gap: 12px;
+    padding: 12px 8px;
+    background: var(--light-bg);
+    border-radius: 40px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--secondary);
+}
+
+.service-name-col {
+    padding-left: 12px;
+}
+
+.service-price-col,
+.service-qty-col {
+    text-align: center;
+}
+
+/* Список добавленных услуг */
+.services-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+}
+
+/* Пустое состояние корзины */
+.services-list:empty::after {
+    content: "📭 Корзина пуста. Добавьте услугу выше →";
+    display: block;
+    text-align: center;
+    padding: 40px;
+    color: var(--secondary);
+    font-size: 0.9rem;
+}
+
+.calc-item {
+    display: grid;
+    grid-template-columns: 1fr 100px 80px 40px;
+    gap: 12px;
+    align-items: center;
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.calc-item:hover {
+    background: var(--light-bg);
+}
+
+.calc-item .service-name {
+    padding-left: 12px;
+    font-weight: 500;
+    word-break: break-word;
+    white-space: normal;
+    line-height: 1.4;
+}
+
+.calc-item .service-price,
+.calc-item .service-qty {
+    text-align: center;
+    font-weight: 500;
+}
+
+.calc-item .service-remove {
+    text-align: center;
+}
+
+.remove-item {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-item:hover {
+    background: #fee2e2;
+    transform: scale(1.05);
+}
+
+/* Блок добавления услуги */
 .add-service {
     display: flex;
     gap: 12px;
     margin: 20px 0;
     align-items: center;
     flex-wrap: wrap;
+    background: var(--light-bg);
+    padding: 15px;
+    border-radius: var(--radius-lg);
 }
-.add-service select, .calc-qty {
-    padding: 10px;
+
+.service-select {
+    flex: 2;
+    min-width: 200px;
+    padding: 12px;
     border-radius: 40px;
     border: 1px solid var(--border);
     background: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
 }
+
+.service-select option {
+    white-space: normal;
+    word-break: break-word;
+    padding: 8px;
+}
+
 .calc-qty {
     width: 80px;
+    padding: 12px;
+    border-radius: 40px;
+    border: 1px solid var(--border);
+    background: white;
+    text-align: center;
 }
-.calc-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px dashed var(--border);
+
+.add-service-btn {
+    white-space: nowrap;
 }
+
+/* Итого */
 .total-block {
     margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid var(--primary);
     font-size: 1.5rem;
     font-weight: bold;
     text-align: right;
 }
+
 .discount-info {
     font-size: 0.9rem;
-    color: green;
+    color: #28a745;
+    margin-top: 8px;
 }
-.calc-pdf-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin: 20px 0;
-    justify-content: center;
+
+/* Адаптивность для телефонов */
+@media (max-width: 768px) {
+    .services-header {
+        display: none;
+    }
+
+    .calc-item {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 16px;
+        position: relative;
+    }
+
+    .calc-item .service-name {
+        padding-left: 0;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .calc-item .service-price {
+        text-align: left;
+        font-size: 0.9rem;
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .calc-item .service-qty {
+        text-align: left;
+        font-size: 0.85rem;
+        color: var(--secondary);
+    }
+
+    .calc-item .service-remove {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+    }
+
+    .add-service {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .service-select {
+        width: 100%;
+    }
+
+    .add-service-btn {
+        white-space: normal;
+    }
+
+    .total-block {
+        text-align: center;
+        font-size: 1.3rem;
+    }
 }
 
 /* ========== Квиз ========== */
@@ -482,12 +687,19 @@ body {
 }
 .quiz-question {
     margin-bottom: 30px;
+    font-size: 1.1rem;
+}
+.quiz-question p {
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-align: center;
 }
 .quiz-options {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 15px;
+    justify-content: center;
 }
 .quiz-option {
     background: var(--light-bg);
@@ -495,6 +707,9 @@ body {
     border-radius: 40px;
     cursor: pointer;
     transition: var(--transition);
+    flex: 1 0 auto;
+    text-align: center;
+    min-width: 140px;
 }
 .quiz-option.selected {
     background: var(--primary);
@@ -546,6 +761,30 @@ body {
     margin-top: 15px;
     font-size: 1rem;
     color: var(--secondary);
+}
+
+@media (max-width: 480px) {
+    .quiz-options {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .quiz-option {
+        width: 100%;
+        text-align: center;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+    }
+    .quiz-question p {
+        font-size: 1rem;
+    }
+    .quiz-nav {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .quiz-nav button {
+        width: 100%;
+    }
 }
 
 /* ========== Бесплатные материалы и диагностика (улучшенные карточки) ========== */
@@ -805,8 +1044,54 @@ footer a:hover {
     transform: translateY(0);
 }
 .checklist-card.visible,
-.calendar-card.visible {
+.calendar-card.visible,
+.benefit-card.visible {
     transition-delay: 0.05s;
+}
+
+/* ========== Секции с фоном ========== */
+.section-dark {
+    background: var(--dark-bg);
+    color: var(--text-light);
+    padding: 60px 0;
+}
+.section-dark .section-title {
+    color: white;
+}
+.section-light {
+    background: var(--light-bg);
+    padding: 60px 0;
+}
+
+/* ========== Кнопка "Наверх" ========== */
+.scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--primary);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 99;
+    box-shadow: var(--shadow-md);
+    border: none;
+    font-size: 1.5rem;
+}
+.scroll-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+.scroll-top:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
 }
 
 /* ========== Учёт reduced motion ========== */
@@ -825,18 +1110,4 @@ footer a:hover {
         opacity: 1 !important;
         transform: none !important;
     }
-}
-
-/* ========== Секции с фоном ========== */
-.section-dark {
-    background: var(--dark-bg);
-    color: var(--text-light);
-    padding: 60px 0;
-}
-.section-dark .section-title {
-    color: white;
-}
-.section-light {
-    background: var(--light-bg);
-    padding: 60px 0;
 }
