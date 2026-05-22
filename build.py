@@ -4,15 +4,18 @@ from datetime import datetime
 COMMON_DIR = "components/common"
 SECTIONS_DIR = "components/sections"
 
+
 def read_file(path):
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
+
 
 def read_css_files(dir_path):
     if not os.path.exists(dir_path):
         return ""
     files = sorted([f for f in os.listdir(dir_path) if f.endswith('.css')])
     return "\n".join(read_file(os.path.join(dir_path, f)) for f in files)
+
 
 def build_css():
     common_css = read_css_files(os.path.join(COMMON_DIR, "css"))
@@ -21,6 +24,7 @@ def build_css():
         f.write(common_css + "\n" + sections_css)
     print("✅ styles.css")
 
+
 def build_js():
     js_dir = os.path.join(COMMON_DIR, "js")
     files = sorted([f for f in os.listdir(js_dir) if f.endswith('.js')])
@@ -28,6 +32,7 @@ def build_js():
     with open("scripts.js", "w", encoding="utf-8") as f:
         f.write(js_content)
     print("✅ scripts.js")
+
 
 def build_page():
     section_files = sorted([f for f in os.listdir(SECTIONS_DIR) if f.endswith('.html')])
@@ -42,10 +47,18 @@ def build_page():
 
     footer = footer.replace("{{VERSION}}", datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
 
-    full = "".join([head, navbar, content, footer, cookie, privacy, checklist, '<script src="scripts.js" defer></script>'])
+    # Генерируем версию (timestamp) для обхода кэша
+    cache_buster = datetime.now().strftime("%Y%m%d%H%M%S")
+
+    # Добавляем версию к CSS и JS ссылкам
+    head = head.replace('href="styles.css"', f'href="styles.css?v={cache_buster}"')
+
+    full = "".join([head, navbar, content, footer, cookie, privacy, checklist,
+                    f'<script src="scripts.js?v={cache_buster}" defer></script>'])
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(full)
     print("✅ index.html")
+
 
 def generate_sitemap():
     today = datetime.now().strftime("%Y-%m-%d")
@@ -62,6 +75,7 @@ def generate_sitemap():
         f.write(sitemap_content)
     print("✅ sitemap.xml")
 
+
 def build_robots():
     robots_content = """User-agent: *
 Allow: /
@@ -70,6 +84,7 @@ Sitemap: https://hrlubacheva.github.io/sitemap.xml
     with open("robots.txt", "w", encoding="utf-8") as f:
         f.write(robots_content)
     print("✅ robots.txt")
+
 
 if __name__ == "__main__":
     build_css()
