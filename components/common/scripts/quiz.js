@@ -1,46 +1,10 @@
 /**
- * Квиз для определения карьерного пути
- * Загружает вопросы из Google Sheets и предлагает варианты на основе ответов
- *
- * @module quiz
- */
-
-// ---------- Глобальные переменные ----------
-/**
- * Массив вопросов квиза
- * @type {Array<{text: string, options: string[]}>}
+ * Квиз для определения карьерного пути – статическая версия
  */
 let quizQuestions = [];
-
-/**
- * Ответы пользователя
- * @type {Array<string|null>}
- */
 let answers = [];
-
-/**
- * Состояние квиза ('questions' или 'choice')
- * @type {string}
- */
 let quizState = 'questions';
-
-/**
- * Флаг инициализации квиза
- * @type {boolean}
- */
 let quizInitialized = false;
-
-/**
- * Матрица вариантов ответов для подбора предложений
- * @type {Array<Object>}
- */
-let variantsMatrix = [];
-
-const GOOGLE_SHEETS_QUIZ_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTDxpfQuCLTjJpiJHgK26zSt_S8a-1LtFUGZV0v1eSg2bHat_BMK6pP4RhXkF5aXPtl9AS9UDj4-a1a/pub?output=csv&gid=1216597339';
-const GOOGLE_SHEETS_MATRIX_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTDxpfQuCLTjJpiJHgK26zSt_S8a-1LtFUGZV0v1eSg2bHat_BMK6pP4RhXkF5aXPtl9AS9UDj4-a1a/pub?output=csv&gid=27728112';
-
-const CACHE_KEY_QUESTIONS = 'hr_quiz_questions';
-const CACHE_KEY_VARIANTS = 'hr_quiz_variants';
 
 const LOCAL_QUESTIONS = [
     { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
@@ -50,139 +14,25 @@ const LOCAL_QUESTIONS = [
     { text: "5. Бюджет на консультацию/подбор?", options: ["До 5000 ₽", "5000–15000 ₽", "15000–50000 ₽", "Выше 50000 ₽"] }
 ];
 
-const LOCAL_VARIANTS = [
+const VARIANTS_MATRIX = [
     { priority: 1, role: "Подбираю сотрудников", level: "*", urgency: "*", importance: "*", budget: "*",
-      variantA: "HR-аудит и закрытие вакансии под ключ",
-      variantB: "Бесплатная диагностика вакансии" },
+      variantA: "HR-аудит и закрытие вакансии под ключ", variantB: "Бесплатная диагностика вакансии" },
+    { priority: 2, role: "Ищу работу", level: "Junior / начинающий", urgency: "*", importance: "*", budget: "*",
+      variantA: "Карьерная стратегия + упаковка резюме", variantB: "Экспресс-консультация по поиску" },
+    { priority: 3, role: "Ищу работу", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*",
+      variantA: "Тренинг «Продай себя дорого» и переговоры о зарплате", variantB: "Индивидуальное сопровождение до оффера" },
     { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*",
-      variantA: "Индивидуальная карьерная стратегия + полное сопровождение",
-      variantB: "Тренинг «Продай себя дорого» + самоподготовка" }
+      variantA: "Индивидуальная карьерная стратегия + полное сопровождение", variantB: "Тренинг «Продай себя дорого» + самоподготовка" }
 ];
 
-/**
- * Загружает вопросы из Google Sheets
- * @returns {Promise<void>}
- */
-async function loadQuizFromGoogleSheets() {
-    showLoading('Загрузка квиза...');
-    try {
-        const csvText = await loadWithCache(CACHE_KEY_QUESTIONS, () => {
-            return fetchTextWithRetry(GOOGLE_SHEETS_QUIZ_URL, 3, 8000);
-        }, 10 * 60 * 1000);
-
-        const rows = csvText.split('\n').filter(row => row.trim());
-        if (rows.length < 2) throw new Error('Нет данных');
-
-        const headers = rows[0].split(',').map(h => h.trim());
-        const qIndex = headers.indexOf('question');
-        const opt1Index = headers.indexOf('option1');
-        const opt2Index = headers.indexOf('option2');
-        const opt3Index = headers.indexOf('option3');
-        const opt4Index = headers.indexOf('option4');
-
-        const loadedQuestions = [];
-        for (let i = 1; i < rows.length; i++) {
-            const values = rows[i].split(',').map(v => v.trim());
-            const question = values[qIndex];
-            if (!question) continue;
-            const options = [];
-            if (opt1Index !== -1 && values[opt1Index]) options.push(values[opt1Index]);
-            if (opt2Index !== -1 && values[opt2Index]) options.push(values[opt2Index]);
-            if (opt3Index !== -1 && values[opt3Index]) options.push(values[opt3Index]);
-            if (opt4Index !== -1 && values[opt4Index]) options.push(values[opt4Index]);
-            if (options.length > 0) {
-                loadedQuestions.push({ text: question, options });
-            }
-        }
-
-        if (loadedQuestions.length > 0) {
-            quizQuestions = loadedQuestions;
-        } else {
-            throw new Error('Нет вопросов');
-        }
-
-    } catch (error) {
-        logError('Ошибка загрузки, используем локальные:', error);
-        showToast('⚠️ Не удалось загрузить вопросы. Используем локальные.', 4000);
-        quizQuestions = LOCAL_QUESTIONS;
-    } finally {
-        hideLoading();
-    }
+function initQuizData() {
+    quizQuestions = LOCAL_QUESTIONS;
+    answers = new Array(quizQuestions.length).fill(null);
 }
 
-/**
- * Загружает матрицу вариантов из Google Sheets
- * @returns {Promise<void>}
- */
-async function loadVariantsMatrix() {
-    if (variantsLoaded) return;
-
-    showLoading('Загрузка вариантов...');
-    try {
-        const csvText = await loadWithCache(CACHE_KEY_VARIANTS, () => {
-            return fetchTextWithRetry(GOOGLE_SHEETS_MATRIX_URL, 3, 8000);
-        }, 10 * 60 * 1000);
-
-        const rows = csvText.split('\n').filter(row => row.trim() && row.includes(','));
-        if (rows.length > 0) {
-            const headers = rows[0].split(',').map(h => h.trim().toLowerCase());
-            const idx = {
-                priority: headers.indexOf('priority'),
-                role: headers.indexOf('role'),
-                level: headers.indexOf('level'),
-                urgency: headers.indexOf('urgency'),
-                importance: headers.indexOf('importance'),
-                budget: headers.indexOf('budget'),
-                variantA: headers.indexOf('variant_a'),
-                variantB: headers.indexOf('variant_b')
-            };
-            variantsMatrix = [];
-            for (let i = 1; i < rows.length; i++) {
-                const values = rows[i].split(',').map(v => v.trim());
-                if (values[idx.variantA] || values[idx.variantB]) {
-                    variantsMatrix.push({
-                        priority: parseInt(values[idx.priority]) || 999,
-                        role: values[idx.role] || '*',
-                        level: values[idx.level] || '*',
-                        urgency: values[idx.urgency] || '*',
-                        importance: values[idx.importance] || '*',
-                        budget: values[idx.budget] || '*',
-                        variantA: values[idx.variantA] || "Индивидуальная стратегия",
-                        variantB: values[idx.variantB] || "Тренинг «Продай себя дорого»"
-                    });
-                }
-            }
-            variantsMatrix.sort((a, b) => a.priority - b.priority);
-        } else {
-            throw new Error('Нет данных');
-        }
-
-    } catch (error) {
-        logError('Ошибка загрузки матрицы, используем локальную');
-        showToast('⚠️ Не удалось загрузить варианты. Используем локальные.', 4000);
-        variantsMatrix = LOCAL_VARIANTS;
-    } finally {
-        hideLoading();
-    }
-
-    variantsLoaded = true;
-}
-
-/**
- * Находит подходящий вариант на основе ответов пользователя
- * @param {Array<string>} answersArr - Массив ответов
- * @returns {Promise<{variantA: string, variantB: string}>}
- */
-async function findVariant(answersArr) {
-    if (!variantsLoaded) await loadVariantsMatrix();
-    const user = {
-        role: answersArr[0],
-        level: answersArr[1],
-        urgency: answersArr[2],
-        importance: answersArr[3],
-        budget: answersArr[4]
-    };
-    for (const rule of variantsMatrix) {
+function findVariant(answersArr) {
+    const user = { role: answersArr[0], level: answersArr[1], urgency: answersArr[2], importance: answersArr[3], budget: answersArr[4] };
+    for (const rule of VARIANTS_MATRIX) {
         let match = true;
         if (rule.role !== '*' && rule.role !== user.role) match = false;
         if (rule.level !== '*' && rule.level !== user.level) match = false;
@@ -191,13 +41,10 @@ async function findVariant(answersArr) {
         if (rule.budget !== '*' && rule.budget !== user.budget) match = false;
         if (match) return { variantA: rule.variantA, variantB: rule.variantB };
     }
-    const def = variantsMatrix.find(r => r.priority === 999) || variantsMatrix[0];
+    const def = VARIANTS_MATRIX.find(r => r.priority === 999) || VARIANTS_MATRIX[0];
     return { variantA: def.variantA, variantB: def.variantB };
 }
 
-/**
- * Отрисовывает текущее состояние квиза
- */
 function renderQuiz() {
     const container = document.getElementById('quizContainer');
     if (!container) return;
@@ -212,70 +59,53 @@ function renderQuiz() {
             html += `<div class="quiz-question"><p>${escapeHtml(q.text)}</p><div class="quiz-options" data-q="${i}">`;
             for (let j = 0; j < q.options.length; j++) {
                 const opt = q.options[j];
-                const isSelected = answers[i] === opt;
-                const optClass = isSelected ? 'selected' : '';
-                const escapedOpt = escapeHtml(opt);
-                html += `<div class="quiz-option ${optClass}" data-opt="${escapedOpt}">${escapedOpt}</div>`;
+                html += `<div class="quiz-option ${answers[i] === opt ? 'selected' : ''}" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</div>`;
             }
             html += `</div></div>`;
         }
         html += `<button id="submitQuizBtn" class="btn-primary">Показать варианты</button>`;
         container.innerHTML = html;
-        const opts = document.querySelectorAll('.quiz-option');
-        for (let i = 0; i < opts.length; i++) {
-            opts[i].onclick = function() {
-                const parent = this.parentElement;
-                const qIdx = parseInt(parent.dataset.q);
+        document.querySelectorAll('.quiz-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                const qIdx = parseInt(this.parentElement.dataset.q);
                 answers[qIdx] = this.dataset.opt;
                 renderQuiz();
-            };
-        }
-        const btn = document.getElementById('submitQuizBtn');
-        if (btn) {
-            btn.onclick = async function() {
-                if (answers.includes(null)) {
-                    alert('Ответьте на все вопросы');
-                    return;
-                }
-                quizState = 'choice';
-                container.innerHTML = '<div style="text-align:center; padding:40px;">⏳ Анализ ответов...</div>';
-                const variant = await findVariant(answers);
-                showResult(variant);
-            };
-        }
+            });
+        });
+        document.getElementById('submitQuizBtn')?.addEventListener('click', () => {
+            if (answers.includes(null)) { alert('Ответьте на все вопросы'); return; }
+            quizState = 'choice';
+            container.innerHTML = '<div style="text-align:center; padding:40px;">⏳ Анализ ответов...</div>';
+            const variant = findVariant(answers);
+            showResult(variant);
+        });
     }
 }
 
-/**
- * Показывает результат квиза (два варианта)
- * @param {{variantA: string, variantB: string}} variant - Варианты ответов
- */
 function showResult(variant) {
     const container = document.getElementById('quizContainer');
     if (!container) return;
     container.innerHTML = `
-        <p style="font-weight: 600; margin-bottom: 20px;">На основе ваших ответов мы подготовили 2 варианта:</p>
-        <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-            <div style="flex: 1; min-width: 250px; background: var(--surface-soft); border-radius: 28px; padding: 28px; text-align: left; border: 1px solid var(--border);">
-                <div style="font-size: 32px; margin-bottom: 12px;">📌</div>
+        <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подготовили 2 варианта:</p>
+        <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
+            <div style="flex:1; min-width:250px; background:var(--surface-soft); border-radius:28px; padding:28px; border:1px solid var(--border);">
+                <div style="font-size:32px; margin-bottom:12px;">📌</div>
                 <h4>Вариант 1</h4>
                 <p>${escapeHtml(variant.variantA)}</p>
                 <button class="btn-primary choose-option" data-choice="1" data-text="${escapeHtml(variant.variantA)}">Выбрать</button>
             </div>
-            <div style="flex: 1; min-width: 250px; background: var(--surface-soft); border-radius: 28px; padding: 28px; text-align: left; border: 1px solid var(--border);">
-                <div style="font-size: 32px; margin-bottom: 12px;">🎯</div>
+            <div style="flex:1; min-width:250px; background:var(--surface-soft); border-radius:28px; padding:28px; border:1px solid var(--border);">
+                <div style="font-size:32px; margin-bottom:12px;">🎯</div>
                 <h4>Вариант 2</h4>
                 <p>${escapeHtml(variant.variantB)}</p>
                 <button class="btn-primary choose-option" data-choice="2" data-text="${escapeHtml(variant.variantB)}">Выбрать</button>
             </div>
         </div>
     `;
-    const btns = document.querySelectorAll('.choose-option');
-    for (let i = 0; i < btns.length; i++) {
-        btns[i].onclick = function() {
+    document.querySelectorAll('.choose-option').forEach(btn => {
+        btn.addEventListener('click', function() {
             const chosen = this.dataset.choice;
             const chosenText = this.dataset.text;
-
             const sendQuizResult = (userId) => {
                 const formData = {
                     formType: 'Квиз',
@@ -283,17 +113,8 @@ function showResult(variant) {
                     chosenVariant: `${chosen}: ${chosenText}`,
                     userId: userId
                 };
-
                 if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
-
-                if (typeof gtag === 'function') {
-                    gtag('event', 'quiz_choice', {
-                        'event_category': 'quiz',
-                        'event_label': chosenText,
-                        'value': chosen
-                    });
-                }
-
+                if (typeof gtag === 'function') gtag('event', 'quiz_choice', { event_category: 'quiz', event_label: chosenText, value: chosen });
                 const resultDiv = document.getElementById('quizResult');
                 if (resultDiv) {
                     resultDiv.innerHTML = `<strong>✅ Вы выбрали вариант ${chosen}:</strong><br>${escapeHtml(chosenText)}<br><br><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">📱 Обсудить в Telegram</a>`;
@@ -301,39 +122,20 @@ function showResult(variant) {
                 }
                 container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
             };
-
-            if (typeof currentUserId !== 'undefined' && currentUserId) {
-                sendQuizResult(currentUserId);
-            } else if (typeof getUserIdFromSW === 'function') {
-                getUserIdFromSW().then(userId => sendQuizResult(userId));
-            } else {
-                sendQuizResult('unknown');
-            }
-        };
-    }
+            if (typeof currentUserId !== 'undefined' && currentUserId) sendQuizResult(currentUserId);
+            else if (typeof getUserIdFromSW === 'function') getUserIdFromSW().then(userId => sendQuizResult(userId));
+            else sendQuizResult('unknown');
+        });
+    });
 }
 
-let variantsLoaded = false;
-
-/**
- * Инициализирует квиз
- * @returns {Promise<void>}
- */
-async function initQuiz() {
+function initQuiz() {
     if (quizInitialized) return;
     quizInitialized = true;
-    await loadQuizFromGoogleSheets();
-    answers = new Array(quizQuestions.length).fill(null);
+    initQuizData();
     renderQuiz();
 }
-
-// Автозапуск после загрузки DOM
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(initQuiz, 100));
-} else {
-    setTimeout(initQuiz, 100);
-}
-
-// Экспорты
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(initQuiz, 100));
+else setTimeout(initQuiz, 100);
 window.renderQuiz = renderQuiz;
 window.initQuiz = initQuiz;
