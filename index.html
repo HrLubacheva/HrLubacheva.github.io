@@ -23,7 +23,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="preload" href="assets/images/img_1.jpg" as="image" fetchpriority="high">
-    <link rel="stylesheet" href="styles.css?v=30782bfd0f">
 
     <!-- Schema.org -->
     <script type="application/ld+json">
@@ -86,6 +85,850 @@
         });
         gtag('config', 'G-QZJJ2SE117');
     </script>
+<style>
+/* ========== Базовые переменные и сброс ========== */
+:root {
+    --primary: #2D6A9F;
+    --primary-dark: #1F4A6E;
+    --primary-light: #4A8BC2;
+    --secondary: #6c757d;
+    --dark-bg: #1a2a3a;
+    --light-bg: #f8f9fa;
+    --surface-soft: #ffffff;
+    --border: #e0e0e0;
+    --text-dark: #212529;
+    --text-light: #f8f9fa;
+    --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+    --shadow-md: 0 8px 24px rgba(0,0,0,0.1);
+    --shadow-lg: 0 20px 30px -12px rgba(0,0,0,0.15);
+    --radius-md: 16px;
+    --radius-lg: 28px;
+    --transition: all 0.25s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: #ffffff;
+    line-height: 1.5;
+    scroll-behavior: smooth;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ========== Типографика ========== */
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 48px;
+    color: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 32px;
+    }
+}
+
+/* ========== Кнопки ========== */
+.btn-primary, .btn-secondary {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    font-size: 1rem;
+}
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+.btn-primary:active {
+    transform: scale(0.97);
+}
+.btn-secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+.btn-secondary:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+}
+
+/* ========== Навигация ========== */
+.navbar {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+}
+.nav-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    flex-wrap: wrap;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+.logo-sub {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--secondary);
+}
+.social-icons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    transition: var(--transition);
+}
+
+.social-icons a:hover {
+    transform: translateY(-2px);
+    opacity: 0.8;
+}
+
+.social-icons svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+}
+.burger-menu {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+.burger-menu span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--primary);
+    margin: 5px 0;
+    transition: 0.2s;
+}
+.nav-bottom {
+    background: var(--light-bg);
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin: 10px 0;
+}
+.nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: var(--transition);
+}
+.nav-links a:hover {
+    color: var(--primary);
+}
+@media (max-width: 768px) {
+    .burger-menu {
+        display: block;
+    }
+    .nav-bottom {
+        display: none;
+        background: white;
+        border-radius: 0;
+        padding: 20px;
+        margin: 0;
+    }
+    .nav-bottom.open {
+        display: block;
+    }
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    body.menu-open {
+        overflow: hidden;
+    }
+}
+
+/* ========== Hero секция ========== */
+.hero-grid {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    padding: 60px 0;
+    flex-wrap: wrap;
+}
+.hero-content {
+    flex: 1.2;
+}
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+}
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+.hero-text {
+    font-size: 1rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+.small-note {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    margin-top: 15px;
+}
+.hero-image {
+    flex: 0.8;
+    text-align: center;
+}
+@media (max-width: 768px) {
+    .hero-grid {
+        flex-direction: column;
+        text-align: center;
+    }
+    .hero-title {
+        font-size: 2rem;
+    }
+}
+
+/* ========== Карточки и сетки (общие) ========== */
+.roles-grid, .services-flex, .stats-grid, .process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.role-card, .service-card, .stat-item, .process-card {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid var(--border);
+}
+.role-card:hover, .service-card:hover, .process-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+.stat-item {
+    text-align: center;
+}
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+.stat-label {
+    font-size: 1rem;
+    color: var(--secondary);
+}
+.process-step {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.process-title {
+    text-align: center;
+    margin: 40px 0 20px;
+    font-size: 1.8rem;
+}
+.process-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+.process-col {
+    flex: 1;
+    min-width: 280px;
+}
+@media (max-width: 768px) {
+    .process-row {
+        flex-direction: column;
+    }
+}
+
+/* ========== Секция преимуществ (улучшенная) ========== */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+    margin: 48px 0;
+}
+
+.benefit-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(0px);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    border: none;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.benefit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.benefit-card:hover::before {
+    transform: scaleX(1);
+}
+
+.benefit-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 40px rgba(0, 0, 0, 0.3);
+    background: white;
+}
+
+.benefit-card h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--primary-dark);
+    transition: color 0.2s;
+}
+
+.benefit-card:hover h4 {
+    color: var(--primary);
+}
+
+.benefit-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--secondary);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .benefits-grid {
+        gap: 24px;
+        margin: 32px 0;
+    }
+    .benefit-card {
+        padding: 24px 20px;
+    }
+    .benefit-card h4 {
+        font-size: 1.3rem;
+    }
+}
+
+/* ========== Калькулятор ========== */
+.calculator-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+.tab-btn {
+    background: var(--light-bg);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+}
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+}
+.tab-pane {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+.tab-pane.active {
+    display: block;
+    opacity: 1;
+    animation: fadeIn 0.25s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.add-service {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.add-service select, .calc-qty {
+    padding: 10px;
+    border-radius: 40px;
+    border: 1px solid var(--border);
+    background: white;
+}
+.calc-qty {
+    width: 80px;
+}
+.calc-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border);
+}
+.total-block {
+    margin-top: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: right;
+}
+.discount-info {
+    font-size: 0.9rem;
+    color: green;
+}
+.calc-pdf-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 20px 0;
+    justify-content: center;
+}
+
+/* ========== Квиз ========== */
+.quiz-card {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    margin: 60px 0;
+    box-shadow: var(--shadow-md);
+}
+.quiz-question {
+    margin-bottom: 30px;
+}
+.quiz-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 15px;
+}
+.quiz-option {
+    background: var(--light-bg);
+    padding: 10px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.quiz-option.selected {
+    background: var(--primary);
+    color: white;
+}
+.quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+.quiz-progress {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 10px;
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+.quiz-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+.quiz-result {
+    margin-top: 30px;
+    padding: 20px;
+    background: var(--light-bg);
+    border-radius: var(--radius-md);
+    display: none;
+}
+.quiz-loading {
+    text-align: center;
+    padding: 40px;
+}
+.quiz-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: quiz-spin 0.8s linear infinite;
+}
+@keyframes quiz-spin {
+    to { transform: rotate(360deg); }
+}
+.quiz-loading p {
+    margin-top: 15px;
+    font-size: 1rem;
+    color: var(--secondary);
+}
+
+/* ========== Бесплатные материалы и диагностика (улучшенные карточки) ========== */
+.checklist-card,
+.calendar-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
+    border-radius: var(--radius-lg);
+    padding: 48px 32px;
+    margin: 60px 0;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.checklist-card:hover,
+.calendar-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.checklist-card::before,
+.calendar-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+}
+
+.checklist-card .section-title,
+.calendar-card .section-title {
+    margin-bottom: 16px;
+    color: var(--primary-dark);
+}
+
+.checklist-card p,
+.calendar-card p {
+    font-size: 1.1rem;
+    text-align: center;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--secondary);
+    margin-bottom: 32px;
+}
+
+.freebies-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.freebies-buttons .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    font-size: 1rem;
+}
+
+.freebies-buttons .btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 20px -8px rgba(45,106,159,0.4);
+}
+
+/* ========== Форма обратного звонка ========== */
+.callback-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.callback-form input,
+.callback-form textarea {
+    width: 100%;
+    padding: 14px 20px;
+    margin: 12px 0;
+    border: 1px solid var(--border);
+    border-radius: 60px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: #fff;
+}
+
+.callback-form textarea {
+    border-radius: 24px;
+    resize: vertical;
+}
+
+.callback-form input:focus,
+.callback-form textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
+}
+
+.consent-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    font-size: 0.9rem;
+}
+
+.consent-checkbox input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: var(--primary);
+}
+
+.callback-form .btn-primary {
+    width: 100%;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.callback-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--secondary);
+    margin-top: 20px;
+}
+
+.btn-primary.loading {
+    pointer-events: none;
+    opacity: 0.7;
+    position: relative;
+    padding-right: 2.5rem;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+.btn-primary.loading::after {
+    content: '';
+    position: absolute;
+    right: 1rem;
+    top: calc(50% - 0.6rem);
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* ========== Cookie-баннер ========== */
+.cookie-consent {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 10000;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+.cookie-consent__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+/* ========== Модальные окна ========== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    max-width: 500px;
+    width: 90%;
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transform: scale(0.95);
+}
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+/* ========== Контакты ========== */
+.contact-block {
+    text-align: center;
+    padding: 40px 0;
+}
+.contact-line {
+    margin: 15px 0;
+    font-size: 1.1rem;
+}
+.contact-line a {
+    color: var(--primary-light);
+    text-decoration: none;
+}
+.contact-line a:hover {
+    text-decoration: underline;
+}
+.copyable-phone, .copyable-text {
+    cursor: pointer;
+    border-bottom: 1px dashed var(--primary-light);
+}
+.contact-telegram-btn {
+    margin-top: 30px;
+}
+
+/* ========== Футер ========== */
+footer {
+    background: var(--dark-bg);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 40px;
+}
+footer a {
+    color: var(--primary-light);
+    text-decoration: none;
+}
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* ========== Анимация появления ========== */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.checklist-card.visible,
+.calendar-card.visible {
+    transition-delay: 0.05s;
+}
+
+/* ========== Учёт reduced motion ========== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .fade-up, .tab-pane, .modal-content, .role-card:hover {
+        transform: none !important;
+    }
+    .fade-up,
+    .fade-up.visible {
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+/* ========== Секции с фоном ========== */
+.section-dark {
+    background: var(--dark-bg);
+    color: var(--text-light);
+    padding: 60px 0;
+}
+.section-dark .section-title {
+    color: white;
+}
+.section-light {
+    background: var(--light-bg);
+    padding: 60px 0;
+}
+</style>
 </head>
 <body>
 <div id="top"></div><nav class="navbar">
@@ -438,9 +1281,9 @@
             <h2 class="section-title">📥 Бесплатные материалы</h2>
             <p>Чек-лист «Идеальное резюме» + программа тренинга «Продай себя дорого»</p>
             <div class="freebies-buttons">
-                <a href="assets/docs/checklist.pdf" class="btn-primary" target="_blank">📄 Скачать чек-лист (PDF)</a>
-                <a href="assets/docs/training_program.pdf" class="btn-primary" target="_blank">📘 Скачать программу тренинга (PDF)</a>
-                <button id="openChecklistModal" class="btn-primary">📧 Получить материалы на email</button>
+                <a href="assets/docs/checklist.pdf" class="btn-primary" target="_blank">📄 Чек-лист «Идеальное резюме»</a>
+                <a href="assets/docs/training_program.pdf" class="btn-primary" target="_blank">📘 Программа тренинга</a>
+                <button id="openChecklistModal" class="btn-primary">📧 Получить на email</button>
             </div>
         </div>
     </div>
@@ -451,9 +1294,9 @@
             <h2 class="section-title">📞 Бесплатная 20-минутная диагностика</h2>
             <p>Разберём вашу ситуацию: для соискателя — что мешает получить оффер выше; для бизнеса — почему вакансия не закрывается.</p>
             <form id="callbackForm" class="callback-form">
-                <input type="text" id="callbackName" placeholder="Ваше имя" required>
-                <input type="tel" id="callbackPhone" placeholder="+7 912 345 67 89" inputmode="numeric" required>
-                <textarea id="callbackComment" rows="3" placeholder="Удобное время для звонка или дополнительная информация"></textarea>
+                <input type="text" id="callbackName" placeholder="👤 Ваше имя" required>
+                <input type="tel" id="callbackPhone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
+                <textarea id="callbackComment" rows="3" placeholder="💬 Удобное время для звонка или дополнительная информация"></textarea>
                 <div class="consent-checkbox">
                     <input type="checkbox" id="callbackConsent" required>
                     <label for="callbackConsent">Я согласен на <a href="#" id="privacyLinkForm">обработку персональных данных</a></label>
@@ -482,7 +1325,7 @@
         </div>
     </div>
 </section><footer>
-    <div class="container">© 2026 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер. Версия: 22.05.2026 15:02:03
+    <div class="container">© 2026 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер. Версия: 22.05.2026 17:06:14
         <a href="#" id="privacyLink">Политика конфиденциальности</a>
     </div>
 </footer><div id="cookieConsent" class="cookie-consent" style="display: none;">
@@ -512,4 +1355,1013 @@
             <button id="closeModalBtn" class="btn-secondary">Закрыть</button>
         </div>
     </div>
-</div><script src="scripts.js?v=fa853cad89" defer></script>
+</div><script>
+// ========== ОБЩИЕ УТИЛИТЫ ==========
+
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
+}
+
+const IS_DEV = window.location.hostname === 'localhost' ||
+               window.location.hostname === '127.0.0.1' ||
+               window.location.search.includes('debug=true');
+
+let originalConsoleLog = null;
+
+function log(...args) {
+    if (IS_DEV) console.log(...args);
+}
+function logError(...args) { console.error(...args); }
+function logWarn(...args) { if (IS_DEV) console.warn(...args); }
+
+if (!IS_DEV) {
+    originalConsoleLog = console.log;
+    console.log = function() {};
+}
+
+window.enableLogs = function() {
+    if (originalConsoleLog) {
+        console.log = originalConsoleLog;
+        originalConsoleLog = null;
+    } else {
+        console.log = function(...args) { if (typeof console !== 'undefined') console.log(...args); };
+    }
+    showToast('🔍 Логи включены', 2000);
+};
+window.disableLogs = function() {
+    if (originalConsoleLog === null) originalConsoleLog = console.log;
+    console.log = function() {};
+    showToast('🔇 Логи отключены', 2000);
+};
+
+// User ID (только локальный, без Service Worker)
+function getOrCreateLocalUserId() {
+    try {
+        let userId = localStorage.getItem('hr_user_id');
+        if (!userId) {
+            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+            localStorage.setItem('hr_user_id', userId);
+        }
+        return userId;
+    } catch(e) {
+        return 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+    }
+}
+
+let currentUserId = null;
+function initUserId() {
+    currentUserId = getOrCreateLocalUserId();
+    if (typeof gtag === 'function') gtag('config', 'G-QZJJ2SE117', { 'user_id': currentUserId });
+    if (typeof ym === 'function') ym(109292129, 'setUserID', currentUserId);
+    return Promise.resolve(currentUserId);
+}
+
+// Fetch with retry
+async function fetchWithRetry(url, options = {}, retries = 3, timeout = 10000) {
+    let lastError = null;
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            const response = await fetch(url, { ...options, signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (response.ok) return response;
+            lastError = new Error(`HTTP ${response.status}`);
+        } catch (err) { lastError = err; }
+        if (attempt < retries) await new Promise(resolve => setTimeout(resolve, Math.min(1000 * Math.pow(2, attempt-1), 5000)));
+    }
+    throw lastError;
+}
+async function fetchTextWithRetry(url, retries = 3, timeout = 10000) {
+    const response = await fetchWithRetry(url, {}, retries, timeout);
+    return response.text();
+}
+
+// Кеширование
+const CACHE_TTL = 10 * 60 * 1000;
+async function loadWithCache(cacheKey, fetchFn, ttl = CACHE_TTL) {
+    try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+            const { data, timestamp } = JSON.parse(cached);
+            if (Date.now() - timestamp < ttl) return data;
+        }
+    } catch(e) {}
+    const data = await fetchFn();
+    try { localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() })); } catch(e) {}
+    return data;
+}
+
+// Индикатор загрузки
+let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
+function showLoading(message = 'Загрузка...') {
+    if (isLoadingActive) return;
+    isLoadingActive = true;
+    if (!loadingStylesAdded) {
+        const style = document.createElement('style');
+        style.textContent = `
+            .loading-indicator {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(0,0,0,0.85);
+                backdrop-filter: blur(8px);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 40px;
+                font-size: 14px;
+                z-index: 10001;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+            .loading-spinner {
+                width: 20px;
+                height: 20px;
+                border: 2px solid rgba(255,255,255,0.3);
+                border-top-color: white;
+                border-radius: 50%;
+                animation: loading-spin 0.8s linear infinite;
+            }
+            @keyframes loading-spin {
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+        loadingStylesAdded = true;
+    }
+    loadingIndicator = document.createElement('div');
+    loadingIndicator.className = 'loading-indicator';
+    loadingIndicator.innerHTML = `<div class="loading-spinner"></div><div class="loading-text">${escapeHtml(message)}</div>`;
+    document.body.appendChild(loadingIndicator);
+}
+function hideLoading() {
+    if (!isLoadingActive) return;
+    isLoadingActive = false;
+    if (loadingIndicator) loadingIndicator.remove();
+}
+
+// Отправка в Google Sheets
+function sendDataToSheet(data) {
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUUIy_I9Z0qXBQmYMQmwCpkjVAdGemxl6k9DZiVF9djhI_w7Th7fMGaCbVNI-EyDnnBQ/exec';
+    const userId = currentUserId || getOrCreateLocalUserId();
+    data.userId = userId;
+    fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data)
+    }).catch(err => logError('❌ Ошибка отправки:', err));
+}
+
+// Toast
+function showToast(message, duration = 3000) {
+    let toast = document.querySelector('.custom-toast');
+    if (toast) toast.remove();
+    toast = document.createElement('div');
+    toast.className = 'custom-toast';
+    toast.textContent = message;
+    toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:12px 24px;border-radius:40px;font-size:1rem;z-index:10000;font-family:Inter,sans-serif;backdrop-filter:blur(8px);box-shadow:0 4px 12px rgba(0,0,0,0.2);opacity:0;transition:opacity 0.2s;';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.style.opacity = '1', 10);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 200);
+    }, duration);
+}
+
+function formatPhoneNumber(input) {
+    let digits = input.replace(/\D/g, '');
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (!digits.startsWith('7')) digits = '7' + digits;
+    if (digits.length > 11) digits = digits.slice(0, 11);
+    let formatted = '';
+    if (digits.length === 0) return '';
+    formatted = '+7';
+    if (digits.length > 1) formatted += ' ' + digits.slice(1, 4);
+    if (digits.length >= 5) formatted += ' ' + digits.slice(4, 7);
+    if (digits.length >= 8) formatted += ' ' + digits.slice(7, 9);
+    if (digits.length >= 10) formatted += ' ' + digits.slice(9, 11);
+    return formatted;
+}
+
+window.escapeHtml = escapeHtml;
+window.getOrCreateLocalUserId = getOrCreateLocalUserId;
+window.initUserId = initUserId;
+window.sendDataToSheet = sendDataToSheet;
+window.showToast = showToast;
+window.formatPhoneNumber = formatPhoneNumber;
+window.fetchWithRetry = fetchWithRetry;
+window.fetchTextWithRetry = fetchTextWithRetry;
+window.loadWithCache = loadWithCache;
+window.showLoading = showLoading;
+window.hideLoading = hideLoading;
+window.log = log;
+window.logError = logError;
+window.logWarn = logWarn;
+function initAnimations() {
+    const elements = document.querySelectorAll('.fade-up');
+    if (!elements.length) return;
+    const isMobile = window.innerWidth <= 768;
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: isMobile ? '0px 0px -30px 0px' : '0px 0px -80px 0px'
+    });
+    elements.forEach(el => observer.observe(el));
+}
+window.initAnimations = initAnimations;
+function initCallbackForm() {
+    const phoneInput = document.getElementById('callbackPhone');
+    if (phoneInput) {
+        phoneInput.addEventListener('input', function(e) {
+            let rawValue = this.value.replace(/\D/g, '');
+            if (typeof formatPhoneNumber === 'function') {
+                let masked = formatPhoneNumber(rawValue);
+                this.value = masked || '';
+            } else {
+                if (rawValue.length > 11) rawValue = rawValue.slice(0, 11);
+                let formatted = '+7';
+                if (rawValue.length > 1) formatted += ' ' + rawValue.slice(1, 4);
+                if (rawValue.length >= 5) formatted += ' ' + rawValue.slice(4, 7);
+                if (rawValue.length >= 8) formatted += ' ' + rawValue.slice(7, 9);
+                if (rawValue.length >= 10) formatted += ' ' + rawValue.slice(9, 11);
+                this.value = formatted;
+            }
+        });
+    }
+
+    const callbackForm = document.getElementById('callbackForm');
+    let isSubmitting = false;
+
+    if (callbackForm) {
+        callbackForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (isSubmitting) return;
+
+            const consentCheckbox = document.getElementById('callbackConsent');
+            if (!consentCheckbox || !consentCheckbox.checked) {
+                showToast('❌ Подтвердите согласие на обработку данных');
+                return;
+            }
+
+            const submitBtn = callbackForm.querySelector('button[type="submit"]');
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            isSubmitting = true;
+
+            const name = document.getElementById('callbackName').value.trim();
+            let phoneField = document.getElementById('callbackPhone').value.trim();
+            const comment = document.getElementById('callbackComment').value.trim() || 'Не указано';
+
+            if (!name || !phoneField) {
+                showToast('❌ Заполните имя и телефон');
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                isSubmitting = false;
+                return;
+            }
+
+            let digits = phoneField.replace(/\D/g, '');
+            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+            if (!digits.startsWith('7')) digits = '7' + digits;
+            if (digits.length !== 11) {
+                showToast('❌ Некорректный номер телефона');
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                isSubmitting = false;
+                return;
+            }
+
+            const formattedForDisplay = '+7 ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
+
+            const sendForm = (userId) => {
+                const formData = {
+                    formType: 'Обратный звонок',
+                    name: name,
+                    phone: digits,
+                    comment: comment,
+                    quizAnswers: '-',
+                    consent: true,
+                    userId: userId
+                };
+                if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
+                showToast(`✅ Спасибо, ${name}! Мы перезвоним на ${formattedForDisplay}`, 4000);
+                callbackForm.reset();
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+                isSubmitting = false;
+            };
+
+            if (typeof currentUserId !== 'undefined' && currentUserId) sendForm(currentUserId);
+            else if (typeof getOrCreateLocalUserId === 'function') sendForm(getOrCreateLocalUserId());
+            else sendForm('unknown');
+        });
+    }
+
+    const privacyLinkForm = document.getElementById('privacyLinkForm');
+    if (privacyLinkForm) {
+        privacyLinkForm.addEventListener('click', (e) => {
+            e.preventDefault();
+            const privacyModal = document.getElementById('privacyModal');
+            if (privacyModal && typeof showModal === 'function') showModal(privacyModal);
+        });
+    }
+}
+
+function initFormEnterSubmit() {
+    const form = document.getElementById('callbackForm');
+    if (!form) return;
+    form.querySelectorAll('input, textarea').forEach(input => {
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const submitBtn = form.querySelector('button[type="submit"]');
+                if (submitBtn) submitBtn.click();
+            }
+        });
+    });
+}
+
+window.initCallbackForm = initCallbackForm;
+window.initFormEnterSubmit = initFormEnterSubmit;
+function showModal(modal) {
+    if (!modal) return;
+    modal.style.display = 'flex';
+    modal.offsetHeight; // reflow
+    modal.classList.add('show');
+}
+function hideModal(modal) {
+    if (!modal) return;
+    modal.classList.remove('show');
+    modal.addEventListener('transitionend', function onEnd() {
+        if (!modal.classList.contains('show')) modal.style.display = 'none';
+        modal.removeEventListener('transitionend', onEnd);
+    }, { once: true });
+}
+
+function initModal() {
+    const modal = document.getElementById('checklistModal');
+    const openModal = document.getElementById('openChecklistModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const downloadBoth = document.getElementById('downloadBothBtn');
+    const singleChecklistBtn = document.getElementById('singleChecklistBtn');
+    const singleTrainingBtn = document.getElementById('singleTrainingBtn');
+
+    if (openModal) openModal.addEventListener('click', () => showModal(modal));
+    if (closeModalBtn) closeModalBtn.addEventListener('click', () => hideModal(modal));
+
+    function saveEmailAndOpen(email, checklist, training) {
+        if (!email || !email.includes('@')) {
+            alert('Введите корректный email');
+            return false;
+        }
+        const formData = {
+            formType: 'Запрос материалов',
+            name: email,
+            phone: '',
+            comment: `Запросил: чек-лист=${checklist}, тренинг=${training}`,
+            quizAnswers: '-'
+        };
+        if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
+        if (typeof gtag === 'function') gtag('event', 'download', { event_category: 'material', event_label: checklist && training ? 'both' : (checklist ? 'checklist' : 'training') });
+        if (checklist) window.open('assets/docs/checklist.pdf', '_blank');
+        if (training) window.open('assets/docs/training_program.pdf', '_blank');
+        showToast('✅ Email сохранён. Файлы открываются.', 3000);
+        return true;
+    }
+
+    if (downloadBoth) {
+        downloadBoth.addEventListener('click', () => {
+            const email = document.getElementById('checklistEmail').value;
+            const checklist = document.getElementById('checklistCheck').checked;
+            const training = document.getElementById('trainingCheck').checked;
+            if (saveEmailAndOpen(email, checklist, training)) hideModal(modal);
+        });
+    }
+    if (singleChecklistBtn) {
+        singleChecklistBtn.addEventListener('click', () => {
+            const email = document.getElementById('checklistEmail').value;
+            if (saveEmailAndOpen(email, true, false)) hideModal(modal);
+        });
+    }
+    if (singleTrainingBtn) {
+        singleTrainingBtn.addEventListener('click', () => {
+            const email = document.getElementById('checklistEmail').value;
+            if (saveEmailAndOpen(email, false, true)) hideModal(modal);
+        });
+    }
+
+    const privacyModal = document.getElementById('privacyModal');
+    const closePrivacyBtn = document.getElementById('closePrivacyModalBtn');
+    const closePrivacy = document.getElementById('closePrivacyModal');
+    if (closePrivacyBtn) closePrivacyBtn.addEventListener('click', () => hideModal(privacyModal));
+    if (closePrivacy) closePrivacy.addEventListener('click', () => hideModal(privacyModal));
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) hideModal(modal);
+        if (e.target === privacyModal) hideModal(privacyModal);
+    });
+}
+
+window.initModal = initModal;
+window.showModal = showModal;
+window.hideModal = hideModal;
+function initCookieConsent() {
+    const consent = localStorage.getItem('cookie_consent');
+    const banner = document.getElementById('cookieConsent');
+    if (!banner) return;
+
+    if (consent === null) {
+        banner.style.display = 'block';
+    } else {
+        banner.style.display = 'none';
+    }
+
+    const acceptBtn = document.getElementById('acceptCookies');
+    const declineBtn = document.getElementById('declineCookies');
+
+    if (acceptBtn) {
+        acceptBtn.addEventListener('click', () => {
+            localStorage.setItem('cookie_consent', 'accepted');
+            banner.style.display = 'none';
+            if (typeof gtag !== 'undefined') {
+                gtag('consent', 'update', { analytics_storage: 'granted' });
+            }
+        });
+    }
+
+    if (declineBtn) {
+        declineBtn.addEventListener('click', () => {
+            localStorage.setItem('cookie_consent', 'declined');
+            banner.style.display = 'none';
+            if (typeof gtag !== 'undefined') {
+                gtag('consent', 'update', { analytics_storage: 'denied' });
+            }
+        });
+    }
+}
+window.initCookieConsent = initCookieConsent;
+function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            if (targetId === '#top') {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+                e.preventDefault();
+                const navbar = document.querySelector('.navbar');
+                const navbarHeight = navbar ? navbar.offsetHeight : 80;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            }
+        });
+    });
+}
+
+function initBurgerMenu() {
+    const burger = document.getElementById('burgerMenu');
+    const navBottom = document.getElementById('navBottom');
+
+    if (!burger || !navBottom) return;
+
+    burger.addEventListener('click', function() {
+        this.classList.toggle('active');
+        navBottom.classList.toggle('open');
+        document.body.classList.toggle('menu-open');
+    });
+
+    navBottom.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            burger.classList.remove('active');
+            navBottom.classList.remove('open');
+            document.body.classList.remove('menu-open');
+        });
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            burger.classList.remove('active');
+            navBottom.classList.remove('open');
+            document.body.classList.remove('menu-open');
+        }
+    });
+}
+
+window.initSmoothScroll = initSmoothScroll;
+window.initBurgerMenu = initBurgerMenu;
+function initCopyButtons() {
+    document.querySelectorAll('.copyable-phone, .copyable-text').forEach(el => {
+        el.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const textToCopy = this.getAttribute('data-copy');
+            if (!textToCopy) return;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                showToast('✅ Скопировано!');
+            }).catch(err => {
+                console.error('Ошибка копирования:', err);
+                alert('Не удалось скопировать. Попробуйте вручную.');
+            });
+        });
+    });
+}
+window.initCopyButtons = initCopyButtons;
+let cart = [];
+let calculatorInitialized = false;
+let servicesData = { business: [], individual: [], corporate: [], group: [] };
+
+const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTDxpfQuCLTjJpiJHgK26zSt_S8a-1LtFUGZV0v1eSg2bHat_BMK6pP4RhXkF5aXPtl9AS9UDj4-a1a/pub?output=csv';
+const CACHE_KEY_SERVICES = 'hr_services_data';
+
+function parsePrice(value) {
+    if (!value) return 0;
+    let cleaned = String(value).replace(/\s/g, '').replace(',', '.');
+    cleaned = cleaned.replace(/[^0-9.-]/g, '');
+    const result = parseFloat(cleaned);
+    return isNaN(result) ? 0 : result;
+}
+
+async function loadServicesFromGoogleSheets() {
+    showLoading('Загрузка услуг...');
+    try {
+        const csvText = await loadWithCache(CACHE_KEY_SERVICES, () => fetchTextWithRetry(GOOGLE_SHEETS_CSV_URL, 3, 8000), 10 * 60 * 1000);
+        const rows = [];
+        const lines = csvText.split('\n');
+        for (const line of lines) {
+            if (!line.trim()) continue;
+            const values = line.split(',').map(v => v.replace(/^"|"$/g, '').trim());
+            if (values.length >= 3 && values[0] && values[1] && values[2]) rows.push(values);
+        }
+        if (rows.length === 0) throw new Error('Нет данных');
+        const headers = rows[0].map(h => h.toLowerCase());
+        const colIndex = {
+            category: headers.indexOf('category'),
+            service: headers.indexOf('service'),
+            price: headers.indexOf('price'),
+            sort: headers.indexOf('sort')
+        };
+        servicesData = { business: [], individual: [], corporate: [], group: [] };
+        for (let i = 1; i < rows.length; i++) {
+            const values = rows[i];
+            const category = values[colIndex.category];
+            const service = values[colIndex.service];
+            const price = parsePrice(values[colIndex.price]);
+            const sort = colIndex.sort !== -1 ? (parseInt(values[colIndex.sort]) || 999) : 999;
+            if (category && service && price > 0) {
+                const catMap = { 'business': 'business', 'individual': 'individual', 'corporate': 'corporate', 'group': 'group' };
+                const cat = catMap[category.toLowerCase()];
+                if (cat) servicesData[cat].push({ service, price, sort });
+            }
+        }
+        for (const cat in servicesData) servicesData[cat].sort((a,b) => a.sort - b.sort);
+        updateSelectsFromData();
+    } catch (error) {
+        logError('Ошибка загрузки:', error);
+        showToast('⚠️ Не удалось загрузить услуги. Используем локальные данные.', 4000);
+        loadLocalFallback();
+    } finally {
+        hideLoading();
+    }
+}
+
+function loadLocalFallback() {
+    servicesData = {
+        business: [
+            { service: "Подбор специалиста", price: 60000, sort: 1 },
+            { service: "Подбор руководителя", price: 90000, sort: 2 },
+            { service: "Хэдхантинг", price: 120000, sort: 3 },
+            { service: "Онбординг", price: 250000, sort: 4 },
+            { service: "УТП компании", price: 25000, sort: 5 }
+        ],
+        individual: [
+            { service: "Индивидуальная консультация (1ч)", price: 7000, sort: 1 },
+            { service: "Экспресс-консультация (30мин)", price: 3500, sort: 2 },
+            { service: "Аудит резюме", price: 4000, sort: 3 },
+            { service: "Резюме специалиста", price: 6000, sort: 4 },
+            { service: "Резюме руководителя", price: 9000, sort: 5 },
+            { service: "CV на английском", price: 15000, sort: 6 },
+            { service: "Сопроводительное письмо", price: 3000, sort: 7 },
+            { service: "Индивидуальный тренинг «Продай себя дорого»", price: 14000, sort: 8 }
+        ],
+        corporate: [
+            { service: "Тренинг по запросу (до 25 чел.)", price: 12000, sort: 1 },
+            { service: "Мастер-класс (3ч, до 25 чел.)", price: 30000, sort: 2 },
+            { service: "Стратегическая сессия (до 12 чел.)", price: 13000, sort: 3 }
+        ],
+        group: [
+            { service: "Групповой тренинг (до 10 чел.)", price: 5500, sort: 1 },
+            { service: "Групповой тренинг (11-20 чел.)", price: 5000, sort: 2 },
+            { service: "Групповой тренинг (21+ чел.)", price: 4500, sort: 3 }
+        ]
+    };
+    updateSelectsFromData();
+}
+
+function updateSelectsFromData() {
+    const selects = {
+        'business-select': servicesData.business,
+        'individual-select': servicesData.individual,
+        'corporate-select': servicesData.corporate,
+        'group-select': servicesData.group
+    };
+    for (const [id, data] of Object.entries(selects)) {
+        const select = document.getElementById(id);
+        if (select && data && data.length) {
+            select.innerHTML = data.map(s => `<option value="${s.price}">${escapeHtml(s.service)} — ${s.price.toLocaleString()} ₽</option>`).join('');
+        }
+    }
+}
+
+function renderCart() {
+    let total = 0, qty = 0;
+    cart.forEach(i => { total += i.price * i.qty; qty += i.qty; });
+    let final = total;
+    if (qty >= 2) final = total * 0.95;
+    const totalEl = document.getElementById('totalPrice');
+    if (totalEl) totalEl.innerText = Math.round(final).toLocaleString() + ' ₽';
+    const discountDiv = document.getElementById('discountInfo');
+    if (discountDiv) {
+        if (qty >= 2) discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — экономия ${Math.round(total*0.05)} ₽`;
+        else discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
+    }
+    const containers = { business: 'business-list', individual: 'individual-list', corporate: 'corporate-list', group: 'group-list' };
+    for (const cat of Object.keys(containers)) {
+        const container = document.getElementById(containers[cat]);
+        if (container) container.innerHTML = '';
+    }
+    cart.forEach((item, idx) => {
+        const container = document.getElementById(containers[item.cat]);
+        if (!container) return;
+        const div = document.createElement('div');
+        div.className = 'calc-item';
+        div.innerHTML = `<div>${escapeHtml(item.name)} × ${item.qty}</div><div>${(item.price * item.qty).toLocaleString()} ₽ <button class="remove-item" data-idx="${idx}" style="background:none;border:none;color:red;cursor:pointer;font-size:1.2rem;">✖</button></div>`;
+        container.appendChild(div);
+    });
+    document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.removeEventListener('click', btn._handler);
+        btn._handler = () => { cart.splice(parseInt(btn.dataset.idx), 1); renderCart(); };
+        btn.addEventListener('click', btn._handler);
+    });
+}
+
+function addToCart(cat, selectId, qtyId) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+    const price = parseInt(select.value);
+    const fullText = select.options[select.selectedIndex].text;
+    const name = fullText.replace(/ — .*/, '');
+    let quantity = parseInt(document.getElementById(qtyId).value);
+    if (isNaN(quantity) || quantity < 1) quantity = 1;
+    const existing = cart.find(i => i.name === name && i.cat === cat);
+    if (existing) existing.qty += quantity;
+    else cart.push({ name, price, qty: quantity, cat });
+    renderCart();
+}
+
+async function initCalculator() {
+    if (calculatorInitialized) return;
+    calculatorInitialized = true;
+    await loadServicesFromGoogleSheets();
+
+    const handlers = [
+        { btn: 'business-add', cat: 'business', select: 'business-select', qty: 'business-qty' },
+        { btn: 'individual-add', cat: 'individual', select: 'individual-select', qty: 'individual-qty' },
+        { btn: 'corporate-add', cat: 'corporate', select: 'corporate-select', qty: 'corporate-qty' },
+        { btn: 'group-add', cat: 'group', select: 'group-select', qty: 'group-qty' }
+    ];
+    handlers.forEach(({ btn, cat, select, qty }) => {
+        const button = document.getElementById(btn);
+        if (button) {
+            button.removeEventListener('click', button._handler);
+            button._handler = () => addToCart(cat, select, qty);
+            button.addEventListener('click', button._handler);
+        }
+    });
+
+    const tabs = document.querySelectorAll('.calculator-tabs .tab-btn');
+    tabs.forEach(btn => {
+        btn.removeEventListener('click', btn._tabHandler);
+        btn._tabHandler = () => {
+            const tab = btn.dataset.tab;
+            const activePane = document.querySelector('.tab-pane.active');
+            if (activePane) activePane.classList.remove('active');
+            tabs.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const newPane = document.getElementById(`tab-${tab}`);
+            if (newPane) newPane.classList.add('active');
+        };
+        btn.addEventListener('click', btn._tabHandler);
+    });
+
+    log('✅ Калькулятор инициализирован');
+}
+
+window.initCalculator = initCalculator;
+window.addToCart = addToCart;
+window.renderCart = renderCart;
+let quizQuestions = [];
+let answers = [];
+let quizState = 'questions';
+let quizInitialized = false;
+let currentQuestionIndex = 0;
+let totalQuestions = 0;
+let isSubmittingChoice = false;
+let isAnalyzing = false; // флаг для предотвращения повторного анализа
+
+const LOCAL_QUESTIONS = [
+    { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
+    { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"] },
+    { text: "3. Как быстро нужен результат?", options: ["Вчера", "1–2 месяца", "3–6 месяцев", "Планирую постепенно"] },
+    { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности"] },
+    { text: "5. Бюджет на консультацию/подбор?", options: ["До 5000 ₽", "5000–15000 ₽", "15000–50000 ₽", "Выше 50000 ₽"] }
+];
+
+const VARIANTS_MATRIX = [
+    { priority: 1, role: "Подбираю сотрудников", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "HR-аудит и закрытие вакансии под ключ", variantB: "Бесплатная диагностика вакансии" },
+    { priority: 2, role: "Ищу работу", level: "Junior / начинающий", urgency: "*", importance: "*", budget: "*", variantA: "Карьерная стратегия + упаковка резюме", variantB: "Экспресс-консультация по поиску" },
+    { priority: 3, role: "Ищу работу", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*", variantA: "Тренинг «Продай себя дорого» и переговоры о зарплате", variantB: "Индивидуальное сопровождение до оффера" },
+    { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная карьерная стратегия + полное сопровождение", variantB: "Тренинг «Продай себя дорого» + самоподготовка" }
+];
+
+function initQuizData() {
+    quizQuestions = LOCAL_QUESTIONS;
+    answers = new Array(quizQuestions.length).fill(null);
+    currentQuestionIndex = 0;
+}
+
+function findVariant(answersArr) {
+    const user = { role: answersArr[0], level: answersArr[1], urgency: answersArr[2], importance: answersArr[3], budget: answersArr[4] };
+    const sorted = [...VARIANTS_MATRIX].sort((a,b) => a.priority - b.priority);
+    for (const rule of sorted) {
+        let match = true;
+        if (rule.role !== '*' && rule.role !== user.role) match = false;
+        if (rule.level !== '*' && rule.level !== user.level) match = false;
+        if (rule.urgency !== '*' && rule.urgency !== user.urgency) match = false;
+        if (rule.importance !== '*' && rule.importance !== user.importance) match = false;
+        if (rule.budget !== '*' && rule.budget !== user.budget) match = false;
+        if (match) return { variantA: rule.variantA, variantB: rule.variantB };
+    }
+    const def = VARIANTS_MATRIX.find(r => r.priority === 999) || VARIANTS_MATRIX[0];
+    return { variantA: def.variantA, variantB: def.variantB };
+}
+
+function resetQuiz() {
+    quizState = 'questions';
+    currentQuestionIndex = 0;
+    answers = new Array(quizQuestions.length).fill(null);
+    renderQuiz();
+}
+
+function renderQuiz() {
+    const container = document.getElementById('quizContainer');
+    if (!container) return;
+    if (quizQuestions.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:40px;">⏳ Загрузка...</div>';
+        return;
+    }
+    totalQuestions = quizQuestions.length;
+    if (quizState === 'questions') {
+        let progressHtml = `<div class="quiz-progress"><div class="quiz-progress-bar" style="width: ${((currentQuestionIndex+1)/totalQuestions)*100}%;"></div></div>`;
+        let question = quizQuestions[currentQuestionIndex];
+        let html = progressHtml;
+        html += `<div class="quiz-question fade-up"><p>${escapeHtml(question.text)}</p><div class="quiz-options" data-q="${currentQuestionIndex}">`;
+        for (let opt of question.options) {
+            html += `<div class="quiz-option ${answers[currentQuestionIndex] === opt ? 'selected' : ''}" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</div>`;
+        }
+        html += `</div></div>`;
+        html += `<div class="quiz-nav"><button id="quizPrevBtn" class="btn-secondary" ${currentQuestionIndex === 0 ? 'disabled' : ''}>◀ Назад</button>`;
+        if (currentQuestionIndex === totalQuestions - 1) {
+            html += `<button id="submitQuizBtn" class="btn-primary">Показать варианты</button>`;
+        } else {
+            html += `<button id="quizNextBtn" class="btn-primary">Далее ▶</button>`;
+        }
+        html += `</div>`;
+        container.innerHTML = html;
+
+        document.querySelectorAll('.quiz-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                if (isAnalyzing) return;
+                answers[currentQuestionIndex] = this.dataset.opt;
+                renderQuiz();
+            });
+        });
+
+        const nextBtn = document.getElementById('quizNextBtn');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                if (isAnalyzing) return;
+                if (answers[currentQuestionIndex] === null) {
+                    alert('Пожалуйста, выберите ответ');
+                    return;
+                }
+                currentQuestionIndex++;
+                renderQuiz();
+            });
+        }
+        const prevBtn = document.getElementById('quizPrevBtn');
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (isAnalyzing) return;
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    renderQuiz();
+                }
+            });
+        }
+        const submitQuiz = document.getElementById('submitQuizBtn');
+        if (submitQuiz) {
+            submitQuiz.addEventListener('click', () => {
+                if (isAnalyzing) {
+                    alert('Подождите, анализ уже выполняется...');
+                    return;
+                }
+                if (answers[currentQuestionIndex] === null) {
+                    alert('Выберите ответ перед отправкой');
+                    return;
+                }
+                if (answers.includes(null)) {
+                    alert('Ответьте на все вопросы');
+                    return;
+                }
+                isAnalyzing = true;
+                submitQuiz.disabled = true;
+                submitQuiz.style.opacity = '0.5';
+                submitQuiz.style.cursor = 'not-allowed';
+
+                // Показываем крутящийся спиннер вместо текста
+                container.innerHTML = `
+                    <div class="quiz-loading">
+                        <div class="quiz-spinner"></div>
+                        <p>Анализируем ваши ответы...</p>
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    const variant = findVariant(answers);
+                    quizState = 'choice';
+                    showResult(variant);
+                    isAnalyzing = false;
+                }, 1500);
+            });
+        }
+    } else if (quizState === 'choice') {
+        showResult(findVariant(answers));
+    }
+}
+
+function showResult(variant) {
+    const container = document.getElementById('quizContainer');
+    if (!container) return;
+    container.innerHTML = `
+        <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подготовили 2 варианта:</p>
+        <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
+            <div style="flex:1; min-width:250px; background:var(--surface-soft); border-radius:28px; padding:28px; border:1px solid var(--border);">
+                <div style="font-size:32px; margin-bottom:12px;">📌</div>
+                <h4>Вариант 1</h4>
+                <p>${escapeHtml(variant.variantA)}</p>
+                <button class="btn-primary choose-option" data-choice="1" data-text="${escapeHtml(variant.variantA)}">Выбрать</button>
+            </div>
+            <div style="flex:1; min-width:250px; background:var(--surface-soft); border-radius:28px; padding:28px; border:1px solid var(--border);">
+                <div style="font-size:32px; margin-bottom:12px;">🎯</div>
+                <h4>Вариант 2</h4>
+                <p>${escapeHtml(variant.variantB)}</p>
+                <button class="btn-primary choose-option" data-choice="2" data-text="${escapeHtml(variant.variantB)}">Выбрать</button>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:30px;">
+            <button id="resetQuizBtn" class="btn-secondary">🔁 Пройти заново</button>
+        </div>
+    `;
+    document.querySelectorAll('.choose-option').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if (isSubmittingChoice) return;
+            isSubmittingChoice = true;
+            const chosen = this.dataset.choice;
+            const chosenText = this.dataset.text;
+            const sendQuizResult = (userId) => {
+                const formData = {
+                    formType: 'Квиз',
+                    quizAnswers: answers.map((a, idx) => `${quizQuestions[idx]?.text} — ${a}`).join('\n'),
+                    chosenVariant: `${chosen}: ${chosenText}`,
+                    userId: userId
+                };
+                if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
+                if (typeof gtag === 'function') gtag('event', 'quiz_choice', { event_category: 'quiz', event_label: chosenText, value: chosen });
+                const resultDiv = document.getElementById('quizResult');
+                if (resultDiv) {
+                    resultDiv.innerHTML = `<strong>✅ Вы выбрали вариант ${chosen}:</strong><br>${escapeHtml(chosenText)}<br><br><a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">📱 Обсудить в Telegram</a>`;
+                    resultDiv.style.display = 'block';
+                }
+                container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
+                isSubmittingChoice = false;
+            };
+            if (typeof currentUserId !== 'undefined' && currentUserId) sendQuizResult(currentUserId);
+            else if (typeof getOrCreateLocalUserId === 'function') sendQuizResult(getOrCreateLocalUserId());
+            else sendQuizResult('unknown');
+        });
+    });
+    const resetBtn = document.getElementById('resetQuizBtn');
+    if (resetBtn) resetBtn.addEventListener('click', () => resetQuiz());
+}
+
+function initQuiz() {
+    if (quizInitialized) return;
+    quizInitialized = true;
+    initQuizData();
+    renderQuiz();
+}
+
+window.initQuiz = initQuiz;
+window.renderQuiz = renderQuiz;
+(function() {
+    'use strict';
+
+    // Функция для повторной инициализации анимации на ещё не видимых элементах
+    function reinitAnimations() {
+        const elements = document.querySelectorAll('.fade-up:not(.visible)');
+        if (!elements.length) return;
+        const isMobile = window.innerWidth <= 768;
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: isMobile ? '0px 0px -30px 0px' : '0px 0px -80px 0px'
+        });
+        elements.forEach(el => observer.observe(el));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.querySelectorAll('.fade-up').forEach(el => {
+                el.classList.add('visible');
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+            if (typeof initAnimations === 'function') window.initAnimations = function() {};
+        }
+
+        // Базовые инициализации
+        if (typeof initAnimations === 'function') initAnimations();
+        if (typeof initUserId === 'function') initUserId().catch(e => console.warn(e));
+        if (typeof initCalculator === 'function') initCalculator();
+        if (typeof initQuiz === 'function') initQuiz();
+        if (typeof initModal === 'function') initModal();
+        if (typeof initCallbackForm === 'function') initCallbackForm();
+        if (typeof initSmoothScroll === 'function') initSmoothScroll();
+        if (typeof initCopyButtons === 'function') initCopyButtons();
+        if (typeof initBurgerMenu === 'function') initBurgerMenu();
+        if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
+        if (typeof initCookieConsent === 'function') initCookieConsent();
+
+        // Переопределяем initCalculator и initQuiz, чтобы после их завершения перезапускать анимацию
+        const originalInitCalculator = window.initCalculator;
+        if (originalInitCalculator) {
+            window.initCalculator = async function() {
+                await originalInitCalculator();
+                setTimeout(reinitAnimations, 100);
+            };
+        }
+
+        const originalInitQuiz = window.initQuiz;
+        if (originalInitQuiz) {
+            window.initQuiz = function() {
+                originalInitQuiz();
+                setTimeout(reinitAnimations, 150);
+            };
+        }
+
+        // Также при клике на вкладки калькулятора перезапускаем анимацию
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.tab-btn')) {
+                setTimeout(reinitAnimations, 50);
+            }
+        });
+
+        // Дополнительный вызов через небольшую задержку для динамически подгружаемых данных (например, из Google Sheets)
+        setTimeout(reinitAnimations, 500);
+    });
+})();
+</script>

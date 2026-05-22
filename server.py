@@ -32,20 +32,10 @@ def main():
     if not os.path.exists("build.py") or not os.path.exists("components"):
         print("❌ Запустите из корневой папки проекта")
         sys.exit(1)
-
-    print("📦 Первичная сборка...")
-    try:
-        from build import build_page
-        build_page()
-        print("✅ Сборка завершена")
-    except Exception as e:
-        print(f"❌ Ошибка сборки: {e}")
-        sys.exit(1)
-
     port = get_free_port()
     with socketserver.TCPServer(("127.0.0.1", port), Handler) as httpd:
         print(f"\n🚀 Сервер запущен: http://127.0.0.1:{port}")
-        print("💡 Файлы собраны один раз. При изменениях запустите сборку вручную: python build.py")
+        print("💡 После изменений в компонентах выполните python build.py и обновите страницу")
         webbrowser.open(f"http://127.0.0.1:{port}")
         try:
             httpd.serve_forever()

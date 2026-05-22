@@ -94,40 +94,632 @@ body {
     font-size: 0.85rem;
 }
 
-/* ========== Секции ========== */
-.section-dark {
-    background: var(--dark-bg);
-    color: var(--text-light);
-    padding: 60px 0;
+/* ========== Навигация ========== */
+.navbar {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
 }
-.section-dark .section-title {
+.nav-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    flex-wrap: wrap;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+.logo-sub {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--secondary);
+}
+.social-icons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    transition: var(--transition);
+}
+
+.social-icons a:hover {
+    transform: translateY(-2px);
+    opacity: 0.8;
+}
+
+.social-icons svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+}
+.burger-menu {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+.burger-menu span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--primary);
+    margin: 5px 0;
+    transition: 0.2s;
+}
+.nav-bottom {
+    background: var(--light-bg);
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin: 10px 0;
+}
+.nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: var(--transition);
+}
+.nav-links a:hover {
+    color: var(--primary);
+}
+@media (max-width: 768px) {
+    .burger-menu {
+        display: block;
+    }
+    .nav-bottom {
+        display: none;
+        background: white;
+        border-radius: 0;
+        padding: 20px;
+        margin: 0;
+    }
+    .nav-bottom.open {
+        display: block;
+    }
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    body.menu-open {
+        overflow: hidden;
+    }
+}
+
+/* ========== Hero секция ========== */
+.hero-grid {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    padding: 60px 0;
+    flex-wrap: wrap;
+}
+.hero-content {
+    flex: 1.2;
+}
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+}
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+.hero-text {
+    font-size: 1rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+.small-note {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    margin-top: 15px;
+}
+.hero-image {
+    flex: 0.8;
+    text-align: center;
+}
+@media (max-width: 768px) {
+    .hero-grid {
+        flex-direction: column;
+        text-align: center;
+    }
+    .hero-title {
+        font-size: 2rem;
+    }
+}
+
+/* ========== Карточки и сетки (общие) ========== */
+.roles-grid, .services-flex, .stats-grid, .process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.role-card, .service-card, .stat-item, .process-card {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid var(--border);
+}
+.role-card:hover, .service-card:hover, .process-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+.stat-item {
+    text-align: center;
+}
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+.stat-label {
+    font-size: 1rem;
+    color: var(--secondary);
+}
+.process-step {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.process-title {
+    text-align: center;
+    margin: 40px 0 20px;
+    font-size: 1.8rem;
+}
+.process-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+.process-col {
+    flex: 1;
+    min-width: 280px;
+}
+@media (max-width: 768px) {
+    .process-row {
+        flex-direction: column;
+    }
+}
+
+/* ========== Секция преимуществ (улучшенная) ========== */
+.benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 32px;
+    margin: 48px 0;
+}
+
+.benefit-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(0px);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    border: none;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.benefit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s ease;
+}
+
+.benefit-card:hover::before {
+    transform: scaleX(1);
+}
+
+.benefit-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 40px rgba(0, 0, 0, 0.3);
+    background: white;
+}
+
+.benefit-card h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--primary-dark);
+    transition: color 0.2s;
+}
+
+.benefit-card:hover h4 {
+    color: var(--primary);
+}
+
+.benefit-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--secondary);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .benefits-grid {
+        gap: 24px;
+        margin: 32px 0;
+    }
+    .benefit-card {
+        padding: 24px 20px;
+    }
+    .benefit-card h4 {
+        font-size: 1.3rem;
+    }
+}
+
+/* ========== Калькулятор ========== */
+.calculator-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+.tab-btn {
+    background: var(--light-bg);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+}
+.tab-btn.active {
+    background: var(--primary);
     color: white;
 }
-.section-light {
-    background: var(--light-bg);
-    padding: 60px 0;
-}
-
-/* ========== Анимация появления ========== */
-.fade-up {
+.tab-pane {
+    display: none;
     opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transition: opacity 0.2s ease;
 }
-.fade-up.visible {
+.tab-pane.active {
+    display: block;
     opacity: 1;
-    transform: translateY(0);
+    animation: fadeIn 0.25s;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.add-service {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.add-service select, .calc-qty {
+    padding: 10px;
+    border-radius: 40px;
+    border: 1px solid var(--border);
+    background: white;
+}
+.calc-qty {
+    width: 80px;
+}
+.calc-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border);
+}
+.total-block {
+    margin-top: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: right;
+}
+.discount-info {
+    font-size: 0.9rem;
+    color: green;
+}
+.calc-pdf-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 20px 0;
+    justify-content: center;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-    .fade-up, .tab-pane, .modal-content, .role-card:hover {
-        transform: none !important;
-    }
+/* ========== Квиз ========== */
+.quiz-card {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    margin: 60px 0;
+    box-shadow: var(--shadow-md);
+}
+.quiz-question {
+    margin-bottom: 30px;
+}
+.quiz-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 15px;
+}
+.quiz-option {
+    background: var(--light-bg);
+    padding: 10px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.quiz-option.selected {
+    background: var(--primary);
+    color: white;
+}
+.quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+.quiz-progress {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 10px;
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+.quiz-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+.quiz-result {
+    margin-top: 30px;
+    padding: 20px;
+    background: var(--light-bg);
+    border-radius: var(--radius-md);
+    display: none;
+}
+.quiz-loading {
+    text-align: center;
+    padding: 40px;
+}
+.quiz-spinner {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: quiz-spin 0.8s linear infinite;
+}
+@keyframes quiz-spin {
+    to { transform: rotate(360deg); }
+}
+.quiz-loading p {
+    margin-top: 15px;
+    font-size: 1rem;
+    color: var(--secondary);
+}
+
+/* ========== Бесплатные материалы и диагностика (улучшенные карточки) ========== */
+.checklist-card,
+.calendar-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
+    border-radius: var(--radius-lg);
+    padding: 48px 32px;
+    margin: 60px 0;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.checklist-card:hover,
+.calendar-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.checklist-card::before,
+.calendar-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+}
+
+.checklist-card .section-title,
+.calendar-card .section-title {
+    margin-bottom: 16px;
+    color: var(--primary-dark);
+}
+
+.checklist-card p,
+.calendar-card p {
+    font-size: 1.1rem;
+    text-align: center;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--secondary);
+    margin-bottom: 32px;
+}
+
+.freebies-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.freebies-buttons .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    font-size: 1rem;
+}
+
+.freebies-buttons .btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 20px -8px rgba(45,106,159,0.4);
+}
+
+/* ========== Форма обратного звонка ========== */
+.callback-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.callback-form input,
+.callback-form textarea {
+    width: 100%;
+    padding: 14px 20px;
+    margin: 12px 0;
+    border: 1px solid var(--border);
+    border-radius: 60px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: #fff;
+}
+
+.callback-form textarea {
+    border-radius: 24px;
+    resize: vertical;
+}
+
+.callback-form input:focus,
+.callback-form textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
+}
+
+.consent-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0;
+    font-size: 0.9rem;
+}
+
+.consent-checkbox input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: var(--primary);
+}
+
+.callback-form .btn-primary {
+    width: 100%;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.callback-note {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--secondary);
+    margin-top: 20px;
+}
+
+.btn-primary.loading {
+    pointer-events: none;
+    opacity: 0.7;
+    position: relative;
+    padding-right: 2.5rem;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+.btn-primary.loading::after {
+    content: '';
+    position: absolute;
+    right: 1rem;
+    top: calc(50% - 0.6rem);
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+/* ========== Cookie-баннер ========== */
+.cookie-consent {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 10000;
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+.cookie-consent__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
 }
 
 /* ========== Модальные окна ========== */
@@ -162,65 +754,89 @@ body {
     transform: scale(1);
 }
 
-/* ========== Cookie‑баннер ========== */
-.cookie-consent {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: white;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-    z-index: 10000;
-    padding: 12px 20px;
-    font-size: 0.9rem;
+/* ========== Контакты ========== */
+.contact-block {
     text-align: center;
+    padding: 40px 0;
 }
-.cookie-consent__inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
+.contact-line {
+    margin: 15px 0;
+    font-size: 1.1rem;
+}
+.contact-line a {
+    color: var(--primary-light);
+    text-decoration: none;
+}
+.contact-line a:hover {
+    text-decoration: underline;
+}
+.copyable-phone, .copyable-text {
+    cursor: pointer;
+    border-bottom: 1px dashed var(--primary-light);
+}
+.contact-telegram-btn {
+    margin-top: 30px;
 }
 
-/* ========== Формы ========== */
-.callback-form input, .callback-form textarea {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid var(--border);
-    border-radius: 40px;
-    font-family: inherit;
+/* ========== Футер ========== */
+footer {
+    background: var(--dark-bg);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 40px;
 }
-.callback-form textarea {
-    border-radius: 20px;
+footer a {
+    color: var(--primary-light);
+    text-decoration: none;
 }
-.consent-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 15px 0;
+footer a:hover {
+    text-decoration: underline;
 }
-.btn-primary.loading {
-    pointer-events: none;
-    opacity: 0.7;
-    position: relative;
-    padding-right: 2.5rem;
+
+/* ========== Анимация появления ========== */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
-@keyframes spin {
-    to { transform: rotate(360deg); }
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
 }
-.btn-primary.loading::after {
-    content: '';
-    position: absolute;
-    right: 1rem;
-    top: calc(50% - 0.6rem);
-    width: 1.2rem;
-    height: 1.2rem;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
+.checklist-card.visible,
+.calendar-card.visible {
+    transition-delay: 0.05s;
+}
+
+/* ========== Учёт reduced motion ========== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .fade-up, .tab-pane, .modal-content, .role-card:hover {
+        transform: none !important;
+    }
+    .fade-up,
+    .fade-up.visible {
+        transition: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+}
+
+/* ========== Секции с фоном ========== */
+.section-dark {
+    background: var(--dark-bg);
+    color: var(--text-light);
+    padding: 60px 0;
+}
+.section-dark .section-title {
+    color: white;
+}
+.section-light {
+    background: var(--light-bg);
+    padding: 60px 0;
 }
