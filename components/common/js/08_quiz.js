@@ -9,6 +9,23 @@ let isSubmittingChoice = false;
 let isAnalyzing = false;
 let currentRole = null;
 
+// ========== УВЕДОМЛЕНИЕ ОБ ОШИБКЕ (ТОСТ) ==========
+function showErrorToast(message) {
+    // Удаляем старый тост, если есть
+    const existingToast = document.querySelector('.custom-toast-error');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast-error';
+    toast.innerHTML = `⚠️ ${message}`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
+
 // ---------- Вопросы ----------
 const FIRST_QUESTION = {
     text: "1. Ваша роль?",
@@ -37,7 +54,7 @@ const IMPORTANCE_QUESTION = {
     options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности"]
 };
 
-// Пятый вопрос (ОБНОВЛЁН)
+// Пятый вопрос (ОБНОВЛЁН: 5 вариантов, включая "Выше 100 000 ₽")
 const BUDGET_QUESTION = {
     text: "5. Бюджет на консультацию/подбор?",
     options: [
@@ -230,7 +247,7 @@ function renderQuiz() {
             nextBtn.addEventListener('click', () => {
                 if (isAnalyzing) return;
                 if (answers[currentQuestionIndex] === null) {
-                    alert('Пожалуйста, выберите ответ');
+                    showErrorToast('📌 Пожалуйста, выберите ответ');
                     return;
                 }
                 currentQuestionIndex++;
@@ -251,15 +268,15 @@ function renderQuiz() {
         if (submitBtn) {
             submitBtn.addEventListener('click', () => {
                 if (isAnalyzing) {
-                    alert('Подождите, анализ уже выполняется...');
+                    showErrorToast('⏳ Подождите, анализ уже выполняется...');
                     return;
                 }
                 if (answers[currentQuestionIndex] === null) {
-                    alert('Выберите ответ перед отправкой');
+                    showErrorToast('📌 Выберите ответ перед отправкой');
                     return;
                 }
                 if (answers.includes(null)) {
-                    alert('Ответьте на все вопросы');
+                    showErrorToast('📋 Ответьте на все вопросы');
                     return;
                 }
                 isAnalyzing = true;
