@@ -47,6 +47,49 @@ body {
     color: var(--primary-dark);
 }
 
+/* ========== КАСКАДНОЕ ПОЯВЛЕНИЕ КАРТОЧЕК ========== */
+.roles-grid .fade-up:nth-child(1) { transition-delay: 0.00s; }
+.roles-grid .fade-up:nth-child(2) { transition-delay: 0.05s; }
+.roles-grid .fade-up:nth-child(3) { transition-delay: 0.10s; }
+.roles-grid .fade-up:nth-child(4) { transition-delay: 0.15s; }
+.roles-grid .fade-up:nth-child(5) { transition-delay: 0.20s; }
+
+.services-flex .fade-up:nth-child(1) { transition-delay: 0.00s; }
+.services-flex .fade-up:nth-child(2) { transition-delay: 0.05s; }
+.services-flex .fade-up:nth-child(3) { transition-delay: 0.10s; }
+.services-flex .fade-up:nth-child(4) { transition-delay: 0.15s; }
+
+.benefits-grid .fade-up:nth-child(1) { transition-delay: 0.00s; }
+.benefits-grid .fade-up:nth-child(2) { transition-delay: 0.05s; }
+.benefits-grid .fade-up:nth-child(3) { transition-delay: 0.10s; }
+.benefits-grid .fade-up:nth-child(4) { transition-delay: 0.15s; }
+
+.process-grid .fade-up:nth-child(1) { transition-delay: 0.00s; }
+.process-grid .fade-up:nth-child(2) { transition-delay: 0.05s; }
+.process-grid .fade-up:nth-child(3) { transition-delay: 0.10s; }
+.process-grid .fade-up:nth-child(4) { transition-delay: 0.15s; }
+.process-grid .fade-up:nth-child(5) { transition-delay: 0.20s; }
+.process-grid .fade-up:nth-child(6) { transition-delay: 0.25s; }
+
+/* ========== АНИМАЦИЯ ПОЯВЛЕНИЯ КНОПОК КВИЗА ========== */
+.quiz-options .quiz-option {
+    animation: quizOptionFadeIn 0.3s ease forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.quiz-options .quiz-option:nth-child(1) { animation-delay: 0.00s; }
+.quiz-options .quiz-option:nth-child(2) { animation-delay: 0.05s; }
+.quiz-options .quiz-option:nth-child(3) { animation-delay: 0.10s; }
+.quiz-options .quiz-option:nth-child(4) { animation-delay: 0.15s; }
+
+@keyframes quizOptionFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @media (max-width: 768px) {
     .section-title {
         font-size: 1.8rem;

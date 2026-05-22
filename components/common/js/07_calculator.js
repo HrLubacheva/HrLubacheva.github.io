@@ -108,7 +108,7 @@ function renderCart() {
         btn.addEventListener('click', btn._handler);
     });
     // После каждого рендера (добавление/удаление) логируем изменение
-    logCartToSheet('update');
+    // logCartToSheet('update');
 }
 
 function addToCart(cat, selectId, qtyId) {

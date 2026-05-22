@@ -136,6 +136,49 @@ body {
     color: var(--primary-dark);
 }
 
+/* ========== КАСКАДНОЕ ПОЯВЛЕНИЕ КАРТОЧЕК ========== */
+.roles-grid .fade-up:nth-child(1) { transition-delay: 0.00s; }
+.roles-grid .fade-up:nth-child(2) { transition-delay: 0.05s; }
+.roles-grid .fade-up:nth-child(3) { transition-delay: 0.10s; }
+.roles-grid .fade-up:nth-child(4) { transition-delay: 0.15s; }
+.roles-grid .fade-up:nth-child(5) { transition-delay: 0.20s; }
+
+.services-flex .fade-up:nth-child(1) { transition-delay: 0.00s; }
+.services-flex .fade-up:nth-child(2) { transition-delay: 0.05s; }
+.services-flex .fade-up:nth-child(3) { transition-delay: 0.10s; }
+.services-flex .fade-up:nth-child(4) { transition-delay: 0.15s; }
+
+.benefits-grid .fade-up:nth-child(1) { transition-delay: 0.00s; }
+.benefits-grid .fade-up:nth-child(2) { transition-delay: 0.05s; }
+.benefits-grid .fade-up:nth-child(3) { transition-delay: 0.10s; }
+.benefits-grid .fade-up:nth-child(4) { transition-delay: 0.15s; }
+
+.process-grid .fade-up:nth-child(1) { transition-delay: 0.00s; }
+.process-grid .fade-up:nth-child(2) { transition-delay: 0.05s; }
+.process-grid .fade-up:nth-child(3) { transition-delay: 0.10s; }
+.process-grid .fade-up:nth-child(4) { transition-delay: 0.15s; }
+.process-grid .fade-up:nth-child(5) { transition-delay: 0.20s; }
+.process-grid .fade-up:nth-child(6) { transition-delay: 0.25s; }
+
+/* ========== АНИМАЦИЯ ПОЯВЛЕНИЯ КНОПОК КВИЗА ========== */
+.quiz-options .quiz-option {
+    animation: quizOptionFadeIn 0.3s ease forwards;
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.quiz-options .quiz-option:nth-child(1) { animation-delay: 0.00s; }
+.quiz-options .quiz-option:nth-child(2) { animation-delay: 0.05s; }
+.quiz-options .quiz-option:nth-child(3) { animation-delay: 0.10s; }
+.quiz-options .quiz-option:nth-child(4) { animation-delay: 0.15s; }
+
+@keyframes quizOptionFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @media (max-width: 768px) {
     .section-title {
         font-size: 1.8rem;
@@ -1761,7 +1804,7 @@ footer a:hover {
                 <a href="#" id="privacyLink">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 22.05.2026 23:08:12
+                Версия: 22.05.2026 23:37:11
             </div>
         </div>
     </div>
@@ -1964,7 +2007,7 @@ function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
 // ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfH9EVDr7k3ZeFem_AMEmcydDnjU26a7QRI_k4VkcSDWgmrndhCmcyYO-Q5gJdz16iDg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGZgaR7kv4M4peC_Ta0HbkoSfJFWQCy2n3P7cu5Q3CgbW_rXP6vHZr7PlCXjSLF86HOA/exec';
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
@@ -2371,94 +2414,75 @@ function initCopyButtons() {
     });
 }
 window.initCopyButtons = initCopyButtons;
-// ========== МАТРИЦА ВАРИАНТОВ КВИЗА (под реальные услуги + логичные дополнения) ==========
+// ========== ПОЛНАЯ МАТРИЦА ВАРИАНТОВ КВИЗА (с акцентом на тарифы) ==========
 window.VARIANTS_MATRIX = [
-    // ========== РЕКРУТЕРЫ (работодатели) ==========
-    // Срочно, бюджет 30-60 тыс. – быстрый подбор
-    { priority: 101, role: "Подбираю сотрудников", level: "*", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "30 000 – 60 000 ₽", variantA: "Подбор специалиста (до 7 дней)", variantB: "База кандидатов + скрининг" },
-    // Срочно, бюджет 60-120 тыс. – подбор руководителя
-    { priority: 102, role: "Подбираю сотрудников", level: "*", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "60 000 – 120 000 ₽", variantA: "Подбор руководителя (до 10 дней)", variantB: "Хэдхантинг (ускоренный)" },
-    // Срочно, бюджет выше 120 тыс. – хэдхантинг топ-менеджера
-    { priority: 103, role: "Подбираю сотрудников", level: "*", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "120 000 – 250 000 ₽", variantA: "Хэдхантинг топ-менеджера", variantB: "Онбординг + подбор" },
-    // Важен профессиональный опыт (1-2 месяца)
-    { priority: 104, role: "Подбираю сотрудников", level: "*", urgency: "1–2 месяца", importance: "Профессиональный опыт", budget: "60 000 – 120 000 ₽", variantA: "Подбор Middle/Senior специалиста", variantB: "Глубокое интервью + кейсы" },
-    // Мотивация и лояльность, 3-6 месяцев
-    { priority: 105, role: "Подбираю сотрудников", level: "*", urgency: "3–6 месяцев", importance: "Мотивация и лояльность", budget: "120 000 – 250 000 ₽", variantA: "Онбординг под ключ", variantB: "Коучинг для руководителей" },
-    // Соответствие бюджету (гибкие сроки)
-    { priority: 106, role: "Подбираю сотрудников", level: "*", urgency: "Гибкие сроки", importance: "Соответствие бюджету", budget: "До 30 000 ₽", variantA: "Бесплатная консультация по услугам", variantB: "База кандидатов" },
-    { priority: 107, role: "Подбираю сотрудников", level: "*", urgency: "Гибкие сроки", importance: "Соответствие бюджету", budget: "30 000 – 60 000 ₽", variantA: "Подбор специалиста (стандарт)", variantB: "Частичная предоплата" },
-    { priority: 108, role: "Подбираю сотрудников", level: "*", urgency: "Гибкие сроки", importance: "Соответствие бюджету", budget: "60 000 – 120 000 ₽", variantA: "Подбор руководителя с постгарантией", variantB: "Оплата за результат" },
-    // Комплексный HR-аудит
-    { priority: 109, role: "Подбираю сотрудников", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "HR-аудит и закрытие вакансии под ключ", variantB: "Разработка УТП компании" },
+    // ==================== ДЛЯ СОИСКАТЕЛЕЙ (ИЩУ РАБОТУ) ====================
 
-    // ========== СОИСКАТЕЛИ: ИЩУ РАБОТУ ==========
-    // Junior, срочно, маленький бюджет
-    { priority: 10, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Зарплата", budget: "До 5 000 ₽", variantA: "Экспресс-консультация (30мин) + аудит резюме", variantB: "Чек-лист быстрого поиска" },
-    // Junior, срочно, средний бюджет
-    { priority: 11, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Резюме специалиста + консультация", variantB: "Групповой тренинг «Продай себя дорого»" },
-    // Junior, срочно, высокий бюджет
-    { priority: 12, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Карьерная стратегия (пакет 3 консультации)", variantB: "Подготовка к собеседованию" },
-    // Junior, важны условия/удаленка
-    { priority: 13, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Условия/удаленка", budget: "*", variantA: "Сопроводительное письмо + самопрезентация", variantB: "Подборка удаленных вакансий" },
-    // Junior, карьерный рост
-    { priority: 14, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Карьерный рост", budget: "*", variantA: "План развития на 6 месяцев", variantB: "Тренинг Soft skills" },
-    // Junior, 1-2 месяца
-    { priority: 15, role: "Ищу работу", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Зарплата", budget: "До 5 000 ₽", variantA: "Аудит резюме + стратегия поиска", variantB: "Чек-лист" },
-    { priority: 16, role: "Ищу работу", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Резюме специалиста + созвоны", variantB: "Мастер-класс по повышению зарплаты" },
-    // Junior, долгосрочно
-    { priority: 17, role: "Ищу работу", level: "Junior / начинающий", urgency: "3–6 месяцев", importance: "*", budget: "*", variantA: "Стратегия карьерного роста", variantB: "План развития навыков" },
+    // JUNIOR
+    { priority: 10, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Зарплата", budget: "До 5 000 ₽", variantA: "Тариф «Бронзовый» (аудит резюме + консультация)", variantB: "Экспресс-консультация (30мин) — 3 500 ₽" },
+    { priority: 11, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Тариф «Серебряный» (резюме + 2 консультации + сопровождение)", variantB: "Резюме специалиста — 6 000 ₽" },
+    { priority: 12, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Тариф «Золотой» (сопровождение под ключ до оффера)", variantB: "Индивидуальный карьерный коучинг — по запросу" },
+    { priority: 13, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Условия/удаленка", budget: "*", variantA: "Тариф «Серебряный» + самопрезентация для удаленки", variantB: "Экспресс-консультация — 3 500 ₽" },
+    { priority: 14, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Карьерный рост", budget: "*", variantA: "Тариф «Серебряный» + план развития", variantB: "Групповой тренинг «Продай себя дорого» — 5 500 ₽" },
+    { priority: 15, role: "Ищу работу", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Зарплата", budget: "До 5 000 ₽", variantA: "Тариф «Бронзовый» (пошаговая стратегия поиска)", variantB: "Аудит резюме — 4 000 ₽" },
+    { priority: 16, role: "Ищу работу", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Тариф «Серебряный» (карьерная карта на полгода)", variantB: "Резюме специалиста — 6 000 ₽" },
+    { priority: 17, role: "Ищу работу", level: "Junior / начинающий", urgency: "3–6 месяцев", importance: "*", budget: "*", variantA: "Тариф «Бронзовый» (стратегия роста)", variantB: "План развития навыков — 5 000 ₽" },
 
-    // Middle, срочно, бюджет 5-15 тыс.
-    { priority: 20, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Индивидуальный тренинг «Продай себя дорого»", variantB: "Групповой тренинг по переговорам о зарплате" },
-    // Middle, срочно, бюджет 15-50 тыс.
-    { priority: 21, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Резюме руководителя + LinkedIn-профиль", variantB: "Подготовка к сложным интервью" },
-    // Middle, срочно, бюджет 50-100 тыс.
-    { priority: 22, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "Карьерная стратегия + переговоры о зарплате", variantB: "Индивидуальный коучинг" },
-    // Middle, 1-2 месяца, важна зарплата
-    { priority: 23, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Зарплата", budget: "*", variantA: "Аудит карьеры + план повышения дохода", variantB: "Тренинг по переговорам" },
-    // Middle, 1-2 месяца, важен карьерный рост
-    { priority: 24, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Диагностика потолка + стратегия роста", variantB: "Развитие управленческих навыков" },
-    // Middle, долгосрочно
-    { priority: 25, role: "Ищу работу", level: "Middle / опытный", urgency: "3–6 месяцев", importance: "*", budget: "*", variantA: "Стратегия развития до Senior", variantB: "План прокачки экспертизы" },
-    // Middle, высокий бюджет
-    { priority: 26, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "Выше 100 000 ₽", variantA: "Тариф «Золотой» (сопровождение под ключ)", variantB: "Индивидуальный коучинг + карьерная стратегия" },
+    // MIDDLE
+    { priority: 20, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Тариф «Серебряный» (интенсив «Продай себя дорого»)", variantB: "Групповой тренинг по переговорам — 5 500 ₽" },
+    { priority: 21, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Тариф «Серебряный» (упаковка резюме + LinkedIn)", variantB: "Подготовка к сложным интервью — 5 000 ₽" },
+    { priority: 22, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "Тариф «Золотой» (executive-поиск + сопровождение)", variantB: "Индивидуальный коучинг — по запросу" },
+    { priority: 23, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Зарплата", budget: "*", variantA: "Тариф «Серебряный» (аудит карьеры + план повышения дохода)", variantB: "Тренинг по переговорам о зарплате — 6 000 ₽" },
+    { priority: 24, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Тариф «Серебряный» (диагностика потолка + стратегия)", variantB: "Развитие управленческих навыков — 7 000 ₽" },
+    { priority: 25, role: "Ищу работу", level: "Middle / опытный", urgency: "3–6 месяцев", importance: "*", budget: "*", variantA: "Тариф «Серебряный» (стратегия развития до Senior)", variantB: "План прокачки экспертизы — 5 000 ₽" },
+    { priority: 26, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "Выше 100 000 ₽", variantA: "Тариф «Золотой» (премиум-сопровождение)", variantB: "Индивидуальный коучинг + карьерная стратегия — по запросу" },
 
-    // Senior, срочно, бюджет 15-50 тыс.
-    { priority: 30, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Executive-подготовка (резюме + переговоры)", variantB: "Карьерная сессия по позиционированию" },
-    // Senior, срочно, бюджет 50-100 тыс.
-    { priority: 31, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "Хэдхантинг (поиск через контакты)", variantB: "VIP-сопровождение" },
-    // Senior, 1-2 месяца
-    { priority: 32, role: "Ищу работу", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "*", budget: "*", variantA: "Стратегия перехода в топ-компанию", variantB: "Подготовка к собеседованию с топ-менеджерами" },
-    // Senior, высокий бюджет
-    { priority: 33, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "Выше 100 000 ₽", variantA: "Executive-коучинг + поиск через хедхантеров", variantB: "Тариф «Золотой»" },
+    // SENIOR
+    { priority: 30, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Тариф «Золотой» (executive-коучинг + подготовка)", variantB: "Карьерная сессия по позиционированию — 9 000 ₽" },
+    { priority: 31, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "Тариф «Золотой» (поиск C-level позиций с хедхантером)", variantB: "VIP-сопровождение карьеры — по запросу" },
+    { priority: 32, role: "Ищу работу", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "*", budget: "*", variantA: "Тариф «Серебряный» (стратегия перехода в топ-компанию)", variantB: "Подготовка к собеседованию с топ-менеджерами — 7 000 ₽" },
+    { priority: 33, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "Выше 100 000 ₽", variantA: "Тариф «Золотой» (executive-коучинг + хедхантинг)", variantB: "VIP-коучинг для топ-менеджеров — по запросу" },
 
-    // Lead / Руководитель
-    { priority: 40, role: "Ищу работу", level: "Lead / руководитель", urgency: "*", importance: "*", budget: "50 000 – 100 000 ₽", variantA: "Подготовка к собеседованию на C-level", variantB: "Стратегия карьеры топ-менеджера" },
-    { priority: 41, role: "Ищу работу", level: "Lead / руководитель", urgency: "*", importance: "*", budget: "*", variantA: "Коучинг для руководителей", variantB: "Карьерная стратегия первого лица" },
-    { priority: 42, role: "Ищу работу", level: "Lead / руководитель", urgency: "Максимально быстро", importance: "Зарплата", budget: "Выше 100 000 ₽", variantA: "VIP-коучинг для топ-менеджеров", variantB: "Хэдхантинг" },
+    // TEAM LEAD / LEAD
+    { priority: 35, role: "Ищу работу", level: "Team Lead", urgency: "Максимально быстро", importance: "*", budget: "*", variantA: "Тариф «Золотой» (экспресс-подготовка к собеседованию)", variantB: "Карьерный коучинг для тимлидов — 8 000 ₽" },
+    { priority: 40, role: "Ищу работу", level: "Lead / руководитель", urgency: "*", importance: "*", budget: "50 000 – 100 000 ₽", variantA: "Тариф «Золотой» (подготовка к собеседованиям на C-level)", variantB: "Стратегия развития карьеры топ-менеджера — по запросу" },
+    { priority: 41, role: "Ищу работу", level: "Lead / руководитель", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Золотой» (executive-коучинг для руководителей)", variantB: "Карьерная стратегия первого лица — по запросу" },
+    { priority: 42, role: "Ищу работу", level: "Lead / руководитель", urgency: "Максимально быстро", importance: "Зарплата", budget: "Выше 100 000 ₽", variantA: "Тариф «Золотой» (VIP-коучинг)", variantB: "Поиск позиции первого лица с хедхантером — по запросу" },
 
-    // ========== ХОЧУ СМЕНИТЬ ПРОФЕССИЮ ==========
-    { priority: 40, role: "Хочу сменить профессию", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "*", budget: "До 5 000 ₽", variantA: "Профориентационная диагностика", variantB: "Тест на склонности" },
-    { priority: 41, role: "Хочу сменить профессию", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "*", budget: "5 000 – 15 000 ₽", variantA: "Карьерная консультация + дорожная карта", variantB: "Обучение с трудоустройством" },
-    { priority: 42, role: "Хочу сменить профессию", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*", variantA: "Аудит навыков + план перехода", variantB: "Менторство от эксперта" },
-    { priority: 43, role: "Хочу сменить профессию", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Профориентационная диагностика", variantB: "Индивидуальная консультация" },
+    // ==================== ДЛЯ ЖЕЛАЮЩИХ СМЕНИТЬ ПРОФЕССИЮ ====================
+    { priority: 100, role: "Хочу сменить профессию", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "*", budget: "До 5 000 ₽", variantA: "Профориентационная диагностика — 8 000 ₽", variantB: "Тест на склонности — 4 000 ₽" },
+    { priority: 101, role: "Хочу сменить профессию", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "*", budget: "5 000 – 15 000 ₽", variantA: "Карьерная консультация + дорожная карта — 7 000 ₽", variantB: "Индивидуальная консультация (1ч) — 7 000 ₽" },
+    { priority: 102, role: "Хочу сменить профессию", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*", variantA: "Аудит навыков + план перехода — 9 000 ₽", variantB: "Менторство от эксперта — по запросу" },
 
-    // ========== РОСТ В ТЕКУЩЕЙ КОМПАНИИ ==========
-    { priority: 50, role: "Рост в текущей компании", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Зарплата", budget: "*", variantA: "Подготовка к повышению + разговор с руководителем", variantB: "План развития внутри компании" },
-    { priority: 51, role: "Рост в текущей компании", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Подготовка к повышению", variantB: "План развития" },
-    { priority: 52, role: "Рост в текущей компании", level: "Middle / опытный", urgency: "3–6 месяцев", importance: "Зарплата", budget: "*", variantA: "Переговорная стратегия для повышения дохода", variantB: "Аудит эффективности" },
-    { priority: 53, role: "Рост в текущей компании", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Подготовка к роли тимлида", variantB: "Развитие управленческих компетенций" },
-    { priority: 54, role: "Рост в текущей компании", level: "Lead / руководитель", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Коучинг для руководителей", variantB: "Стратегия роста до C-level" },
-    { priority: 55, role: "Рост в текущей компании", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Карьерная сессия «Следующий уровень»", variantB: "План карьерного роста на год" },
+    // ==================== ДЛЯ РОСТА В ТЕКУЩЕЙ КОМПАНИИ ====================
+    { priority: 200, role: "Рост в текущей компании", level: "*", urgency: "1–2 месяца", importance: "Зарплата", budget: "*", variantA: "Переговорная стратегия для повышения дохода — 6 000 ₽", variantB: "Аудит эффективности + презентация руководителю — 7 000 ₽" },
+    { priority: 201, role: "Рост в текущей компании", level: "*", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Подготовка к повышению + разговор с руководителем — 7 000 ₽", variantB: "План развития внутри компании — 5 000 ₽" },
+    { priority: 202, role: "Рост в текущей компании", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Подготовка к роли тимлида — 8 000 ₽", variantB: "Развитие управленческих компетенций — 7 000 ₽" },
+    { priority: 203, role: "Рост в текущей компании", level: "Lead / руководитель", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Коучинг для руководителей высшего звена — по запросу", variantB: "Стратегия роста до C-level — по запросу" },
 
-    // ========== УНИВЕРСАЛЬНЫЕ (если что-то не совпало) ==========
-    { priority: 90, role: "*", level: "*", urgency: "*", importance: "*", budget: "До 5 000 ₽", variantA: "Аудит резюме", variantB: "Экспресс-консультация" },
-    { priority: 91, role: "*", level: "*", urgency: "*", importance: "*", budget: "5 000 – 15 000 ₽", variantA: "Резюме специалиста", variantB: "Групповой тренинг" },
-    { priority: 92, role: "*", level: "*", urgency: "*", importance: "*", budget: "15 000 – 50 000 ₽", variantA: "Индивидуальный тренинг", variantB: "Карьерная стратегия (пакет)" },
-    { priority: 93, role: "*", level: "*", urgency: "*", importance: "*", budget: "Выше 100 000 ₽", variantA: "Тариф «Золотой»", variantB: "Индивидуальный коучинг" },
+    // ==================== ДЛЯ РЕКРУТЕРОВ (ПОДБИРАЮ СОТРУДНИКОВ) ====================
+    { priority: 300, role: "Подбираю сотрудников", level: "*", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "До 30 000 ₽", variantA: "Экспресс-подбор (3 дня) — 30 000 ₽", variantB: "База кандидатов + скрининг — 15 000 ₽" },
+    { priority: 301, role: "Подбираю сотрудников", level: "*", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "30 000 – 60 000 ₽", variantA: "Подбор специалиста (до 7 дней) — 60 000 ₽", variantB: "Срочный подбор + тестирование — 50 000 ₽" },
+    { priority: 302, role: "Подбираю сотрудников", level: "*", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "60 000 – 120 000 ₽", variantA: "Подбор руководителя (до 10 дней) — 90 000 ₽", variantB: "Хэдхантинг (ускоренный) — 100 000 ₽" },
+    { priority: 303, role: "Подбираю сотрудников", level: "*", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "120 000 – 250 000 ₽", variantA: "Хэдхантинг топ-менеджера — 150 000 ₽", variantB: "Онбординг + подбор — от 250 000 ₽" },
+    { priority: 304, role: "Подбираю сотрудников", level: "*", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "Выше 250 000 ₽", variantA: "Executive search + гарантия — от 300 000 ₽", variantB: "Эксклюзивный поиск — по запросу" },
 
-    // ========== FALLBACK (если ничего не подошло) ==========
-    { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная карьерная стратегия (пакет)", variantB: "Тренинг «Продай себя дорого»" }
+    { priority: 310, role: "Подбираю сотрудников", level: "*", urgency: "1–2 месяца", importance: "Профессиональный опыт", budget: "60 000 – 120 000 ₽", variantA: "Поиск Senior-специалиста — 90 000 ₽", variantB: "Картографирование рынка — 70 000 ₽" },
+    { priority: 311, role: "Подбираю сотрудников", level: "*", urgency: "1–2 месяца", importance: "Профессиональный опыт", budget: "120 000 – 250 000 ₽", variantA: "Подбор руководителя отдела — 120 000 ₽", variantB: "Оценка управленческого потенциала — 50 000 ₽" },
+
+    { priority: 320, role: "Подбираю сотрудников", level: "*", urgency: "3–6 месяцев", importance: "Мотивация и лояльность", budget: "120 000 – 250 000 ₽", variantA: "HR-стратегия + подбор ключевых людей — по запросу", variantB: "Коучинг топ-менеджеров — по запросу" },
+
+    { priority: 330, role: "Подбираю сотрудников", level: "*", urgency: "Гибкие сроки", importance: "Соответствие бюджету", budget: "*", variantA: "Консультация по услугам — 0 ₽", variantB: "Бесплатная диагностика вакансии" },
+
+    // ==================== УНИВЕРСАЛЬНЫЕ (FALLBACK) ====================
+    { priority: 900, role: "*", level: "*", urgency: "*", importance: "*", budget: "До 5 000 ₽", variantA: "Тариф «Бронзовый» (базовый пакет)", variantB: "Аудит резюме — 4 000 ₽" },
+    { priority: 901, role: "*", level: "*", urgency: "*", importance: "*", budget: "5 000 – 15 000 ₽", variantA: "Тариф «Серебряный» (стандартный пакет)", variantB: "Резюме специалиста — 6 000 ₽" },
+    { priority: 902, role: "*", level: "*", urgency: "*", importance: "*", budget: "15 000 – 50 000 ₽", variantA: "Тариф «Серебряный» (расширенный пакет)", variantB: "Индивидуальный тренинг — 14 000 ₽" },
+    { priority: 903, role: "*", level: "*", urgency: "*", importance: "*", budget: "50 000 – 100 000 ₽", variantA: "Тариф «Золотой» (премиум-сопровождение)", variantB: "VIP-коучинг — по запросу" },
+    { priority: 904, role: "*", level: "*", urgency: "*", importance: "*", budget: "Выше 100 000 ₽", variantA: "Тариф «Золотой» (эксклюзивный пакет)", variantB: "Индивидуальный коучинг + хэдхантинг — по запросу" },
+
+    // ==================== АБСОЛЮТНЫЙ FALLBACK ====================
+    { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная консультация (1ч) — 7 000 ₽", variantB: "Экспресс-консультация (30мин) — 3 500 ₽" }
 ];
 // ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, логирование корзины) ==========
 let cart = [];
@@ -2570,7 +2594,7 @@ function renderCart() {
         btn.addEventListener('click', btn._handler);
     });
     // После каждого рендера (добавление/удаление) логируем изменение
-    logCartToSheet('update');
+    // logCartToSheet('update');
 }
 
 function addToCart(cat, selectId, qtyId) {
@@ -2629,7 +2653,7 @@ function initCalculator() {
 window.initCalculator = initCalculator;
 window.addToCart = addToCart;
 window.renderCart = renderCart;
-// ========== КВИЗ (использует внешнюю матрицу window.VARIANTS_MATRIX) ==========
+// ========== КВИЗ (с 3 вариантами: тариф, альтернатива, помощь) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -2641,7 +2665,7 @@ window.renderCart = renderCart;
     let currentRole = null;
     let isRendering = false;
 
-    // Резервная функция экранирования (на случай, если core.js не загрузился)
+    // Резервная функция экранирования
     if (typeof window.escapeHtml !== 'function') {
         window.escapeHtml = function(str) {
             if (!str) return '';
@@ -2653,19 +2677,6 @@ window.renderCart = renderCart;
             });
         };
     }
-
-function showErrorToast(message) {
-    const existingToast = document.querySelector('.custom-toast-error');
-    if (existingToast) existingToast.remove();
-    const toast = document.createElement('div');
-    toast.className = 'custom-toast-error';
-    toast.innerHTML = `⚠️ ${message}`;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-    }, 2500);
-}
 
     // ========== ВОПРОСЫ ==========
     const FIRST_QUESTION = {
@@ -2696,7 +2707,7 @@ function showErrorToast(message) {
     // Поиск варианта ответа во внешней матрице
     function findVariant(answersArr) {
         if (!window.VARIANTS_MATRIX || !window.VARIANTS_MATRIX.length) {
-            console.error('Матрица вариантов не загружена (window.VARIANTS_MATRIX отсутствует)');
+            console.error('Матрица вариантов не загружена');
             return { variantA: 'Индивидуальная консультация', variantB: 'Экспресс-консультация' };
         }
         const user = {
@@ -2717,6 +2728,14 @@ function showErrorToast(message) {
             if (match) return { variantA: rule.variantA, variantB: rule.variantB };
         }
         return { variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB };
+    }
+
+    // Получить цену из текста варианта
+    function extractPrice(text) {
+        const match = text.match(/(\d[\d\s]*)\s*₽/);
+        if (match) return match[1].replace(/\s/g, '') + ' ₽';
+        if (text.includes('по запросу')) return 'по запросу';
+        return 'уточняйте';
     }
 
     // Сохранение и восстановление прогресса
@@ -2827,7 +2846,6 @@ function showErrorToast(message) {
             html += `</div>`;
             container.innerHTML = html;
 
-            // Обработчики выбора варианта
             document.querySelectorAll('.quiz-option').forEach(opt => {
                 opt.removeEventListener('click', opt._handler);
                 opt._handler = (e) => {
@@ -2903,20 +2921,35 @@ function showErrorToast(message) {
         }
         else if (quizState === 'choice') {
             const variant = findVariant(answers);
+            const priceA = extractPrice(variant.variantA);
+            const priceB = extractPrice(variant.variantB);
+
             container.innerHTML = `
-                <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подготовили 2 варианта:</p>
+                <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подготовили 3 варианта:</p>
                 <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
+                    <!-- Вариант 1 (рекомендуемый) -->
                     <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">📌</div>
                         <h4>Вариант 1</h4>
                         <p><strong>${window.escapeHtml(variant.variantA)}</strong></p>
+                        <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
                         <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(variant.variantA)}">Выбрать →</button>
                     </div>
+                    <!-- Вариант 2 (альтернатива) -->
                     <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">🎯</div>
                         <h4>Вариант 2</h4>
                         <p><strong>${window.escapeHtml(variant.variantB)}</strong></p>
+                        <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
                         <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(variant.variantB)}">Выбрать →</button>
+                    </div>
+                    <!-- Вариант 3 (помощь) -->
+                    <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
+                        <div style="font-size:32px; margin-bottom:12px;">🤔</div>
+                        <h4>Вариант 3</h4>
+                        <p><strong>Не уверены в выборе?</strong></p>
+                        <p style="font-size:0.9rem; margin-bottom:10px;">Позвольте помочь – бесплатная консультация 15 минут.</p>
+                        <button class="btn-secondary choose-help" data-choice="help">Помогите выбрать →</button>
                     </div>
                 </div>
                 <div style="text-align:center; margin-top:30px;">
@@ -2924,6 +2957,7 @@ function showErrorToast(message) {
                 </div>
             `;
 
+            // Обработчики для вариантов 1 и 2 (выбор тарифа)
             document.querySelectorAll('.choose-option').forEach(btn => {
                 btn.removeEventListener('click', btn._choiceHandler);
                 btn._choiceHandler = () => {
@@ -2933,7 +2967,6 @@ function showErrorToast(message) {
                     const chosenText = btn.dataset.text;
 
                     const sendData = (userId) => {
-                        // ★★★ ОТДЕЛЬНЫЕ ПОЛЯ ДЛЯ ТАБЛИЦЫ ★★★
                         const formData = {
                             formType: 'Квиз',
                             quizAnswers: answers.map((a, idx) => `${quizQuestions[idx]?.text} — ${a}`).join('\n'),
@@ -2956,7 +2989,6 @@ function showErrorToast(message) {
                         document.querySelector('#calendar')?.scrollIntoView({ behavior: 'smooth' });
                         container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
                         isSubmittingChoice = false;
-                        // Очищаем сохранённый прогресс, так как квиз завершён
                         localStorage.removeItem('quizAnswers');
                         localStorage.removeItem('quizCurrentIndex');
                         localStorage.removeItem('quizState');
@@ -2967,6 +2999,45 @@ function showErrorToast(message) {
                 };
                 btn.addEventListener('click', btn._choiceHandler);
             });
+
+            // Обработчик для варианта "Помочь выбрать"
+            const helpBtn = document.querySelector('.choose-help');
+            if (helpBtn) {
+                helpBtn.removeEventListener('click', helpBtn._helpHandler);
+                helpBtn._helpHandler = () => {
+                    if (isSubmittingChoice) return;
+                    isSubmittingChoice = true;
+
+                    const sendHelpData = (userId) => {
+                        const formData = {
+                            formType: 'Помощь с выбором',
+                            quizAnswers: answers.map((a, idx) => `${quizQuestions[idx]?.text} — ${a}`).join('\n'),
+                            name: 'Требуется консультация',
+                            comment: 'Пользователь не определился с выбором, просит помощи',
+                            userId: userId
+                        };
+                        if (typeof window.sendDataToSheet === 'function') {
+                            window.sendDataToSheet(formData);
+                        }
+                        const resultDiv = document.getElementById('quizResult');
+                        if (resultDiv) {
+                            resultDiv.innerHTML = `<strong>✅ Заявка отправлена!</strong><br>Я свяжусь с вами в ближайшее время, чтобы помочь выбрать подходящий вариант.`;
+                            resultDiv.style.display = 'block';
+                        }
+                        document.querySelector('#calendar')?.scrollIntoView({ behavior: 'smooth' });
+                        container.innerHTML = '<p>✨ Спасибо! Я скоро свяжусь с вами, чтобы помочь определиться.</p>';
+                        isSubmittingChoice = false;
+                        localStorage.removeItem('quizAnswers');
+                        localStorage.removeItem('quizCurrentIndex');
+                        localStorage.removeItem('quizState');
+                        localStorage.removeItem('quizCurrentRole');
+                    };
+
+                    const uid = (typeof currentUserId !== 'undefined' && currentUserId) ? currentUserId : (typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown');
+                    sendHelpData(uid);
+                };
+                helpBtn.addEventListener('click', helpBtn._helpHandler);
+            }
 
             const resetBtn = document.getElementById('resetQuizBtn');
             if (resetBtn) {

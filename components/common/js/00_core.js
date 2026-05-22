@@ -169,7 +169,7 @@ function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
 // ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfH9EVDr7k3ZeFem_AMEmcydDnjU26a7QRI_k4VkcSDWgmrndhCmcyYO-Q5gJdz16iDg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxGZgaR7kv4M4peC_Ta0HbkoSfJFWQCy2n3P7cu5Q3CgbW_rXP6vHZr7PlCXjSLF86HOA/exec';
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
