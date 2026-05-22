@@ -30,12 +30,12 @@ window.enableLogs = function() {
     } else {
         console.log = function(...args) { if (typeof console !== 'undefined') console.log(...args); };
     }
-    showToast('🔍 Логи включены', 2000);
+    showToast('🔍 Логи включены', 'success');
 };
 window.disableLogs = function() {
     if (originalConsoleLog === null) originalConsoleLog = console.log;
     console.log = function() {};
-    showToast('🔇 Логи отключены', 2000);
+    showToast('🔇 Логи отключены', 'success');
 };
 
 // User ID
@@ -144,13 +144,37 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
-// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ (Google Apps Script) ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby42VYh_6QLImZrxqvoaUcRo8sb8AFwj7Z820gP_zVu1MZ2wxdWb1ZMXcwrC-d8D51u0A/exec';
+// ========== КАСТОМНЫЕ ТОСТЫ (КРАСИВЫЕ УВЕДОМЛЕНИЯ) ==========
+function showToast(message, type = 'error') {
+    const existingToast = document.querySelector('.custom-toast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = `custom-toast custom-toast-${type}`;
+    let icon = '⚠️';
+    if (type === 'success') icon = '✅';
+    if (type === 'warning') icon = '🔔';
+    if (type === 'error') icon = '❌';
+    toast.innerHTML = `${icon} ${message}`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function showErrorToast(message) { showToast(message, 'error'); }
+function showSuccessToast(message) { showToast(message, 'success'); }
+function showWarningToast(message) { showToast(message, 'warning'); }
+
+// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ ==========
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfH9EVDr7k3ZeFem_AMEmcydDnjU26a7QRI_k4VkcSDWgmrndhCmcyYO-Q5gJdz16iDg/exec';
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
 
-// ========== ОТПРАВКА ДАННЫХ (обратный звонок, квиз и т.д.) ==========
+// ========== ОТПРАВКА ДАННЫХ ==========
 function sendDataToSheet(data) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
@@ -165,22 +189,6 @@ function sendDataToSheet(data) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(data)
     }).catch(err => logError('❌ Ошибка отправки в Google Sheets:', err));
-}
-
-// Toast
-function showToast(message, duration = 3000) {
-    let toast = document.querySelector('.custom-toast');
-    if (toast) toast.remove();
-    toast = document.createElement('div');
-    toast.className = 'custom-toast';
-    toast.textContent = message;
-    toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:12px 24px;border-radius:40px;font-size:1rem;z-index:10000;font-family:Inter,sans-serif;backdrop-filter:blur(8px);box-shadow:0 4px 12px rgba(0,0,0,0.2);opacity:0;transition:opacity 0.2s;';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.style.opacity = '1', 10);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 200);
-    }, duration);
 }
 
 function formatPhoneNumber(input) {
@@ -202,7 +210,6 @@ window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
 window.sendDataToSheet = sendDataToSheet;
-window.showToast = showToast;
 window.formatPhoneNumber = formatPhoneNumber;
 window.fetchWithRetry = fetchWithRetry;
 window.fetchTextWithRetry = fetchTextWithRetry;
@@ -212,3 +219,9 @@ window.hideLoading = hideLoading;
 window.log = log;
 window.logError = logError;
 window.logWarn = logWarn;
+
+// Экспорт тостов
+window.showToast = showToast;
+window.showErrorToast = showErrorToast;
+window.showSuccessToast = showSuccessToast;
+window.showWarningToast = showWarningToast;

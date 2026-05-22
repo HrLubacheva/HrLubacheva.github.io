@@ -28,7 +28,7 @@ function initCallbackForm() {
 
             const consentCheckbox = document.getElementById('callbackConsent');
             if (!consentCheckbox || !consentCheckbox.checked) {
-                showToast('❌ Подтвердите согласие на обработку данных');
+                showErrorToast('Подтвердите согласие на обработку данных');
                 return;
             }
 
@@ -42,7 +42,7 @@ function initCallbackForm() {
             const comment = document.getElementById('callbackComment').value.trim() || 'Не указано';
 
             if (!name || !phoneField) {
-                showToast('❌ Заполните имя и телефон');
+                showErrorToast('Заполните имя и телефон');
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 isSubmitting = false;
@@ -53,7 +53,7 @@ function initCallbackForm() {
             if (digits.startsWith('8')) digits = '7' + digits.slice(1);
             if (!digits.startsWith('7')) digits = '7' + digits;
             if (digits.length !== 11) {
-                showToast('❌ Некорректный номер телефона');
+                showErrorToast('Некорректный номер телефона');
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 isSubmitting = false;
@@ -73,7 +73,7 @@ function initCallbackForm() {
                     userId: userId
                 };
                 if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
-                showToast(`✅ Спасибо, ${name}! Мы перезвоним на ${formattedForDisplay}`, 4000);
+                showSuccessToast(`Спасибо, ${name}! Мы перезвоним на ${formattedForDisplay}`);
                 callbackForm.reset();
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;

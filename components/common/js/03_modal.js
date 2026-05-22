@@ -35,7 +35,6 @@ function initModal() {
 
             try {
                 await window.sendMaterialsEmail(email, wantChecklist, wantTraining);
-                // Дополнительная отправка в старую таблицу (опционально)
                 if (typeof window.sendDataToSheet === 'function') {
                     window.sendDataToSheet({
                         formType: 'Запрос материалов',
@@ -44,7 +43,6 @@ function initModal() {
                         quizAnswers: '-'
                     });
                 }
-                // Показываем сообщение об успехе
                 const modalContent = modal.querySelector('.modal-content');
                 modalContent.innerHTML = `
                     <h3>✅ Письмо отправлено!</h3>
@@ -53,7 +51,7 @@ function initModal() {
                 `;
                 document.getElementById('closeAfterSendBtn').addEventListener('click', () => hideModal(modal));
             } catch (err) {
-                alert('Ошибка: ' + err.message);
+                showErrorToast('Ошибка: ' + err.message);
                 sendBtn.disabled = false;
                 sendBtn.innerText = originalText;
             }

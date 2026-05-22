@@ -1302,6 +1302,64 @@ footer a:hover {
         text-align: center;
     }
 }
+
+/* ========== КАСТОМНЫЕ ТОСТЫ ========== */
+.custom-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 14px 24px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    z-index: 10001;
+    animation: toastFadeIn 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.custom-toast-error {
+    background: #dc3545;
+    color: white;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+}
+
+.custom-toast-success {
+    background: #28a745;
+    color: white;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.custom-toast-warning {
+    background: #ffc107;
+    color: #212529;
+    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+}
+
+@keyframes toastFadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+@media (max-width: 640px) {
+    .custom-toast {
+        white-space: normal;
+        text-align: center;
+        max-width: 90%;
+        font-size: 0.85rem;
+    }
+}
 </style>
 </head>
 <body>
@@ -1703,7 +1761,7 @@ footer a:hover {
                 <a href="#" id="privacyLink">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 22.05.2026 23:00:04
+                Версия: 22.05.2026 23:08:12
             </div>
         </div>
     </div>
@@ -1767,12 +1825,12 @@ window.enableLogs = function() {
     } else {
         console.log = function(...args) { if (typeof console !== 'undefined') console.log(...args); };
     }
-    showToast('🔍 Логи включены', 2000);
+    showToast('🔍 Логи включены', 'success');
 };
 window.disableLogs = function() {
     if (originalConsoleLog === null) originalConsoleLog = console.log;
     console.log = function() {};
-    showToast('🔇 Логи отключены', 2000);
+    showToast('🔇 Логи отключены', 'success');
 };
 
 // User ID
@@ -1881,13 +1939,37 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
-// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ (Google Apps Script) ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby42VYh_6QLImZrxqvoaUcRo8sb8AFwj7Z820gP_zVu1MZ2wxdWb1ZMXcwrC-d8D51u0A/exec';
+// ========== КАСТОМНЫЕ ТОСТЫ (КРАСИВЫЕ УВЕДОМЛЕНИЯ) ==========
+function showToast(message, type = 'error') {
+    const existingToast = document.querySelector('.custom-toast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = `custom-toast custom-toast-${type}`;
+    let icon = '⚠️';
+    if (type === 'success') icon = '✅';
+    if (type === 'warning') icon = '🔔';
+    if (type === 'error') icon = '❌';
+    toast.innerHTML = `${icon} ${message}`;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+function showErrorToast(message) { showToast(message, 'error'); }
+function showSuccessToast(message) { showToast(message, 'success'); }
+function showWarningToast(message) { showToast(message, 'warning'); }
+
+// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ ==========
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfH9EVDr7k3ZeFem_AMEmcydDnjU26a7QRI_k4VkcSDWgmrndhCmcyYO-Q5gJdz16iDg/exec';
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
 
-// ========== ОТПРАВКА ДАННЫХ (обратный звонок, квиз и т.д.) ==========
+// ========== ОТПРАВКА ДАННЫХ ==========
 function sendDataToSheet(data) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
@@ -1902,22 +1984,6 @@ function sendDataToSheet(data) {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(data)
     }).catch(err => logError('❌ Ошибка отправки в Google Sheets:', err));
-}
-
-// Toast
-function showToast(message, duration = 3000) {
-    let toast = document.querySelector('.custom-toast');
-    if (toast) toast.remove();
-    toast = document.createElement('div');
-    toast.className = 'custom-toast';
-    toast.textContent = message;
-    toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);color:#fff;padding:12px 24px;border-radius:40px;font-size:1rem;z-index:10000;font-family:Inter,sans-serif;backdrop-filter:blur(8px);box-shadow:0 4px 12px rgba(0,0,0,0.2);opacity:0;transition:opacity 0.2s;';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.style.opacity = '1', 10);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 200);
-    }, duration);
 }
 
 function formatPhoneNumber(input) {
@@ -1939,7 +2005,6 @@ window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
 window.sendDataToSheet = sendDataToSheet;
-window.showToast = showToast;
 window.formatPhoneNumber = formatPhoneNumber;
 window.fetchWithRetry = fetchWithRetry;
 window.fetchTextWithRetry = fetchTextWithRetry;
@@ -1949,6 +2014,12 @@ window.hideLoading = hideLoading;
 window.log = log;
 window.logError = logError;
 window.logWarn = logWarn;
+
+// Экспорт тостов
+window.showToast = showToast;
+window.showErrorToast = showErrorToast;
+window.showSuccessToast = showSuccessToast;
+window.showWarningToast = showWarningToast;
 function initAnimations() {
     const elements = document.querySelectorAll('.fade-up');
     if (!elements.length) return;
@@ -1997,7 +2068,7 @@ function initCallbackForm() {
 
             const consentCheckbox = document.getElementById('callbackConsent');
             if (!consentCheckbox || !consentCheckbox.checked) {
-                showToast('❌ Подтвердите согласие на обработку данных');
+                showErrorToast('Подтвердите согласие на обработку данных');
                 return;
             }
 
@@ -2011,7 +2082,7 @@ function initCallbackForm() {
             const comment = document.getElementById('callbackComment').value.trim() || 'Не указано';
 
             if (!name || !phoneField) {
-                showToast('❌ Заполните имя и телефон');
+                showErrorToast('Заполните имя и телефон');
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 isSubmitting = false;
@@ -2022,7 +2093,7 @@ function initCallbackForm() {
             if (digits.startsWith('8')) digits = '7' + digits.slice(1);
             if (!digits.startsWith('7')) digits = '7' + digits;
             if (digits.length !== 11) {
-                showToast('❌ Некорректный номер телефона');
+                showErrorToast('Некорректный номер телефона');
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 isSubmitting = false;
@@ -2042,7 +2113,7 @@ function initCallbackForm() {
                     userId: userId
                 };
                 if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
-                showToast(`✅ Спасибо, ${name}! Мы перезвоним на ${formattedForDisplay}`, 4000);
+                showSuccessToast(`Спасибо, ${name}! Мы перезвоним на ${formattedForDisplay}`);
                 callbackForm.reset();
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
@@ -2118,7 +2189,6 @@ function initModal() {
 
             try {
                 await window.sendMaterialsEmail(email, wantChecklist, wantTraining);
-                // Дополнительная отправка в старую таблицу (опционально)
                 if (typeof window.sendDataToSheet === 'function') {
                     window.sendDataToSheet({
                         formType: 'Запрос материалов',
@@ -2127,7 +2197,6 @@ function initModal() {
                         quizAnswers: '-'
                     });
                 }
-                // Показываем сообщение об успехе
                 const modalContent = modal.querySelector('.modal-content');
                 modalContent.innerHTML = `
                     <h3>✅ Письмо отправлено!</h3>
@@ -2136,7 +2205,7 @@ function initModal() {
                 `;
                 document.getElementById('closeAfterSendBtn').addEventListener('click', () => hideModal(modal));
             } catch (err) {
-                alert('Ошибка: ' + err.message);
+                showErrorToast('Ошибка: ' + err.message);
                 sendBtn.disabled = false;
                 sendBtn.innerText = originalText;
             }
@@ -2585,18 +2654,18 @@ window.renderCart = renderCart;
         };
     }
 
-    function showErrorToast(message) {
-        const existingToast = document.querySelector('.custom-toast-error');
-        if (existingToast) existingToast.remove();
-        const toast = document.createElement('div');
-        toast.className = 'custom-toast-error';
-        toast.innerHTML = `⚠️ ${message}`;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 2500);
-    }
+function showErrorToast(message) {
+    const existingToast = document.querySelector('.custom-toast-error');
+    if (existingToast) existingToast.remove();
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast-error';
+    toast.innerHTML = `⚠️ ${message}`;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
 
     // ========== ВОПРОСЫ ==========
     const FIRST_QUESTION = {

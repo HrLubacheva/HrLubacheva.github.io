@@ -1,4 +1,4 @@
-// ========== КВИЗ (использует внешнюю матрицу window.VARIANTS_MATRIX) ==========
+// ========== КВИЗ (с 3 вариантами: тариф, альтернатива, помощь) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -10,7 +10,7 @@
     let currentRole = null;
     let isRendering = false;
 
-    // Резервная функция экранирования (на случай, если core.js не загрузился)
+    // Резервная функция экранирования
     if (typeof window.escapeHtml !== 'function') {
         window.escapeHtml = function(str) {
             if (!str) return '';
@@ -21,19 +21,6 @@
                 return m;
             });
         };
-    }
-
-    function showErrorToast(message) {
-        const existingToast = document.querySelector('.custom-toast-error');
-        if (existingToast) existingToast.remove();
-        const toast = document.createElement('div');
-        toast.className = 'custom-toast-error';
-        toast.innerHTML = `⚠️ ${message}`;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 2500);
     }
 
     // ========== ВОПРОСЫ ==========
@@ -65,7 +52,7 @@
     // Поиск варианта ответа во внешней матрице
     function findVariant(answersArr) {
         if (!window.VARIANTS_MATRIX || !window.VARIANTS_MATRIX.length) {
-            console.error('Матрица вариантов не загружена (window.VARIANTS_MATRIX отсутствует)');
+            console.error('Матрица вариантов не загружена');
             return { variantA: 'Индивидуальная консультация', variantB: 'Экспресс-консультация' };
         }
         const user = {
@@ -86,6 +73,14 @@
             if (match) return { variantA: rule.variantA, variantB: rule.variantB };
         }
         return { variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB };
+    }
+
+    // Получить цену из текста варианта
+    function extractPrice(text) {
+        const match = text.match(/(\d[\d\s]*)\s*₽/);
+        if (match) return match[1].replace(/\s/g, '') + ' ₽';
+        if (text.includes('по запросу')) return 'по запросу';
+        return 'уточняйте';
     }
 
     // Сохранение и восстановление прогресса
@@ -196,7 +191,6 @@
             html += `</div>`;
             container.innerHTML = html;
 
-            // Обработчики выбора варианта
             document.querySelectorAll('.quiz-option').forEach(opt => {
                 opt.removeEventListener('click', opt._handler);
                 opt._handler = (e) => {
@@ -272,20 +266,35 @@
         }
         else if (quizState === 'choice') {
             const variant = findVariant(answers);
+            const priceA = extractPrice(variant.variantA);
+            const priceB = extractPrice(variant.variantB);
+
             container.innerHTML = `
-                <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подготовили 2 варианта:</p>
+                <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подготовили 3 варианта:</p>
                 <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
+                    <!-- Вариант 1 (рекомендуемый) -->
                     <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">📌</div>
                         <h4>Вариант 1</h4>
                         <p><strong>${window.escapeHtml(variant.variantA)}</strong></p>
+                        <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
                         <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(variant.variantA)}">Выбрать →</button>
                     </div>
+                    <!-- Вариант 2 (альтернатива) -->
                     <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">🎯</div>
                         <h4>Вариант 2</h4>
                         <p><strong>${window.escapeHtml(variant.variantB)}</strong></p>
+                        <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
                         <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(variant.variantB)}">Выбрать →</button>
+                    </div>
+                    <!-- Вариант 3 (помощь) -->
+                    <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
+                        <div style="font-size:32px; margin-bottom:12px;">🤔</div>
+                        <h4>Вариант 3</h4>
+                        <p><strong>Не уверены в выборе?</strong></p>
+                        <p style="font-size:0.9rem; margin-bottom:10px;">Позвольте помочь – бесплатная консультация 15 минут.</p>
+                        <button class="btn-secondary choose-help" data-choice="help">Помогите выбрать →</button>
                     </div>
                 </div>
                 <div style="text-align:center; margin-top:30px;">
@@ -293,6 +302,7 @@
                 </div>
             `;
 
+            // Обработчики для вариантов 1 и 2 (выбор тарифа)
             document.querySelectorAll('.choose-option').forEach(btn => {
                 btn.removeEventListener('click', btn._choiceHandler);
                 btn._choiceHandler = () => {
@@ -302,7 +312,6 @@
                     const chosenText = btn.dataset.text;
 
                     const sendData = (userId) => {
-                        // ★★★ ОТДЕЛЬНЫЕ ПОЛЯ ДЛЯ ТАБЛИЦЫ ★★★
                         const formData = {
                             formType: 'Квиз',
                             quizAnswers: answers.map((a, idx) => `${quizQuestions[idx]?.text} — ${a}`).join('\n'),
@@ -325,7 +334,6 @@
                         document.querySelector('#calendar')?.scrollIntoView({ behavior: 'smooth' });
                         container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
                         isSubmittingChoice = false;
-                        // Очищаем сохранённый прогресс, так как квиз завершён
                         localStorage.removeItem('quizAnswers');
                         localStorage.removeItem('quizCurrentIndex');
                         localStorage.removeItem('quizState');
@@ -336,6 +344,45 @@
                 };
                 btn.addEventListener('click', btn._choiceHandler);
             });
+
+            // Обработчик для варианта "Помочь выбрать"
+            const helpBtn = document.querySelector('.choose-help');
+            if (helpBtn) {
+                helpBtn.removeEventListener('click', helpBtn._helpHandler);
+                helpBtn._helpHandler = () => {
+                    if (isSubmittingChoice) return;
+                    isSubmittingChoice = true;
+
+                    const sendHelpData = (userId) => {
+                        const formData = {
+                            formType: 'Помощь с выбором',
+                            quizAnswers: answers.map((a, idx) => `${quizQuestions[idx]?.text} — ${a}`).join('\n'),
+                            name: 'Требуется консультация',
+                            comment: 'Пользователь не определился с выбором, просит помощи',
+                            userId: userId
+                        };
+                        if (typeof window.sendDataToSheet === 'function') {
+                            window.sendDataToSheet(formData);
+                        }
+                        const resultDiv = document.getElementById('quizResult');
+                        if (resultDiv) {
+                            resultDiv.innerHTML = `<strong>✅ Заявка отправлена!</strong><br>Я свяжусь с вами в ближайшее время, чтобы помочь выбрать подходящий вариант.`;
+                            resultDiv.style.display = 'block';
+                        }
+                        document.querySelector('#calendar')?.scrollIntoView({ behavior: 'smooth' });
+                        container.innerHTML = '<p>✨ Спасибо! Я скоро свяжусь с вами, чтобы помочь определиться.</p>';
+                        isSubmittingChoice = false;
+                        localStorage.removeItem('quizAnswers');
+                        localStorage.removeItem('quizCurrentIndex');
+                        localStorage.removeItem('quizState');
+                        localStorage.removeItem('quizCurrentRole');
+                    };
+
+                    const uid = (typeof currentUserId !== 'undefined' && currentUserId) ? currentUserId : (typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown');
+                    sendHelpData(uid);
+                };
+                helpBtn.addEventListener('click', helpBtn._helpHandler);
+            }
 
             const resetBtn = document.getElementById('resetQuizBtn');
             if (resetBtn) {
