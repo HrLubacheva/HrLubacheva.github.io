@@ -145,7 +145,7 @@ function hideLoading() {
 }
 
 // ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ (Google Apps Script) ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyUUxRsDd4XtAcgEudxyymuperWp5-Mir7UQbFv3E-7G0zpR39qu1eeKW58fl7M-X6d2A/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby42VYh_6QLImZrxqvoaUcRo8sb8AFwj7Z820gP_zVu1MZ2wxdWb1ZMXcwrC-d8D51u0A/exec';
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
