@@ -1,49 +1,25 @@
-// ========== КАЛЬКУЛЯТОР (только локальные данные) ==========
+// ========== КАЛЬКУЛЯТОР (использует внешний файл с услугами) ==========
 let cart = [];
 let calculatorInitialized = false;
 
-// Локальные данные услуг (ПОЛНАЯ ВЕРСИЯ)
-const LOCAL_SERVICES = {
-    business: [
-        { service: "Подбор специалиста", price: 60000, sort: 1 },
-        { service: "Подбор руководителя", price: 90000, sort: 2 },
-        { service: "Хэдхантинг", price: 120000, sort: 3 },
-        { service: "Онбординг", price: 250000, sort: 4 },
-        { service: "УТП компании", price: 25000, sort: 5 }
-    ],
-    individual: [
-        { service: "Индивидуальная консультация (1ч)", price: 7000, sort: 1 },
-        { service: "Экспресс-консультация (30мин)", price: 3500, sort: 2 },
-        { service: "Аудит резюме", price: 4000, sort: 3 },
-        { service: "Резюме специалиста", price: 6000, sort: 4 },
-        { service: "Резюме руководителя", price: 9000, sort: 5 },
-        { service: "CV на английском", price: 15000, sort: 6 },
-        { service: "Сопроводительное письмо", price: 3000, sort: 7 },
-        { service: "Индивидуальный тренинг «Продай себя дорого»", price: 14000, sort: 8 }
-    ],
-    corporate: [
-        { service: "Тренинг по запросу (до 25 чел.)", price: 12000, sort: 1 },
-        { service: "Мастер-класс (3ч, до 25 чел.)", price: 30000, sort: 2 },
-        { service: "Стратегическая сессия (до 12 чел.)", price: 13000, sort: 3 }
-    ],
-    group: [
-        { service: "Групповой тренинг (до 10 чел.)", price: 5500, sort: 1 },
-        { service: "Групповой тренинг (11-20 чел.)", price: 5000, sort: 2 },
-        { service: "Групповой тренинг (21+ чел.)", price: 4500, sort: 3 }
-    ]
-};
-
 function updateSelectsFromData() {
+    if (!window.LOCAL_SERVICES) {
+        console.error('Данные услуг не загружены (window.LOCAL_SERVICES отсутствует)');
+        return;
+    }
     const selects = {
-        'business-select': LOCAL_SERVICES.business,
-        'individual-select': LOCAL_SERVICES.individual,
-        'corporate-select': LOCAL_SERVICES.corporate,
-        'group-select': LOCAL_SERVICES.group
+        'business-select': window.LOCAL_SERVICES.business,
+        'individual-select': window.LOCAL_SERVICES.individual,
+        'corporate-select': window.LOCAL_SERVICES.corporate,
+        'group-select': window.LOCAL_SERVICES.group
     };
     for (const [id, data] of Object.entries(selects)) {
         const select = document.getElementById(id);
         if (select && data && data.length) {
-            select.innerHTML = data.map(s => `<option value="${s.price}">${escapeHtml(s.service)} — ${s.price.toLocaleString()} ₽</option>`).join('');
+            select.innerHTML = data.map(s => {
+                const priceText = s.price > 0 ? s.price.toLocaleString() + ' ₽' : 'по запросу';
+                return `<option value="${s.price}">${escapeHtml(s.service)} — ${priceText}</option>`;
+            }).join('');
         }
     }
 }
@@ -60,7 +36,12 @@ function renderCart() {
         if (qty >= 2) discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — экономия ${Math.round(total*0.05)} ₽`;
         else discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
     }
-    const containers = { business: 'business-list', individual: 'individual-list', corporate: 'corporate-list', group: 'group-list' };
+    const containers = {
+        business: 'business-list',
+        individual: 'individual-list',
+        corporate: 'corporate-list',
+        group: 'group-list'
+    };
     for (const cat of Object.keys(containers)) {
         const container = document.getElementById(containers[cat]);
         if (container) container.innerHTML = '';
@@ -72,7 +53,7 @@ function renderCart() {
         div.className = 'calc-item';
         div.innerHTML = `
             <div class="service-name">${escapeHtml(item.name)}</div>
-            <div class="service-price">${(item.price * item.qty).toLocaleString()} ₽</div>
+            <div class="service-price">${item.price > 0 ? (item.price * item.qty).toLocaleString() + ' ₽' : 'по запросу'}</div>
             <div class="service-qty">× ${item.qty}</div>
             <div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>
         `;
@@ -103,10 +84,8 @@ function initCalculator() {
     if (calculatorInitialized) return;
     calculatorInitialized = true;
 
-    // Заполняем селекты локальными данными
     updateSelectsFromData();
 
-    // Обработчики кнопок добавления
     const handlers = [
         { btn: 'business-add', cat: 'business', select: 'business-select', qty: 'business-qty' },
         { btn: 'individual-add', cat: 'individual', select: 'individual-select', qty: 'individual-qty' },
@@ -122,7 +101,6 @@ function initCalculator() {
         }
     });
 
-    // Обработчики вкладок
     const tabs = document.querySelectorAll('.calculator-tabs .tab-btn');
     tabs.forEach(btn => {
         btn.removeEventListener('click', btn._tabHandler);
@@ -138,7 +116,7 @@ function initCalculator() {
         btn.addEventListener('click', btn._tabHandler);
     });
 
-    log('✅ Калькулятор инициализирован (локальные данные)');
+    log('✅ Калькулятор инициализирован (4 вкладки, данные из внешнего файла)');
 }
 
 window.initCalculator = initCalculator;

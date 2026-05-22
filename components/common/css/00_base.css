@@ -343,14 +343,13 @@ body {
     }
 }
 
-/* ========== Секция преимуществ ========== */
+/* ========== Секция преимуществ (улучшенная) ========== */
 .benefits-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 32px;
     margin: 48px 0;
 }
-
 .benefit-card {
     background: rgba(255, 255, 255, 0.95);
     border-radius: var(--radius-lg);
@@ -362,7 +361,6 @@ body {
     overflow: hidden;
     text-align: center;
 }
-
 .benefit-card::before {
     content: '';
     position: absolute;
@@ -375,17 +373,14 @@ body {
     transform-origin: left;
     transition: transform 0.4s ease;
 }
-
 .benefit-card:hover::before {
     transform: scaleX(1);
 }
-
 .benefit-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 25px 40px rgba(0, 0, 0, 0.3);
     background: white;
 }
-
 .benefit-card h4 {
     font-size: 1.5rem;
     font-weight: 700;
@@ -393,18 +388,15 @@ body {
     color: var(--primary-dark);
     transition: color 0.2s;
 }
-
 .benefit-card:hover h4 {
     color: var(--primary);
 }
-
 .benefit-card p {
     font-size: 1rem;
     line-height: 1.5;
     color: var(--secondary);
     margin: 0;
 }
-
 @media (max-width: 768px) {
     .benefits-grid {
         gap: 24px;
@@ -418,7 +410,16 @@ body {
     }
 }
 
-/* ========== Калькулятор ========== */
+/* ========== Калькулятор (улучшенный, корзина внизу) ========== */
+#calculator .section-title {
+    margin-bottom: 16px;
+}
+.calculator-desc {
+    text-align: center;
+    margin-bottom: 32px;
+    color: var(--secondary);
+    font-size: 1rem;
+}
 .calculator-tabs {
     display: flex;
     gap: 10px;
@@ -453,46 +454,129 @@ body {
     to   { opacity: 1; transform: translateY(0); }
 }
 
-.services-header {
+/* ========== Улучшенная строка добавления услуги ========== */
+.add-service {
     display: grid;
-    grid-template-columns: 1fr 100px 80px 40px;
-    gap: 12px;
-    padding: 12px 8px;
+    grid-template-columns: 1fr auto auto;
+    gap: 16px;
+    align-items: center;
+    margin: 24px 0 16px;
+    background: #ffffff;
+    padding: 8px;
+    border-radius: 60px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    transition: box-shadow 0.2s;
+}
+.add-service:focus-within {
+    box-shadow: 0 4px 12px rgba(45, 106, 159, 0.1), 0 0 0 1px var(--primary);
+}
+.service-select {
+    flex: 1;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
     background: var(--light-bg);
-    border-radius: 40px;
-    margin-bottom: 15px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    color: var(--secondary);
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: all 0.2s;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
 }
-
-.service-name-col {
-    padding-left: 12px;
+.service-select:hover {
+    background-color: #eef2f5;
 }
-
-.service-price-col,
-.service-qty-col {
+.service-select:focus {
+    outline: none;
+    background-color: white;
+    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3);
+}
+.calc-qty {
+    width: 90px;
+    padding: 14px 8px;
     text-align: center;
+    border: none;
+    background: var(--light-bg);
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.calc-qty:focus {
+    outline: none;
+    background: white;
+    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3);
+}
+.add-service-btn {
+    background: var(--primary);
+    border: none;
+    padding: 12px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+.add-service-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.25);
+}
+.add-service-btn:active {
+    transform: translateY(1px);
 }
 
+/* Общий итог */
+.total-block {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid var(--primary);
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: right;
+}
+.discount-info {
+    font-size: 0.9rem;
+    color: #28a745;
+    margin-top: 8px;
+}
+
+/* Корзина */
+.cart-section {
+    margin-top: 30px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+.cart-section h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: var(--primary-dark);
+}
 .services-list {
-    max-height: 300px;
-    overflow-y: auto;
     margin-bottom: 20px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    background: #fff;
 }
-
+.services-list:empty {
+    display: none;
+}
 .services-list:empty::after {
     content: "📭 Корзина пуста. Добавьте услугу выше →";
     display: block;
     text-align: center;
-    padding: 40px;
+    padding: 20px;
     color: var(--secondary);
     font-size: 0.9rem;
 }
-
 .calc-item {
     display: grid;
     grid-template-columns: 1fr 100px 80px 40px;
@@ -503,22 +587,13 @@ body {
     transition: background 0.2s;
     animation: slideIn 0.3s ease;
 }
-
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
-
 .calc-item:hover {
     background: var(--light-bg);
 }
-
 .calc-item .service-name {
     padding-left: 12px;
     font-weight: 500;
@@ -526,17 +601,14 @@ body {
     white-space: normal;
     line-height: 1.4;
 }
-
 .calc-item .service-price,
 .calc-item .service-qty {
     text-align: center;
     font-weight: 500;
 }
-
 .calc-item .service-remove {
     text-align: center;
 }
-
 .remove-item {
     background: none;
     border: none;
@@ -551,73 +623,23 @@ body {
     align-items: center;
     justify-content: center;
 }
-
 .remove-item:hover {
     background: #fee2e2;
     transform: scale(1.05);
 }
-
-.add-service {
+.calc-pdf-section {
     display: flex;
-    gap: 12px;
-    margin: 20px 0;
-    align-items: center;
     flex-wrap: wrap;
-    background: var(--light-bg);
-    padding: 15px;
-    border-radius: var(--radius-lg);
+    gap: 15px;
+    margin: 20px 0;
+    justify-content: center;
 }
 
-.service-select {
-    flex: 2;
-    min-width: 200px;
-    padding: 12px;
-    border-radius: 40px;
-    border: 1px solid var(--border);
-    background: white;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-}
-
-.service-select option {
-    white-space: normal;
-    word-break: break-word;
-    padding: 8px;
-}
-
-.calc-qty {
-    width: 80px;
-    padding: 12px;
-    border-radius: 40px;
-    border: 1px solid var(--border);
-    background: white;
-    text-align: center;
-}
-
-.add-service-btn {
-    white-space: nowrap;
-}
-
-.total-block {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 2px solid var(--primary);
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-align: right;
-}
-
-.discount-info {
-    font-size: 0.9rem;
-    color: #28a745;
-    margin-top: 8px;
-}
-
+/* Адаптивность калькулятора */
 @media (max-width: 768px) {
     .services-header {
         display: none;
     }
-
     .calc-item {
         display: flex;
         flex-direction: column;
@@ -626,52 +648,56 @@ body {
         padding: 16px;
         position: relative;
     }
-
     .calc-item .service-name {
         padding-left: 0;
         font-weight: 600;
         font-size: 1rem;
     }
-
     .calc-item .service-price {
         text-align: left;
         font-size: 0.9rem;
         color: var(--primary);
         font-weight: 600;
     }
-
     .calc-item .service-qty {
         text-align: left;
         font-size: 0.85rem;
         color: var(--secondary);
     }
-
     .calc-item .service-remove {
         position: absolute;
         top: 12px;
         right: 12px;
     }
-
     .add-service {
-        flex-direction: column;
-        align-items: stretch;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        background: transparent;
+        box-shadow: none;
+        padding: 0;
     }
-
     .service-select {
+        background-color: var(--light-bg);
+        border-radius: 50px;
+        padding: 14px 20px;
+    }
+    .calc-qty {
         width: 100%;
+        background-color: var(--light-bg);
+        border-radius: 50px;
     }
-
     .add-service-btn {
-        white-space: normal;
+        width: 100%;
+        justify-content: center;
+        padding: 14px;
     }
-
     .total-block {
         text-align: center;
         font-size: 1.3rem;
     }
 }
 
-/* ========== Квиз ========== */
+/* ========== Квиз (компактные кнопки) ========== */
 .quiz-card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -679,42 +705,38 @@ body {
     margin: 60px 0;
     box-shadow: var(--shadow-md);
 }
-
 .quiz-question {
     margin-bottom: 30px;
     font-size: 1.1rem;
 }
-
 .quiz-question p {
     font-weight: 600;
     margin-bottom: 16px;
     text-align: center;
     color: var(--text-dark);
 }
-
 .quiz-options {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 12px;
     margin-top: 15px;
-    justify-content: center;
 }
-
 .quiz-option {
     background: var(--light-bg);
     border: 1px solid var(--border);
     color: var(--text-dark);
-    padding: 12px 24px;
+    padding: 10px 24px;
     border-radius: 40px;
     cursor: pointer;
     transition: all 0.2s ease;
-    flex: 1 0 auto;
-    text-align: center;
-    min-width: 140px;
     font-weight: 500;
     font-size: 0.95rem;
+    white-space: nowrap;
+    flex: 0 1 auto;
+    min-width: 130px;
+    text-align: center;
 }
-
 .quiz-option:hover {
     background: var(--primary);
     border-color: var(--primary);
@@ -722,26 +744,22 @@ body {
     transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
 }
-
 .quiz-option.selected {
     background: var(--primary);
     border-color: var(--primary);
     color: white;
     box-shadow: var(--shadow-sm);
 }
-
 .quiz-nav {
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
     gap: 15px;
 }
-
 .quiz-nav button {
     padding: 12px 28px;
     font-size: 1rem;
 }
-
 .quiz-progress {
     width: 100%;
     height: 8px;
@@ -750,14 +768,12 @@ body {
     margin-bottom: 30px;
     overflow: hidden;
 }
-
 .quiz-progress-bar {
     width: 0%;
     height: 100%;
     background: var(--primary);
     transition: width 0.3s ease;
 }
-
 .quiz-result {
     margin-top: 30px;
     padding: 20px;
@@ -766,12 +782,10 @@ body {
     display: none;
     border: 1px solid var(--border);
 }
-
 .quiz-loading {
     text-align: center;
     padding: 40px;
 }
-
 .quiz-spinner {
     display: inline-block;
     width: 40px;
@@ -781,51 +795,69 @@ body {
     border-radius: 50%;
     animation: quiz-spin 0.8s linear infinite;
 }
-
 @keyframes quiz-spin {
     to { transform: rotate(360deg); }
 }
-
 .quiz-loading p {
     margin-top: 15px;
     font-size: 1rem;
     color: var(--secondary);
 }
-
 @media (max-width: 768px) {
     .quiz-card {
         padding: 24px 16px;
     }
-
-    .quiz-options {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-    }
-
     .quiz-option {
-        width: 100%;
-        text-align: center;
-        padding: 12px 16px;
-        font-size: 0.9rem;
+        white-space: normal;
+        padding: 10px 16px;
+        flex: 1 0 auto;
+        min-width: 120px;
     }
-
     .quiz-question p {
         font-size: 1rem;
-        text-align: center;
     }
-
     .quiz-nav {
         flex-direction: column;
         gap: 12px;
     }
-
     .quiz-nav button {
         width: 100%;
     }
 }
 
-/* ========== Кастомный тост для ошибок квиза ========== */
+/* ========== Принудительные стили для квиза (всегда видимы) ========== */
+.quiz-option,
+.quiz-options .quiz-option,
+div[class*="quiz-option"] {
+    background: #f8f9fa !important;
+    border: 1px solid #dee2e6 !important;
+    color: #212529 !important;
+    padding: 12px 24px !important;
+    border-radius: 40px !important;
+    cursor: pointer !important;
+    font-weight: 500 !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s ease !important;
+    display: inline-block !important;
+    margin: 4px !important;
+    text-align: center !important;
+}
+.quiz-option:hover,
+.quiz-options .quiz-option:hover {
+    background: #2D6A9F !important;
+    border-color: #2D6A9F !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+}
+.quiz-option.selected,
+.quiz-options .quiz-option.selected {
+    background: #2D6A9F !important;
+    border-color: #2D6A9F !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(45,106,159,0.2) !important;
+}
+
+/* ========== Кастомный тост для ошибок ========== */
 .custom-toast-error {
     position: fixed;
     bottom: 30px;
@@ -845,16 +877,9 @@ body {
     gap: 10px;
     font-family: 'Inter', sans-serif;
 }
-
 @keyframes toastFadeIn {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 
 /* ========== Бесплатные материалы и диагностика ========== */
@@ -869,13 +894,11 @@ body {
     position: relative;
     overflow: hidden;
 }
-
 .checklist-card:hover,
 .calendar-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
 }
-
 .checklist-card::before,
 .calendar-card::before {
     content: '';
@@ -886,13 +909,11 @@ body {
     height: 6px;
     background: linear-gradient(90deg, var(--primary), var(--primary-light));
 }
-
 .checklist-card .section-title,
 .calendar-card .section-title {
     margin-bottom: 16px;
     color: var(--primary-dark);
 }
-
 .checklist-card p,
 .calendar-card p {
     font-size: 1.1rem;
@@ -903,14 +924,12 @@ body {
     color: var(--secondary);
     margin-bottom: 32px;
 }
-
 .freebies-buttons {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
 }
-
 .freebies-buttons .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -918,7 +937,6 @@ body {
     padding: 14px 32px;
     font-size: 1rem;
 }
-
 .freebies-buttons .btn-primary:hover {
     background: var(--primary-dark);
     transform: translateY(-3px);
@@ -930,7 +948,6 @@ body {
     max-width: 600px;
     margin: 0 auto;
 }
-
 .callback-form input,
 .callback-form textarea {
     width: 100%;
@@ -943,19 +960,16 @@ body {
     transition: all 0.2s;
     background-color: #fff;
 }
-
 .callback-form textarea {
     border-radius: 24px;
     resize: vertical;
 }
-
 .callback-form input:focus,
 .callback-form textarea:focus {
     outline: none;
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
 }
-
 .consent-checkbox {
     display: flex;
     align-items: center;
@@ -963,14 +977,12 @@ body {
     margin: 20px 0;
     font-size: 0.9rem;
 }
-
 .consent-checkbox input {
     width: 20px;
     height: 20px;
     margin: 0;
     accent-color: var(--primary);
 }
-
 .callback-form .btn-primary {
     width: 100%;
     padding: 14px;
@@ -978,14 +990,12 @@ body {
     font-size: 1.1rem;
     margin-top: 10px;
 }
-
 .callback-note {
     text-align: center;
     font-size: 0.85rem;
     color: var(--secondary);
     margin-top: 20px;
 }
-
 .btn-primary.loading {
     pointer-events: none;
     opacity: 0.7;
