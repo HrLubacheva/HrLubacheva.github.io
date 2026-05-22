@@ -16,11 +16,12 @@ jobs:
           python-version: '3.11'
       - name: Build site
         run: python build.py
-      - name: Deploy to gh-pages branch
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
+          publish_dir: ./  # Указываем текущую папку как источник
           publish_branch: gh-pages
           keep_files: false
           allow_empty_commit: false
+          exclude_assets: '.github,.gitignore,build.py,deploy.py,server.py,components' # Исключаем служебные файлы
