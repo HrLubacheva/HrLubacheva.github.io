@@ -22,26 +22,21 @@ def read_js_files(dir_path):
     return "\n".join(read_file(os.path.join(dir_path, f)) for f in files)
 
 def content_hash(content):
-    return hashlib.md5(content.encode()).hexdigest()[:8]
+    return hashlib.md5(content.encode()).hexdigest()[:10]
 
-def build_css():
+def build_page():
+    # Сборка CSS
     common_css = read_css_files(os.path.join(COMMON_DIR, "css"))
     sections_css = read_css_files(os.path.join(SECTIONS_DIR, "css"))
     full_css = common_css + "\n" + sections_css
-    with open("styles.css", "w", encoding="utf-8") as f:
-        f.write(full_css)
-    print("✅ styles.css")
-    return full_css
+    css_hash = content_hash(full_css)
 
-def build_js():
+    # Сборка JS
     js_dir = os.path.join(COMMON_DIR, "js")
     full_js = read_js_files(js_dir)
-    with open("scripts.js", "w", encoding="utf-8") as f:
-        f.write(full_js)
-    print("✅ scripts.js")
-    return full_js
+    js_hash = content_hash(full_js)
 
-def build_page(css_hash, js_hash):
+    # Сборка HTML-секций
     section_files = sorted([f for f in os.listdir(SECTIONS_DIR) if f.endswith('.html')])
     sections_html = "\n".join(read_file(os.path.join(SECTIONS_DIR, f)) for f in section_files)
 
@@ -52,15 +47,16 @@ def build_page(css_hash, js_hash):
     privacy = read_file(os.path.join(COMMON_DIR, "04_privacy-modal.html"))
     checklist = read_file(os.path.join(COMMON_DIR, "05_checklist-modal.html"))
 
-    # Подставляем версию в подвал
+    # Вставляем версию в подвал
     footer = footer.replace("{{VERSION}}", datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
 
-    # Заменяем ссылки на CSS и JS на версионированные
+    # Заменяем ссылку на CSS на версионированную (если есть)
     head = head.replace('<link rel="stylesheet" href="styles.css">', f'<link rel="stylesheet" href="styles.css?v={css_hash}">')
-    # Если в head нет такой строки, просто вставим нужную перед </head>
-    if '<link rel="stylesheet" href="styles.css?v=' not in head:
+    # Если ссылки не было, добавим её перед </head>
+    if 'styles.css?v=' not in head:
         head = head.replace('</head>', f'<link rel="stylesheet" href="styles.css?v={css_hash}">\n</head>')
 
+    # Собираем тело
     body_content = navbar + sections_html + footer + cookie + privacy + checklist
     script_tag = f'<script src="scripts.js?v={js_hash}" defer></script>'
 
@@ -69,6 +65,14 @@ def build_page(css_hash, js_hash):
     with open("index.html", "w", encoding="utf-8") as f:
         f.write(full_html)
     print("✅ index.html (с версионированием CSS/JS)")
+
+    # Также записываем отдельные файлы styles.css и scripts.js (для совместимости и отладки)
+    with open("styles.css", "w", encoding="utf-8") as f:
+        f.write(full_css)
+    print("✅ styles.css")
+    with open("scripts.js", "w", encoding="utf-8") as f:
+        f.write(full_js)
+    print("✅ scripts.js")
 
 def generate_sitemap():
     today = datetime.now().strftime("%Y-%m-%d")
@@ -95,10 +99,6 @@ Sitemap: https://hrlubacheva.github.io/sitemap.xml
     print("✅ robots.txt")
 
 if __name__ == "__main__":
-    css_content = build_css()
-    js_content = build_js()
-    css_hash = content_hash(css_content)
-    js_hash = content_hash(js_content)
-    build_page(css_hash, js_hash)
+    build_page()
     generate_sitemap()
     build_robots()

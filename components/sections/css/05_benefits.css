@@ -16,5 +16,3 @@
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
 }
-/* Внутри section-dark фон уже задан в base, но текст карточек должен быть тёмным,
-   поэтому дополнительно ничего не требуется */
