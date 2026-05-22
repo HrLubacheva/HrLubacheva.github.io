@@ -1,4 +1,4 @@
-// ========== КВИЗ (с поддержкой рекрутера и расширенной матрицей) ==========
+// ========== КВИЗ (использует внешнюю матрицу window.VARIANTS_MATRIX) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -10,7 +10,7 @@
     let currentRole = null;
     let isRendering = false;
 
-    // Базовая функция экранирования
+    // Резервная функция экранирования (на случай, если core.js не загрузился)
     if (typeof window.escapeHtml !== 'function') {
         window.escapeHtml = function(str) {
             if (!str) return '';
@@ -36,7 +36,7 @@
         }, 2500);
     }
 
-    // ========== БАЗОВЫЕ ВОПРОСЫ ==========
+    // ========== ВОПРОСЫ ==========
     const FIRST_QUESTION = {
         text: "1. Ваша роль?",
         options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"]
@@ -49,39 +49,23 @@
         text: "2. Какой уровень сотрудника ищете?",
         options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"]
     };
-
-    // Вопросы для соискателя (3,4,5)
-    const URGENCY_JOBSEEKER = {
+    const URGENCY_QUESTION = {
         text: "3. Как быстро нужен результат?",
         options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "Планирую постепенно"]
     };
-    const IMPORTANCE_JOBSEEKER = {
+    const IMPORTANCE_QUESTION = {
         text: "4. Что для вас важнее всего?",
         options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности"]
     };
-    const BUDGET_JOBSEEKER = {
+    const BUDGET_QUESTION = {
         text: "5. Бюджет на консультацию/подбор?",
         options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "Выше 100 000 ₽"]
     };
 
-    // Вопросы для рекрутера (3,4,5)
-    const URGENCY_RECRUITER = {
-        text: "3. Как быстро нужно закрыть вакансию?",
-        options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "Гибкие сроки"]
-    };
-    const IMPORTANCE_RECRUITER = {
-        text: "4. Что важнее всего при подборе?",
-        options: ["Профессиональный опыт", "Мотивация и лояльность", "Скорость закрытия", "Соответствие бюджету"]
-    };
-    const BUDGET_RECRUITER = {
-        text: "5. Бюджет на позицию (месячная зарплата)?",
-        options: ["До 30 000 ₽", "30 000 – 60 000 ₽", "60 000 – 120 000 ₽", "120 000 – 250 000 ₽", "Выше 250 000 ₽"]
-    };
-
-    // ========== ФУНКЦИЯ ПОДБОРА ВАРИАНТА ==========
+    // Поиск варианта ответа во внешней матрице
     function findVariant(answersArr) {
         if (!window.VARIANTS_MATRIX || !window.VARIANTS_MATRIX.length) {
-            console.error('Матрица вариантов не загружена');
+            console.error('Матрица вариантов не загружена (window.VARIANTS_MATRIX отсутствует)');
             return { variantA: 'Индивидуальная консультация', variantB: 'Экспресс-консультация' };
         }
         const user = {
@@ -101,8 +85,7 @@
             if (rule.budget !== '*' && rule.budget !== user.budget) match = false;
             if (match) return { variantA: rule.variantA, variantB: rule.variantB };
         }
-        // fallback
-        return { variantA: "Индивидуальная карьерная стратегия", variantB: "Тренинг «Продай себя дорого»" };
+        return { variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB };
     }
 
     // Сохранение и восстановление прогресса
@@ -131,7 +114,6 @@
         return false;
     }
 
-    // Полная перезагрузка квиза
     function resetAndStart() {
         quizState = 'questions';
         currentQuestionIndex = 0;
@@ -144,7 +126,6 @@
         startQuiz();
     }
 
-    // Основная инициализация
     function startQuiz() {
         console.log('startQuiz вызван, роль:', currentRole);
         const restored = restoreQuizProgress();
@@ -154,28 +135,15 @@
             quizState = 'questions';
             currentRole = null;
         }
-        // Вопрос 1 и 2 всегда одинаковы (второй подменится позже)
         quizQuestions = [
             FIRST_QUESTION,
             (currentRole === "Подбираю сотрудников") ? { ...LEVEL_RECRUITER } : { ...LEVEL_JOBSEEKER },
-            null, null, null  // временно
+            URGENCY_QUESTION,
+            IMPORTANCE_QUESTION,
+            BUDGET_QUESTION
         ];
-        // Устанавливаем вопросы 3,4,5 в зависимости от роли
-        updateQuestionsByRole();
         quizInitialized = true;
         renderQuiz();
-    }
-
-    function updateQuestionsByRole() {
-        if (currentRole === "Подбираю сотрудников") {
-            quizQuestions[2] = URGENCY_RECRUITER;
-            quizQuestions[3] = IMPORTANCE_RECRUITER;
-            quizQuestions[4] = BUDGET_RECRUITER;
-        } else {
-            quizQuestions[2] = URGENCY_JOBSEEKER;
-            quizQuestions[3] = IMPORTANCE_JOBSEEKER;
-            quizQuestions[4] = BUDGET_JOBSEEKER;
-        }
     }
 
     function updateSecondQuestion(role) {
@@ -186,16 +154,6 @@
         }
         if (answers[1] && !quizQuestions[1].options.includes(answers[1])) {
             answers[1] = null;
-            saveQuizProgress();
-        }
-        // Если только что выбрали роль, обновляем остальные вопросы
-        if (currentQuestionIndex === 0) {
-            currentRole = role;
-            updateQuestionsByRole();
-            // Сбрасываем ответы на 3-5 вопросы, так как они изменились
-            for (let i = 2; i <= 4; i++) {
-                if (answers[i] !== undefined) answers[i] = null;
-            }
             saveQuizProgress();
         }
         if (currentQuestionIndex === 1 && quizState === 'questions') {
@@ -238,6 +196,7 @@
             html += `</div>`;
             container.innerHTML = html;
 
+            // Обработчики выбора варианта
             document.querySelectorAll('.quiz-option').forEach(opt => {
                 opt.removeEventListener('click', opt._handler);
                 opt._handler = (e) => {
@@ -245,7 +204,8 @@
                     const selected = e.currentTarget.dataset.opt;
                     answers[currentQuestionIndex] = selected;
                     if (currentQuestionIndex === 0) {
-                        updateSecondQuestion(selected);
+                        currentRole = selected;
+                        updateSecondQuestion(currentRole);
                     }
                     saveQuizProgress();
                     renderQuiz();
@@ -340,14 +300,23 @@
                     isSubmittingChoice = true;
                     const chosen = btn.dataset.choice;
                     const chosenText = btn.dataset.text;
+
                     const sendData = (userId) => {
+                        // ★★★ ОТДЕЛЬНЫЕ ПОЛЯ ДЛЯ ТАБЛИЦЫ ★★★
                         const formData = {
                             formType: 'Квиз',
                             quizAnswers: answers.map((a, idx) => `${quizQuestions[idx]?.text} — ${a}`).join('\n'),
                             chosenVariant: `${chosen}: ${chosenText}`,
+                            role: answers[0] || '',
+                            level: answers[1] || '',
+                            urgency: answers[2] || '',
+                            importance: answers[3] || '',
+                            budget: answers[4] || '',
                             userId: userId
                         };
-                        if (typeof window.sendDataToSheet === 'function') window.sendDataToSheet(formData);
+                        if (typeof window.sendDataToSheet === 'function') {
+                            window.sendDataToSheet(formData);
+                        }
                         const resultDiv = document.getElementById('quizResult');
                         if (resultDiv) {
                             resultDiv.innerHTML = `<strong>✅ Вы выбрали вариант ${chosen}:</strong><br>${chosenText}<br><br>📋 Напишите мне в Telegram: <a href="https://t.me/HrLubacheva" target="_blank">@HrLubacheva</a>`;
@@ -356,7 +325,7 @@
                         document.querySelector('#calendar')?.scrollIntoView({ behavior: 'smooth' });
                         container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
                         isSubmittingChoice = false;
-                        // Очистить сохранённый прогресс
+                        // Очищаем сохранённый прогресс, так как квиз завершён
                         localStorage.removeItem('quizAnswers');
                         localStorage.removeItem('quizCurrentIndex');
                         localStorage.removeItem('quizState');

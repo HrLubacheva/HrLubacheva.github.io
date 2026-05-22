@@ -1,6 +1,45 @@
-// ========== КАЛЬКУЛЯТОР (использует внешний файл с услугами) ==========
+// ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, логирование корзины) ==========
 let cart = [];
 let calculatorInitialized = false;
+
+// Получить текстовое представление корзины для отправки
+function getCartData() {
+    if (!cart || cart.length === 0) return 'Корзина пуста';
+    let total = 0;
+    let items = cart.map(item => {
+        total += item.price * item.qty;
+        return `${item.name} x${item.qty} (${(item.price * item.qty).toLocaleString()} ₽)`;
+    }).join('; ');
+    let discount = cart.length >= 2 ? ' (скидка 5%)' : '';
+    let finalTotal = Math.round(total * (cart.length >= 2 ? 0.95 : 1));
+    return items + '; Итого: ' + finalTotal.toLocaleString() + ' ₽' + discount;
+}
+window.getCartData = getCartData;
+
+// Логирование изменения корзины в Лист4 (Google Sheets)
+function logCartToSheet(action) {
+    const url = window.SCRIPT_URL;
+    if (!url) return;
+    const userId = typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown';
+    const cartText = getCartData();
+    let total = '';
+    const match = cartText.match(/Итого:\s*([\d\s]+)₽/);
+    if (match) total = match[1].replace(/\s/g, '');
+
+    const formData = {
+        formType: 'Корзина',
+        action: action,
+        userId: userId,
+        cart: cartText,
+        total: total
+    };
+    fetch(url, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData)
+    }).catch(err => console.error('Ошибка логирования корзины:', err));
+}
 
 function updateSelectsFromData() {
     if (!window.LOCAL_SERVICES) {
@@ -61,9 +100,15 @@ function renderCart() {
     });
     document.querySelectorAll('.remove-item').forEach(btn => {
         btn.removeEventListener('click', btn._handler);
-        btn._handler = () => { cart.splice(parseInt(btn.dataset.idx), 1); renderCart(); };
+        btn._handler = () => {
+            cart.splice(parseInt(btn.dataset.idx), 1);
+            renderCart();
+            logCartToSheet('remove');
+        };
         btn.addEventListener('click', btn._handler);
     });
+    // После каждого рендера (добавление/удаление) логируем изменение
+    logCartToSheet('update');
 }
 
 function addToCart(cat, selectId, qtyId) {

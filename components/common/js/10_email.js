@@ -1,15 +1,14 @@
-// ========== ОТПРАВКА ЗАПРОСА МАТЕРИАЛОВ НА ВАШ Google Apps Script ==========
+// ========== ОТПРАВКА ЗАПРОСА МАТЕРИАЛОВ ==========
+// Используем глобальную переменную window.SCRIPT_URL из 00_core.js
 
-/**
- * Отправляет email-запрос на получение материалов (чек-лист и/или программа тренинга)
- * @param {string} email - Email пользователя
- * @param {boolean} wantChecklist - Запросить ли чек-лист
- * @param {boolean} wantTraining - Запросить ли программу тренинга
- * @returns {Promise<boolean>}
- */
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
     if (!email || !email.includes('@')) {
         throw new Error('Введите корректный email');
+    }
+
+    const url = window.SCRIPT_URL;
+    if (!url) {
+        throw new Error('URL скрипта не задан. Убедитесь, что window.SCRIPT_URL определён в 00_core.js');
     }
 
     const formData = {
@@ -23,34 +22,21 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
     console.log('📤 Отправка данных на скрипт:', formData);
 
     try {
-        // Отправляем JSON (скрипт умеет обрабатывать и JSON, и URL-encoded)
-        const response = await fetch(MATERIALS_SCRIPT_URL, {
+        const body = new URLSearchParams(formData);
+        await fetch(url, {
             method: 'POST',
-            mode: 'cors',               // важно для получения ответа
+            mode: 'no-cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: JSON.stringify(formData)
+            body: body
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const result = await response.json();
-        console.log('✅ Ответ от скрипта:', result);
-
-        if (result.result !== 'ok') {
-            throw new Error(result.message || 'Неизвестная ошибка скрипта');
-        }
-
+        console.log('✅ Запрос отправлен (режим no-cors)');
         return true;
     } catch (err) {
         console.error('❌ Ошибка отправки:', err);
-        // Можно также показать пользователю более понятное сообщение, но выбросим ошибку для обработки выше
         throw new Error('Не удалось отправить запрос. Попробуйте позже.');
     }
 }
 
-// Делаем функцию доступной глобально
 window.sendMaterialsEmail = sendMaterialsEmail;

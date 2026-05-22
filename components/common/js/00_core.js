@@ -1,5 +1,4 @@
 // ========== ОБЩИЕ УТИЛИТЫ ==========
-
 function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -13,12 +12,9 @@ function escapeHtml(str) {
 const IS_DEV = window.location.hostname === 'localhost' ||
                window.location.hostname === '127.0.0.1' ||
                window.location.search.includes('debug=true');
-
 let originalConsoleLog = null;
 
-function log(...args) {
-    if (IS_DEV) console.log(...args);
-}
+function log(...args) { if (IS_DEV) console.log(...args); }
 function logError(...args) { console.error(...args); }
 function logWarn(...args) { if (IS_DEV) console.warn(...args); }
 
@@ -42,7 +38,7 @@ window.disableLogs = function() {
     showToast('🔇 Логи отключены', 2000);
 };
 
-// User ID (только локальный, без Service Worker)
+// User ID
 function getOrCreateLocalUserId() {
     try {
         let userId = localStorage.getItem('hr_user_id');
@@ -55,7 +51,6 @@ function getOrCreateLocalUserId() {
         return 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
     }
 }
-
 let currentUserId = null;
 function initUserId() {
     currentUserId = getOrCreateLocalUserId();
@@ -64,7 +59,7 @@ function initUserId() {
     return Promise.resolve(currentUserId);
 }
 
-// Fetch with retry
+// Fetch utils
 async function fetchWithRetry(url, options = {}, retries = 3, timeout = 10000) {
     let lastError = null;
     for (let attempt = 1; attempt <= retries; attempt++) {
@@ -85,7 +80,6 @@ async function fetchTextWithRetry(url, retries = 3, timeout = 10000) {
     return response.text();
 }
 
-// Кеширование
 const CACHE_TTL = 10 * 60 * 1000;
 async function loadWithCache(cacheKey, fetchFn, ttl = CACHE_TTL) {
     try {
@@ -100,7 +94,7 @@ async function loadWithCache(cacheKey, fetchFn, ttl = CACHE_TTL) {
     return data;
 }
 
-// Индикатор загрузки
+// Loading indicator
 let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
 function showLoading(message = 'Загрузка...') {
     if (isLoadingActive) return;
@@ -150,17 +144,27 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
-// Отправка в Google Sheets
+// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ (Google Apps Script) ==========
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxlTVJQbD_v5KppUbbjUVvcN2yiPy0AR64iC5NEzWHCgz5jnNxjF_r5ri0_u5ws6cCozw/exec';
+if (typeof window !== 'undefined') {
+    window.SCRIPT_URL = SCRIPT_URL;
+}
+
+// ========== ОТПРАВКА ДАННЫХ (обратный звонок, квиз и т.д.) ==========
 function sendDataToSheet(data) {
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxUUIy_I9Z0qXBQmYMQmwCpkjVAdGemxl6k9DZiVF9djhI_w7Th7fMGaCbVNI-EyDnnBQ/exec';
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
+    if (typeof window.getCartData === 'function') {
+        data.cart = window.getCartData();
+    } else {
+        data.cart = '';
+    }
     fetch(SCRIPT_URL, {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams(data)
-    }).catch(err => logError('❌ Ошибка отправки:', err));
+    }).catch(err => logError('❌ Ошибка отправки в Google Sheets:', err));
 }
 
 // Toast
