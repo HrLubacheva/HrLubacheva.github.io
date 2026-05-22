@@ -726,6 +726,7 @@ let quizInitialized = false;
 let currentQuestionIndex = 0;
 let totalQuestions = 0;
 let isSubmittingChoice = false;
+let isAnalyzing = false; // флаг для предотвращения повторного анализа
 
 const LOCAL_QUESTIONS = [
     { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
@@ -799,6 +800,7 @@ function renderQuiz() {
 
         document.querySelectorAll('.quiz-option').forEach(opt => {
             opt.addEventListener('click', function() {
+                if (isAnalyzing) return;
                 answers[currentQuestionIndex] = this.dataset.opt;
                 renderQuiz();
             });
@@ -807,6 +809,7 @@ function renderQuiz() {
         const nextBtn = document.getElementById('quizNextBtn');
         if (nextBtn) {
             nextBtn.addEventListener('click', () => {
+                if (isAnalyzing) return;
                 if (answers[currentQuestionIndex] === null) {
                     alert('Пожалуйста, выберите ответ');
                     return;
@@ -818,6 +821,7 @@ function renderQuiz() {
         const prevBtn = document.getElementById('quizPrevBtn');
         if (prevBtn) {
             prevBtn.addEventListener('click', () => {
+                if (isAnalyzing) return;
                 if (currentQuestionIndex > 0) {
                     currentQuestionIndex--;
                     renderQuiz();
@@ -827,6 +831,10 @@ function renderQuiz() {
         const submitQuiz = document.getElementById('submitQuizBtn');
         if (submitQuiz) {
             submitQuiz.addEventListener('click', () => {
+                if (isAnalyzing) {
+                    alert('Подождите, анализ уже выполняется...');
+                    return;
+                }
                 if (answers[currentQuestionIndex] === null) {
                     alert('Выберите ответ перед отправкой');
                     return;
@@ -835,10 +843,25 @@ function renderQuiz() {
                     alert('Ответьте на все вопросы');
                     return;
                 }
-                quizState = 'choice';
-                container.innerHTML = '<div style="text-align:center; padding:40px;">⏳ Анализ ответов...</div>';
-                const variant = findVariant(answers);
-                showResult(variant);
+                isAnalyzing = true;
+                submitQuiz.disabled = true;
+                submitQuiz.style.opacity = '0.5';
+                submitQuiz.style.cursor = 'not-allowed';
+
+                // Показываем крутящийся спиннер вместо текста
+                container.innerHTML = `
+                    <div class="quiz-loading">
+                        <div class="quiz-spinner"></div>
+                        <p>Анализируем ваши ответы...</p>
+                    </div>
+                `;
+
+                setTimeout(() => {
+                    const variant = findVariant(answers);
+                    quizState = 'choice';
+                    showResult(variant);
+                    isAnalyzing = false;
+                }, 1500);
             });
         }
     } else if (quizState === 'choice') {

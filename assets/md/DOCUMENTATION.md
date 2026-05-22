@@ -68,7 +68,7 @@
    ```
 3. Задеплойте:
    ```bash
-   python 03_deploy.py
+   python deploy.py
    ```
    Или вручную:
    ```bash
