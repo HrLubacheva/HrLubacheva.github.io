@@ -1,3 +1,4 @@
+// ========== КВИЗ ==========
 let quizQuestions = [];
 let answers = [];
 let quizState = 'questions';
@@ -6,43 +7,99 @@ let currentQuestionIndex = 0;
 let totalQuestions = 0;
 let isSubmittingChoice = false;
 let isAnalyzing = false;
-let currentRole = null; // запоминаем роль для динамической смены вопроса
+let currentRole = null;
 
-// Базовые вопросы (второй вопрос будет заменён динамически)
-const BASE_QUESTIONS = [
-    { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
-    // место для второго вопроса (заполнится позже)
-    { text: "3. Как быстро нужен результат?", options: ["Вчера", "1–2 месяца", "3–6 месяцев", "Планирую постепенно"] },
-    { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности"] },
-    { text: "5. Бюджет на консультацию/подбор?", options: ["До 5000 ₽", "5000–15000 ₽", "15000–50000 ₽", "Выше 50000 ₽"] }
-];
+// ---------- Вопросы ----------
+const FIRST_QUESTION = {
+    text: "1. Ваша роль?",
+    options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"]
+};
 
-// Вопрос для тех, кто ищет работу (оригинальный)
-const LEVEL_QUESTION_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"] };
+// Второй вопрос (будет заменён динамически)
+const LEVEL_JOBSEEKER = {
+    text: "2. Ваш текущий уровень?",
+    options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"]
+};
+const LEVEL_RECRUITER = {
+    text: "2. Какой уровень сотрудника ищете?",
+    options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"]
+};
 
-// Вопрос для тех, кто подбирает сотрудников
-const LEVEL_QUESTION_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"] };
+// Третий вопрос
+const URGENCY_QUESTION = {
+    text: "3. Как быстро нужен результат?",
+    options: ["Вчера", "1–2 месяца", "3–6 месяцев", "Планирую постепенно"]
+};
 
-// Матрица подбора вариантов (расширена для рекрутеров)
+// Четвёртый вопрос
+const IMPORTANCE_QUESTION = {
+    text: "4. Что для вас важнее всего?",
+    options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности"]
+};
+
+// Пятый вопрос
+const BUDGET_QUESTION = {
+    text: "5. Бюджет на консультацию/подбор?",
+    options: ["До 5000 ₽", "5000–15000 ₽", "15000–50000 ₽", "Выше 50000 ₽"]
+};
+
+// ---------- Матрица вариантов (из вашей таблицы) ----------
 const VARIANTS_MATRIX = [
-    // Рекрутеры
-    { priority: 1, role: "Подбираю сотрудников", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "HR-аудит и закрытие вакансии под ключ", variantB: "Бесплатная диагностика вакансии" },
-    // Соискатели Junior
-    { priority: 2, role: "Ищу работу", level: "Junior / начинающий", urgency: "*", importance: "*", budget: "*", variantA: "Карьерная стратегия + упаковка резюме", variantB: "Экспресс-консультация по поиску" },
-    // Соискатели Middle
-    { priority: 3, role: "Ищу работу", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*", variantA: "Тренинг «Продай себя дорого» и переговоры о зарплате", variantB: "Индивидуальное сопровождение до оффера" },
-    // Соискатели Senior/Lead
-    { priority: 4, role: "Ищу работу", level: "Senior / ведущий", urgency: "*", importance: "*", budget: "*", variantA: "Executive-коучинг и позиционирование C-level", variantB: "Стратегия поиска через хедхантеров" },
-    { priority: 5, role: "Ищу работу", level: "Lead / руководитель", urgency: "*", importance: "*", budget: "*", variantA: "Управленческий аудит и карта роста", variantB: "Подготовка к совету директоров" },
-    // Дефолтный вариант
-    { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная карьерная стратегия + полное сопровождение", variantB: "Тренинг «Продай себя дорого» + самоподготовка" }
+    { priority: 1, role: "Подбираю сотрудников", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "HR-аудит и закрытие вакансии под ключ (гарантия 28 дней)", variantB: "Бесплатная диагностика вакансии + консультация по поиску" },
+    { priority: 2, role: "Хочу сменить профессию", level: "Junior / начинающий", urgency: "Вчера", importance: "*", budget: "До 5000 ₽", variantA: "Профориентационная диагностика + план смены профессии", variantB: "Тест на склонности и способности" },
+    { priority: 3, role: "Хочу сменить профессию", level: "Junior / начинающий", urgency: "Вчера", importance: "*", budget: "5000–15000 ₽", variantA: "Индивидуальная программа переквалификации + менторство", variantB: "Карьерная сессия \"Новая профессия за 3 месяца\"" },
+    { priority: 4, role: "Хочу сменить профессию", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "*", budget: "*", variantA: "Дорожная карта перехода в новую профессию", variantB: "Обучение с гарантией трудоустройства" },
+    { priority: 5, role: "Хочу сменить профессию", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*", variantA: "Аудит текущих навыков + план перехода на новую роль", variantB: "Менторство от эксперта из новой сферы" },
+    { priority: 6, role: "Хочу сменить профессию", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Карьерная консультация + диагностика", variantB: "Профориентационное тестирование" },
+    { priority: 10, role: "Ищу работу", level: "Junior / начинающий", urgency: "Вчера", importance: "Зарплата", budget: "До 5000 ₽", variantA: "Экспресс-трудоустройство за 3 дня + резюме", variantB: "Чек-лист быстрого поиска + самодиагностика" },
+    { priority: 11, role: "Ищу работу", level: "Junior / начинающий", urgency: "Вчера", importance: "Зарплата", budget: "5000–15000 ₽", variantA: "Интенсивная подготовка к собеседованиям", variantB: "Групповой вебинар \"Как получить оффер\"" },
+    { priority: 12, role: "Ищу работу", level: "Junior / начинающий", urgency: "Вчера", importance: "Зарплата", budget: "15000–50000 ₽", variantA: "Индивидуальный карьерный коучинг", variantB: "Подготовка к собеседованиям с топ-менеджерами" },
+    { priority: 13, role: "Ищу работу", level: "Junior / начинающий", urgency: "Вчера", importance: "Условия/удаленка", budget: "*", variantA: "Подборка работодателей с удаленкой", variantB: "Самопрезентация для удаленных вакансий" },
+    { priority: 14, role: "Ищу работу", level: "Junior / начинающий", urgency: "Вчера", importance: "Карьерный рост", budget: "*", variantA: "План развития на 6 месяцев + менторство", variantB: "Тренинг \"Soft skills для джуниора\"" },
+    { priority: 15, role: "Ищу работу", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Зарплата", budget: "До 5000 ₽", variantA: "Пошаговая стратегия поиска + упаковка резюме", variantB: "Тренинг \"Как правильно искать работу\"" },
+    { priority: 16, role: "Ищу работу", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Зарплата", budget: "5000–15000 ₽", variantA: "Карьерная карта на полгода + созвоны", variantB: "Мастер-класс \"Как просить повышение\"" },
+    { priority: 17, role: "Ищу работу", level: "Junior / начинающий", urgency: "3–6 месяцев", importance: "*", budget: "*", variantA: "Стратегия долгосрочного карьерного роста", variantB: "План развития навыков" },
+    { priority: 20, role: "Ищу работу", level: "Middle / опытный", urgency: "Вчера", importance: "Зарплата", budget: "5000–15000 ₽", variantA: "Интенсив «Продай себя дорого»", variantB: "Групповой тренинг по переговорам о зарплате" },
+    { priority: 21, role: "Ищу работу", level: "Middle / опытный", urgency: "Вчера", importance: "Зарплата", budget: "15000–50000 ₽", variantA: "Упаковка резюме и LinkedIn для топ-компаний", variantB: "Подготовка к сложным интервью" },
+    { priority: 22, role: "Ищу работу", level: "Middle / опытный", urgency: "Вчера", importance: "Зарплата", budget: "Выше 50000 ₽", variantA: "Executive-поиск + сопровождение", variantB: "Переговоры о компенсации топ-уровня" },
+    { priority: 23, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Зарплата", budget: "*", variantA: "Аудит карьеры + план выхода на новый доход", variantB: "Тренинг \"Как сменить работу с повышением\"" },
+    { priority: 24, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Диагностика потолка + стратегия роста", variantB: "Развитие управленческих навыков" },
+    { priority: 25, role: "Ищу работу", level: "Middle / опытный", urgency: "3–6 месяцев", importance: "*", budget: "*", variantA: "Стратегия развития до Senior", variantB: "План прокачки экспертизы" },
+    { priority: 30, role: "Ищу работу", level: "Senior / ведущий", urgency: "Вчера", importance: "Зарплата", budget: "15000–50000 ₽", variantA: "Executive-коучинг и подготовка", variantB: "Карьерная сессия по позиционированию" },
+    { priority: 31, role: "Ищу работу", level: "Senior / ведущий", urgency: "Вчера", importance: "Зарплата", budget: "Выше 50000 ₽", variantA: "Поиск C-level позиций с хедхантером", variantB: "VIP-сопровождение карьеры" },
+    { priority: 32, role: "Ищу работу", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "*", budget: "*", variantA: "Стратегия перехода в топ-компанию", variantB: "Подготовка к совету директоров" },
+    { priority: 35, role: "Ищу работу", level: "Team Lead", urgency: "Вчера", importance: "*", budget: "*", variantA: "Экспресс-подготовка к собеседованию", variantB: "Карьерный коучинг для тимлидов" },
+    { priority: 40, role: "Ищу работу", level: "Lead / руководитель", urgency: "*", importance: "*", budget: "Выше 50000 ₽", variantA: "Подготовка к собеседованиям на C-level", variantB: "Стратегия развития карьеры топ-менеджера" },
+    { priority: 41, role: "Ищу работу", level: "Lead / руководитель", urgency: "*", importance: "*", budget: "*", variantA: "Executive-коучинг для руководителей", variantB: "Карьерная стратегия первого лица" },
+    { priority: 45, role: "*", level: "*", urgency: "*", importance: "Команда и ценности", budget: "*", variantA: "Как выбрать идеальный коллектив", variantB: "Тест на корпоративную культуру" },
+    { priority: 50, role: "Рост в текущей компании", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Зарплата", budget: "*", variantA: "Подготовка к повышению + разговор с руководителем", variantB: "План развития внутри компании" },
+    { priority: 51, role: "Рост в текущей компании", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Подготовка к повышению + разговор с руководителем", variantB: "План развития внутри компании" },
+    { priority: 52, role: "Рост в текущей компании", level: "Middle / опытный", urgency: "3–6 месяцев", importance: "Зарплата", budget: "*", variantA: "Переговорная стратегия для повышения дохода", variantB: "Аудит эффективности + презентация руководителю" },
+    { priority: 53, role: "Рост в текущей компании", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Подготовка к роли тимлида", variantB: "Развитие управленческих компетенций" },
+    { priority: 54, role: "Рост в текущей компании", level: "Lead / руководитель", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Коучинг для руководителей высшего звена", variantB: "Стратегия роста до C-level" },
+    { priority: 55, role: "Рост в текущей компании", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Карьерная сессия \"Следующий уровень\"", variantB: "План карьерного роста на год" },
+    { priority: 60, role: "*", level: "Junior / начинающий", urgency: "Вчера", importance: "*", budget: "До 5000 ₽", variantA: "Экспресс-подготовка за 3 дня", variantB: "Чек-лист быстрого поиска" },
+    { priority: 61, role: "*", level: "Junior / начинающий", urgency: "Вчера", importance: "*", budget: "5000–15000 ₽", variantA: "Интенсивная подготовка", variantB: "Тренинг \"Старт карьеры\"" },
+    { priority: 62, role: "*", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "*", budget: "*", variantA: "Пошаговая стратегия поиска", variantB: "Карьерная карта развития" },
+    { priority: 70, role: "*", level: "*", urgency: "Вчера", importance: "*", budget: "До 5000 ₽", variantA: "Экспресс-подготовка", variantB: "Чек-лист быстрого поиска" },
+    { priority: 71, role: "*", level: "*", urgency: "Вчера", importance: "*", budget: "5000–15000 ₽", variantA: "Ускоренный курс подготовки", variantB: "Тренинг \"Результат за неделю\"" },
+    { priority: 80, role: "*", level: "*", urgency: "*", importance: "*", budget: "Выше 50000 ₽", variantA: "Премиум-сопровождение карьеры", variantB: "VIP-коучинг с гарантией" },
+    { priority: 85, role: "*", level: "*", urgency: "*", importance: "*", budget: "5000–15000 ₽", variantA: "Эконом-пакет: резюме + 1 консультация", variantB: "Стандарт: резюме + 2 консультации" },
+    { priority: 90, role: "*", level: "*", urgency: "*", importance: "*", budget: "До 5000 ₽", variantA: "Минимальный пакет услуг", variantB: "Самоподготовка по материалам" },
+    { priority: 91, role: "*", level: "*", urgency: "*", importance: "*", budget: "5000–15000 ₽", variantA: "Стандартный пакет услуг", variantB: "Групповые тренинги" },
+    { priority: 92, role: "*", level: "*", urgency: "*", importance: "*", budget: "15000–50000 ₽", variantA: "Расширенный пакет услуг", variantB: "Индивидуальный коучинг" },
+    { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная карьерная стратегия + полное сопровождение (резюме, подготовка, переговоры до оффера)", variantB: "Тренинг «Продай себя дорого» + самоподготовка по материалам" }
 ];
 
+// ---------- Инициализация ----------
 function initQuizData() {
-    // Начинаем с базовых вопросов, но второй вопрос будет заменён динамически
-    quizQuestions = [...BASE_QUESTIONS];
-    // Временно вставляем заглушку на вторую позицию
-    quizQuestions.splice(1, 0, { text: "2. Загрузка...", options: [] });
+    quizQuestions = [
+        FIRST_QUESTION,
+        { ...LEVEL_JOBSEEKER },  // временно, потом обновится
+        URGENCY_QUESTION,
+        IMPORTANCE_QUESTION,
+        BUDGET_QUESTION
+    ];
     answers = new Array(quizQuestions.length).fill(null);
     currentQuestionIndex = 0;
     currentRole = null;
@@ -50,18 +107,17 @@ function initQuizData() {
 
 function updateSecondQuestion(role) {
     if (role === "Подбираю сотрудников") {
-        quizQuestions[1] = LEVEL_QUESTION_RECRUITER;
+        quizQuestions[1] = { ...LEVEL_RECRUITER };
     } else {
-        quizQuestions[1] = LEVEL_QUESTION_JOBSEEKER;
+        quizQuestions[1] = { ...LEVEL_JOBSEEKER };
     }
-    // Сброс ответа на второй вопрос при смене роли
-    if (answers[1] !== undefined) answers[1] = null;
-    // Перерисовываем только если мы на этом вопросе или раньше
+    answers[1] = null;
     if (quizState === 'questions' && currentQuestionIndex <= 1) {
         renderQuiz();
     }
 }
 
+// ---------- Поиск варианта по матрице ----------
 function findVariant(answersArr) {
     const user = {
         role: answersArr[0],
@@ -70,6 +126,7 @@ function findVariant(answersArr) {
         importance: answersArr[3],
         budget: answersArr[4]
     };
+    // Сортируем по приоритету (число)
     const sorted = [...VARIANTS_MATRIX].sort((a,b) => a.priority - b.priority);
     for (const rule of sorted) {
         let match = true;
@@ -80,6 +137,7 @@ function findVariant(answersArr) {
         if (rule.budget !== '*' && rule.budget !== user.budget) match = false;
         if (match) return { variantA: rule.variantA, variantB: rule.variantB };
     }
+    // fallback (priority 999)
     const def = VARIANTS_MATRIX.find(r => r.priority === 999) || VARIANTS_MATRIX[0];
     return { variantA: def.variantA, variantB: def.variantB };
 }
@@ -87,25 +145,30 @@ function findVariant(answersArr) {
 function resetQuiz() {
     quizState = 'questions';
     currentQuestionIndex = 0;
-    initQuizData(); // переинициализируем с правильным вторым вопросом
+    initQuizData();
     renderQuiz();
 }
 
+// ---------- Отрисовка ----------
 function renderQuiz() {
     const container = document.getElementById('quizContainer');
-    if (!container) return;
-    if (quizQuestions.length === 0 || quizQuestions[1].options.length === 0) {
+    if (!container) {
+        console.warn('quizContainer не найден');
+        return;
+    }
+    if (!quizQuestions.length) {
         container.innerHTML = '<div style="text-align:center; padding:40px;">⏳ Загрузка...</div>';
         return;
     }
     totalQuestions = quizQuestions.length;
     if (quizState === 'questions') {
-        let progressHtml = `<div class="quiz-progress"><div class="quiz-progress-bar" style="width: ${((currentQuestionIndex+1)/totalQuestions)*100}%;"></div></div>`;
-        let question = quizQuestions[currentQuestionIndex];
-        let html = progressHtml;
-        html += `<div class="quiz-question fade-up"><p>${escapeHtml(question.text)}</p><div class="quiz-options" data-q="${currentQuestionIndex}">`;
+        const progressWidth = ((currentQuestionIndex+1)/totalQuestions)*100;
+        let html = `<div class="quiz-progress"><div class="quiz-progress-bar" style="width: ${progressWidth}%;"></div></div>`;
+        const question = quizQuestions[currentQuestionIndex];
+        html += `<div class="quiz-question fade-up"><p>${escapeHtml(question.text)}</p><div class="quiz-options">`;
         for (let opt of question.options) {
-            html += `<div class="quiz-option ${answers[currentQuestionIndex] === opt ? 'selected' : ''}" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</div>`;
+            const selectedClass = answers[currentQuestionIndex] === opt ? 'selected' : '';
+            html += `<div class="quiz-option ${selectedClass}" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</div>`;
         }
         html += `</div></div>`;
         html += `<div class="quiz-nav"><button id="quizPrevBtn" class="btn-secondary" ${currentQuestionIndex === 0 ? 'disabled' : ''}>◀ Назад</button>`;
@@ -119,13 +182,12 @@ function renderQuiz() {
 
         // Обработчики выбора опций
         document.querySelectorAll('.quiz-option').forEach(opt => {
-            opt.addEventListener('click', function() {
+            opt.addEventListener('click', (e) => {
                 if (isAnalyzing) return;
-                const selectedValue = this.dataset.opt;
-                answers[currentQuestionIndex] = selectedValue;
-                // Если это первый вопрос (роль), обновляем второй вопрос
+                const selected = e.currentTarget.dataset.opt;
+                answers[currentQuestionIndex] = selected;
                 if (currentQuestionIndex === 0) {
-                    currentRole = selectedValue;
+                    currentRole = selected;
                     updateSecondQuestion(currentRole);
                 }
                 renderQuiz();
@@ -154,9 +216,9 @@ function renderQuiz() {
                 }
             });
         }
-        const submitQuiz = document.getElementById('submitQuizBtn');
-        if (submitQuiz) {
-            submitQuiz.addEventListener('click', () => {
+        const submitBtn = document.getElementById('submitQuizBtn');
+        if (submitBtn) {
+            submitBtn.addEventListener('click', () => {
                 if (isAnalyzing) {
                     alert('Подождите, анализ уже выполняется...');
                     return;
@@ -170,17 +232,9 @@ function renderQuiz() {
                     return;
                 }
                 isAnalyzing = true;
-                submitQuiz.disabled = true;
-                submitQuiz.style.opacity = '0.5';
-                submitQuiz.style.cursor = 'not-allowed';
-
-                container.innerHTML = `
-                    <div class="quiz-loading">
-                        <div class="quiz-spinner"></div>
-                        <p>Анализируем ваши ответы...</p>
-                    </div>
-                `;
-
+                submitBtn.disabled = true;
+                submitBtn.style.opacity = '0.5';
+                container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
                 setTimeout(() => {
                     const variant = findVariant(answers);
                     quizState = 'choice';
@@ -240,9 +294,8 @@ function showResult(variant) {
                 container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
                 isSubmittingChoice = false;
             };
-            if (typeof currentUserId !== 'undefined' && currentUserId) sendQuizResult(currentUserId);
-            else if (typeof getOrCreateLocalUserId === 'function') sendQuizResult(getOrCreateLocalUserId());
-            else sendQuizResult('unknown');
+            const uid = (typeof currentUserId !== 'undefined' && currentUserId) ? currentUserId : (typeof getOrCreateLocalUserId === 'function' ? getOrCreateLocalUserId() : 'unknown');
+            sendQuizResult(uid);
         });
     });
     const resetBtn = document.getElementById('resetQuizBtn');
