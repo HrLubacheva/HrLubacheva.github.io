@@ -1,672 +1,575 @@
-/* styles.css – единый файл, без дублирования */
+/* ========== Базовые переменные и сброс ========== */
 :root {
-    --bg: #F4F7FB;
-    --surface: #FFFFFF;
-    --text: #12263F;
     --primary: #2D6A9F;
-    --accent: #F9A826;
-    --surface-soft: #F8FAFE;
-    --border: #E4E9F2;
-    --shadow: 0 18px 50px rgba(17,40,82,0.08);
+    --primary-dark: #1F4A6E;
+    --primary-light: #4A8BC2;
+    --secondary: #6c757d;
+    --dark-bg: #1a2a3a;
+    --light-bg: #f8f9fa;
+    --surface-soft: #ffffff;
+    --border: #e0e0e0;
+    --text-dark: #212529;
+    --text-light: #f8f9fa;
+    --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+    --shadow-md: 0 8px 24px rgba(0,0,0,0.1);
+    --shadow-lg: 0 20px 30px -12px rgba(0,0,0,0.15);
+    --radius-md: 16px;
+    --radius-lg: 28px;
+    --transition: all 0.25s ease;
 }
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
-    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: #ffffff;
+    line-height: 1.5;
+    scroll-behavior: smooth;
 }
+
 .container {
-    max-width: 1280px;
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 0 28px;
+    padding: 0 20px;
 }
-a, a:link, a:visited {
-    color: inherit;
-    text-decoration: none;
-}
-section {
-    padding: 82px 0;
-}
-.section-dark {
-    background: #12263F !important;
-    color: white;
-}
-.section-dark a {
-    color: #F9A826 !important;
-}
-.section-light {
-    background: var(--surface-soft);
-}
+
+/* ========== Типографика ========== */
 .section-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 20px;
-    letter-spacing: -0.02em;
-}
-
-/* ===== ШАПКА ===== */
-.navbar {
-    position: sticky;
-    top: 0;
-    background: rgba(255,255,255,0.96);
-    backdrop-filter: blur(18px);
-    border-bottom: 1px solid rgba(73,95,133,0.08);
-    padding: 18px 0;
-    z-index: 100;
-}
-.nav-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-}
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 800;
-    font-size: 1.7rem;
-    color: var(--text);
-}
-.logo-triangle {
-    width: 28px;
-    height: 28px;
-    background: var(--primary);
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-}
-.logo-sub {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--primary);
-    margin-left: 4px;
-}
-.nav-bottom {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    white-space: nowrap;
-}
-.nav-links {
-    display: inline-flex;
-    gap: 28px;
-    font-weight: 600;
-    padding-bottom: 4px;
-}
-.nav-links a {
-    position: relative;
-    font-size: 1rem;
-    transition: color 0.3s;
-}
-.nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: var(--primary);
-    transition: width 0.3s;
-}
-.nav-links a:hover::after,
-.nav-links a.active::after {
-    width: 100%;
-}
-.nav-links a:hover {
-    color: var(--primary);
-}
-.social-icons {
-    display: flex;
-    gap: 12px;
-}
-.social-icons a {
-    display: inline-flex;
-    width: 44px;
-    height: 44px;
-    border-radius: 16px;
-    background: rgba(45,106,159,0.08);
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s, background 0.3s;
-    color: var(--primary);
-}
-.social-icons a:hover {
-    background: var(--primary);
-    transform: translateY(-3px);
-    color: white;
-}
-.social-icons svg {
-    width: 22px;
-    height: 22px;
-    display: block;
-}
-
-/* ===== КНОПКИ ===== */
-.btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, var(--primary), #1D4D7A);
-    color: white;
-    padding: 14px 32px;
-    border-radius: 999px;
+    font-size: 2.2rem;
     font-weight: 700;
-    border: none;
-    cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+    margin-bottom: 48px;
+    color: var(--primary-dark);
 }
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 35px rgba(45,106,159,0.2);
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 32px;
+    }
 }
-.btn-secondary {
+
+/* ========== Кнопки ========== */
+.btn-primary, .btn-secondary {
     display: inline-block;
-    background: transparent;
-    border: 1px solid rgba(45,106,159,0.28);
-    color: var(--primary);
-    padding: 10px 24px;
-    border-radius: 999px;
+    padding: 12px 28px;
+    border-radius: 40px;
     font-weight: 600;
-    transition: all 0.3s;
+    text-decoration: none;
     cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    font-size: 1rem;
 }
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active {
+    transform: scale(0.97);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
 .btn-secondary:hover {
     background: var(--primary);
     color: white;
     transform: translateY(-2px);
 }
 
-/* ===== HERO ===== */
-.hero-grid {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 60px;
-}
-.hero-content {
-    flex: 1.2;
-    min-width: 280px;
-}
-.hero-image {
-    flex: 0.8;
-    min-width: 280px;
-    text-align: center;
-}
-.hero-title {
-    font-size: clamp(2.6rem, 5vw, 3.8rem);
-    font-weight: 800;
-    line-height: 1.05;
-    background: linear-gradient(135deg, var(--text), var(--primary));
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-}
-.hero-subtitle {
-    font-size: 1.35rem;
-    font-weight: 600;
-    margin-bottom: 24px;
-    color: var(--primary);
-}
-.hero-text {
-    font-size: 1.08rem;
-    margin-bottom: 28px;
-    color: #5C6E87;
-    max-width: 680px;
-}
-.hero-text strong {
-    color: var(--text);
-}
-.hero-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 36px;
-    box-shadow: var(--shadow);
-}
-.small-note {
-    margin-top: 20px;
-    font-size: 0.95rem;
-    color: #5C6E87;
-    border-left: 3px solid var(--primary);
-    padding-left: 18px;
-}
-
-/* ===== КАРТОЧКИ И СЕТКИ ===== */
-.roles-grid, .process-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin: 40px 0;
-}
-.role-card, .process-card, .service-card,
-.quiz-card, .checklist-card, .calendar-card,
-.stat-item, .benefit-card {
-    background: var(--surface);
-}
-.role-card, .process-card {
-    flex: 1;
-    border-radius: 28px;
-    padding: 30px;
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-.role-card:hover, .process-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 25px 55px rgba(17,40,82,0.12);
-}
-.process-card {
-    text-align: center;
-}
-.process-step {
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--primary);
-    margin-bottom: 12px;
-}
-.services-flex {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin: 40px 0;
-}
-.service-card {
-    flex: 1;
-    border-radius: 28px;
-    padding: 36px 32px;
-    border: 1px solid var(--border);
-    transition: transform 0.3s, box-shadow 0.3s;
-}
-.service-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 24px 50px rgba(17,40,82,0.08);
-}
-.stats-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 30px;
-    margin: 56px 0 20px;
-}
-.stat-item {
-    flex: 1;
-    text-align: center;
-    padding: 24px 18px;
-    background: var(--surface-soft);
-    border-radius: 32px;
-    transition: transform 0.3s;
-}
-.stat-item:hover {
-    transform: translateY(-5px);
-}
-.stat-number {
-    font-size: 3.5rem;
-    font-weight: 800;
-    color: var(--primary);
-}
-.benefits-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
-    margin-top: 40px;
-}
-.benefit-card {
-    background: rgba(255,255,255,0.08);
-    flex: 1;
-    padding: 32px 26px;
-    border-radius: 24px;
-    border-left: 4px solid var(--primary);
-    transition: transform 0.3s;
-}
-.benefit-card:hover {
-    transform: translateX(5px);
-    background: rgba(255,255,255,0.12);
-}
-
-/* ===== КАЛЬКУЛЯТОР, КВИЗ, МОДАЛКИ ===== */
-.calculator-tabs {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-bottom: 32px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 16px;
-}
-.tab-btn {
-    background: none;
-    border: none;
-    padding: 12px 28px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 999px;
-    transition: 0.3s;
-    color: var(--text);
-}
-.tab-btn.active {
-    background: var(--primary);
-    color: white;
-}
-.tab-pane {
-    display: none;
-}
-.tab-pane.active {
-    display: block;
-    animation: fadeIn 0.4s ease;
-}
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.calc-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--surface-soft);
-    padding: 16px 24px;
-    border-radius: 60px;
-    margin-bottom: 12px;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-.add-service {
-    margin-top: 20px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    align-items: flex-end;
-}
-.add-service select, .add-service input {
-    padding: 12px 18px;
-    border-radius: 60px;
-    border: 1px solid var(--border);
-    background: var(--surface-soft);
-    font-size: 1rem;
-}
-.total-block {
-    background: rgba(45,106,159,0.08);
-    padding: 24px;
-    border-radius: 32px;
-    text-align: center;
-    margin-top: 32px;
-}
-
-.quiz-card, .checklist-card, .calendar-card {
-    background: var(--surface);
-    border-radius: 28px;
-    padding: 36px;
-    box-shadow: var(--shadow);
-    margin-top: 40px;
-}
-.quiz-question {
-    margin-bottom: 28px;
-}
-.quiz-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-.quiz-option {
-    background: var(--surface-soft);
-    border: 1px solid var(--border);
-    padding: 10px 24px;
-    border-radius: 60px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.quiz-option.selected {
-    background: var(--primary);
-    color: white;
-}
-.quiz-result {
-    margin-top: 28px;
-    padding: 24px;
-    background: rgba(45,106,159,0.08);
-    border-radius: 28px;
-    display: none;
-}
-
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(4px);
-    z-index: 2000;
-    align-items: center;
-    justify-content: center;
-}
-.modal-content {
+/* ========== Навигация ========== */
+.navbar {
     background: white;
-    max-width: 500px;
-    width: 90%;
-    padding: 40px;
-    border-radius: 32px;
-    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
 }
 
-.contact-block {
-    text-align: center;
-    max-width: 700px;
-    margin: 0 auto;
+.nav-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    flex-wrap: wrap;
 }
-.contact-line {
-    margin: 20px 0;
+
+.logo {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 12px;
-}
-footer {
-    text-align: center;
-    padding: 32px;
-    border-top: 1px solid var(--border);
-    font-size: 0.85rem;
-    color: #6B7F95;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
 }
 
-/* ===== АНИМАЦИИ ПРИ СКРОЛЛЕ – простые и единые ===== */
-.fade-up {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.4, 1),
-                transform 0.8s cubic-bezier(0.2, 0.8, 0.4, 1);
-}
-.fade-up.visible {
-    opacity: 1 !important;
-    transform: translateY(0) !important;
-}
-/* Разные смещения для разных элементов */
-.hero-title.fade-up,
-.hero-subtitle.fade-up {
-    transform: translateY(20px);
-    transition-duration: 0.6s;
-}
-.section-title.fade-up {
-    transform: translateY(25px);
-    transition-duration: 0.6s;
-}
-.role-card.fade-up,
-.service-card.fade-up,
-.benefit-card.fade-up,
-.process-card.fade-up {
-    transform: translateY(50px);
-    transition-duration: 0.7s;
-}
-.stat-item.fade-up {
-    transform: translateY(35px);
-    transition-duration: 0.5s;
+.logo-sub {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--secondary);
 }
 
-/* Бургер-меню */
+.social-icons {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icons a {
+    color: var(--primary);
+    transition: var(--transition);
+}
+
+.social-icons a:hover {
+    transform: translateY(-2px);
+    opacity: 0.8;
+}
+
 .burger-menu {
     display: none;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30px;
-    height: 22px;
-    background: transparent;
+    background: none;
     border: none;
     cursor: pointer;
-    z-index: 101;
+    padding: 10px;
 }
+
 .burger-menu span {
-    width: 100%;
-    height: 2px;
-    background: var(--text);
-    transition: all 0.3s;
-    border-radius: 2px;
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--primary);
+    margin: 5px 0;
+    transition: 0.2s;
 }
 
-/* Мобильная адаптация */
-@media (max-width: 768px) {
-    .container { padding: 0 16px; }
-    .navbar { padding: 8px 0; position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); }
-    body { padding-top: 80px; }
-    .logo { font-size: 1.3rem; }
-    .logo-triangle { width: 20px; height: 20px; }
-    .social-icons a { width: 36px; height: 36px; }
-    .social-icons { margin-right: 50px; }
-    .burger-menu { display: flex; }
-    .nav-bottom { position: fixed; top: 70px; left: -100%; width: 100%; height: calc(100vh - 70px); background: rgba(255,255,255,0.98); backdrop-filter: blur(10px); transition: left 0.3s; z-index: 99; overflow-y: auto; padding: 20px; }
-    .nav-bottom.open { left: 0; }
-    .nav-links { display: flex; flex-direction: column; align-items: center; gap: 20px; }
-    .nav-links a { font-size: 1.2rem; padding: 10px; }
-    .hero-title { font-size: 2rem; }
-    .hero-grid { flex-direction: column; gap: 40px; }
-    .section-title { font-size: 1.8rem; }
-    .roles-grid, .process-grid, .benefits-grid, .services-flex { flex-direction: column; }
-    .stats-grid { flex-direction: column; align-items: center; }
-    .stat-number { font-size: 2.5rem; }
-    .btn-primary { width: 100%; justify-content: center; }
-    section { padding: 60px 0; }
-    .fade-up { transform: translateY(25px); transition-duration: 0.5s; }
-    .role-card.fade-up, .service-card.fade-up { transform: translateY(30px); }
+.nav-bottom {
+    background: var(--light-bg);
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin: 10px 0;
 }
-@media (prefers-reduced-motion: reduce) {
-    .fade-up { transition: none !important; opacity: 1 !important; transform: none !important; }
-}
-/* ===== ДОПОЛНИТЕЛЬНЫЕ УЛУЧШЕНИЯ ===== */
 
-/* Активная ссылка в навигации */
-.nav-links a.active {
+.nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.nav-links a:hover {
     color: var(--primary);
 }
-.nav-links a.active::after {
-    width: 100%;
+
+@media (max-width: 768px) {
+    .burger-menu {
+        display: block;
+    }
+    .nav-bottom {
+        display: none;
+        background: white;
+        border-radius: 0;
+        padding: 20px;
+        margin: 0;
+    }
+    .nav-bottom.open {
+        display: block;
+    }
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+    body.menu-open {
+        overflow: hidden;
+    }
 }
 
-/* Стили для тост-уведомлений (вынесены из core.js) */
-.custom-toast {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(8px);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 40px;
-    font-size: 1rem;
-    z-index: 10000;
-    font-family: 'Inter', sans-serif;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    animation: toastFade 0.3s ease;
-}
-@keyframes toastFade {
-    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-/* Улучшенные состояния для инпутов и кнопок */
-input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
-}
-button:disabled, .btn-primary:disabled, .btn-secondary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-
-/* Плавный скролл для всей страницы (уже есть в body, но добавим для якорей) */
-html {
-    scroll-behavior: smooth;
-}
-/* ===== ФИКСЫ ДЛЯ ПРИЖАТИЯ ФУТЕРА И ПРАВИЛЬНОГО ПОЗИЦИОНИРОВАНИЯ ===== */
-
-/* Оборачиваем всё содержимое, кроме футера, в flex-контейнер */
-body {
+/* ========== Hero секция ========== */
+.hero-grid {
     display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    margin: 0;
-}
-main {
-    flex: 1; /* Растягивает основное содержимое на всю высоту, футер прижимается вниз */
-}
-footer {
-    margin-top: auto; /* Дополнительная страховка для прижатия */
-    width: 100%;
+    gap: 40px;
+    align-items: center;
+    padding: 60px 0;
+    flex-wrap: wrap;
 }
 
-/* Для секций, которые могут выпадать – обрезаем переполнение */
-section {
-    overflow-x: hidden;
-    width: 100%;
+.hero-content {
+    flex: 1.2;
 }
 
-/* Кнопка "Наверх", если она будет добавлена – фиксируем внизу справа */
-.back-to-top {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 48px;
-    height: 48px;
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.hero-text {
+    font-size: 1rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+.small-note {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    margin-top: 15px;
+}
+
+.hero-image {
+    flex: 0.8;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .hero-grid {
+        flex-direction: column;
+        text-align: center;
+    }
+    .hero-title {
+        font-size: 2rem;
+    }
+}
+
+/* ========== Карточки и сетки ========== */
+.roles-grid, .services-flex, .benefits-grid, .stats-grid, .process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    margin: 40px 0;
+}
+
+.role-card, .service-card, .benefit-card, .process-card, .stat-item {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid var(--border);
+}
+
+.role-card:hover, .service-card:hover, .benefit-card:hover, .process-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: var(--secondary);
+}
+
+.process-step {
+    width: 40px;
+    height: 40px;
     background: var(--primary);
+    color: white;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s;
-    z-index: 999;
-}
-.back-to-top.show {
-    opacity: 1;
-    visibility: visible;
-}
-.back-to-top:hover {
-    transform: translateY(-3px);
-    background: #1D4D7A;
+    font-weight: bold;
+    margin-bottom: 15px;
 }
 
-/* Чтобы модальные окна не "убегали" при открытии */
+.process-title {
+    text-align: center;
+    margin: 40px 0 20px;
+    font-size: 1.8rem;
+}
+
+/* ========== Калькулятор ========== */
+.calculator-tabs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    background: var(--light-bg);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 500;
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+.tab-pane {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.tab-pane.active {
+    display: block;
+    opacity: 1;
+    animation: fadeIn 0.25s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.add-service {
+    display: flex;
+    gap: 12px;
+    margin: 20px 0;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.add-service select, .calc-qty {
+    padding: 10px;
+    border-radius: 40px;
+    border: 1px solid var(--border);
+    background: white;
+}
+
+.calc-qty {
+    width: 80px;
+}
+
+.calc-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border);
+}
+
+.total-block {
+    margin-top: 30px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: right;
+}
+
+.discount-info {
+    font-size: 0.9rem;
+    color: green;
+}
+
+/* ========== Квиз ========== */
+.quiz-card, .calendar-card, .checklist-card {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    margin: 60px 0;
+    box-shadow: var(--shadow-md);
+}
+
+.quiz-question {
+    margin-bottom: 30px;
+}
+
+.quiz-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 15px;
+}
+
+.quiz-option {
+    background: var(--light-bg);
+    padding: 10px 20px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.quiz-option.selected {
+    background: var(--primary);
+    color: white;
+}
+
+.quiz-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.quiz-progress {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 10px;
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+.quiz-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+/* ========== Форма ========== */
+.callback-form input, .callback-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    font-family: inherit;
+}
+
+.callback-form textarea {
+    border-radius: 20px;
+}
+
+.consent-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 15px 0;
+}
+
+.btn-primary.loading {
+    pointer-events: none;
+    opacity: 0.7;
+    position: relative;
+    padding-right: 2.5rem;
+}
+
+.btn-primary.loading::after {
+    content: '';
+    position: absolute;
+    right: 1rem;
+    top: calc(50% - 0.6rem);
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ========== Модальные окна ========== */
 .modal {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(4px);
-    z-index: 2000;
-    display: none;
+    background: rgba(0,0,0,0.5);
     align-items: center;
     justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
 }
+
 .modal.show {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
 }
+
 .modal-content {
-    max-height: 90vh;
-    overflow-y: auto;
+    background: white;
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    max-width: 500px;
+    width: 90%;
+    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transform: scale(0.95);
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+/* ========== Анимация появления ========== */
+.fade-up {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ========== Адаптив ========== */
+@media (max-width: 640px) {
+    .calculator-tabs .tab-btn {
+        flex: 1 0 auto;
+        font-size: 0.8rem;
+        padding: 8px 6px;
+    }
+    .add-service select, .add-service .calc-qty, .add-service .add-service-btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+    .quiz-options {
+        justify-content: center;
+    }
+}
+
+/* ========== Учёт reduced motion ========== */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .fade-up, .tab-pane, .modal-content, .role-card:hover {
+        transform: none !important;
+    }
 }

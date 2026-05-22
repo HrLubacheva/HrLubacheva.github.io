@@ -1,10 +1,9 @@
-/**
- * Квиз для определения карьерного пути – статическая версия
- */
 let quizQuestions = [];
 let answers = [];
 let quizState = 'questions';
 let quizInitialized = false;
+let currentQuestionIndex = 0;
+let totalQuestions = 0;
 
 const LOCAL_QUESTIONS = [
     { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] },
@@ -15,19 +14,16 @@ const LOCAL_QUESTIONS = [
 ];
 
 const VARIANTS_MATRIX = [
-    { priority: 1, role: "Подбираю сотрудников", level: "*", urgency: "*", importance: "*", budget: "*",
-      variantA: "HR-аудит и закрытие вакансии под ключ", variantB: "Бесплатная диагностика вакансии" },
-    { priority: 2, role: "Ищу работу", level: "Junior / начинающий", urgency: "*", importance: "*", budget: "*",
-      variantA: "Карьерная стратегия + упаковка резюме", variantB: "Экспресс-консультация по поиску" },
-    { priority: 3, role: "Ищу работу", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*",
-      variantA: "Тренинг «Продай себя дорого» и переговоры о зарплате", variantB: "Индивидуальное сопровождение до оффера" },
-    { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*",
-      variantA: "Индивидуальная карьерная стратегия + полное сопровождение", variantB: "Тренинг «Продай себя дорого» + самоподготовка" }
+    { priority: 1, role: "Подбираю сотрудников", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "HR-аудит и закрытие вакансии под ключ", variantB: "Бесплатная диагностика вакансии" },
+    { priority: 2, role: "Ищу работу", level: "Junior / начинающий", urgency: "*", importance: "*", budget: "*", variantA: "Карьерная стратегия + упаковка резюме", variantB: "Экспресс-консультация по поиску" },
+    { priority: 3, role: "Ищу работу", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*", variantA: "Тренинг «Продай себя дорого» и переговоры о зарплате", variantB: "Индивидуальное сопровождение до оффера" },
+    { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная карьерная стратегия + полное сопровождение", variantB: "Тренинг «Продай себя дорого» + самоподготовка" }
 ];
 
 function initQuizData() {
     quizQuestions = LOCAL_QUESTIONS;
     answers = new Array(quizQuestions.length).fill(null);
+    currentQuestionIndex = 0;
 }
 
 function findVariant(answersArr) {
@@ -52,33 +48,71 @@ function renderQuiz() {
         container.innerHTML = '<div style="text-align:center; padding:40px;">⏳ Загрузка...</div>';
         return;
     }
+    totalQuestions = quizQuestions.length;
     if (quizState === 'questions') {
-        let html = '';
-        for (let i = 0; i < quizQuestions.length; i++) {
-            const q = quizQuestions[i];
-            html += `<div class="quiz-question"><p>${escapeHtml(q.text)}</p><div class="quiz-options" data-q="${i}">`;
-            for (let j = 0; j < q.options.length; j++) {
-                const opt = q.options[j];
-                html += `<div class="quiz-option ${answers[i] === opt ? 'selected' : ''}" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</div>`;
-            }
-            html += `</div></div>`;
+        let progressHtml = `<div class="quiz-progress"><div class="quiz-progress-bar" style="width: ${((currentQuestionIndex+1)/totalQuestions)*100}%;"></div></div>`;
+        let question = quizQuestions[currentQuestionIndex];
+        let html = progressHtml;
+        html += `<div class="quiz-question fade-up"><p>${escapeHtml(question.text)}</p><div class="quiz-options" data-q="${currentQuestionIndex}">`;
+        for (let opt of question.options) {
+            html += `<div class="quiz-option ${answers[currentQuestionIndex] === opt ? 'selected' : ''}" data-opt="${escapeHtml(opt)}">${escapeHtml(opt)}</div>`;
         }
-        html += `<button id="submitQuizBtn" class="btn-primary">Показать варианты</button>`;
+        html += `</div></div>`;
+        html += `<div class="quiz-nav"><button id="quizPrevBtn" class="btn-secondary" ${currentQuestionIndex === 0 ? 'disabled' : ''}>◀ Назад</button>`;
+        if (currentQuestionIndex === totalQuestions - 1) {
+            html += `<button id="submitQuizBtn" class="btn-primary">Показать варианты</button>`;
+        } else {
+            html += `<button id="quizNextBtn" class="btn-primary">Далее ▶</button>`;
+        }
+        html += `</div>`;
         container.innerHTML = html;
+
         document.querySelectorAll('.quiz-option').forEach(opt => {
             opt.addEventListener('click', function() {
-                const qIdx = parseInt(this.parentElement.dataset.q);
-                answers[qIdx] = this.dataset.opt;
+                answers[currentQuestionIndex] = this.dataset.opt;
                 renderQuiz();
             });
         });
-        document.getElementById('submitQuizBtn')?.addEventListener('click', () => {
-            if (answers.includes(null)) { alert('Ответьте на все вопросы'); return; }
-            quizState = 'choice';
-            container.innerHTML = '<div style="text-align:center; padding:40px;">⏳ Анализ ответов...</div>';
-            const variant = findVariant(answers);
-            showResult(variant);
-        });
+
+        const nextBtn = document.getElementById('quizNextBtn');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                if (answers[currentQuestionIndex] === null) {
+                    alert('Пожалуйста, выберите ответ');
+                    return;
+                }
+                currentQuestionIndex++;
+                renderQuiz();
+            });
+        }
+        const prevBtn = document.getElementById('quizPrevBtn');
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    renderQuiz();
+                }
+            });
+        }
+        const submitQuiz = document.getElementById('submitQuizBtn');
+        if (submitQuiz) {
+            submitQuiz.addEventListener('click', () => {
+                if (answers[currentQuestionIndex] === null) {
+                    alert('Выберите ответ перед отправкой');
+                    return;
+                }
+                if (answers.includes(null)) {
+                    alert('Ответьте на все вопросы');
+                    return;
+                }
+                quizState = 'choice';
+                container.innerHTML = '<div style="text-align:center; padding:40px;">⏳ Анализ ответов...</div>';
+                const variant = findVariant(answers);
+                showResult(variant);
+            });
+        }
+    } else if (quizState === 'choice') {
+        showResult(findVariant(answers));
     }
 }
 
@@ -135,7 +169,9 @@ function initQuiz() {
     initQuizData();
     renderQuiz();
 }
+
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(initQuiz, 100));
 else setTimeout(initQuiz, 100);
+
 window.renderQuiz = renderQuiz;
 window.initQuiz = initQuiz;

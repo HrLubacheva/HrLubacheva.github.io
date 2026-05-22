@@ -1,4 +1,4 @@
-#!/usr/env python3
+#!/usr/bin/env python3
 import os
 from datetime import datetime
 
@@ -10,7 +10,7 @@ def read_component(dir_path, name):
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
-def build_page():
+def build_page(editor_mode=False):   # параметр добавлен для совместимости, но не используется
     sections_order = [
         "hero.html", "roles.html", "services.html", "stats.html",
         "benefits.html", "process.html", "calculator.html", "quiz.html",

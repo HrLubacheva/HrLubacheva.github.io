@@ -8,7 +8,6 @@ import sys
 
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
-
 def get_free_port(start_port=8080):
     port = start_port
     while True:
@@ -21,7 +20,6 @@ def get_free_port(start_port=8080):
                 if port - start_port > 100:
                     raise RuntimeError("Не найден свободный порт")
 
-
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
@@ -31,29 +29,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
         super().end_headers()
 
-    # УБИРАЕМ автосборку — она ломает соединения
-    # def do_GET(self):
-    #     if self.path == "/" or self.path == "/index.html":
-    #         print("🔄 Пересборка index.html...")
-    #         try:
-    #             build_page(editor_mode=False)
-    #             print("✅ Пересборка завершена")
-    #         except Exception as e:
-    #             print(f"❌ Ошибка сборки: {e}")
-    #     return super().do_GET()
-
-
 def main():
     if not os.path.exists("build.py") or not os.path.exists("components"):
         print("❌ Запустите из корневой папки проекта")
         sys.exit(1)
 
-    # Сначала собираем страницы один раз
+    # Сборка страницы один раз
     print("📦 Первичная сборка...")
     try:
         from build import build_page
-        build_page(editor_mode=False)
-        build_page(editor_mode=True)
+        build_page()   # только публичный сайт, редактор не собираем
         print("✅ Сборка завершена")
     except Exception as e:
         print(f"❌ Ошибка сборки: {e}")
@@ -69,7 +54,6 @@ def main():
         except KeyboardInterrupt:
             print("\n🛑 Сервер остановлен")
             sys.exit(0)
-
 
 if __name__ == "__main__":
     main()

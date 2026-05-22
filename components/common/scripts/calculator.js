@@ -1,37 +1,13 @@
 /**
  * Калькулятор стоимости услуг
- * Загружает данные из Google Sheets и управляет корзиной
- *
- * @module calculator
- */
-
-// ---------- Глобальные переменные ----------
-/**
- * Корзина выбранных услуг
- * @type {Array<{name: string, price: number, qty: number, cat: string}>}
  */
 let cart = [];
-
-/**
- * Флаг инициализации калькулятора
- * @type {boolean}
- */
 let calculatorInitialized = false;
-
-/**
- * Данные услуг по категориям
- * @type {Object.<string, Array<{service: string, price: number, sort: number}>>}
- */
 let servicesData = { business: [], individual: [], corporate: [], group: [] };
 
 const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTDxpfQuCLTjJpiJHgK26zSt_S8a-1LtFUGZV0v1eSg2bHat_BMK6pP4RhXkF5aXPtl9AS9UDj4-a1a/pub?output=csv';
 const CACHE_KEY_SERVICES = 'hr_services_data';
 
-/**
- * Парсит цену из строки (удаляет пробелы, заменяет запятую)
- * @param {string} value - Строка с ценой
- * @returns {number} Числовое значение цены
- */
 function parsePrice(value) {
     if (!value) return 0;
     let cleaned = String(value).replace(/\s/g, '').replace(',', '.');
@@ -40,17 +16,10 @@ function parsePrice(value) {
     return isNaN(result) ? 0 : result;
 }
 
-/**
- * Загружает услуги из Google Sheets CSV
- * @returns {Promise<void>}
- */
 async function loadServicesFromGoogleSheets() {
     showLoading('Загрузка услуг...');
     try {
-        const csvText = await loadWithCache(CACHE_KEY_SERVICES, () => {
-            return fetchTextWithRetry(GOOGLE_SHEETS_CSV_URL, 3, 8000);
-        }, 10 * 60 * 1000);
-
+        const csvText = await loadWithCache(CACHE_KEY_SERVICES, () => fetchTextWithRetry(GOOGLE_SHEETS_CSV_URL, 3, 8000), 10 * 60 * 1000);
         const rows = [];
         const lines = csvText.split('\n');
         for (const line of lines) {
@@ -59,7 +28,6 @@ async function loadServicesFromGoogleSheets() {
             if (values.length >= 3 && values[0] && values[1] && values[2]) rows.push(values);
         }
         if (rows.length === 0) throw new Error('Нет данных');
-
         const headers = rows[0].map(h => h.toLowerCase());
         const colIndex = {
             category: headers.indexOf('category'),
@@ -68,7 +36,6 @@ async function loadServicesFromGoogleSheets() {
             sort: headers.indexOf('sort')
         };
         servicesData = { business: [], individual: [], corporate: [], group: [] };
-
         for (let i = 1; i < rows.length; i++) {
             const values = rows[i];
             const category = values[colIndex.category];
@@ -76,25 +43,13 @@ async function loadServicesFromGoogleSheets() {
             const price = parsePrice(values[colIndex.price]);
             const sort = colIndex.sort !== -1 ? (parseInt(values[colIndex.sort]) || 999) : 999;
             if (category && service && price > 0) {
-                const catMap = {
-                    'business': 'business',
-                    'individual': 'individual',
-                    'corporate': 'corporate',
-                    'group': 'group'
-                };
+                const catMap = { 'business': 'business', 'individual': 'individual', 'corporate': 'corporate', 'group': 'group' };
                 const cat = catMap[category.toLowerCase()];
-                if (cat) {
-                    servicesData[cat].push({ service, price, sort });
-                }
+                if (cat) servicesData[cat].push({ service, price, sort });
             }
         }
-
-        for (const cat in servicesData) {
-            servicesData[cat].sort((a, b) => a.sort - b.sort);
-        }
-
+        for (const cat in servicesData) servicesData[cat].sort((a,b) => a.sort - b.sort);
         updateSelectsFromData();
-
     } catch (error) {
         logError('Ошибка загрузки:', error);
         showToast('⚠️ Не удалось загрузить услуги. Используем локальные данные.', 4000);
@@ -104,9 +59,6 @@ async function loadServicesFromGoogleSheets() {
     }
 }
 
-/**
- * Загружает локальные данные (fallback при ошибке сети)
- */
 function loadLocalFallback() {
     servicesData = {
         business: [
@@ -140,9 +92,6 @@ function loadLocalFallback() {
     updateSelectsFromData();
 }
 
-/**
- * Обновляет select-элементы из загруженных данных
- */
 function updateSelectsFromData() {
     const selects = {
         'business-select': servicesData.business,
@@ -158,10 +107,6 @@ function updateSelectsFromData() {
     }
 }
 
-/**
- * Отображает корзину и обновляет итоговую сумму
- * Применяет скидку 5% при заказе 2+ услуг
- */
 function renderCart() {
     let total = 0, qty = 0;
     cart.forEach(i => { total += i.price * i.qty; qty += i.qty; });
@@ -171,23 +116,16 @@ function renderCart() {
     if (totalEl) totalEl.innerText = Math.round(final).toLocaleString() + ' ₽';
     const discountDiv = document.getElementById('discountInfo');
     if (discountDiv) {
-        if (qty >= 2) {
-            discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — вы экономите ${Math.round(total*0.05)} ₽`;
-        } else {
-            discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
-        }
+        if (qty >= 2) discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — экономия ${Math.round(total*0.05)} ₽`;
+        else discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
     }
-    const containers = {
-        business: document.getElementById('business-list'),
-        individual: document.getElementById('individual-list'),
-        corporate: document.getElementById('corporate-list'),
-        group: document.getElementById('group-list')
-    };
-    for (const container of Object.values(containers)) {
+    const containers = { business: 'business-list', individual: 'individual-list', corporate: 'corporate-list', group: 'group-list' };
+    for (const cat of Object.keys(containers)) {
+        const container = document.getElementById(containers[cat]);
         if (container) container.innerHTML = '';
     }
     cart.forEach((item, idx) => {
-        const container = containers[item.cat];
+        const container = document.getElementById(containers[item.cat]);
         if (!container) return;
         const div = document.createElement('div');
         div.className = 'calc-item';
@@ -196,20 +134,11 @@ function renderCart() {
     });
     document.querySelectorAll('.remove-item').forEach(btn => {
         btn.removeEventListener('click', btn._handler);
-        btn._handler = () => {
-            cart.splice(parseInt(btn.dataset.idx), 1);
-            renderCart();
-        };
+        btn._handler = () => { cart.splice(parseInt(btn.dataset.idx), 1); renderCart(); };
         btn.addEventListener('click', btn._handler);
     });
 }
 
-/**
- * Добавляет услугу в корзину
- * @param {string} cat - Категория ('business', 'individual', 'corporate', 'group')
- * @param {string} selectId - ID элемента select с услугами
- * @param {string} qtyId - ID элемента input с количеством
- */
 function addToCart(cat, selectId, qtyId) {
     const select = document.getElementById(selectId);
     if (!select) return;
@@ -219,18 +148,11 @@ function addToCart(cat, selectId, qtyId) {
     let quantity = parseInt(document.getElementById(qtyId).value);
     if (isNaN(quantity) || quantity < 1) quantity = 1;
     const existing = cart.find(i => i.name === name && i.cat === cat);
-    if (existing) {
-        existing.qty += quantity;
-    } else {
-        cart.push({ name, price, qty: quantity, cat });
-    }
+    if (existing) existing.qty += quantity;
+    else cart.push({ name, price, qty: quantity, cat });
     renderCart();
 }
 
-/**
- * Инициализирует калькулятор: загружает данные и настраивает обработчики
- * @returns {Promise<void>}
- */
 async function initCalculator() {
     if (calculatorInitialized) return;
     calculatorInitialized = true;
@@ -251,17 +173,21 @@ async function initCalculator() {
         }
     });
 
+    // Улучшенные табы с анимацией
     const tabs = document.querySelectorAll('.calculator-tabs .tab-btn');
     const panes = document.querySelectorAll('.tab-pane');
     tabs.forEach(btn => {
         btn.removeEventListener('click', btn._tabHandler);
         btn._tabHandler = () => {
             const tab = btn.dataset.tab;
+            const activePane = document.querySelector('.tab-pane.active');
+            if (activePane) activePane.classList.remove('active');
             tabs.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            panes.forEach(p => p.classList.remove('active'));
-            const activePane = document.getElementById(`tab-${tab}`);
-            if (activePane) activePane.classList.add('active');
+            const newPane = document.getElementById(`tab-${tab}`);
+            if (newPane) {
+                setTimeout(() => newPane.classList.add('active'), 20);
+            }
         };
         btn.addEventListener('click', btn._tabHandler);
     });
@@ -269,7 +195,6 @@ async function initCalculator() {
     log('✅ Калькулятор инициализирован');
 }
 
-// Экспортируем в глобальную область
 window.initCalculator = initCalculator;
 window.addToCart = addToCart;
 window.renderCart = renderCart;
