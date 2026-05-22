@@ -1768,6 +1768,7 @@ footer a:hover {
             <form id="callbackForm" class="callback-form">
                 <input type="text" id="callbackName" placeholder="👤 Ваше имя" required>
                 <input type="tel" id="callbackPhone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
+                <input type="email" id="callbackEmail" placeholder="📧 Email (необязательно)">
                 <textarea id="callbackComment" rows="3" placeholder="💬 Удобное время для звонка или дополнительная информация"></textarea>
                 <div class="consent-checkbox">
                     <input type="checkbox" id="callbackConsent" required>
@@ -1804,7 +1805,7 @@ footer a:hover {
                 <a href="#" id="privacyLink">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 22.05.2026 23:48:36
+                Версия: 23.05.2026 00:08:26
             </div>
         </div>
     </div>
@@ -2007,7 +2008,7 @@ function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
 // ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_frw4oDhfvusqCYk4AeGZr74Z2zSV9qOYFhQB9C5crRkTK827YcTGjjAhbuQqnmGNjA/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyHWw9C5L1JWARu_lMBVvodLJbmDPwWyza7rTVezFuGkBhGKNgqiLHEFTegHFUrD5yTig/exec';
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
@@ -2122,6 +2123,7 @@ function initCallbackForm() {
 
             const name = document.getElementById('callbackName').value.trim();
             let phoneField = document.getElementById('callbackPhone').value.trim();
+            const emailField = document.getElementById('callbackEmail')?.value.trim() || '';
             const comment = document.getElementById('callbackComment').value.trim() || 'Не указано';
 
             if (!name || !phoneField) {
@@ -2150,8 +2152,10 @@ function initCallbackForm() {
                     formType: 'Обратный звонок',
                     name: name,
                     phone: digits,
+                    email: emailField,
                     comment: comment,
-                    quizAnswers: '-',
+                    quizAnswers: window.quizAnswersRaw || '-',
+                    cart: typeof window.getCartData === 'function' ? window.getCartData() : '',
                     consent: true,
                     userId: userId
                 };
@@ -2484,21 +2488,22 @@ window.VARIANTS_MATRIX = [
     // ==================== АБСОЛЮТНЫЙ FALLBACK ====================
     { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная консультация (1ч) — 7 000 ₽", variantB: "Экспресс-консультация (30мин) — 3 500 ₽" }
 ];
-// ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, логирование корзины) ==========
+// ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, построчная корзина) ==========
 let cart = [];
 let calculatorInitialized = false;
 
-// Получить текстовое представление корзины для отправки
+// Получить текстовое представление корзины для отправки (каждый товар с новой строки)
 function getCartData() {
     if (!cart || cart.length === 0) return 'Корзина пуста';
     let total = 0;
-    let items = cart.map(item => {
+    let items = [];
+    cart.forEach(item => {
         total += item.price * item.qty;
-        return `${item.name} x${item.qty} (${(item.price * item.qty).toLocaleString()} ₽)`;
-    }).join('; ');
-    let discount = cart.length >= 2 ? ' (скидка 5%)' : '';
+        items.push(`${item.name} x${item.qty} — ${(item.price * item.qty).toLocaleString()} ₽`);
+    });
+    let discount = cart.length >= 2 ? '\n✅ Скидка 5%' : '';
     let finalTotal = Math.round(total * (cart.length >= 2 ? 0.95 : 1));
-    return items + '; Итого: ' + finalTotal.toLocaleString() + ' ₽' + discount;
+    return items.join('\n') + `\n💰 Итого: ${finalTotal.toLocaleString()} ₽` + discount;
 }
 window.getCartData = getCartData;
 
@@ -2589,12 +2594,12 @@ function renderCart() {
         btn._handler = () => {
             cart.splice(parseInt(btn.dataset.idx), 1);
             renderCart();
-            logCartToSheet('remove');
+            // logCartToSheet('remove'); // закомментировано, чтобы не спамить
         };
         btn.addEventListener('click', btn._handler);
     });
     // После каждого рендера (добавление/удаление) логируем изменение
-    // logCartToSheet('update');
+    // logCartToSheet('update'); // закомментировано, чтобы не спамить
 }
 
 function addToCart(cat, selectId, qtyId) {

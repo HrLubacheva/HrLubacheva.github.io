@@ -1,18 +1,19 @@
-// ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, логирование корзины) ==========
+// ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, построчная корзина) ==========
 let cart = [];
 let calculatorInitialized = false;
 
-// Получить текстовое представление корзины для отправки
+// Получить текстовое представление корзины для отправки (каждый товар с новой строки)
 function getCartData() {
     if (!cart || cart.length === 0) return 'Корзина пуста';
     let total = 0;
-    let items = cart.map(item => {
+    let items = [];
+    cart.forEach(item => {
         total += item.price * item.qty;
-        return `${item.name} x${item.qty} (${(item.price * item.qty).toLocaleString()} ₽)`;
-    }).join('; ');
-    let discount = cart.length >= 2 ? ' (скидка 5%)' : '';
+        items.push(`${item.name} x${item.qty} — ${(item.price * item.qty).toLocaleString()} ₽`);
+    });
+    let discount = cart.length >= 2 ? '\n✅ Скидка 5%' : '';
     let finalTotal = Math.round(total * (cart.length >= 2 ? 0.95 : 1));
-    return items + '; Итого: ' + finalTotal.toLocaleString() + ' ₽' + discount;
+    return items.join('\n') + `\n💰 Итого: ${finalTotal.toLocaleString()} ₽` + discount;
 }
 window.getCartData = getCartData;
 
@@ -103,12 +104,12 @@ function renderCart() {
         btn._handler = () => {
             cart.splice(parseInt(btn.dataset.idx), 1);
             renderCart();
-            logCartToSheet('remove');
+            // logCartToSheet('remove'); // закомментировано, чтобы не спамить
         };
         btn.addEventListener('click', btn._handler);
     });
     // После каждого рендера (добавление/удаление) логируем изменение
-    // logCartToSheet('update');
+    // logCartToSheet('update'); // закомментировано, чтобы не спамить
 }
 
 function addToCart(cat, selectId, qtyId) {

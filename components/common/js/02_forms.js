@@ -39,6 +39,7 @@ function initCallbackForm() {
 
             const name = document.getElementById('callbackName').value.trim();
             let phoneField = document.getElementById('callbackPhone').value.trim();
+            const emailField = document.getElementById('callbackEmail')?.value.trim() || '';
             const comment = document.getElementById('callbackComment').value.trim() || 'Не указано';
 
             if (!name || !phoneField) {
@@ -67,8 +68,10 @@ function initCallbackForm() {
                     formType: 'Обратный звонок',
                     name: name,
                     phone: digits,
+                    email: emailField,
                     comment: comment,
-                    quizAnswers: '-',
+                    quizAnswers: window.quizAnswersRaw || '-',
+                    cart: typeof window.getCartData === 'function' ? window.getCartData() : '',
                     consent: true,
                     userId: userId
                 };
