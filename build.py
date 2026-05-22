@@ -1,20 +1,16 @@
-#!/usr/bin/env python3
+#!/usr/env python3
 import os
-import re
-import time
 from datetime import datetime
 
 COMMON_DIR = "components/common"
 SECTIONS_DIR = "components/sections"
-
 
 def read_component(dir_path, name):
     path = os.path.join(dir_path, name)
     with open(path, "r", encoding="utf-8") as f:
         return f.read()
 
-
-def build_page(editor_mode=False):
+def build_page():
     sections_order = [
         "hero.html", "roles.html", "services.html", "stats.html",
         "benefits.html", "process.html", "calculator.html", "quiz.html",
@@ -34,28 +30,16 @@ def build_page(editor_mode=False):
     footer = read_component(COMMON_DIR, "footer.html")
     cookie_banner = read_component(COMMON_DIR, "cookie-banner.html")
     privacy_modal = read_component(COMMON_DIR, "privacy-modal.html")
+    scripts = read_component("components", "scripts-public.html")
 
     build_version = datetime.now().strftime("%d.%m.%Y %H:%M:%S")
     footer = footer.replace("{{VERSION}}", build_version)
 
-    if editor_mode:
-        scripts_content = read_component("components", "scripts-editor.html")
-        out_file = "editor.html"
-    else:
-        scripts_content = read_component("components", "scripts-public.html")
-        out_file = "index.html"
+    full_html = "".join([head, navbar, full_content, footer, cookie_banner, privacy_modal, scripts])
 
-    parts = [head, navbar, full_content, footer, cookie_banner, privacy_modal, scripts_content]
-    full_html = "".join(parts)
-
-    with open(out_file, "w", encoding="utf-8") as f:
+    with open("index.html", "w", encoding="utf-8") as f:
         f.write(full_html)
-
-    print(f"✅ Собрано {out_file}")
-
+    print("✅ Собрано index.html (редактор выключен)")
 
 if __name__ == "__main__":
-    # Service Worker временно отключён для стабильности анимаций
-    # generate_sw()
-    build_page(editor_mode=False)
-    build_page(editor_mode=True)
+    build_page()
