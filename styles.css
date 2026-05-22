@@ -599,3 +599,74 @@ button:disabled, .btn-primary:disabled, .btn-secondary:disabled {
 html {
     scroll-behavior: smooth;
 }
+/* ===== ФИКСЫ ДЛЯ ПРИЖАТИЯ ФУТЕРА И ПРАВИЛЬНОГО ПОЗИЦИОНИРОВАНИЯ ===== */
+
+/* Оборачиваем всё содержимое, кроме футера, в flex-контейнер */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+main {
+    flex: 1; /* Растягивает основное содержимое на всю высоту, футер прижимается вниз */
+}
+footer {
+    margin-top: auto; /* Дополнительная страховка для прижатия */
+    width: 100%;
+}
+
+/* Для секций, которые могут выпадать – обрезаем переполнение */
+section {
+    overflow-x: hidden;
+    width: 100%;
+}
+
+/* Кнопка "Наверх", если она будет добавлена – фиксируем внизу справа */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s;
+    z-index: 999;
+}
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+}
+.back-to-top:hover {
+    transform: translateY(-3px);
+    background: #1D4D7A;
+}
+
+/* Чтобы модальные окна не "убегали" при открытии */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+.modal.show {
+    display: flex;
+}
+.modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+}
