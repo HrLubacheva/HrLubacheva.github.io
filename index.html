@@ -518,14 +518,23 @@ body {
     }
 }
 
-/* ========== УЛУЧШЕННЫЙ БЛОК СТАТИСТИКИ ========== */
+/* ========== БЛОК СТАТИСТИКИ: 1/2/3 КОЛОНКИ ========== */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1fr;
     gap: 30px;
     margin: 40px 0;
 }
-
+@media (min-width: 576px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (min-width: 992px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
 .stat-item {
     text-align: center;
     background: var(--surface-soft);
@@ -535,21 +544,19 @@ body {
     transition: var(--transition);
     border: 1px solid var(--border);
 }
-
 .stat-item:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-md);
 }
-
 .stat-number-wrapper {
     display: flex;
     align-items: baseline;
     justify-content: center;
     gap: 4px;
     margin-bottom: 12px;
-    flex-wrap: wrap;
+    white-space: nowrap;
+    flex-wrap: nowrap;
 }
-
 .stat-number {
     font-size: 2.8rem;
     font-weight: 800;
@@ -557,21 +564,17 @@ body {
     line-height: 1.2;
     transition: all 0.2s ease;
 }
-
 .stat-plus {
     font-size: 2rem;
     font-weight: 700;
     color: var(--primary);
     line-height: 1.2;
-    margin-left: 2px;
 }
-
 .stat-label {
     font-size: 1rem;
     color: var(--secondary);
     font-weight: 500;
 }
-
 @media (max-width: 768px) {
     .stats-grid {
         gap: 20px;
@@ -587,13 +590,26 @@ body {
         font-size: 0.9rem;
     }
 }
+@media (max-width: 360px) {
+    .stat-number-wrapper {
+        white-space: normal;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
 
-/* ========== Секция преимуществ (улучшенная) ========== */
+/* ========== БЛОК ПРЕИМУЩЕСТВ: 2 КОЛОНКИ НА ДЕСКТОПЕ ========== */
 .benefits-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: 1fr;
     gap: 32px;
     margin: 48px 0;
+}
+@media (min-width: 768px) {
+    .benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+    }
 }
 .benefit-card {
     background: rgba(255, 255, 255, 0.95);
@@ -655,7 +671,7 @@ body {
     }
 }
 
-/* ========== Калькулятор (улучшенный, корзина внизу) ========== */
+/* ========== Калькулятор ========== */
 #calculator .section-title {
     margin-bottom: 16px;
 }
@@ -699,7 +715,7 @@ body {
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ========== Улучшенная строка добавления услуги ========== */
+/* Строка добавления услуги */
 .add-service {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -709,11 +725,11 @@ body {
     background: #ffffff;
     padding: 8px;
     border-radius: 60px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.02);
     transition: box-shadow 0.2s;
 }
 .add-service:focus-within {
-    box-shadow: 0 4px 12px rgba(45, 106, 159, 0.1), 0 0 0 1px var(--primary);
+    box-shadow: 0 4px 12px rgba(45,106,159,0.1), 0 0 0 1px var(--primary);
 }
 .service-select {
     flex: 1;
@@ -739,7 +755,7 @@ body {
 .service-select:focus {
     outline: none;
     background-color: white;
-    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3);
+    box-shadow: 0 0 0 2px rgba(45,106,159,0.3);
 }
 .calc-qty {
     width: 90px;
@@ -755,7 +771,7 @@ body {
 .calc-qty:focus {
     outline: none;
     background: white;
-    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3);
+    box-shadow: 0 0 0 2px rgba(45,106,159,0.3);
 }
 .add-service-btn {
     background: var(--primary);
@@ -775,7 +791,7 @@ body {
 .add-service-btn:hover {
     background: var(--primary-dark);
     transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.25);
+    box-shadow: 0 6px 14px rgba(45,106,159,0.25);
 }
 .add-service-btn:active {
     transform: translateY(1px);
@@ -824,7 +840,7 @@ body {
 }
 .calc-item {
     display: grid;
-    grid-template-columns: 1fr 100px 80px 40px;
+    grid-template-columns: 1fr 100px 100px 40px;
     gap: 12px;
     align-items: center;
     padding: 12px 8px;
@@ -848,6 +864,36 @@ body {
 }
 .calc-item .service-price,
 .calc-item .service-qty {
+    text-align: center;
+    font-weight: 500;
+}
+.service-qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--light-bg);
+    border: 1px solid var(--border);
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.qty-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+.qty-value {
+    min-width: 24px;
     text-align: center;
     font-weight: 500;
 }
@@ -904,10 +950,9 @@ body {
         color: var(--primary);
         font-weight: 600;
     }
-    .calc-item .service-qty {
-        text-align: left;
-        font-size: 0.85rem;
-        color: var(--secondary);
+    .service-qty-control {
+        justify-content: flex-start;
+        margin-top: 5px;
     }
     .calc-item .service-remove {
         position: absolute;
@@ -942,7 +987,7 @@ body {
     }
 }
 
-/* ========== Квиз (компактные кнопки) ========== */
+/* ========== КВИЗ: ГИБКАЯ СЕТКА (без дубликатов) ========== */
 .quiz-card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -961,9 +1006,8 @@ body {
     color: var(--text-dark);
 }
 .quiz-options {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 12px;
     margin-top: 15px;
 }
@@ -971,16 +1015,18 @@ body {
     background: var(--light-bg);
     border: 1px solid var(--border);
     color: var(--text-dark);
-    padding: 10px 24px;
+    padding: 10px 12px;
     border-radius: 40px;
     cursor: pointer;
     transition: all 0.2s ease;
     font-weight: 500;
     font-size: 0.95rem;
-    white-space: nowrap;
-    flex: 0 1 auto;
-    min-width: 130px;
     text-align: center;
+    white-space: normal;
+    word-break: break-word;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .quiz-option:hover {
     background: var(--primary);
@@ -1048,15 +1094,17 @@ body {
     font-size: 1rem;
     color: var(--secondary);
 }
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .quiz-card {
         padding: 24px 16px;
     }
+    .quiz-options {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
     .quiz-option {
-        white-space: normal;
-        padding: 10px 16px;
-        flex: 1 0 auto;
-        min-width: 120px;
+        padding: 12px 16px;
+        width: 100%;
     }
     .quiz-question p {
         font-size: 1rem;
@@ -1453,36 +1501,25 @@ footer a:hover {
     white-space: nowrap;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
-
 .custom-toast-error {
     background: #dc3545;
     color: white;
     box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
 }
-
 .custom-toast-success {
     background: #28a745;
     color: white;
     box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
 }
-
 .custom-toast-warning {
     background: #ffc107;
     color: #212529;
     box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
 }
-
 @keyframes toastFadeIn {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
-
 @media (max-width: 640px) {
     .custom-toast {
         white-space: normal;
@@ -1492,25 +1529,23 @@ footer a:hover {
     }
 }
 
-/* ========== УБИРАЕМ МИГАНИЕ И СТАНДАРТНУЮ РАМКУ У ВЫПАДАЮЩЕГО СПИСКА ========== */
+/* ========== УБИРАЕМ МИГАНИЕ ========== */
 .service-select:focus {
     outline: none !important;
     border-color: var(--primary) !important;
     box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
     background-color: white !important;
 }
-
 .add-service-btn:focus {
     outline: none !important;
     box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
 }
 
-/* ========== УЛУЧШЕННЫЙ КАСТОМНЫЙ ДРОПДАУН ДЛЯ КАЛЬКУЛЯТОРА ========== */
+/* ========== УЛУЧШЕННЫЙ КАСТОМНЫЙ ДРОПДАУН ========== */
 .custom-dropdown {
     position: relative;
     width: 100%;
 }
-
 .dropdown-button {
     width: 100%;
     background: var(--light-bg);
@@ -1528,27 +1563,22 @@ footer a:hover {
     transition: all 0.2s ease;
     text-align: left;
 }
-
 .dropdown-button:hover {
     background: #eef2f5;
     border-color: var(--primary-light);
 }
-
 .dropdown-button.active {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(45,106,159,0.15);
 }
-
 .dropdown-arrow {
     transition: transform 0.2s ease;
     font-size: 0.7rem;
     color: var(--secondary);
 }
-
 .dropdown-button.active .dropdown-arrow {
     transform: rotate(180deg);
 }
-
 .dropdown-menu {
     position: absolute;
     top: calc(100% + 8px);
@@ -1566,13 +1596,11 @@ footer a:hover {
     transform: translateY(-12px);
     transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
-
 .dropdown-menu.open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
-
 .dropdown-option {
     padding: 12px 20px;
     cursor: pointer;
@@ -1580,21 +1608,16 @@ footer a:hover {
     font-size: 0.9rem;
     border-bottom: 1px solid var(--border);
 }
-
 .dropdown-option:last-child {
     border-bottom: none;
 }
-
 .dropdown-option:hover {
     background: var(--light-bg);
 }
-
 .dropdown-option.selected {
     background: var(--primary);
     color: white;
 }
-
-/* Стилизация скроллбара */
 .dropdown-menu::-webkit-scrollbar {
     width: 6px;
 }
@@ -1642,7 +1665,6 @@ footer a:hover {
     cursor: pointer;
     user-select: none;
 }
-
 .consent-checkbox input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
@@ -1656,12 +1678,10 @@ footer a:hover {
     transition: all 0.2s ease;
     position: relative;
 }
-
 .consent-checkbox input[type="checkbox"]:checked {
     background: var(--primary);
     border-color: var(--primary);
 }
-
 .consent-checkbox input[type="checkbox"]:checked::after {
     content: '✓';
     position: absolute;
@@ -1672,35 +1692,29 @@ footer a:hover {
     font-size: 12px;
     font-weight: bold;
 }
-
 .consent-checkbox input[type="checkbox"]:hover {
     border-color: var(--primary-light);
     transform: scale(1.02);
 }
-
 .consent-checkbox input[type="checkbox"]:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
-
 .consent-checkbox label {
     cursor: pointer;
     font-size: 0.9rem;
     color: var(--text-dark);
     line-height: 1.4;
 }
-
 .consent-checkbox label a {
     color: var(--primary);
     text-decoration: none;
     transition: color 0.2s;
 }
-
 .consent-checkbox label a:hover {
     color: var(--primary-dark);
     text-decoration: underline;
 }
-
 .ya-share2, .ya-share, [class*="ya-share"] {
     display: none !important;
 }
@@ -1738,6 +1752,7 @@ footer a:hover {
                 <a href="#services">Услуги</a>
                 <a href="#process">Процесс</a>
                 <a href="#calculator">Калькулятор</a>
+                <a href="#quiz">Квиз</a>
                 <a href="#contacts">Контакты</a>
             </div>
         </div>
@@ -1984,28 +1999,84 @@ footer a:hover {
             <p class="calculator-desc">Выберите категорию, добавьте услуги. Скидка 5% при заказе 2+ позиций из любого раздела.</p>
 
             <div class="calculator-tabs">
-                <button class="tab-btn active" data-tab="business">🏢 Бизнесу</button>
-                <button class="tab-btn" data-tab="individual">👤 Индивидуально</button>
-                <button class="tab-btn" data-tab="corporate">🎓 Тренинги для бизнеса</button>
-                <button class="tab-btn" data-tab="training">🚀 Тренинги "Продай себя дорого"</button>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 10px;">
+                    <button class="tab-btn" data-tab="business-recruitment">👥 Поиск сотрудников</button>
+                    <button class="tab-btn" data-tab="business-retention">🏆 Удержание и развитие</button>
+                    <button class="tab-btn active" data-tab="corporate">🎓 Тренинги для бизнеса</button>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 10px;">
+                    <button class="tab-btn" data-tab="individual-base">👤 Базовые (до 10 000 ₽)</button>
+                    <button class="tab-btn" data-tab="individual-standard">👤 Стандартные</button>
+                    <button class="tab-btn" data-tab="individual-premium">👤 Премиальные</button>
+                    <button class="tab-btn" data-tab="training">🚀 Тренинг "Продай себя дорого"</button>
+                </div>
             </div>
 
-            <!-- Вкладка Бизнесу -->
-            <div id="tab-business" class="tab-pane active">
+            <!-- Вкладка Поиск сотрудников -->
+            <div id="tab-business-recruitment" class="tab-pane active">
                 <div class="add-service">
-                    <select id="business-select" class="service-select"></select>
-                    <input type="number" id="business-qty" min="1" value="1" class="calc-qty">
-                    <button id="business-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="business-recruitment-select" class="service-select"></select>
+                    <input type="number" id="business-recruitment-qty" min="1" value="1" class="calc-qty">
+                    <button id="business-recruitment-add" class="btn-primary add-service-btn">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section" style="visibility: hidden; height: 0; margin: 0; padding: 0;"></div>
             </div>
 
-            <!-- Вкладка Индивидуально -->
-            <div id="tab-individual" class="tab-pane">
+            <!-- Вкладка Удержание и развитие -->
+            <div id="tab-business-retention" class="tab-pane">
                 <div class="add-service">
-                    <select id="individual-select" class="service-select"></select>
-                    <input type="number" id="individual-qty" min="1" value="1" class="calc-qty">
-                    <button id="individual-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="business-retention-select" class="service-select"></select>
+                    <input type="number" id="business-retention-qty" min="1" value="1" class="calc-qty">
+                    <button id="business-retention-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                </div>
+                <div class="calc-pdf-section" style="visibility: hidden; height: 0; margin: 0; padding: 0;"></div>
+            </div>
+
+            <!-- Вкладка Базовые -->
+            <div id="tab-individual-base" class="tab-pane">
+                <div class="add-service">
+                    <select id="individual-base-select" class="service-select"></select>
+                    <input type="number" id="individual-base-qty" min="1" value="1" class="calc-qty">
+                    <button id="individual-base-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                </div>
+                <div class="calc-pdf-section">
+                    <a href="assets/docs/checklist.pdf" class="btn-secondary" target="_blank">📄 Скачать чек-лист (PDF)</a>
+                    <a href="assets/docs/training_program.pdf" class="btn-secondary" target="_blank">📘 Скачать программу тренинга (PDF)</a>
+                </div>
+            </div>
+
+            <!-- Вкладка Стандартные -->
+            <div id="tab-individual-standard" class="tab-pane">
+                <div class="add-service">
+                    <select id="individual-standard-select" class="service-select"></select>
+                    <input type="number" id="individual-standard-qty" min="1" value="1" class="calc-qty">
+                    <button id="individual-standard-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                </div>
+                <div class="calc-pdf-section">
+                    <a href="assets/docs/checklist.pdf" class="btn-secondary" target="_blank">📄 Скачать чек-лист (PDF)</a>
+                    <a href="assets/docs/training_program.pdf" class="btn-secondary" target="_blank">📘 Скачать программу тренинга (PDF)</a>
+                </div>
+            </div>
+
+            <!-- Вкладка Премиальные -->
+            <div id="tab-individual-premium" class="tab-pane">
+                <div class="add-service">
+                    <select id="individual-premium-select" class="service-select"></select>
+                    <input type="number" id="individual-premium-qty" min="1" value="1" class="calc-qty">
+                    <button id="individual-premium-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                </div>
+                <div class="calc-pdf-section">
+                    <a href="assets/docs/checklist.pdf" class="btn-secondary" target="_blank">📄 Скачать чек-лист (PDF)</a>
+                    <a href="assets/docs/training_program.pdf" class="btn-secondary" target="_blank">📘 Скачать программу тренинга (PDF)</a>
+                </div>
+            </div>
+
+            <!-- Вкладка Тренинг "Продай себя дорого" -->
+            <div id="tab-training" class="tab-pane">
+                <div class="add-service">
+                    <select id="training-select" class="service-select"></select>
+                    <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
+                    <button id="training-add" class="btn-primary add-service-btn">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section">
                     <a href="assets/docs/checklist.pdf" class="btn-secondary" target="_blank">📄 Скачать чек-лист (PDF)</a>
@@ -2023,20 +2094,7 @@ footer a:hover {
                 <div class="calc-pdf-section" style="visibility: hidden; height: 0; margin: 0; padding: 0;"></div>
             </div>
 
-            <!-- Вкладка Тренинги "Продай себя дорого" -->
-            <div id="tab-training" class="tab-pane">
-                <div class="add-service">
-                    <select id="training-select" class="service-select"></select>
-                    <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
-                    <button id="training-add" class="btn-primary add-service-btn">➕ Добавить</button>
-                </div>
-                <div class="calc-pdf-section">
-                    <a href="assets/docs/checklist.pdf" class="btn-secondary" target="_blank">📄 Скачать чек-лист (PDF)</a>
-                    <a href="assets/docs/training_program.pdf" class="btn-secondary" target="_blank">📘 Скачать программу тренинга (PDF)</a>
-                </div>
-            </div>
-
-            <!-- ОБЩИЙ БЛОК ИТОГА И КОРЗИНЫ -->
+            <!-- Итог и корзина -->
             <div class="total-block">
                 <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
                 <div id="discountInfo" class="discount-info"></div>
@@ -2048,6 +2106,23 @@ footer a:hover {
                 <div id="individual-list" class="services-list"></div>
                 <div id="corporate-list" class="services-list"></div>
                 <div id="training-list" class="services-list"></div>
+            </div>
+
+            <!-- Быстрый заказ -->
+            <div class="calendar-card" style="margin-top: 40px; padding: 32px; background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%); border-radius: 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.1);">
+                <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark);">📞 Быстрый заказ</h3>
+                <p style="margin-bottom: 24px; color: var(--secondary);">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
+                <form id="quickOrderForm" class="callback-form" style="max-width: 100%;">
+                    <div style="display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap;">
+                        <input type="text" id="quickName" placeholder="👤 Ваше имя (необязательно)" style="flex: 1; padding: 14px 20px; border-radius: 60px; border: 1px solid var(--border); font-size: 1rem;">
+                        <input type="tel" id="quickPhone" placeholder="📞 +7 912 345 67 89" required style="flex: 1; padding: 14px 20px; border-radius: 60px; border: 1px solid var(--border); font-size: 1rem;">
+                    </div>
+                    <div class="consent-checkbox" style="margin-bottom: 24px;">
+                        <input type="checkbox" id="quickConsent" required>
+                        <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width:100%; padding:14px; font-weight:700;">📞 Заказать звонок</button>
+                </form>
             </div>
         </div>
     </div>
@@ -2078,18 +2153,16 @@ footer a:hover {
     <div class="container">
         <div class="calendar-card fade-up">
             <h2 class="section-title">📞 Бесплатная 20-минутная диагностика</h2>
-            <p>Разберём вашу ситуацию: для соискателя — что мешает получить оффер выше; для бизнеса — почему вакансия не
-                закрывается.</p>
+            <p>Разберём вашу ситуацию: для соискателя — что мешает получить оффер выше; для бизнеса — почему вакансия не закрывается.</p>
             <form id="callbackForm" class="callback-form">
-                <input type="text" id="callbackName" placeholder="👤 Ваше имя" required>
+                <input type="text" id="callbackName" placeholder="👤 Ваше имя (необязательно)">
                 <input type="tel" id="callbackPhone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
                 <input type="email" id="callbackEmail" placeholder="📧 Email (необязательно)">
-                <textarea id="callbackComment" rows="3"
-                          placeholder="💬 Удобное время для звонка или дополнительная информация"></textarea>
+                <textarea id="callbackComment" rows="3" placeholder="💬 Удобное время для звонка или дополнительная информация"></textarea>
+
                 <div class="consent-checkbox">
                     <input type="checkbox" id="callbackConsent" required>
-                    <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку
-                        персональных данных</a></label>
+                    <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                 </div>
                 <button type="submit" class="btn-primary">Получить консультацию</button>
             </form>
@@ -2122,7 +2195,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 23.05.2026 19:51:03
+                Версия: 23.05.2026 23:03:19
             </div>
         </div>
     </div>
@@ -2158,7 +2231,7 @@ footer a:hover {
 // ========== ГЛОБАЛЬНЫЕ НАСТРОЙКИ САЙТА ==========
 window.APP_CONFIG = {
     // URL веб-приложения Google Apps Script (обработчик форм)
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwllU7wotk5_Y_0eaYAD2W6FPMyHlwpxTVhfY2t2GWAmEtKrva9QrBi72ctyG_eS5hZzA/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxYvYPIm1av7M07ZS-Ysg7wVZA28n6PH6LnimRQHBVaZBxkt1A9n6eg_te9z7dgsUUm7Q/exec',
 
     // Контакты (для ссылок в меню и подвале)
     TELEGRAM: 'https://t.me/HrLubacheva',
@@ -2558,57 +2631,59 @@ function initAnimations() {
 }
 window.initAnimations = initAnimations;
 function initCallbackForm() {
-    const phoneInput = document.getElementById('callbackPhone');
-    if (phoneInput) {
-        phoneInput.addEventListener('input', function(e) {
-            let rawValue = this.value.replace(/\D/g, '');
-            if (typeof formatPhoneNumber === 'function') {
-                let masked = formatPhoneNumber(rawValue);
-                this.value = masked || '';
-            } else {
-                if (rawValue.length > 11) rawValue = rawValue.slice(0, 11);
-                let formatted = '+7';
-                if (rawValue.length > 1) formatted += ' ' + rawValue.slice(1, 4);
-                if (rawValue.length >= 5) formatted += ' ' + rawValue.slice(4, 7);
-                if (rawValue.length >= 8) formatted += ' ' + rawValue.slice(7, 9);
-                if (rawValue.length >= 10) formatted += ' ' + rawValue.slice(9, 11);
-                this.value = formatted;
-            }
-        });
+    // Форматирование телефона
+    function formatPhoneField(inputElement) {
+        let rawValue = inputElement.value.replace(/\D/g, '');
+        if (typeof formatPhoneNumber === 'function') {
+            let masked = formatPhoneNumber(rawValue);
+            inputElement.value = masked || '';
+        } else {
+            if (rawValue.length > 11) rawValue = rawValue.slice(0, 11);
+            let formatted = '+7';
+            if (rawValue.length > 1) formatted += ' ' + rawValue.slice(1, 4);
+            if (rawValue.length >= 5) formatted += ' ' + rawValue.slice(4, 7);
+            if (rawValue.length >= 8) formatted += ' ' + rawValue.slice(7, 9);
+            if (rawValue.length >= 10) formatted += ' ' + rawValue.slice(9, 11);
+            inputElement.value = formatted;
+        }
     }
 
+    const callbackPhone = document.getElementById('callbackPhone');
+    if (callbackPhone) callbackPhone.addEventListener('input', function() { formatPhoneField(this); });
+
+    const quickPhone = document.getElementById('quickPhone');
+    if (quickPhone) quickPhone.addEventListener('input', function() { formatPhoneField(this); });
+
+    // ----- ОСНОВНАЯ ФОРМА (Обратный звонок) -----
     const callbackForm = document.getElementById('callbackForm');
     let isSubmitting = false;
-
     if (callbackForm) {
         callbackForm.addEventListener('submit', function(e) {
             e.preventDefault();
             if (isSubmitting) return;
-
-            const consentCheckbox = document.getElementById('callbackConsent');
-            if (!consentCheckbox || !consentCheckbox.checked) {
+            const consentCheck = document.getElementById('callbackConsent');
+            if (!consentCheck || !consentCheck.checked) {
                 showErrorToast('Подтвердите согласие на обработку данных');
                 return;
             }
-
             const submitBtn = callbackForm.querySelector('button[type="submit"]');
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
             isSubmitting = true;
 
-            const name = document.getElementById('callbackName').value.trim();
+            let name = document.getElementById('callbackName').value.trim();
             let phoneField = document.getElementById('callbackPhone').value.trim();
             const emailField = document.getElementById('callbackEmail')?.value.trim() || '';
             let comment = document.getElementById('callbackComment').value.trim();
 
-            if (!name || !phoneField) {
-                showErrorToast('Заполните имя и телефон');
+            if (name === '') name = 'Не указано';
+            if (!phoneField) {
+                showErrorToast('Заполните телефон');
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 isSubmitting = false;
                 return;
             }
-
             let digits = phoneField.replace(/\D/g, '');
             if (digits.startsWith('8')) digits = '7' + digits.slice(1);
             if (!digits.startsWith('7')) digits = '7' + digits;
@@ -2619,14 +2694,9 @@ function initCallbackForm() {
                 isSubmitting = false;
                 return;
             }
-
             const formattedForDisplay = '+7 ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
-
-            // Получаем выбранный вариант из квиза (если есть)
             const chosenVariant = window.selectedVariantText || '';
             const chosenVariantPrice = window.selectedVariantPrice || '';
-
-            // Оставляем комментарий как есть (без авто-заполнения)
             if (comment === '') comment = 'Не указано';
 
             const sendForm = async (userId) => {
@@ -2641,7 +2711,7 @@ function initCallbackForm() {
                     quizAnswers: window.quizAnswersRaw || '-',
                     chosenVariant: chosenVariant,
                     chosenVariantPrice: chosenVariantPrice,
-                    cart: typeof window.getCartData === 'function' ? window.getCartData() : '',
+                    cart: '',
                     timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-',
                     visitStats: typeof window.getVisitStatsText === 'function' ? window.getVisitStatsText() : '-',
                     utm: typeof window.getUTMText === 'function' ? window.getUTMText() : '-',
@@ -2656,24 +2726,72 @@ function initCallbackForm() {
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 isSubmitting = false;
-                // Сброс глобальных переменных квиза после отправки
                 window.selectedVariantText = null;
                 window.selectedVariantPrice = null;
                 window.quizAnswersRaw = null;
             };
-
-            if (typeof currentUserId !== 'undefined' && currentUserId) sendForm(currentUserId);
-            else if (typeof getOrCreateLocalUserId === 'function') sendForm(getOrCreateLocalUserId());
-            else sendForm('unknown');
+            const uid = (typeof currentUserId !== 'undefined' && currentUserId) ? currentUserId : (typeof getOrCreateLocalUserId === 'function' ? getOrCreateLocalUserId() : 'unknown');
+            sendForm(uid);
         });
     }
 
-    const privacyLinkForm = document.getElementById('privacyLinkForm');
-    if (privacyLinkForm) {
-        privacyLinkForm.addEventListener('click', (e) => {
+    // ----- БЫСТРЫЙ ЗАКАЗ (под калькулятором) -----
+    const quickForm = document.getElementById('quickOrderForm');
+    if (quickForm) {
+        quickForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const privacyModal = document.getElementById('privacyModal');
-            if (privacyModal && typeof showModal === 'function') showModal(privacyModal);
+            const cartData = typeof window.getCartData === 'function' ? window.getCartData() : '';
+            if (!cartData || cartData === 'Корзина пуста') {
+                showErrorToast('Добавьте хотя бы одну услугу в корзину перед заказом');
+                return;
+            }
+            const phoneInput = document.getElementById('quickPhone');
+            const nameInput = document.getElementById('quickName');
+            const consentCheck = document.getElementById('quickConsent');
+            if (!consentCheck.checked) {
+                showErrorToast('Подтвердите согласие на обработку данных');
+                return;
+            }
+            let phone = phoneInput.value.trim();
+            if (!phone) {
+                showErrorToast('Введите номер телефона');
+                return;
+            }
+            let digits = phone.replace(/\D/g, '');
+            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+            if (!digits.startsWith('7')) digits = '7' + digits;
+            if (digits.length !== 11) {
+                showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
+                return;
+            }
+            let customerName = nameInput ? nameInput.value.trim() : '';
+            if (customerName === '') customerName = 'Быстрый заказ (без имени)';
+            const geo = await window.getGeoData();
+            const formData = {
+                formType: 'Быстрый заказ',
+                name: customerName,
+                phone: digits,
+                email: '',
+                comment: `Быстрый заказ из калькулятора\nКорзина:\n${cartData}`,
+                consent: true,
+                quizAnswers: '-',
+                chosenVariant: '-',
+                chosenVariantPrice: '-',
+                cart: cartData,
+                timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-',
+                visitStats: typeof window.getVisitStatsText === 'function' ? window.getVisitStatsText() : '-',
+                utm: typeof window.getUTMText === 'function' ? window.getUTMText() : '-',
+                device: typeof window.getDeviceText === 'function' ? window.getDeviceText() : '-',
+                page: typeof window.getPageText === 'function' ? window.getPageText() : '-',
+                geo: geo.geoText,
+                userId: typeof getOrCreateLocalUserId === 'function' ? getOrCreateLocalUserId() : ''
+            };
+            if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
+            showSuccessToast('Спасибо! Я перезвоню вам в ближайшее время.');
+            quickForm.reset();
+            consentCheck.checked = false;
+            if (phoneInput) phoneInput.value = '';
+            if (nameInput) nameInput.value = '';
         });
     }
 }
@@ -2685,8 +2803,8 @@ function initFormEnterSubmit() {
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                const submitBtn = form.querySelector('button[type="submit"]');
-                if (submitBtn) submitBtn.click();
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) btn.click();
             }
         });
     });
@@ -2873,86 +2991,101 @@ function initCopyButtons() {
     });
 }
 window.initCopyButtons = initCopyButtons;
-// ========== ДАННЫЕ УСЛУГ ДЛЯ КАЛЬКУЛЯТОРА ==========
 window.LOCAL_SERVICES = {
-    business: [
-        { service: "Подбор специалиста", price: 60000, sort: 1 },
-        { service: "Подбор руководителя", price: 90000, sort: 2 },
-        { service: "Хэдхантинг", price: 120000, sort: 3 },
-        { service: "Онбординг (проект)", price: 250000, sort: 4 },
-        { service: "УТП компании", price: 25000, sort: 5 }
+    // ----- ПОИСК СОТРУДНИКОВ (рекрутинг, подбор, хэдхантинг) -----
+    business_recruitment: [
+        { service: "Диагностика вакансии", price: 10000 },
+        { service: "Скрининг резюме", price: 15000 },
+        { service: "База кандидатов + тестирование", price: 20000 },
+        { service: "Подбор джуниора (до 5 дней)", price: 25000 },
+        { service: "Массовый подбор джуниоров", price: 30000 },
+        { service: "Постепенный найм джуниоров", price: 40000 },
+        { service: "Ассессмент стажёров", price: 18000 },
+        { service: "Подбор на долгосрок (Junior)", price: 50000 },
+        { service: "Программа стажировки", price: 60000 },
+        { service: "Подбор специалиста", price: 60000 },
+        { service: "Подбор Middle-специалиста", price: 60000 },
+        { service: "Классический рекрутинг", price: 70000 },
+        { service: "Аутсорсинг подбора", price: 70000 },
+        { service: "Подбор Middle+ с кейсами", price: 80000 },
+        { service: "Массовый подбор на потоке", price: 80000 },
+        { service: "Подбор руководителя", price: 90000 },
+        { service: "Подбор на долгосрок (Middle)", price: 90000 },
+        { service: "Подбор руководителя отдела", price: 100000 },
+        { service: "Аутсорсинг подбора (абонемент)", price: 100000 },
+        { service: "Хэдхантинг", price: 120000 },
+        { service: "Поиск Senior+ с гарантией", price: 120000 },
+        { service: "Хэдхантинг Senior-специалиста", price: 150000 },
+        { service: "Executive search Senior", price: 200000 },
+        { service: "Эксклюзивный хэдхантинг", price: 250000 }
     ],
-    individual: [
-        { service: "Индивидуальная консультация (1ч)", price: 7000, sort: 1 },
-        { service: "Экспресс-консультация (30мин)", price: 3500, sort: 2 },
-        { service: "Аудит резюме", price: 4000, sort: 3 },
-        { service: "Резюме специалиста", price: 6000, sort: 4 },
-        { service: "Резюме руководителя", price: 9000, sort: 5 },
-        { service: "CV на английском", price: 15000, sort: 6 },
-        { service: "Сопроводительное письмо", price: 3000, sort: 7 },
-        { service: "Подготовка к собеседованию (1ч)", price: 5000, sort: 8 },
-        { service: "Карьерная стратегия (пакет 3 консультации)", price: 18000, sort: 9 },
-        { service: "Переговоры о зарплате (1ч)", price: 6000, sort: 10 },
-        { service: "LinkedIn-профиль под ключ", price: 12000, sort: 11 },
-        { service: "Профориентационная диагностика", price: 8000, sort: 12 },
-        { service: "Психологическое консультирование (1ч)", price: 7000, sort: 13 },
-        // Добавленные услуги для квиза (цены ориентировочные)
-        { service: "VIP-коучинг", price: 30000, sort: 14 },
-        { service: "Executive-коучинг", price: 50000, sort: 15 },
-        { service: "Карьерная стратегия (пакет)", price: 18000, sort: 16 },
-        { service: "Стратегия трудоустройства", price: 15000, sort: 17 },
-        { service: "Поиск позиции C-level", price: 80000, sort: 18 },
-        { service: "Поиск топ-позиций", price: 100000, sort: 19 },
-        { service: "Executive-сопровождение", price: 60000, sort: 20 },
-        { service: "Стратегия поиска работы", price: 8000, sort: 21 },
-        { service: "План развития до Senior", price: 12000, sort: 22 },
-        { service: "Развитие управленческих навыков", price: 15000, sort: 23 },
-        { service: "Подготовка к повышению", price: 10000, sort: 24 },
-        { service: "Коучинг для руководителей", price: 25000, sort: 25 },
-        { service: "Стратегия роста до C-level", price: 45000, sort: 26 },
-        { service: "Переговоры о зарплате", price: 6000, sort: 27 },
-        { service: "Повышение грейда", price: 12000, sort: 28 },
-        { service: "Массовый подбор джуниоров", price: 30000, sort: 29 },
-        { service: "Скрининг резюме", price: 15000, sort: 30 },
-        { service: "Подбор джуниора (до 5 дней)", price: 25000, sort: 31 },
-        { service: "База кандидатов + тестирование", price: 20000, sort: 32 },
-        { service: "Постепенный найм джуниоров", price: 40000, sort: 33 },
-        { service: "Ассессмент стажёров", price: 18000, sort: 34 },
-        { service: "Подбор на долгосрок (Junior)", price: 50000, sort: 35 },
-        { service: "Программа стажировки", price: 60000, sort: 36 },
-        { service: "Подбор Middle-специалиста", price: 60000, sort: 37 },
-        { service: "Классический рекрутинг", price: 70000, sort: 38 },
-        { service: "Подбор Middle+ с кейсами", price: 80000, sort: 39 },
-        { service: "Глубокое интервью", price: 10000, sort: 40 },
-        { service: "Подбор на долгосрок (Middle)", price: 90000, sort: 41 },
-        { service: "Программа удержания", price: 120000, sort: 42 },
-        { service: "Хэдхантинг Senior-специалиста", price: 150000, sort: 43 },
-        { service: "Картографирование рынка", price: 50000, sort: 44 },
-        { service: "Поиск Senior+ с гарантией", price: 120000, sort: 45 },
-        { service: "Оценка компетенций", price: 25000, sort: 46 },
-        { service: "Executive search Senior", price: 200000, sort: 47 },
-        { service: "Эксклюзивный хэдхантинг", price: 250000, sort: 48 },
-        { service: "Подбор руководителя отдела", price: 100000, sort: 49 },
-        { service: "Оценка управленческого потенциала", price: 40000, sort: 50 },
-        { service: "HR-стратегия + подбор ключевых людей", price: 300000, sort: 51 },
-        { service: "Коучинг топ-менеджеров", price: 80000, sort: 52 },
-        { service: "Консультация по услугам подбора", price: 5000, sort: 53 },
-        { service: "Диагностика вакансии", price: 10000, sort: 54 }
+
+    // ----- УДЕРЖАНИЕ И РАЗВИТИЕ -----
+    business_retention: [
+        { service: "УТП компании", price: 25000 },
+        { service: "Оценка компетенций", price: 25000 },
+        { service: "Оценка управленческого потенциала", price: 40000 },
+        { service: "Консультация по внедрению гибких форматов", price: 10000 },
+        { service: "Оценка удовлетворённости персонала", price: 15000 },
+        { service: "План развития команды", price: 80000 },
+        { service: "Грейдирование и мотивация", price: 50000 },
+        { service: "Программа удержания", price: 120000 },
+        { service: "Онбординг (проект)", price: 250000 },
+        { service: "HR-стратегия + подбор ключевых людей", price: 300000 },
+        { service: "Разработка HR-бренда", price: 150000 },
+        { service: "Стратегическая сессия с собственниками", price: 200000 }
     ],
+
+    // ----- B2C -----
+    individual_base: [
+        { service: "Сопроводительное письмо", price: 3000 },
+        { service: "Экспресс-консультация (30мин)", price: 3500 },
+        { service: "Аудит резюме", price: 4000 },
+        { service: "Подготовка к собеседованию (1ч)", price: 5000 },
+        { service: "Консультация по услугам подбора", price: 5000 },
+        { service: "Тренинг по переговорам", price: 6000 },
+        { service: "Переговоры о зарплате (1ч)", price: 6000 },
+        { service: "Резюме специалиста", price: 6000 },
+        { service: "Индивидуальная консультация (1ч)", price: 7000 },
+        { service: "Психологическое консультирование (1ч)", price: 7000 },
+        { service: "Профориентационная диагностика", price: 8000 },
+        { service: "Стратегия поиска работы", price: 8000 },
+        { service: "Резюме руководителя", price: 9000 }
+    ],
+    individual_standard: [
+        { service: "Подготовка к повышению", price: 10000 },
+        { service: "План обучения", price: 10000 },
+        { service: "Поиск работы с гибким графиком", price: 10000 },
+        { service: "LinkedIn-профиль под ключ", price: 12000 },
+        { service: "План развития до Senior", price: 12000 },
+        { service: "Повышение грейда", price: 12000 },
+        { service: "Индивидуальный тренинг «Продай себя дорого»", price: 14000 },
+        { service: "CV на английском", price: 15000 },
+        { service: "Развитие управленческих навыков", price: 15000 },
+        { service: "Стратегия трудоустройства", price: 15000 },
+        { service: "Карьерная стратегия (пакет 3 консультации)", price: 18000 },
+        { service: "Карьерная стратегия (пакет)", price: 18000 },
+        { service: "Коучинг для руководителей", price: 25000 },
+        { service: "VIP-коучинг", price: 30000 },
+        { service: "Стратегия роста до C-level", price: 45000 }
+    ],
+    individual_premium: [
+        { service: "Executive-коучинг", price: 50000 },
+        { service: "Executive-сопровождение", price: 60000 },
+        { service: "Поиск позиции C-level", price: 80000 },
+        { service: "Коучинг топ-менеджеров", price: 80000 }
+    ],
+
     corporate: [
-        { service: "Тренинг по запросу (1ч, до 25 чел.)", price: 12000, sort: 1 },
-        { service: "Мастер-класс (3ч, до 25 чел.)", price: 30000, sort: 2 },
-        { service: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000, sort: 3 }
+        { service: "Тренинг по запросу (1ч, до 25 чел.)", price: 12000 },
+        { service: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000 },
+        { service: "Мастер-класс (3ч, до 25 чел.)", price: 30000 }
     ],
-    // Новая категория для тренингов "Продай себя дорого"
     training: [
-        { service: "Индивидуальный тренинг «Продай себя дорого»", price: 14000, sort: 1 },
-        { service: "Групповой тренинг (до 10 чел.)", price: 5500, sort: 2 },
-        { service: "Групповой тренинг (11-20 чел.)", price: 5000, sort: 3 },
-        { service: "Групповой тренинг (21+ чел.)", price: 4500, sort: 4 }
+        { service: "Индивидуальный тренинг «Продай себя дорого»", price: 14000 },
+        { service: "Групповой тренинг «Продай себя дорого»", price: 5500 }
     ]
 };
-// ========== КАЛЬКУЛЯТОР (4 вкладки, кастомные дропдауны, с категорией training) ==========
 let cart = [];
 let calculatorInitialized = false;
 
@@ -2981,13 +3114,13 @@ function getCartData() {
 window.getCartData = getCartData;
 
 function updateSelectsFromData() {
-    if (!window.LOCAL_SERVICES) {
-        logError('Данные услуг не загружены (window.LOCAL_SERVICES отсутствует)');
-        return;
-    }
+    if (!window.LOCAL_SERVICES) return;
     const selects = {
-        'business-select': window.LOCAL_SERVICES.business,
-        'individual-select': window.LOCAL_SERVICES.individual,
+        'business-recruitment-select': window.LOCAL_SERVICES.business_recruitment,
+        'business-retention-select': window.LOCAL_SERVICES.business_retention,
+        'individual-base-select': window.LOCAL_SERVICES.individual_base,
+        'individual-standard-select': window.LOCAL_SERVICES.individual_standard,
+        'individual-premium-select': window.LOCAL_SERVICES.individual_premium,
         'corporate-select': window.LOCAL_SERVICES.corporate,
         'training-select': window.LOCAL_SERVICES.training
     };
@@ -3002,23 +3135,18 @@ function updateSelectsFromData() {
     }
 }
 
-// ========== КАСТОМНЫЙ ВЫПАДАЮЩИЙ СПИСОК (простой и надёжный) ==========
 function initCustomDropdowns() {
     const selects = document.querySelectorAll('.service-select');
     selects.forEach(select => {
         if (select.nextElementSibling && select.nextElementSibling.classList.contains('custom-dropdown')) return;
-
         const container = document.createElement('div');
         container.className = 'custom-dropdown';
-
         const button = document.createElement('button');
         button.className = 'dropdown-button';
         const defaultText = select.options[select.selectedIndex]?.text || 'Выберите услугу';
         button.innerHTML = `${defaultText} <span class="dropdown-arrow">▼</span>`;
-
         const menu = document.createElement('div');
         menu.className = 'dropdown-menu';
-
         Array.from(select.options).forEach(opt => {
             const optionDiv = document.createElement('div');
             optionDiv.className = 'dropdown-option';
@@ -3035,25 +3163,21 @@ function initCustomDropdowns() {
             });
             menu.appendChild(optionDiv);
         });
-
         const selectedOpt = Array.from(select.options).find(opt => opt.selected);
         if (selectedOpt) {
             const selectedDiv = Array.from(menu.children).find(div => div.textContent === selectedOpt.text);
             if (selectedDiv) selectedDiv.classList.add('selected');
         }
-
         button.addEventListener('click', (e) => {
             e.stopPropagation();
             document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
             menu.classList.toggle('open');
         });
-
         container.appendChild(button);
         container.appendChild(menu);
         select.style.display = 'none';
         select.parentNode.insertBefore(container, select.nextSibling);
     });
-
     document.addEventListener('click', () => {
         document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
     });
@@ -3082,25 +3206,65 @@ function renderCart() {
         if (container) container.innerHTML = '';
     }
     cart.forEach((item, idx) => {
-        const container = document.getElementById(containers[item.cat]);
+        let containerId = null;
+        if (item.cat === 'business') containerId = 'business-list';
+        else if (item.cat === 'individual') containerId = 'individual-list';
+        else if (item.cat === 'corporate') containerId = 'corporate-list';
+        else if (item.cat === 'training') containerId = 'training-list';
+        if (!containerId) return;
+        const container = document.getElementById(containerId);
         if (!container) return;
         const div = document.createElement('div');
         div.className = 'calc-item';
+        div.dataset.idx = idx;
         div.innerHTML = `
             <div class="service-name">${escapeHtml(item.name)}</div>
             <div class="service-price">${item.price > 0 ? (item.price * item.qty).toLocaleString() + ' ₽' : 'по запросу'}</div>
-            <div class="service-qty">× ${item.qty}</div>
+            <div class="service-qty-control">
+                <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
+                <span class="qty-value">${item.qty}</span>
+                <button class="qty-btn qty-plus" data-idx="${idx}">+</button>
+            </div>
             <div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>
         `;
         container.appendChild(div);
     });
-    document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.removeEventListener('click', btn._handler);
-        btn._handler = () => {
-            cart.splice(parseInt(btn.dataset.idx), 1);
+    document.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.removeEventListener('click', btn._minusHandler);
+        btn._minusHandler = () => {
+            const idx = parseInt(btn.dataset.idx);
+            if (isNaN(idx)) return;
+            if (cart[idx].qty > 1) {
+                cart[idx].qty--;
+            } else {
+                cart.splice(idx, 1);
+            }
             renderCart();
+            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
         };
-        btn.addEventListener('click', btn._handler);
+        btn.addEventListener('click', btn._minusHandler);
+    });
+    document.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.removeEventListener('click', btn._plusHandler);
+        btn._plusHandler = () => {
+            const idx = parseInt(btn.dataset.idx);
+            if (isNaN(idx)) return;
+            cart[idx].qty++;
+            renderCart();
+            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
+        };
+        btn.addEventListener('click', btn._plusHandler);
+    });
+    document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.removeEventListener('click', btn._removeHandler);
+        btn._removeHandler = () => {
+            const idx = parseInt(btn.dataset.idx);
+            if (isNaN(idx)) return;
+            cart.splice(idx, 1);
+            renderCart();
+            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
+        };
+        btn.addEventListener('click', btn._removeHandler);
     });
 }
 
@@ -3112,22 +3276,31 @@ function addToCart(cat, selectId, qtyId) {
     const name = fullText.replace(/ — .*/, '');
     let quantity = parseInt(document.getElementById(qtyId).value);
     if (isNaN(quantity) || quantity < 1) quantity = 1;
-    const existing = cart.find(i => i.name === name && i.cat === cat);
+    // Все бизнес-услуги (обе вкладки) попадают в общую категорию 'business'
+    let displayCat = cat;
+    if (cat === 'business_recruitment' || cat === 'business_retention') {
+        displayCat = 'business';
+    } else if (cat === 'individual_base' || cat === 'individual_standard' || cat === 'individual_premium') {
+        displayCat = 'individual';
+    }
+    const existing = cart.find(i => i.name === name && i.cat === displayCat);
     if (existing) existing.qty += quantity;
-    else cart.push({ name, price, qty: quantity, cat });
+    else cart.push({ name, price, qty: quantity, cat: displayCat });
     renderCart();
+    if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
 }
 
 function initCalculator() {
     if (calculatorInitialized) return;
     calculatorInitialized = true;
-
     updateSelectsFromData();
     initCustomDropdowns();
-
     const handlers = [
-        { btn: 'business-add', cat: 'business', select: 'business-select', qty: 'business-qty' },
-        { btn: 'individual-add', cat: 'individual', select: 'individual-select', qty: 'individual-qty' },
+        { btn: 'business-recruitment-add', cat: 'business_recruitment', select: 'business-recruitment-select', qty: 'business-recruitment-qty' },
+        { btn: 'business-retention-add', cat: 'business_retention', select: 'business-retention-select', qty: 'business-retention-qty' },
+        { btn: 'individual-base-add', cat: 'individual_base', select: 'individual-base-select', qty: 'individual-base-qty' },
+        { btn: 'individual-standard-add', cat: 'individual_standard', select: 'individual-standard-select', qty: 'individual-standard-qty' },
+        { btn: 'individual-premium-add', cat: 'individual_premium', select: 'individual-premium-select', qty: 'individual-premium-qty' },
         { btn: 'corporate-add', cat: 'corporate', select: 'corporate-select', qty: 'corporate-qty' },
         { btn: 'training-add', cat: 'training', select: 'training-select', qty: 'training-qty' }
     ];
@@ -3139,7 +3312,6 @@ function initCalculator() {
             button.addEventListener('click', button._handler);
         }
     });
-
     const tabs = document.querySelectorAll('.calculator-tabs .tab-btn');
     tabs.forEach(btn => {
         btn.removeEventListener('click', btn._tabHandler);
@@ -3155,13 +3327,12 @@ function initCalculator() {
         btn.addEventListener('click', btn._tabHandler);
     });
 }
-
 window.initCalculator = initCalculator;
 window.addToCart = addToCart;
 window.renderCart = renderCart;
-// ========== СПРАВОЧНИК ЦЕН (редактируйте здесь) ==========
+// ========== СПРАВОЧНИК ЦЕН (все услуги, встречающиеся в квизе) ==========
 window.PRICE_BOOK = {
-    // Индивидуальные консультации
+    // B2C
     "Экспресс-консультация (30мин)": 3500,
     "Индивидуальная консультация (1ч)": 7000,
     "Аудит резюме": 4000,
@@ -3171,73 +3342,40 @@ window.PRICE_BOOK = {
     "Сопроводительное письмо": 3000,
     "Подготовка к собеседованию (1ч)": 5000,
     "Карьерная стратегия (пакет 3 консультации)": 18000,
+    "Карьерная стратегия (пакет)": 18000,
     "Переговоры о зарплате (1ч)": 6000,
     "LinkedIn-профиль под ключ": 12000,
     "Профориентационная диагностика": 8000,
     "Психологическое консультирование (1ч)": 7000,
     "Стратегия поиска работы": 8000,
     "План развития на 3 месяца": 12000,
-
-    // Тренинги
     "Индивидуальный тренинг «Продай себя дорого»": 14000,
-    "Групповой тренинг (до 10 чел.)": 5500,
-    "Групповой тренинг (11-20 чел.)": 5000,
-    "Групповой тренинг (21+ чел.)": 4500,
-
-    // Коучинг и стратегии
+    "Групповой тренинг «Продай себя дорого»": 5500,
     "VIP-коучинг": 30000,
     "Executive-коучинг": 50000,
-    "Карьерная стратегия плюс": 25000,
-    "Карьерная стратегия": 18000,
-    "Стратегия трудоустройства": 15000,
     "Executive-сопровождение": 60000,
     "Поиск позиции C-level": 80000,
-    "Поиск топ-позиций": 100000,
-    "Поиск позиции Executive": 100000,
-    "Executive search": 200000,
-    "Консультация по управлению": 20000,
-    "Стратегия роста": 50000,
-    "Стратегия перехода в C-level": 45000,
-    "Развитие личного бренда": 20000,
-    "HR-стратегия + подбор ключевых людей": 300000,
-    "VIP-хэдхантинг": 300000,
-    "Аутсорсинг подбора (абонемент)": 100000,
-    "Массовый подбор на потоке": 80000,
-    "Аутсорсинг подбора": 70000,
-    "Постепенный найм профессионалов": 120000,
-    "План развития команды": 80000,
-    "Программа удержания": 120000,
-    "Грейдирование и мотивация": 50000,
-    "Стратегия фриланса / проектной работы": 15000,
-    "Плановое развитие карьеры": 20000,
-    "План постепенного повышения дохода": 18000,
-    "Менторство на год": 50000,
-    "Экспресс-консультация по балансу": 3500,
-    "Переговорная стратегия по графику": 6000,
-    "Консультация по внедрению гибких форматов": 10000,
-    "Оценка удовлетворённости персонала": 15000,
-    "Разработка HR-бренда": 150000,
-    "Стратегическая сессия с собственниками": 200000,
-
-    // Управление и развитие
+    "Коучинг топ-менеджеров": 80000,
     "Развитие управленческих навыков": 15000,
-    "План прокачки экспертизы": 12000,
     "План развития до Senior": 12000,
     "Подготовка к повышению": 10000,
-    "Коучинг для руководителей": 25000,
-    "Стратегия развития": 30000,
-    "Стратегия роста до C-level": 45000,
     "Повышение грейда": 12000,
-    "Карьерный коучинг": 20000,
+    "Коучинг для руководителей": 25000,
+    "Стратегия роста до C-level": 45000,
+    "Стратегия трудоустройства": 15000,
+    "Поиск работы с гибким графиком": 10000,
+    "План обучения": 10000,
     "Сопровождение до оффера": 15000,
     "Управленческие компетенции": 15000,
-    "Оценка управленческого потенциала": 40000,
-
-    // Для рекрутеров
-    "Массовый подбор джуниоров": 30000,
+    "Карьерный коучинг": 20000,
+    "Развитие личного бренда": 20000,
+    "Консультация по услугам подбора": 5000,
+    "Тренинг по переговорам": 6000,
+    // B2B
     "Скрининг резюме": 15000,
-    "Подбор джуниора (до 5 дней)": 25000,
     "База кандидатов + тестирование": 20000,
+    "Массовый подбор джуниоров": 30000,
+    "Подбор джуниора (до 5 дней)": 25000,
     "Постепенный найм джуниоров": 40000,
     "Ассессмент стажёров": 18000,
     "Подбор на долгосрок (Junior)": 50000,
@@ -3255,145 +3393,88 @@ window.PRICE_BOOK = {
     "Executive search Senior": 200000,
     "Эксклюзивный хэдхантинг": 250000,
     "Подбор руководителя отдела": 100000,
-    "Коучинг топ-менеджеров": 80000,
-    "Консультация по услугам подбора": 5000,
+    "Аутсорсинг подбора (абонемент)": 100000,
+    "Массовый подбор на потоке": 80000,
+    "Аутсорсинг подбора": 70000,
+    "Постепенный найм профессионалов": 120000,
+    "План развития команды": 80000,
+    "Грейдирование и мотивация": 50000,
+    "Оценка управленческого потенциала": 40000,
+    "HR-стратегия + подбор ключевых людей": 300000,
+    "УТП компании": 25000,
     "Диагностика вакансии": 10000,
-    "Тренинг по переговорам": 6000,
-    "Поиск работы с гибким графиком": 10000,
-    "План обучения": 10000
+    "Онбординг (проект)": 250000,
+    "Консультация по внедрению гибких форматов": 10000,
+    "Оценка удовлетворённости персонала": 15000,
+    "Разработка HR-бренда": 150000,
+    "Стратегическая сессия с собственниками": 200000
 };
 
-// ========== МАТРИЦА ВАРИАНТОВ КВИЗА (только названия, без цен) ==========
+// ========== МАТРИЦА ВАРИАНТОВ (приоритеты, только названия) ==========
 window.VARIANTS_MATRIX = [
-    // ==================== ДЛЯ СОИСКАТЕЛЕЙ (ИЩУ РАБОТУ) ====================
+    // ----- ВЫСОКИЙ ПРИОРИТЕТ: уровень + бюджет -----
     { priority: 10, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Зарплата", budget: "До 5 000 ₽", variantA: "Экспресс-консультация (30мин)", variantB: "Аудит резюме" },
     { priority: 11, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Резюме специалиста", variantB: "Индивидуальная консультация (1ч)" },
-    { priority: 12, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Индивидуальный тренинг «Продай себя дорого»", variantB: "Карьерная стратегия (пакет 3 консультации)" },
-    { priority: 13, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Условия/удаленка", budget: "*", variantA: "Сопроводительное письмо + LinkedIn", variantB: "Экспресс-консультация (30мин)" },
-    { priority: 14, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Карьерный рост", budget: "*", variantA: "Индивидуальный тренинг «Продай себя дорого»", variantB: "План развития на 3 месяца" },
-    { priority: 15, role: "Ищу работу", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Зарплата", budget: "До 5 000 ₽", variantA: "Аудит резюме", variantB: "Подготовка к собеседованию (1ч)" },
-    { priority: 16, role: "Ищу работу", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Резюме специалиста", variantB: "Стратегия поиска работы" },
-    { priority: 17, role: "Ищу работу", level: "Junior / начинающий", urgency: "3–6 месяцев", importance: "*", budget: "*", variantA: "Профориентационная диагностика", variantB: "План обучения" },
+    { priority: 12, role: "Ищу работу", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Карьерный рост", variantA: "Индивидуальный тренинг «Продай себя дорого»", variantB: "План развития на 3 месяца" },
+    { priority: 20, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Индивидуальный тренинг «Продай себя дорого»", variantB: "Карьерная стратегия (пакет 3 консультации)" },
+    { priority: 21, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "VIP-коучинг", variantB: "Executive-коучинг" },
+    { priority: 22, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Карьерный рост", variantA: "Развитие управленческих навыков", variantB: "План развития до Senior" },
+    { priority: 30, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "VIP-коучинг", variantB: "Стратегия трудоустройства" },
+    { priority: 31, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "100 000 – 300 000 ₽", variantA: "Executive-коучинг", variantB: "Поиск позиции C-level" },
+    { priority: 32, role: "Ищу работу", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "Карьерный рост", variantA: "Executive-коучинг", variantB: "Стратегия роста до C-level" },
+    { priority: 40, role: "Ищу работу", level: "Lead / руководитель", urgency: "Максимально быстро", importance: "Зарплата", budget: "100 000 – 300 000 ₽", variantA: "Executive-коучинг", variantB: "Поиск топ-позиций" },
+    { priority: 41, role: "Ищу работу", level: "Lead / руководитель", urgency: "1–2 месяца", importance: "Карьерный рост", variantA: "Карьерная стратегия (пакет 3 консультации)", variantB: "Сопровождение до оффера" },
+    { priority: 50, role: "Ищу работу", level: "Топ-менеджер (C-level)", urgency: "Максимально быстро", importance: "Зарплата", budget: "Выше 300 000 ₽", variantA: "Executive search", variantB: "Executive-коучинг" },
+    { priority: 51, role: "Ищу работу", level: "Топ-менеджер (C-level)", urgency: "1–2 месяца", importance: "Карьерный рост", variantA: "Executive-коучинг", variantB: "Поиск позиции C-level" },
+    { priority: 60, role: "Ищу работу", level: "Собственник бизнеса", urgency: "Максимально быстро", importance: "Зарплата", budget: "*", variantA: "HR-стратегия + подбор ключевых людей", variantB: "Коучинг топ-менеджеров" },
 
-    { priority: 20, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Резюме руководителя", variantB: "Индивидуальный тренинг «Продай себя дорого»" },
-    { priority: 21, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Индивидуальный тренинг «Продай себя дорого»", variantB: "Подготовка к сложным интервью" },
-    { priority: 22, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "VIP-коучинг", variantB: "Карьерная стратегия плюс" },
-    { priority: 23, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Зарплата", budget: "*", variantA: "Тренинг по переговорам", variantB: "Резюме + сопроводительное" },
-    { priority: 24, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Развитие управленческих навыков", variantB: "План прокачки экспертизы" },
-    { priority: 25, role: "Ищу работу", level: "Middle / опытный", urgency: "3–6 месяцев", importance: "*", budget: "*", variantA: "LinkedIn-профиль под ключ", variantB: "План развития до Senior" },
-    { priority: 26, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "Выше 100 000 ₽", variantA: "VIP-коучинг", variantB: "Executive-сопровождение" },
+    // ----- СРЕДНИЙ ПРИОРИТЕТ: общие правила по уровню -----
+    { priority: 100, role: "Ищу работу", level: "Junior / начинающий", variantA: "Индивидуальная консультация (1ч)", variantB: "Резюме специалиста" },
+    { priority: 101, role: "Ищу работу", level: "Middle / опытный", variantA: "Карьерная стратегия (пакет 3 консультации)", variantB: "Развитие управленческих навыков" },
+    { priority: 102, role: "Ищу работу", level: "Senior / ведущий", variantA: "VIP-коучинг", variantB: "Executive-коучинг" },
+    { priority: 103, role: "Ищу работу", level: "Lead / руководитель", variantA: "Executive-коучинг", variantB: "Поиск топ-позиций" },
+    { priority: 104, role: "Ищу работу", level: "Топ-менеджер (C-level)", variantA: "Executive search", variantB: "Executive-коучинг" },
+    { priority: 105, role: "Ищу работу", level: "Собственник бизнеса", variantA: "HR-стратегия + подбор ключевых людей", variantB: "Коучинг топ-менеджеров" },
 
-    { priority: 30, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Индивидуальный коучинг", variantB: "Стратегия трудоустройства" },
-    { priority: 31, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "VIP-коучинг", variantB: "Executive-поиск" },
-    { priority: 32, role: "Ищу работу", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "*", budget: "*", variantA: "Подготовка к интервью с топ-менеджерами", variantB: "Развитие личного бренда" },
-    { priority: 33, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "Выше 100 000 ₽", variantA: "VIP-коучинг", variantB: "Поиск позиции C-level" },
+    // ----- НИЗКИЙ ПРИОРИТЕТ: полезные недорогие услуги -----
+    { priority: 200, role: "Ищу работу", importance: "Зарплата", variantA: "Переговоры о зарплате (1ч)", variantB: "Повышение грейда" },
+    { priority: 201, role: "Ищу работу", importance: "Карьерный рост", variantA: "План развития до Senior", variantB: "Развитие управленческих навыков" },
+    { priority: 202, role: "Ищу работу", urgency: "Максимально быстро", variantA: "Экспресс-консультация (30мин)", variantB: "Аудит резюме" },
+    { priority: 203, role: "Ищу работу", urgency: "1–2 месяца", variantA: "Резюме руководителя", variantB: "LinkedIn-профиль под ключ" },
 
-    { priority: 35, role: "Ищу работу", level: "Team Lead", urgency: "Максимально быстро", importance: "*", budget: "*", variantA: "Карьерный коучинг", variantB: "Управленческие компетенции" },
-    { priority: 40, role: "Ищу работу", level: "Lead / руководитель", urgency: "*", importance: "*", budget: "50 000 – 100 000 ₽", variantA: "Executive-коучинг", variantB: "Стратегия развития" },
-    { priority: 41, role: "Ищу работу", level: "Lead / руководитель", urgency: "*", importance: "*", budget: "*", variantA: "Карьерная стратегия", variantB: "Сопровождение до оффера" },
-    { priority: 42, role: "Ищу работу", level: "Lead / руководитель", urgency: "Максимально быстро", importance: "Зарплата", budget: "Выше 100 000 ₽", variantA: "VIP-коучинг", variantB: "Поиск позиции Executive" },
+    // ----- СМЕНА ПРОФЕССИИ, РОСТ В ТЕКУЩЕЙ КОМПАНИИ, БАЛАНС -----
+    { priority: 300, role: "Хочу сменить профессию", level: "Junior / начинающий", variantA: "Профориентационная диагностика", variantB: "Индивидуальная консультация (1ч)" },
+    { priority: 301, role: "Хочу сменить профессию", level: "Middle / опытный", variantA: "Карьерная стратегия (пакет 3 консультации)", variantB: "Индивидуальная консультация (1ч)" },
+    { priority: 310, role: "Рост в текущей компании", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Зарплата", variantA: "Переговоры о зарплате (1ч)", variantB: "Повышение грейда" },
+    { priority: 311, role: "Рост в текущей компании", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "Карьерный рост", variantA: "Коучинг для руководителей", variantB: "Стратегия роста до C-level" },
+    { priority: 400, role: "Ищу работу", importance: "Баланс работы и жизни", variantA: "Поиск работы с гибким графиком", variantB: "Психологическое консультирование (1ч)" },
 
-    // ==================== ВЫСОКИЕ БЮДЖЕТЫ (добавленные диапазоны) ====================
-    { priority: 60, role: "Ищу работу", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Зарплата", budget: "100 000 – 300 000 ₽", variantA: "VIP-коучинг", variantB: "Поиск позиции C-level" },
-    { priority: 61, role: "Ищу работу", level: "Lead / руководитель", urgency: "*", importance: "*", budget: "100 000 – 300 000 ₽", variantA: "Executive-коучинг", variantB: "Поиск топ-позиций" },
-    { priority: 62, role: "Ищу работу", level: "Топ-менеджер (C-level)", urgency: "*", importance: "*", budget: "300 000 – 500 000 ₽", variantA: "Executive search", variantB: "Стратегия роста" },
-    { priority: 63, role: "Ищу работу", level: "Собственник бизнеса", urgency: "*", importance: "*", budget: "300 000 – 500 000 ₽", variantA: "HR-стратегия + подбор ключевых людей", variantB: "Коучинг топ-менеджеров" },
-    { priority: 64, role: "Ищу работу", level: "Директор / Managing Director", urgency: "*", importance: "*", budget: "Выше 500 000 ₽", variantA: "Стратегическая сессия с собственниками", variantB: "Разработка HR-бренда" },
+    // ----- ДЛЯ РЕКРУТЕРОВ (B2B) -----
+    { priority: 500, role: "Подбираю сотрудников", level: "Junior / начинающий", urgency: "Максимально быстро", budget: "До 30 000 ₽", variantA: "Скрининг резюме", variantB: "База кандидатов + тестирование" },
+    { priority: 501, role: "Подбираю сотрудников", level: "Middle / опытный", urgency: "Максимально быстро", budget: "60 000 – 120 000 ₽", variantA: "Подбор Middle-специалиста", variantB: "Классический рекрутинг" },
+    { priority: 502, role: "Подбираю сотрудников", level: "Senior / ведущий", urgency: "Максимально быстро", budget: "120 000 – 250 000 ₽", variantA: "Хэдхантинг Senior-специалиста", variantB: "Executive search Senior" },
+    { priority: 503, role: "Подбираю сотрудников", level: "Lead / руководитель", urgency: "Максимально быстро", budget: "Выше 250 000 ₽", variantA: "Executive search Senior", variantB: "Эксклюзивный хэдхантинг" },
+    { priority: 504, role: "Подбираю сотрудников", urgency: "Ежемесячно / на постоянной основе", variantA: "Аутсорсинг подбора (абонемент)", variantB: "Массовый подбор на потоке" },
 
-    // Для рекрутеров с высокими бюджетами
-    { priority: 360, role: "Подбираю сотрудников", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "100 000 – 300 000 ₽", variantA: "Executive search Senior", variantB: "Эксклюзивный хэдхантинг" },
-    { priority: 361, role: "Подбираю сотрудников", urgency: "1–2 месяца", importance: "Профессиональный опыт", budget: "300 000 – 500 000 ₽", variantA: "Поиск топ-менеджеров", variantB: "Картографирование рынка" },
-    { priority: 362, role: "Подбираю сотрудников", urgency: "*", importance: "Мотивация и лояльность", budget: "Выше 500 000 ₽", variantA: "HR-стратегия + подбор ключевых людей", variantB: "Программа удержания топ-кадров" },
+    // ----- ВЕСОВЫЕ ПРАВИЛА (высокий бюджет) -----
+    { priority: 600, budget: "300 000 – 500 000 ₽", variantA: "Executive search Senior", variantB: "HR-стратегия + подбор ключевых людей" },
+    { priority: 601, budget: "Выше 500 000 ₽", variantA: "Стратегическая сессия с собственниками", variantB: "Разработка HR-бренда" },
 
-    // ==================== ДЛЯ ТОП-МЕНЕДЖЕРОВ, СОБСТВЕННИКОВ, ДИРЕКТОРОВ ====================
-    { priority: 45, role: "Ищу работу", level: "Топ-менеджер (C-level)", urgency: "Максимально быстро", importance: "Зарплата", budget: "*", variantA: "Executive-коучинг", variantB: "Поиск позиции C-level" },
-    { priority: 46, role: "Ищу работу", level: "Топ-менеджер (C-level)", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "VIP-коучинг", variantB: "Стратегия развития" },
-    { priority: 47, role: "Ищу работу", level: "Топ-менеджер (C-level)", urgency: "*", importance: "*", budget: "*", variantA: "Executive search", variantB: "Карьерная стратегия" },
-    { priority: 48, role: "Ищу работу", level: "Собственник бизнеса", urgency: "Максимально быстро", importance: "*", budget: "*", variantA: "HR-стратегия + подбор ключевых людей", variantB: "Коучинг топ-менеджеров" },
-    { priority: 49, role: "Ищу работу", level: "Собственник бизнеса", urgency: "1–2 месяца", importance: "*", budget: "*", variantA: "Консультация по управлению", variantB: "Стратегия роста" },
-    { priority: 50, role: "Ищу работу", level: "Собственник бизнеса", urgency: "*", importance: "*", budget: "*", variantA: "Executive-коучинг", variantB: "Развитие личного бренда" },
-    { priority: 51, role: "Ищу работу", level: "Директор / Managing Director", urgency: "Максимально быстро", importance: "Зарплата", budget: "*", variantA: "Поиск топ-позиций", variantB: "VIP-коучинг" },
-    { priority: 52, role: "Ищу работу", level: "Директор / Managing Director", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Executive-коучинг", variantB: "Стратегия перехода в C-level" },
-    { priority: 53, role: "Ищу работу", level: "Директор / Managing Director", urgency: "*", importance: "*", budget: "*", variantA: "Карьерная стратегия", variantB: "Управленческие компетенции" },
-
-    // ==================== ДЛЯ ЖЕЛАЮЩИХ СМЕНИТЬ ПРОФЕССИЮ ====================
-    { priority: 100, role: "Хочу сменить профессию", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "*", budget: "До 5 000 ₽", variantA: "Профориентационная диагностика", variantB: "Тест на склонности" },
-    { priority: 101, role: "Хочу сменить профессию", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "*", budget: "5 000 – 15 000 ₽", variantA: "Карьерная консультация + дорожная карта", variantB: "Индивидуальная консультация (1ч)" },
-    { priority: 102, role: "Хочу сменить профессию", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*", variantA: "Аудит навыков + план перехода", variantB: "Менторство от эксперта" },
-    { priority: 103, role: "Хочу сменить профессию", level: "Senior / ведущий", urgency: "*", importance: "*", budget: "*", variantA: "Стратегия перехода в смежную сферу", variantB: "Интенсивная переподготовка" },
-
-    // ==================== ДЛЯ РОСТА В ТЕКУЩЕЙ КОМПАНИИ ====================
-    { priority: 200, role: "Рост в текущей компании", level: "*", urgency: "1–2 месяца", importance: "Зарплата", budget: "*", variantA: "Переговоры о зарплате", variantB: "Аудит эффективности" },
-    { priority: 201, role: "Рост в текущей компании", level: "*", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Подготовка к повышению", variantB: "План развития" },
-    { priority: 202, role: "Рост в текущей компании", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Подготовка к роли тимлида", variantB: "Управленческие компетенции" },
-    { priority: 203, role: "Рост в текущей компании", level: "Lead / руководитель", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Коучинг для руководителей", variantB: "Стратегия роста до C-level" },
-    { priority: 204, role: "Рост в текущей компании", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "*", variantA: "Переговоры о зарплате", variantB: "Повышение грейда" },
-
-    // ==================== ДЛЯ РЕКРУТЕРОВ (ПОДБИРАЮ СОТРУДНИКОВ) ====================
-    { priority: 305, role: "Подбираю сотрудников", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "До 30 000 ₽", variantA: "Массовый подбор джуниоров", variantB: "Скрининг резюме" },
-    { priority: 306, role: "Подбираю сотрудников", level: "Junior / начинающий", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "30 000 – 60 000 ₽", variantA: "Подбор джуниора (до 5 дней)", variantB: "База кандидатов + тестирование" },
-    { priority: 307, role: "Подбираю сотрудников", level: "Junior / начинающий", urgency: "1–2 месяца", importance: "Профессиональный опыт", budget: "30 000 – 60 000 ₽", variantA: "Постепенный найм джуниоров", variantB: "Ассессмент стажёров" },
-    { priority: 308, role: "Подбираю сотрудников", level: "Junior / начинающий", urgency: "3–6 месяцев", importance: "Мотивация и лояльность", budget: "60 000 – 120 000 ₽", variantA: "Подбор на долгосрок (Junior)", variantB: "Программа стажировки" },
-    { priority: 309, role: "Подбираю сотрудников", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "60 000 – 120 000 ₽", variantA: "Подбор Middle-специалиста", variantB: "Классический рекрутинг" },
-    { priority: 310, role: "Подбираю сотрудников", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Профессиональный опыт", budget: "60 000 – 120 000 ₽", variantA: "Подбор Middle+ с кейсами", variantB: "Глубокое интервью" },
-    { priority: 311, role: "Подбираю сотрудников", level: "Middle / опытный", urgency: "3–6 месяцев", importance: "Мотивация и лояльность", budget: "120 000 – 250 000 ₽", variantA: "Подбор на долгосрок (Middle)", variantB: "Программа удержания" },
-    { priority: 312, role: "Подбираю сотрудников", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "120 000 – 250 000 ₽", variantA: "Хэдхантинг Senior-специалиста", variantB: "Картографирование рынка" },
-    { priority: 313, role: "Подбираю сотрудников", level: "Senior / ведущий", urgency: "1–2 месяца", importance: "Профессиональный опыт", budget: "120 000 – 250 000 ₽", variantA: "Поиск Senior+ с гарантией", variantB: "Оценка компетенций" },
-    { priority: 314, role: "Подбираю сотрудников", level: "Senior / ведущий", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "Выше 250 000 ₽", variantA: "Executive search Senior", variantB: "Эксклюзивный хэдхантинг" },
-    { priority: 315, role: "Подбираю сотрудников", level: "Lead / руководитель", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "120 000 – 250 000 ₽", variantA: "Подбор руководителя отдела", variantB: "Оценка управленческого потенциала" },
-    { priority: 316, role: "Подбираю сотрудников", level: "Lead / руководитель", urgency: "Максимально быстро", importance: "Скорость закрытия", budget: "Выше 250 000 ₽", variantA: "Executive search (топ-менеджеры)", variantB: "VIP-хэдхантинг" },
-    { priority: 317, role: "Подбираю сотрудников", level: "Lead / руководитель", urgency: "1–2 месяца", importance: "Мотивация и лояльность", budget: "Выше 250 000 ₽", variantA: "HR-стратегия + подбор ключевых людей", variantB: "Коучинг топ-менеджеров" },
-    { priority: 330, role: "Подбираю сотрудников", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Консультация по услугам подбора", variantB: "Диагностика вакансии" },
-
-    // ==================== ДЛЯ ДОЛГОСРОЧНОГО И РЕГУЛЯРНОГО НАЙМА ====================
-    { priority: 350, role: "Подбираю сотрудников", urgency: "Ежемесячно / на постоянной основе", importance: "Мотивация и лояльность", budget: "*", variantA: "Аутсорсинг подбора (абонемент)", variantB: "HR-стратегия + подбор ключевых людей" },
-    { priority: 351, role: "Подбираю сотрудников", urgency: "Ежемесячно / на постоянной основе", importance: "Скорость закрытия", budget: "*", variantA: "Массовый подбор на потоке", variantB: "Аутсорсинг подбора" },
-    { priority: 355, role: "Подбираю сотрудников", urgency: "В течение года", importance: "Профессиональный опыт", budget: "*", variantA: "Постепенный найм профессионалов", variantB: "План развития команды" },
-    { priority: 356, role: "Подбираю сотрудников", urgency: "В течение года", importance: "Мотивация и лояльность", budget: "*", variantA: "Программа удержания", variantB: "Грейдирование и мотивация" },
-    { priority: 357, role: "Ищу работу", urgency: "Ежемесячно / на постоянной основе", importance: "*", budget: "*", variantA: "Стратегия фриланса / проектной работы", variantB: "Плановое развитие карьеры" },
-    { priority: 358, role: "Ищу работу", urgency: "В течение года", importance: "Зарплата", budget: "*", variantA: "План постепенного повышения дохода", variantB: "Менторство на год" },
-
-    // ==================== ДЛЯ ТЕХ, КОМУ ВАЖЕН БАЛАНС РАБОТЫ И ЖИЗНИ ====================
-    { priority: 530, role: "Ищу работу", importance: "Баланс работы и жизни", urgency: "*", budget: "*", variantA: "Поиск работы с гибким графиком", variantB: "Психологическое консультирование (1ч)" },
-    { priority: 531, role: "Ищу работу", importance: "Баланс работы и жизни", urgency: "Максимально быстро", budget: "*", variantA: "Экспресс-консультация по балансу", variantB: "Сопроводительное письмо + LinkedIn" },
-    { priority: 532, role: "Рост в текущей компании", importance: "Баланс работы и жизни", urgency: "*", budget: "*", variantA: "Переговорная стратегия по графику", variantB: "Аудит эффективности" },
-    { priority: 533, role: "Хочу сменить профессию", importance: "Баланс работы и жизни", urgency: "*", budget: "*", variantA: "Профориентационная диагностика", variantB: "Карьерная консультация + дорожная карта" },
-    { priority: 534, role: "Подбираю сотрудников", importance: "Баланс работы и жизни", urgency: "*", budget: "*", variantA: "Консультация по внедрению гибких форматов", variantB: "Оценка удовлетворённости персонала" },
-
-    // ==================== ДОПОЛНИТЕЛЬНЫЕ ПРАВИЛА ====================
-    { priority: 500, role: "Ищу работу", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "VIP-коучинг", variantB: "Стратегия трудоустройства" },
-    { priority: 510, role: "Ищу работу", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "15 000 – 50 000 ₽", variantA: "Карьерная стратегия (пакет 3 консультации)", variantB: "Индивидуальный тренинг «Продай себя дорого»" },
-    { priority: 520, role: "Ищу работу", importance: "Условия/удаленка", budget: "*", variantA: "Психологическое консультирование (1ч)", variantB: "Поиск работы с гибким графиком" },
-
-    // ==================== ТАРИФЫ (цена по запросу) ====================
-    { priority: 800, role: "Ищу работу", level: "Junior / начинающий", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Бронзовый» (по запросу)", variantB: "Экспресс-консультация (30мин)" },
-    { priority: 801, role: "Ищу работу", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Серебряный» (по запросу)", variantB: "Индивидуальная консультация (1ч)" },
-    { priority: 802, role: "Ищу работу", level: "Senior / ведущий", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Золотой» (по запросу)", variantB: "VIP-коучинг" },
-    { priority: 810, role: "Хочу сменить профессию", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Бронзовый» (профориентация)", variantB: "Индивидуальная консультация (1ч)" },
-    { priority: 820, role: "Рост в текущей компании", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Серебряный» (рост)", variantB: "План развития" },
-    { priority: 830, role: "Подбираю сотрудников", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Золотой» (подбор ключевых сотрудников)", variantB: "Консультация по подбору" },
-
-    // ==================== УНИВЕРСАЛЬНЫЕ (FALLBACK) ====================
-    { priority: 900, role: "*", level: "*", urgency: "*", importance: "*", budget: "До 5 000 ₽", variantA: "Экспресс-консультация (30мин)", variantB: "Аудит резюме" },
-    { priority: 901, role: "*", level: "*", urgency: "*", importance: "*", budget: "5 000 – 15 000 ₽", variantA: "Резюме специалиста", variantB: "Индивидуальная консультация (1ч)" },
-    { priority: 902, role: "*", level: "*", urgency: "*", importance: "*", budget: "15 000 – 50 000 ₽", variantA: "Индивидуальный тренинг «Продай себя дорого»", variantB: "Карьерная стратегия" },
-    { priority: 903, role: "*", level: "*", urgency: "*", importance: "*", budget: "50 000 – 100 000 ₽", variantA: "VIP-коучинг", variantB: "Executive-коучинг" },
-    { priority: 904, role: "*", level: "*", urgency: "*", importance: "*", budget: "100 000 – 300 000 ₽", variantA: "VIP-коучинг", variantB: "Поиск топ-позиций" },
-    { priority: 905, role: "*", level: "*", urgency: "*", importance: "*", budget: "300 000 – 500 000 ₽", variantA: "Executive search", variantB: "HR-стратегия" },
-    { priority: 906, role: "*", level: "*", urgency: "*", importance: "*", budget: "Выше 500 000 ₽", variantA: "Стратегическая сессия", variantB: "Разработка HR-бренда" },
-    { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная консультация (1ч)", variantB: "Экспресс-консультация (30мин)" }
+    // ----- FALLBACK (универсальный вариант) -----
+    { priority: 1000, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная консультация (1ч)", variantB: "Экспресс-консультация (30мин)" }
 ];
-// ========== КВИЗ (с выбором варианта, без автозаполнения комментария, с сохранением цены) ==========
+// ========== КВИЗ (без подтверждения, цена из PRICE_BOOK) ==========
 (function () {
     let quizQuestions = [];
     let answers = [];
-    let quizState = 'questions';   // 'questions', 'confirm', 'choice'
+    let quizState = 'questions';
     let quizInitialized = false;
     let currentQuestionIndex = 0;
     let isSubmittingChoice = false;
     let isAnalyzing = false;
     let currentRole = null;
     let isRendering = false;
+    let choiceMade = false;
 
     if (typeof window.escapeHtml !== 'function') {
         window.escapeHtml = function (str) {
@@ -3414,12 +3495,8 @@ window.VARIANTS_MATRIX = [
         toast.className = 'custom-toast-error';
         toast.innerHTML = `⚠️ ${message}`;
         document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 2500);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
     }
-
     function showWarningToast(message) {
         const existingToast = document.querySelector('.custom-toast-warning');
         if (existingToast) existingToast.remove();
@@ -3427,12 +3504,8 @@ window.VARIANTS_MATRIX = [
         toast.className = 'custom-toast-warning';
         toast.innerHTML = `🔔 ${message}`;
         document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 2500);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
     }
-
     function showSuccessToast(message) {
         const existingToast = document.querySelector('.custom-toast-success');
         if (existingToast) existingToast.remove();
@@ -3440,66 +3513,47 @@ window.VARIANTS_MATRIX = [
         toast.className = 'custom-toast-success';
         toast.innerHTML = `✅ ${message}`;
         document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
     }
 
-    // Извлекает цену из текста (ищет число и ₽)
-    function extractPrice(text) {
-        const match = text.match(/(\d[\d\s]*)\s*₽/);
-        if (match) return match[1].replace(/\s/g, '') + ' ₽';
-        if (text.includes('по запросу')) return 'по запросу';
+    function updateCommentField(variantText, variantPrice) {
+        const commentField = document.getElementById('callbackComment');
+        if (!commentField) return;
+        let selectedLine = variantText && variantText !== ''
+            ? `🔹 Выбранный вариант: ${variantText}${variantPrice ? ' (' + variantPrice + ')' : ''}`
+            : '🔹 Выбранный вариант: Помогите выбрать (бесплатная консультация)';
+        let current = commentField.value;
+        const lines = current.split('\n');
+        const filteredLines = lines.filter(line => !line.trim().startsWith('🔹 Выбранный вариант:'));
+        filteredLines.unshift(selectedLine);
+        commentField.value = filteredLines.join('\n');
+    }
+
+    function getPrice(serviceName) {
+        if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName]) {
+            return window.PRICE_BOOK[serviceName].toLocaleString() + ' ₽';
+        }
         return 'цена по запросу';
     }
 
-    const FIRST_QUESTION = {
-        text: "1. Ваша роль?",
-        options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"]
-    };
-    const LEVEL_JOBSEEKER = {
-        text: "2. Ваш текущий уровень?",
-        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"]
-    };
-
-    const LEVEL_RECRUITER = {
-        text: "2. Какой уровень сотрудника ищете?",
-        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"]
-    };
-    const URGENCY_QUESTION = {
-        text: "3. Как быстро нужен результат?",
-        options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"]
-    };
-    const IMPORTANCE_QUESTION = {
-        text: "4. Что для вас важнее всего?",
-        options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"]
-    };
-    const BUDGET_QUESTION = {
-        text: "5. Бюджет на консультацию/подбор?",
-        options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"]
-    };
-
-    const QUESTION_TEXTS = ["Ваша роль", "Ваш уровень / уровень сотрудника", "Срочность", "Важнее всего", "Бюджет"];
+    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] };
+    const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
+    const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
+    const URGENCY_QUESTION = { text: "3. Как быстро нужен результат?", options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"] };
+    const IMPORTANCE_QUESTION = { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"] };
+    const BUDGET_QUESTION = { text: "5. Бюджет на консультацию/подбор?", options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"] };
 
     function formatQuizAnswersOnly() {
         if (!answers || answers.length === 0) return '-';
         return answers.map(a => a === null ? 'не выбран' : a).join('\n');
     }
-
     window.quizAnswersRaw = null;
-
-    function updateQuizAnswersRaw() {
-        window.quizAnswersRaw = formatQuizAnswersOnly();
-    }
+    function updateQuizAnswersRaw() { window.quizAnswersRaw = formatQuizAnswersOnly(); }
 
     function findVariant(answersArr) {
         if (!window.VARIANTS_MATRIX || !window.VARIANTS_MATRIX.length) {
             console.error('Матрица вариантов не загружена');
-            return {
-                variantA: 'Индивидуальная консультация (1ч) — 7 000 ₽',
-                variantB: 'Экспресс-консультация (30мин) — 3 500 ₽'
-            };
+            return { variantA: 'Индивидуальная консультация (1ч)', variantB: 'Экспресс-консультация (30мин)' };
         }
         const user = {
             role: answersArr[0] === null ? '*' : answersArr[0],
@@ -3516,128 +3570,50 @@ window.VARIANTS_MATRIX = [
             if (rule.urgency !== '*' && rule.urgency !== user.urgency) match = false;
             if (rule.importance !== '*' && rule.importance !== user.importance) match = false;
             if (rule.budget !== '*' && rule.budget !== user.budget) match = false;
-            if (match) return {variantA: rule.variantA, variantB: rule.variantB};
+            if (match) return { variantA: rule.variantA, variantB: rule.variantB };
         }
-        return {variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB};
+        return { variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB };
     }
 
     function startQuiz() {
-        console.log('startQuiz вызван');
         answers = [null, null, null, null, null];
         currentQuestionIndex = 0;
         quizState = 'questions';
         currentRole = null;
         window.quizAnswersRaw = null;
-
+        choiceMade = false;
         quizQuestions = [FIRST_QUESTION, LEVEL_JOBSEEKER, URGENCY_QUESTION, IMPORTANCE_QUESTION, BUDGET_QUESTION];
         quizInitialized = true;
         renderQuiz();
     }
 
     function updateSecondQuestion(role) {
-        if (role === "Подбираю сотрудников") {
-            quizQuestions[1] = {...LEVEL_RECRUITER};
-        } else {
-            quizQuestions[1] = {...LEVEL_JOBSEEKER};
-        }
+        if (role === "Подбираю сотрудников") quizQuestions[1] = { ...LEVEL_RECRUITER };
+        else quizQuestions[1] = { ...LEVEL_JOBSEEKER };
         if (answers[1] && !quizQuestions[1].options.includes(answers[1])) {
             answers[1] = null;
             updateQuizAnswersRaw();
         }
-        if (currentQuestionIndex === 1 && quizState === 'questions') {
-            renderQuiz();
-        }
-    }
-
-    function renderConfirmScreen() {
-        const container = document.getElementById('quizContainer');
-        if (!container) return;
-
-        let html = `<div class="quiz-confirm">`;
-        html += `<h3 style="margin-bottom: 20px; text-align: center;">📋 Проверьте свои ответы</h3>`;
-        html += `<div style="margin-bottom: 30px;">`;
-        for (let i = 0; i < answers.length; i++) {
-            const answer = answers[i];
-            const answerText = answer === null ? '❌ не выбран' : answer;
-            html += `<div style="margin-bottom: 15px; padding: 10px; background: var(--light-bg); border-radius: 16px;">`;
-            html += `<strong>${QUESTION_TEXTS[i]}:</strong><br>`;
-            html += `<span style="color: var(--primary);">${escapeHtml(answerText)}</span>`;
-            html += `</div>`;
-        }
-        html += `</div>`;
-        html += `<div class="quiz-nav" style="justify-content: space-between;">`;
-        html += `<button id="quizBackToQuestions" class="btn-secondary">◀ Назад к вопросам</button>`;
-        html += `<button id="submitQuizFromConfirm" class="btn-primary">Показать варианты ▶</button>`;
-        html += `</div>`;
-        html += `</div>`;
-        container.innerHTML = html;
-
-        const backBtn = document.getElementById('quizBackToQuestions');
-        if (backBtn) {
-            backBtn.addEventListener('click', () => {
-                quizState = 'questions';
-                currentQuestionIndex = answers.length - 1;
-                renderQuiz();
-            });
-        }
-
-        const submitBtn = document.getElementById('submitQuizFromConfirm');
-        if (submitBtn) {
-            submitBtn.addEventListener('click', () => {
-                const missingCount = answers.filter(a => a === null).length;
-                if (missingCount > 0) {
-                    showWarningToast(`⚠️ Вы не ответили на ${missingCount} вопрос(ов). Вернитесь и ответьте.`);
-                    return;
-                }
-                isAnalyzing = true;
-                container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
-                setTimeout(() => {
-                    const filledAnswers = answers.map(a => a === null ? 'не выбран' : a);
-                    const variant = findVariant(filledAnswers);
-                    quizState = 'choice';
-                    renderQuiz();
-                    isAnalyzing = false;
-                }, 1500);
-            });
-        }
+        if (currentQuestionIndex === 1 && quizState === 'questions') renderQuiz();
     }
 
     function renderQuiz() {
         if (isRendering) return;
         isRendering = true;
         const container = document.getElementById('quizContainer');
-        if (!container) {
-            console.error('quizContainer не найден!');
-            isRendering = false;
-            return;
-        }
-
-        if (quizState === 'confirm') {
-            renderConfirmScreen();
-            isRendering = false;
-            return;
-        }
+        if (!container) { console.error('quizContainer не найден!'); isRendering = false; return; }
 
         if (quizState === 'questions') {
             const currentQ = quizQuestions[currentQuestionIndex];
-            if (!currentQ || !currentQ.options) {
-                container.innerHTML = '<div style="text-align:center; padding:40px;">Ошибка загрузки вопроса</div>';
-                isRendering = false;
-                return;
-            }
+            if (!currentQ || !currentQ.options) { container.innerHTML = '<div style="text-align:center; padding:40px;">Ошибка загрузки вопроса</div>'; isRendering = false; return; }
             const progressWidth = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
-            let html = `<div class="quiz-progress"><div class="quiz-progress-bar" style="width: ${progressWidth}%;"></div></div>`;
-            html += `<div class="quiz-question"><p>${window.escapeHtml(currentQ.text)}</p><div class="quiz-options">`;
+            let html = `<div class="quiz-progress"><div class="quiz-progress-bar" style="width: ${progressWidth}%;"></div></div><div class="quiz-question"><p>${window.escapeHtml(currentQ.text)}</p><div class="quiz-options">`;
             for (let opt of currentQ.options) {
                 const isSelected = (answers[currentQuestionIndex] === opt);
                 html += `<div class="quiz-option ${isSelected ? 'selected' : ''}" data-opt="${window.escapeHtml(opt)}">${window.escapeHtml(opt)}</div>`;
             }
-            html += `</div></div>`;
-            html += `<div class="quiz-nav">`;
-            html += `<button id="quizPrevBtn" class="btn-secondary" ${currentQuestionIndex === 0 ? 'disabled' : ''}>◀ Назад</button>`;
-            if (currentQuestionIndex < quizQuestions.length - 1) {
-                html += `<button id="quizNextBtn" class="btn-primary">Далее ▶</button>`;
-            }
+            html += `</div></div><div class="quiz-nav"><button id="quizPrevBtn" class="btn-secondary" ${currentQuestionIndex === 0 ? 'disabled' : ''}>◀ Назад</button>`;
+            if (currentQuestionIndex < quizQuestions.length - 1) html += `<button id="quizNextBtn" class="btn-primary">Далее ▶</button>`;
             html += `</div>`;
             container.innerHTML = html;
 
@@ -3647,15 +3623,19 @@ window.VARIANTS_MATRIX = [
                     if (isAnalyzing) return;
                     const selected = e.currentTarget.dataset.opt;
                     answers[currentQuestionIndex] = selected;
-                    if (currentQuestionIndex === 0) {
-                        currentRole = selected;
-                        updateSecondQuestion(currentRole);
-                    }
+                    if (currentQuestionIndex === 0) { currentRole = selected; updateSecondQuestion(currentRole); }
                     updateQuizAnswersRaw();
 
                     if (currentQuestionIndex === quizQuestions.length - 1) {
-                        quizState = 'confirm';
-                        renderQuiz();
+                        isAnalyzing = true;
+                        container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
+                        setTimeout(() => {
+                            const filledAnswers = answers.map(a => a === null ? 'не выбран' : a);
+                            const variant = findVariant(filledAnswers);
+                            quizState = 'choice';
+                            renderQuiz();
+                            isAnalyzing = false;
+                        }, 700);
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
@@ -3669,12 +3649,22 @@ window.VARIANTS_MATRIX = [
                 nextBtn.removeEventListener('click', nextBtn._nextHandler);
                 nextBtn._nextHandler = () => {
                     if (isAnalyzing) return;
-                    if (answers[currentQuestionIndex] === null) {
-                        showWarningToast('📌 Вы не выбрали ответ, переходим дальше');
+                    if (answers[currentQuestionIndex] === null) showWarningToast('📌 Вы не выбрали ответ, переходим дальше');
+                    if (currentQuestionIndex === quizQuestions.length - 1) {
+                        if (answers[currentQuestionIndex] === null) { showWarningToast('⚠️ Чтобы получить подборку, выберите вариант ответа.'); return; }
+                        isAnalyzing = true;
+                        container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
+                        setTimeout(() => {
+                            const filledAnswers = answers.map(a => a === null ? 'не выбран' : a);
+                            const variant = findVariant(filledAnswers);
+                            quizState = 'choice';
+                            renderQuiz();
+                            isAnalyzing = false;
+                        }, 700);
+                    } else {
+                        currentQuestionIndex++;
+                        renderQuiz();
                     }
-                    currentQuestionIndex++;
-                    updateQuizAnswersRaw();
-                    renderQuiz();
                 };
                 nextBtn.addEventListener('click', nextBtn._nextHandler);
             }
@@ -3682,22 +3672,15 @@ window.VARIANTS_MATRIX = [
             const prevBtn = document.getElementById('quizPrevBtn');
             if (prevBtn) {
                 prevBtn.removeEventListener('click', prevBtn._prevHandler);
-                prevBtn._prevHandler = () => {
-                    if (isAnalyzing) return;
-                    if (currentQuestionIndex > 0) {
-                        currentQuestionIndex--;
-                        updateQuizAnswersRaw();
-                        renderQuiz();
-                    }
-                };
+                prevBtn._prevHandler = () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuiz(); } };
                 prevBtn.addEventListener('click', prevBtn._prevHandler);
             }
-        } else if (quizState === 'choice') {
+        }
+        else if (quizState === 'choice') {
             const variant = findVariant(answers.map(a => a === null ? 'не выбран' : a));
-            const priceA = extractPrice(variant.variantA);
-            const priceB = extractPrice(variant.variantB);
-
-            container.innerHTML = `
+            const priceA = getPrice(variant.variantA);
+            const priceB = getPrice(variant.variantB);
+            let html = `
                 <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подготовили 3 варианта:</p>
                 <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
                     <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
@@ -3722,35 +3705,63 @@ window.VARIANTS_MATRIX = [
                         <button class="btn-secondary choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Помогите выбрать →</button>
                     </div>
                 </div>
-                <div style="text-align:center; margin-top:30px;">
-                    <p style="font-size:0.9rem; color: var(--secondary); margin-bottom: 15px;">⚠️ Этот вариант — отличная основа для консультации. Запишитесь на бесплатную диагностику, чтобы обсудить детали.</p>
+                <div style="text-align:center; margin-top:20px;">
                     <button id="resetQuizBtn" class="btn-secondary">🔁 Пройти заново</button>
                 </div>
             `;
+            container.innerHTML = html;
 
-            // Обработка выбора варианта (без авто-заполнения комментария, но с сохранением выбранного варианта и цены)
             document.querySelectorAll('.choose-option').forEach(btn => {
                 btn.removeEventListener('click', btn._choiceHandler);
                 btn._choiceHandler = () => {
                     if (isSubmittingChoice) return;
                     isSubmittingChoice = true;
-                    const chosen = btn.dataset.choice;
-                    const chosenText = btn.dataset.text;
-                    const chosenPrice = btn.dataset.price || '';
+                    const variantText = btn.dataset.text;
+                    const variantPrice = btn.dataset.price;
+                    window.selectedVariantText = variantText;
+                    window.selectedVariantPrice = variantPrice;
+                    window.selectedVariantNumber = btn.dataset.choice;
 
-                    // Сохраняем выбранный вариант и цену в глобальные переменные для отправки в форме
-                    window.selectedVariantText = chosenText;
-                    window.selectedVariantPrice = chosenPrice;
-                    window.selectedVariantNumber = chosen;
+                    updateCommentField(variantText, variantPrice);
 
                     const resultDiv = document.getElementById('quizResult');
                     if (resultDiv) {
-                        resultDiv.innerHTML = `<strong>✅ Вы выбрали вариант ${chosen}:</strong><br>${chosenText}<br><br>📋 Заполните форму ниже, и я свяжусь с вами.`;
+                        resultDiv.innerHTML = `<strong>✅ Вы выбрали вариант ${btn.dataset.choice}:</strong><br>${variantText}<br><br>📋 Заполните форму ниже, и я свяжусь с вами.`;
                         resultDiv.style.display = 'block';
                     }
+                    showSuccessToast('Выбор сохранён. При необходимости отредактируйте комментарий.');
 
-                    showSuccessToast('Выбор сохранён. Заполните форму обратной связи.');
-                    container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
+                    container.innerHTML = `
+                        <p style="text-align:center; font-size:1.2rem; margin-bottom:20px;">✨ Спасибо за прохождение квиза! ✨</p>
+                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+                            <button id="goToCallbackBtn" class="btn-primary" style="min-width: 200px;">📝 Перейти к форме заявки</button>
+                            <button id="goToCalculatorBtn" class="btn-secondary" style="min-width: 200px;">🔍 Посмотреть все услуги</button>
+                        </div>
+                        <div style="text-align:center; margin-top:20px;">
+                            <button id="resetQuizBtnAfter" class="btn-secondary">🔁 Пройти заново</button>
+                        </div>
+                    `;
+                    document.getElementById('goToCallbackBtn')?.addEventListener('click', () => {
+                        const target = document.getElementById('calendar');
+                        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        else window.location.href = '#calendar';
+                    });
+                    document.getElementById('goToCalculatorBtn')?.addEventListener('click', () => {
+                        const target = document.getElementById('calculator');
+                        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        else window.location.href = '#calculator';
+                    });
+                    document.getElementById('resetQuizBtnAfter')?.addEventListener('click', () => {
+                        answers = [null, null, null, null, null];
+                        currentQuestionIndex = 0;
+                        quizState = 'questions';
+                        currentRole = null;
+                        window.quizAnswersRaw = null;
+                        window.selectedVariantText = null;
+                        window.selectedVariantPrice = null;
+                        choiceMade = false;
+                        renderQuiz();
+                    });
                     isSubmittingChoice = false;
                 };
                 btn.addEventListener('click', btn._choiceHandler);
@@ -3762,19 +3773,50 @@ window.VARIANTS_MATRIX = [
                 helpBtn._helpHandler = () => {
                     if (isSubmittingChoice) return;
                     isSubmittingChoice = true;
-
                     window.selectedVariantText = "Помогите выбрать (бесплатная консультация)";
                     window.selectedVariantPrice = "";
                     window.selectedVariantNumber = "help";
 
+                    updateCommentField("", "");
+
                     const resultDiv = document.getElementById('quizResult');
                     if (resultDiv) {
-                        resultDiv.innerHTML = `<strong>✅ Вы выбрали: Помогите выбрать</strong><br>Я свяжусь с вами, чтобы помочь подобрать подходящий вариант.`;
+                        resultDiv.innerHTML = `<strong>✅ Вы выбрали: Помогите выбрать</strong><br>Заполните форму – я свяжусь с вами и помогу выбрать вариант.`;
                         resultDiv.style.display = 'block';
                     }
+                    showSuccessToast('Спасибо! При необходимости отредактируйте комментарий.');
 
-                    showSuccessToast('Спасибо! Заполните форму обратной связи.');
-                    container.innerHTML = '<p>✨ Спасибо! Я жду вашу заявку в форме ниже.</p>';
+                    container.innerHTML = `
+                        <p style="text-align:center; font-size:1.2rem; margin-bottom:20px;">✨ Спасибо за прохождение квиза! ✨</p>
+                        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+                            <button id="goToCallbackBtn" class="btn-primary" style="min-width: 200px;">📝 Перейти к форме</button>
+                            <button id="goToCalculatorBtn" class="btn-secondary" style="min-width: 200px;">🔍 Посмотреть все услуги</button>
+                        </div>
+                        <div style="text-align:center; margin-top:20px;">
+                            <button id="resetQuizBtnAfter" class="btn-secondary">🔁 Пройти заново</button>
+                        </div>
+                    `;
+                    document.getElementById('goToCallbackBtn')?.addEventListener('click', () => {
+                        const target = document.getElementById('calendar');
+                        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        else window.location.href = '#calendar';
+                    });
+                    document.getElementById('goToCalculatorBtn')?.addEventListener('click', () => {
+                        const target = document.getElementById('calculator');
+                        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        else window.location.href = '#calculator';
+                    });
+                    document.getElementById('resetQuizBtnAfter')?.addEventListener('click', () => {
+                        answers = [null, null, null, null, null];
+                        currentQuestionIndex = 0;
+                        quizState = 'questions';
+                        currentRole = null;
+                        window.quizAnswersRaw = null;
+                        window.selectedVariantText = null;
+                        window.selectedVariantPrice = null;
+                        choiceMade = false;
+                        renderQuiz();
+                    });
                     isSubmittingChoice = false;
                 };
                 helpBtn.addEventListener('click', helpBtn._helpHandler);
@@ -3791,6 +3833,7 @@ window.VARIANTS_MATRIX = [
                     window.quizAnswersRaw = null;
                     window.selectedVariantText = null;
                     window.selectedVariantPrice = null;
+                    choiceMade = false;
                     renderQuiz();
                 };
                 resetBtn.addEventListener('click', resetBtn._resetHandler);
@@ -3799,10 +3842,7 @@ window.VARIANTS_MATRIX = [
         isRendering = false;
     }
 
-    window.initQuiz = function () {
-        if (quizInitialized) return;
-        startQuiz();
-    };
+    window.initQuiz = function () { if (quizInitialized) return; startQuiz(); };
 })();
 // ========== ОТПРАВКА ЗАПРОСА МАТЕРИАЛОВ ==========
 // Используем глобальную переменную window.APP_CONFIG.SCRIPT_URL

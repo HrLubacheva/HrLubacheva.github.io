@@ -1,4 +1,3 @@
-// ========== КАЛЬКУЛЯТОР (4 вкладки, кастомные дропдауны, с категорией training) ==========
 let cart = [];
 let calculatorInitialized = false;
 
@@ -27,13 +26,13 @@ function getCartData() {
 window.getCartData = getCartData;
 
 function updateSelectsFromData() {
-    if (!window.LOCAL_SERVICES) {
-        logError('Данные услуг не загружены (window.LOCAL_SERVICES отсутствует)');
-        return;
-    }
+    if (!window.LOCAL_SERVICES) return;
     const selects = {
-        'business-select': window.LOCAL_SERVICES.business,
-        'individual-select': window.LOCAL_SERVICES.individual,
+        'business-recruitment-select': window.LOCAL_SERVICES.business_recruitment,
+        'business-retention-select': window.LOCAL_SERVICES.business_retention,
+        'individual-base-select': window.LOCAL_SERVICES.individual_base,
+        'individual-standard-select': window.LOCAL_SERVICES.individual_standard,
+        'individual-premium-select': window.LOCAL_SERVICES.individual_premium,
         'corporate-select': window.LOCAL_SERVICES.corporate,
         'training-select': window.LOCAL_SERVICES.training
     };
@@ -48,23 +47,18 @@ function updateSelectsFromData() {
     }
 }
 
-// ========== КАСТОМНЫЙ ВЫПАДАЮЩИЙ СПИСОК (простой и надёжный) ==========
 function initCustomDropdowns() {
     const selects = document.querySelectorAll('.service-select');
     selects.forEach(select => {
         if (select.nextElementSibling && select.nextElementSibling.classList.contains('custom-dropdown')) return;
-
         const container = document.createElement('div');
         container.className = 'custom-dropdown';
-
         const button = document.createElement('button');
         button.className = 'dropdown-button';
         const defaultText = select.options[select.selectedIndex]?.text || 'Выберите услугу';
         button.innerHTML = `${defaultText} <span class="dropdown-arrow">▼</span>`;
-
         const menu = document.createElement('div');
         menu.className = 'dropdown-menu';
-
         Array.from(select.options).forEach(opt => {
             const optionDiv = document.createElement('div');
             optionDiv.className = 'dropdown-option';
@@ -81,25 +75,21 @@ function initCustomDropdowns() {
             });
             menu.appendChild(optionDiv);
         });
-
         const selectedOpt = Array.from(select.options).find(opt => opt.selected);
         if (selectedOpt) {
             const selectedDiv = Array.from(menu.children).find(div => div.textContent === selectedOpt.text);
             if (selectedDiv) selectedDiv.classList.add('selected');
         }
-
         button.addEventListener('click', (e) => {
             e.stopPropagation();
             document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
             menu.classList.toggle('open');
         });
-
         container.appendChild(button);
         container.appendChild(menu);
         select.style.display = 'none';
         select.parentNode.insertBefore(container, select.nextSibling);
     });
-
     document.addEventListener('click', () => {
         document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
     });
@@ -128,25 +118,65 @@ function renderCart() {
         if (container) container.innerHTML = '';
     }
     cart.forEach((item, idx) => {
-        const container = document.getElementById(containers[item.cat]);
+        let containerId = null;
+        if (item.cat === 'business') containerId = 'business-list';
+        else if (item.cat === 'individual') containerId = 'individual-list';
+        else if (item.cat === 'corporate') containerId = 'corporate-list';
+        else if (item.cat === 'training') containerId = 'training-list';
+        if (!containerId) return;
+        const container = document.getElementById(containerId);
         if (!container) return;
         const div = document.createElement('div');
         div.className = 'calc-item';
+        div.dataset.idx = idx;
         div.innerHTML = `
             <div class="service-name">${escapeHtml(item.name)}</div>
             <div class="service-price">${item.price > 0 ? (item.price * item.qty).toLocaleString() + ' ₽' : 'по запросу'}</div>
-            <div class="service-qty">× ${item.qty}</div>
+            <div class="service-qty-control">
+                <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
+                <span class="qty-value">${item.qty}</span>
+                <button class="qty-btn qty-plus" data-idx="${idx}">+</button>
+            </div>
             <div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>
         `;
         container.appendChild(div);
     });
-    document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.removeEventListener('click', btn._handler);
-        btn._handler = () => {
-            cart.splice(parseInt(btn.dataset.idx), 1);
+    document.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.removeEventListener('click', btn._minusHandler);
+        btn._minusHandler = () => {
+            const idx = parseInt(btn.dataset.idx);
+            if (isNaN(idx)) return;
+            if (cart[idx].qty > 1) {
+                cart[idx].qty--;
+            } else {
+                cart.splice(idx, 1);
+            }
             renderCart();
+            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
         };
-        btn.addEventListener('click', btn._handler);
+        btn.addEventListener('click', btn._minusHandler);
+    });
+    document.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.removeEventListener('click', btn._plusHandler);
+        btn._plusHandler = () => {
+            const idx = parseInt(btn.dataset.idx);
+            if (isNaN(idx)) return;
+            cart[idx].qty++;
+            renderCart();
+            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
+        };
+        btn.addEventListener('click', btn._plusHandler);
+    });
+    document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.removeEventListener('click', btn._removeHandler);
+        btn._removeHandler = () => {
+            const idx = parseInt(btn.dataset.idx);
+            if (isNaN(idx)) return;
+            cart.splice(idx, 1);
+            renderCart();
+            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
+        };
+        btn.addEventListener('click', btn._removeHandler);
     });
 }
 
@@ -158,22 +188,31 @@ function addToCart(cat, selectId, qtyId) {
     const name = fullText.replace(/ — .*/, '');
     let quantity = parseInt(document.getElementById(qtyId).value);
     if (isNaN(quantity) || quantity < 1) quantity = 1;
-    const existing = cart.find(i => i.name === name && i.cat === cat);
+    // Все бизнес-услуги (обе вкладки) попадают в общую категорию 'business'
+    let displayCat = cat;
+    if (cat === 'business_recruitment' || cat === 'business_retention') {
+        displayCat = 'business';
+    } else if (cat === 'individual_base' || cat === 'individual_standard' || cat === 'individual_premium') {
+        displayCat = 'individual';
+    }
+    const existing = cart.find(i => i.name === name && i.cat === displayCat);
     if (existing) existing.qty += quantity;
-    else cart.push({ name, price, qty: quantity, cat });
+    else cart.push({ name, price, qty: quantity, cat: displayCat });
     renderCart();
+    if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
 }
 
 function initCalculator() {
     if (calculatorInitialized) return;
     calculatorInitialized = true;
-
     updateSelectsFromData();
     initCustomDropdowns();
-
     const handlers = [
-        { btn: 'business-add', cat: 'business', select: 'business-select', qty: 'business-qty' },
-        { btn: 'individual-add', cat: 'individual', select: 'individual-select', qty: 'individual-qty' },
+        { btn: 'business-recruitment-add', cat: 'business_recruitment', select: 'business-recruitment-select', qty: 'business-recruitment-qty' },
+        { btn: 'business-retention-add', cat: 'business_retention', select: 'business-retention-select', qty: 'business-retention-qty' },
+        { btn: 'individual-base-add', cat: 'individual_base', select: 'individual-base-select', qty: 'individual-base-qty' },
+        { btn: 'individual-standard-add', cat: 'individual_standard', select: 'individual-standard-select', qty: 'individual-standard-qty' },
+        { btn: 'individual-premium-add', cat: 'individual_premium', select: 'individual-premium-select', qty: 'individual-premium-qty' },
         { btn: 'corporate-add', cat: 'corporate', select: 'corporate-select', qty: 'corporate-qty' },
         { btn: 'training-add', cat: 'training', select: 'training-select', qty: 'training-qty' }
     ];
@@ -185,7 +224,6 @@ function initCalculator() {
             button.addEventListener('click', button._handler);
         }
     });
-
     const tabs = document.querySelectorAll('.calculator-tabs .tab-btn');
     tabs.forEach(btn => {
         btn.removeEventListener('click', btn._tabHandler);
@@ -201,7 +239,6 @@ function initCalculator() {
         btn.addEventListener('click', btn._tabHandler);
     });
 }
-
 window.initCalculator = initCalculator;
 window.addToCart = addToCart;
 window.renderCart = renderCart;

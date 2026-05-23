@@ -372,14 +372,23 @@ body {
     }
 }
 
-/* ========== УЛУЧШЕННЫЙ БЛОК СТАТИСТИКИ ========== */
+/* ========== БЛОК СТАТИСТИКИ: 1/2/3 КОЛОНКИ ========== */
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1fr;
     gap: 30px;
     margin: 40px 0;
 }
-
+@media (min-width: 576px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (min-width: 992px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
 .stat-item {
     text-align: center;
     background: var(--surface-soft);
@@ -389,21 +398,19 @@ body {
     transition: var(--transition);
     border: 1px solid var(--border);
 }
-
 .stat-item:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-md);
 }
-
 .stat-number-wrapper {
     display: flex;
     align-items: baseline;
     justify-content: center;
     gap: 4px;
     margin-bottom: 12px;
-    flex-wrap: wrap;
+    white-space: nowrap;
+    flex-wrap: nowrap;
 }
-
 .stat-number {
     font-size: 2.8rem;
     font-weight: 800;
@@ -411,21 +418,17 @@ body {
     line-height: 1.2;
     transition: all 0.2s ease;
 }
-
 .stat-plus {
     font-size: 2rem;
     font-weight: 700;
     color: var(--primary);
     line-height: 1.2;
-    margin-left: 2px;
 }
-
 .stat-label {
     font-size: 1rem;
     color: var(--secondary);
     font-weight: 500;
 }
-
 @media (max-width: 768px) {
     .stats-grid {
         gap: 20px;
@@ -441,13 +444,26 @@ body {
         font-size: 0.9rem;
     }
 }
+@media (max-width: 360px) {
+    .stat-number-wrapper {
+        white-space: normal;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
 
-/* ========== Секция преимуществ (улучшенная) ========== */
+/* ========== БЛОК ПРЕИМУЩЕСТВ: 2 КОЛОНКИ НА ДЕСКТОПЕ ========== */
 .benefits-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: 1fr;
     gap: 32px;
     margin: 48px 0;
+}
+@media (min-width: 768px) {
+    .benefits-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+    }
 }
 .benefit-card {
     background: rgba(255, 255, 255, 0.95);
@@ -509,7 +525,7 @@ body {
     }
 }
 
-/* ========== Калькулятор (улучшенный, корзина внизу) ========== */
+/* ========== Калькулятор ========== */
 #calculator .section-title {
     margin-bottom: 16px;
 }
@@ -553,7 +569,7 @@ body {
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ========== Улучшенная строка добавления услуги ========== */
+/* Строка добавления услуги */
 .add-service {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -563,11 +579,11 @@ body {
     background: #ffffff;
     padding: 8px;
     border-radius: 60px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 0 0 1px rgba(0,0,0,0.02);
     transition: box-shadow 0.2s;
 }
 .add-service:focus-within {
-    box-shadow: 0 4px 12px rgba(45, 106, 159, 0.1), 0 0 0 1px var(--primary);
+    box-shadow: 0 4px 12px rgba(45,106,159,0.1), 0 0 0 1px var(--primary);
 }
 .service-select {
     flex: 1;
@@ -593,7 +609,7 @@ body {
 .service-select:focus {
     outline: none;
     background-color: white;
-    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3);
+    box-shadow: 0 0 0 2px rgba(45,106,159,0.3);
 }
 .calc-qty {
     width: 90px;
@@ -609,7 +625,7 @@ body {
 .calc-qty:focus {
     outline: none;
     background: white;
-    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3);
+    box-shadow: 0 0 0 2px rgba(45,106,159,0.3);
 }
 .add-service-btn {
     background: var(--primary);
@@ -629,7 +645,7 @@ body {
 .add-service-btn:hover {
     background: var(--primary-dark);
     transform: translateY(-1px);
-    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.25);
+    box-shadow: 0 6px 14px rgba(45,106,159,0.25);
 }
 .add-service-btn:active {
     transform: translateY(1px);
@@ -678,7 +694,7 @@ body {
 }
 .calc-item {
     display: grid;
-    grid-template-columns: 1fr 100px 80px 40px;
+    grid-template-columns: 1fr 100px 100px 40px;
     gap: 12px;
     align-items: center;
     padding: 12px 8px;
@@ -702,6 +718,36 @@ body {
 }
 .calc-item .service-price,
 .calc-item .service-qty {
+    text-align: center;
+    font-weight: 500;
+}
+.service-qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--light-bg);
+    border: 1px solid var(--border);
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.qty-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+.qty-value {
+    min-width: 24px;
     text-align: center;
     font-weight: 500;
 }
@@ -758,10 +804,9 @@ body {
         color: var(--primary);
         font-weight: 600;
     }
-    .calc-item .service-qty {
-        text-align: left;
-        font-size: 0.85rem;
-        color: var(--secondary);
+    .service-qty-control {
+        justify-content: flex-start;
+        margin-top: 5px;
     }
     .calc-item .service-remove {
         position: absolute;
@@ -796,7 +841,7 @@ body {
     }
 }
 
-/* ========== Квиз (компактные кнопки) ========== */
+/* ========== КВИЗ: ГИБКАЯ СЕТКА (без дубликатов) ========== */
 .quiz-card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -815,9 +860,8 @@ body {
     color: var(--text-dark);
 }
 .quiz-options {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 12px;
     margin-top: 15px;
 }
@@ -825,16 +869,18 @@ body {
     background: var(--light-bg);
     border: 1px solid var(--border);
     color: var(--text-dark);
-    padding: 10px 24px;
+    padding: 10px 12px;
     border-radius: 40px;
     cursor: pointer;
     transition: all 0.2s ease;
     font-weight: 500;
     font-size: 0.95rem;
-    white-space: nowrap;
-    flex: 0 1 auto;
-    min-width: 130px;
     text-align: center;
+    white-space: normal;
+    word-break: break-word;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .quiz-option:hover {
     background: var(--primary);
@@ -902,15 +948,17 @@ body {
     font-size: 1rem;
     color: var(--secondary);
 }
-@media (max-width: 768px) {
+@media (max-width: 640px) {
     .quiz-card {
         padding: 24px 16px;
     }
+    .quiz-options {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
     .quiz-option {
-        white-space: normal;
-        padding: 10px 16px;
-        flex: 1 0 auto;
-        min-width: 120px;
+        padding: 12px 16px;
+        width: 100%;
     }
     .quiz-question p {
         font-size: 1rem;
@@ -1307,36 +1355,25 @@ footer a:hover {
     white-space: nowrap;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
-
 .custom-toast-error {
     background: #dc3545;
     color: white;
     box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
 }
-
 .custom-toast-success {
     background: #28a745;
     color: white;
     box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
 }
-
 .custom-toast-warning {
     background: #ffc107;
     color: #212529;
     box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
 }
-
 @keyframes toastFadeIn {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
-
 @media (max-width: 640px) {
     .custom-toast {
         white-space: normal;
@@ -1346,25 +1383,23 @@ footer a:hover {
     }
 }
 
-/* ========== УБИРАЕМ МИГАНИЕ И СТАНДАРТНУЮ РАМКУ У ВЫПАДАЮЩЕГО СПИСКА ========== */
+/* ========== УБИРАЕМ МИГАНИЕ ========== */
 .service-select:focus {
     outline: none !important;
     border-color: var(--primary) !important;
     box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
     background-color: white !important;
 }
-
 .add-service-btn:focus {
     outline: none !important;
     box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
 }
 
-/* ========== УЛУЧШЕННЫЙ КАСТОМНЫЙ ДРОПДАУН ДЛЯ КАЛЬКУЛЯТОРА ========== */
+/* ========== УЛУЧШЕННЫЙ КАСТОМНЫЙ ДРОПДАУН ========== */
 .custom-dropdown {
     position: relative;
     width: 100%;
 }
-
 .dropdown-button {
     width: 100%;
     background: var(--light-bg);
@@ -1382,27 +1417,22 @@ footer a:hover {
     transition: all 0.2s ease;
     text-align: left;
 }
-
 .dropdown-button:hover {
     background: #eef2f5;
     border-color: var(--primary-light);
 }
-
 .dropdown-button.active {
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(45,106,159,0.15);
 }
-
 .dropdown-arrow {
     transition: transform 0.2s ease;
     font-size: 0.7rem;
     color: var(--secondary);
 }
-
 .dropdown-button.active .dropdown-arrow {
     transform: rotate(180deg);
 }
-
 .dropdown-menu {
     position: absolute;
     top: calc(100% + 8px);
@@ -1420,13 +1450,11 @@ footer a:hover {
     transform: translateY(-12px);
     transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
-
 .dropdown-menu.open {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
-
 .dropdown-option {
     padding: 12px 20px;
     cursor: pointer;
@@ -1434,21 +1462,16 @@ footer a:hover {
     font-size: 0.9rem;
     border-bottom: 1px solid var(--border);
 }
-
 .dropdown-option:last-child {
     border-bottom: none;
 }
-
 .dropdown-option:hover {
     background: var(--light-bg);
 }
-
 .dropdown-option.selected {
     background: var(--primary);
     color: white;
 }
-
-/* Стилизация скроллбара */
 .dropdown-menu::-webkit-scrollbar {
     width: 6px;
 }
@@ -1496,7 +1519,6 @@ footer a:hover {
     cursor: pointer;
     user-select: none;
 }
-
 .consent-checkbox input[type="checkbox"] {
     appearance: none;
     -webkit-appearance: none;
@@ -1510,12 +1532,10 @@ footer a:hover {
     transition: all 0.2s ease;
     position: relative;
 }
-
 .consent-checkbox input[type="checkbox"]:checked {
     background: var(--primary);
     border-color: var(--primary);
 }
-
 .consent-checkbox input[type="checkbox"]:checked::after {
     content: '✓';
     position: absolute;
@@ -1526,35 +1546,29 @@ footer a:hover {
     font-size: 12px;
     font-weight: bold;
 }
-
 .consent-checkbox input[type="checkbox"]:hover {
     border-color: var(--primary-light);
     transform: scale(1.02);
 }
-
 .consent-checkbox input[type="checkbox"]:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
-
 .consent-checkbox label {
     cursor: pointer;
     font-size: 0.9rem;
     color: var(--text-dark);
     line-height: 1.4;
 }
-
 .consent-checkbox label a {
     color: var(--primary);
     text-decoration: none;
     transition: color 0.2s;
 }
-
 .consent-checkbox label a:hover {
     color: var(--primary-dark);
     text-decoration: underline;
 }
-
 .ya-share2, .ya-share, [class*="ya-share"] {
     display: none !important;
 }
