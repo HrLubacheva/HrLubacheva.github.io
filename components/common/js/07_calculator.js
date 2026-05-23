@@ -1,4 +1,4 @@
-// ========== КАЛЬКУЛЯТОР (4 вкладки, кастомные дропдауны, без иконок) ==========
+// ========== КАЛЬКУЛЯТОР (4 вкладки, кастомные дропдауны без иконок) ==========
 let cart = [];
 let calculatorInitialized = false;
 
@@ -28,7 +28,7 @@ window.getCartData = getCartData;
 
 function updateSelectsFromData() {
     if (!window.LOCAL_SERVICES) {
-        logError('Данные услуг не загружены (window.LOCAL_SERVICES отсутствует)');
+        console.error('Данные услуг не загружены (window.LOCAL_SERVICES отсутствует)');
         return;
     }
     const selects = {
@@ -42,65 +42,62 @@ function updateSelectsFromData() {
         if (select && data && data.length) {
             select.innerHTML = data.map(s => {
                 const priceText = s.price > 0 ? s.price.toLocaleString() + ' ₽' : 'по запросу';
-                return `<option value="${s.price}">${escapeHtml(s.service)} — ${priceText}</option>`;
+                return `<option value="${s.price}">${s.service} — ${priceText}</option>`;
             }).join('');
         }
     }
 }
 
-// ========== КАСТОМНЫЙ ВЫПАДАЮЩИЙ СПИСОК ==========
+// ========== КАСТОМНЫЙ ВЫПАДАЮЩИЙ СПИСОК (простой и надёжный) ==========
 function initCustomDropdowns() {
     const selects = document.querySelectorAll('.service-select');
     selects.forEach(select => {
-        if (select.parentElement.classList.contains('custom-dropdown')) return;
+        // Проверяем, не заменён ли уже
+        if (select.nextElementSibling && select.nextElementSibling.classList.contains('custom-dropdown')) return;
 
         const container = document.createElement('div');
         container.className = 'custom-dropdown';
 
         const button = document.createElement('button');
         button.className = 'dropdown-button';
-        const selectedText = select.options[select.selectedIndex]?.text || 'Выберите услугу';
-        button.innerHTML = `<span>${escapeHtml(selectedText)}</span><span class="dropdown-arrow">▼</span>`;
+        const defaultText = select.options[select.selectedIndex]?.text || 'Выберите услугу';
+        button.innerHTML = `${defaultText} <span class="dropdown-arrow">▼</span>`;
 
         const menu = document.createElement('div');
         menu.className = 'dropdown-menu';
 
+        // Заполняем меню
         Array.from(select.options).forEach(opt => {
             const optionDiv = document.createElement('div');
             optionDiv.className = 'dropdown-option';
-            if (opt.selected) optionDiv.classList.add('selected');
             optionDiv.textContent = opt.text;
             optionDiv.dataset.value = opt.value;
-            optionDiv.addEventListener('click', (e) => {
-                e.stopPropagation();
+            optionDiv.addEventListener('click', () => {
                 select.value = opt.value;
-                const event = new Event('change', { bubbles: true });
-                select.dispatchEvent(event);
-                button.querySelector('span:first-child').textContent = opt.text;
+                button.innerHTML = `${opt.text} <span class="dropdown-arrow">▼</span>`;
                 menu.querySelectorAll('.dropdown-option').forEach(div => div.classList.remove('selected'));
                 optionDiv.classList.add('selected');
                 menu.classList.remove('open');
-                button.querySelector('.dropdown-arrow').classList.remove('open');
-                button.classList.remove('active');
+                // Триггерим событие change на оригинальном select, чтобы обновить корзину
+                const event = new Event('change', { bubbles: true });
+                select.dispatchEvent(event);
             });
             menu.appendChild(optionDiv);
         });
 
+        // Выделяем текущий выбранный пункт
+        const selectedOpt = Array.from(select.options).find(opt => opt.selected);
+        if (selectedOpt) {
+            const selectedDiv = Array.from(menu.children).find(div => div.textContent === selectedOpt.text);
+            if (selectedDiv) selectedDiv.classList.add('selected');
+        }
+
+        // Клик по кнопке
         button.addEventListener('click', (e) => {
             e.stopPropagation();
-            const isOpen = menu.classList.contains('open');
+            // Закрываем все остальные открытые меню
             document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
-            document.querySelectorAll('.dropdown-arrow.open').forEach(arrow => arrow.classList.remove('open'));
-            document.querySelectorAll('.dropdown-button.active').forEach(btn => btn.classList.remove('active'));
-            if (!isOpen) {
-                menu.classList.add('open');
-                button.querySelector('.dropdown-arrow').classList.add('open');
-                button.classList.add('active');
-            } else {
-                menu.classList.remove('open');
-                button.querySelector('.dropdown-arrow').classList.remove('open');
-                button.classList.remove('active');
-            }
+            menu.classList.toggle('open');
         });
 
         container.appendChild(button);
@@ -108,18 +105,12 @@ function initCustomDropdowns() {
         select.style.display = 'none';
         select.parentNode.insertBefore(container, select.nextSibling);
     });
-}
 
-document.addEventListener('click', function() {
-    document.querySelectorAll('.dropdown-menu.open').forEach(menu => {
-        menu.classList.remove('open');
-        const btn = menu.previousElementSibling;
-        if (btn) {
-            btn.querySelector('.dropdown-arrow')?.classList.remove('open');
-            btn.classList.remove('active');
-        }
+    // Закрываем меню при клике вне
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
     });
-});
+}
 
 function renderCart() {
     let total = 0, qty = 0;
