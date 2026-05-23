@@ -144,7 +144,7 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
-// ========== КАСТОМНЫЕ ТОСТЫ (КРАСИВЫЕ УВЕДОМЛЕНИЯ) ==========
+// ========== КАСТОМНЫЕ ТОСТЫ ==========
 function showToast(message, type = 'error') {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -169,7 +169,7 @@ function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
 // ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyHWw9C5L1JWARu_lMBVvodLJbmDPwWyza7rTVezFuGkBhGKNgqiLHEFTegHFUrD5yTig/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTRTkBsdo-hffs8S1WczL_afnfRM7YD0ePlOB3oCmEIXZ_NvoVUwqVtQFCNLL0m_5jkg/exec';
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
@@ -206,6 +206,63 @@ function formatPhoneNumber(input) {
     return formatted;
 }
 
+// ========== ВРЕМЯ НА САЙТЕ ==========
+window.sessionStartTime = Date.now();
+
+function getTimeOnSite() {
+    if (!window.sessionStartTime) return '-';
+    const seconds = Math.floor((Date.now() - window.sessionStartTime) / 1000);
+    if (seconds < 60) return `${seconds} сек`;
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes} мин ${secs} сек`;
+}
+window.getTimeOnSite = getTimeOnSite;
+
+// ========== СЧЁТЧИК ВИЗИТОВ ==========
+function getVisitStats() {
+    const now = new Date();
+    const oneDay = 24 * 60 * 60 * 1000;
+    const oneWeek = 7 * oneDay;
+    const oneMonth = 30 * oneDay;
+
+    let visits = [];
+    try {
+        const stored = localStorage.getItem('hr_visits');
+        if (stored) {
+            visits = JSON.parse(stored);
+            const monthAgo = now.getTime() - oneMonth;
+            visits = visits.filter(v => v > monthAgo);
+        }
+    } catch(e) {}
+
+    const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
+    if (now.getTime() - lastVisit > 30 * 60 * 1000) {
+        visits.push(now.getTime());
+    }
+
+    try {
+        localStorage.setItem('hr_visits', JSON.stringify(visits));
+    } catch(e) {}
+
+    const weekAgo = now.getTime() - oneWeek;
+    const monthAgo = now.getTime() - oneMonth;
+
+    return {
+        week: visits.filter(v => v > weekAgo).length,
+        month: visits.length,
+        total: visits.length
+    };
+}
+
+function getVisitStatsText() {
+    const stats = getVisitStats();
+    return `📊 Визиты: ${stats.week} за неделю, ${stats.month} за месяц`;
+}
+window.getVisitStats = getVisitStats;
+window.getVisitStatsText = getVisitStatsText;
+
+// ========== ЭКСПОРТ ГЛОБАЛЬНЫХ ФУНКЦИЙ ==========
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
@@ -219,8 +276,6 @@ window.hideLoading = hideLoading;
 window.log = log;
 window.logError = logError;
 window.logWarn = logWarn;
-
-// Экспорт тостов
 window.showToast = showToast;
 window.showErrorToast = showErrorToast;
 window.showSuccessToast = showSuccessToast;

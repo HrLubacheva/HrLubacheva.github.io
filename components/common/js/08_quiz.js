@@ -23,6 +23,32 @@
         };
     }
 
+    function showErrorToast(message) {
+        const existingToast = document.querySelector('.custom-toast-error');
+        if (existingToast) existingToast.remove();
+        const toast = document.createElement('div');
+        toast.className = 'custom-toast-error';
+        toast.innerHTML = `⚠️ ${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 2500);
+    }
+
+    function showWarningToast(message) {
+        const existingToast = document.querySelector('.custom-toast-warning');
+        if (existingToast) existingToast.remove();
+        const toast = document.createElement('div');
+        toast.className = 'custom-toast-warning';
+        toast.innerHTML = `🔔 ${message}`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 2500);
+    }
+
     // ========== ВОПРОСЫ ==========
     const FIRST_QUESTION = {
         text: "1. Ваша роль?",
@@ -49,6 +75,17 @@
         options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "Выше 100 000 ₽"]
     };
 
+    // Глобальное хранилище ответов квиза
+    window.quizAnswersRaw = null;
+
+    function formatQuizAnswers() {
+        if (!answers || answers.length === 0) return '-';
+        return answers.map((a, idx) => {
+            const qText = quizQuestions[idx]?.text || `Вопрос ${idx+1}`;
+            return `${qText} — ${a === null ? 'не выбран' : a}`;
+        }).join('\n');
+    }
+
     // Поиск варианта ответа во внешней матрице
     function findVariant(answersArr) {
         if (!window.VARIANTS_MATRIX || !window.VARIANTS_MATRIX.length) {
@@ -56,11 +93,11 @@
             return { variantA: 'Индивидуальная консультация', variantB: 'Экспресс-консультация' };
         }
         const user = {
-            role: answersArr[0],
-            level: answersArr[1],
-            urgency: answersArr[2],
-            importance: answersArr[3],
-            budget: answersArr[4]
+            role: answersArr[0] === null ? '*' : answersArr[0],
+            level: answersArr[1] === null ? '*' : answersArr[1],
+            urgency: answersArr[2] === null ? '*' : answersArr[2],
+            importance: answersArr[3] === null ? '*' : answersArr[3],
+            budget: answersArr[4] === null ? '*' : answersArr[4]
         };
         const sorted = [...window.VARIANTS_MATRIX].sort((a,b) => a.priority - b.priority);
         for (const rule of sorted) {
@@ -75,7 +112,6 @@
         return { variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB };
     }
 
-    // Получить цену из текста варианта
     function extractPrice(text) {
         const match = text.match(/(\d[\d\s]*)\s*₽/);
         if (match) return match[1].replace(/\s/g, '') + ' ₽';
@@ -83,7 +119,6 @@
         return 'уточняйте';
     }
 
-    // Сохранение и восстановление прогресса
     function saveQuizProgress() {
         try {
             localStorage.setItem('quizAnswers', JSON.stringify(answers));
@@ -114,6 +149,7 @@
         currentQuestionIndex = 0;
         answers = [null, null, null, null, null];
         currentRole = null;
+        window.quizAnswersRaw = null;
         localStorage.removeItem('quizAnswers');
         localStorage.removeItem('quizCurrentIndex');
         localStorage.removeItem('quizState');
@@ -201,6 +237,7 @@
                         currentRole = selected;
                         updateSecondQuestion(currentRole);
                     }
+                    window.quizAnswersRaw = formatQuizAnswers();
                     saveQuizProgress();
                     renderQuiz();
                 };
@@ -213,10 +250,10 @@
                 nextBtn._nextHandler = () => {
                     if (isAnalyzing) return;
                     if (answers[currentQuestionIndex] === null) {
-                        showErrorToast('📌 Пожалуйста, выберите ответ');
-                        return;
+                        showWarningToast('📌 Вы не выбрали ответ, переходим дальше');
                     }
                     currentQuestionIndex++;
+                    window.quizAnswersRaw = formatQuizAnswers();
                     saveQuizProgress();
                     renderQuiz();
                     document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -231,6 +268,7 @@
                     if (isAnalyzing) return;
                     if (currentQuestionIndex > 0) {
                         currentQuestionIndex--;
+                        window.quizAnswersRaw = formatQuizAnswers();
                         saveQuizProgress();
                         renderQuiz();
                         document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -244,18 +282,17 @@
                 submitBtn.removeEventListener('click', submitBtn._submitHandler);
                 submitBtn._submitHandler = () => {
                     if (isAnalyzing) return;
-                    if (answers[currentQuestionIndex] === null) {
-                        showErrorToast('📌 Выберите ответ перед отправкой');
-                        return;
+
+                    const missingCount = answers.filter(a => a === null).length;
+                    if (missingCount > 0) {
+                        showWarningToast(`⚠️ Вы не ответили на ${missingCount} вопрос(ов). Мы подготовим варианты на основе ваших ответов.`);
                     }
-                    if (answers.includes(null)) {
-                        showErrorToast('📋 Ответьте на все вопросы');
-                        return;
-                    }
+
                     isAnalyzing = true;
                     container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
                     setTimeout(() => {
-                        const variant = findVariant(answers);
+                        const filledAnswers = answers.map(a => a === null ? 'не выбран' : a);
+                        const variant = findVariant(filledAnswers);
                         quizState = 'choice';
                         renderQuiz();
                         isAnalyzing = false;
@@ -265,14 +302,13 @@
             }
         }
         else if (quizState === 'choice') {
-            const variant = findVariant(answers);
+            const variant = findVariant(answers.map(a => a === null ? 'не выбран' : a));
             const priceA = extractPrice(variant.variantA);
             const priceB = extractPrice(variant.variantB);
 
             container.innerHTML = `
                 <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подготовили 3 варианта:</p>
                 <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
-                    <!-- Вариант 1 (рекомендуемый) -->
                     <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">📌</div>
                         <h4>Вариант 1</h4>
@@ -280,7 +316,6 @@
                         <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
                         <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(variant.variantA)}">Выбрать →</button>
                     </div>
-                    <!-- Вариант 2 (альтернатива) -->
                     <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">🎯</div>
                         <h4>Вариант 2</h4>
@@ -288,7 +323,6 @@
                         <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
                         <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(variant.variantB)}">Выбрать →</button>
                     </div>
-                    <!-- Вариант 3 (помощь) -->
                     <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">🤔</div>
                         <h4>Вариант 3</h4>
@@ -302,7 +336,6 @@
                 </div>
             `;
 
-            // Обработчики для вариантов 1 и 2 (выбор тарифа)
             document.querySelectorAll('.choose-option').forEach(btn => {
                 btn.removeEventListener('click', btn._choiceHandler);
                 btn._choiceHandler = () => {
@@ -314,13 +347,13 @@
                     const sendData = (userId) => {
                         const formData = {
                             formType: 'Квиз',
-                            quizAnswers: answers.map((a, idx) => `${quizQuestions[idx]?.text} — ${a}`).join('\n'),
+                            quizAnswers: window.quizAnswersRaw || formatQuizAnswers(),
                             chosenVariant: `${chosen}: ${chosenText}`,
-                            role: answers[0] || '',
-                            level: answers[1] || '',
-                            urgency: answers[2] || '',
-                            importance: answers[3] || '',
-                            budget: answers[4] || '',
+                            role: answers[0] || 'не выбран',
+                            level: answers[1] || 'не выбран',
+                            urgency: answers[2] || 'не выбран',
+                            importance: answers[3] || 'не выбран',
+                            budget: answers[4] || 'не выбран',
                             userId: userId
                         };
                         if (typeof window.sendDataToSheet === 'function') {
@@ -345,7 +378,6 @@
                 btn.addEventListener('click', btn._choiceHandler);
             });
 
-            // Обработчик для варианта "Помочь выбрать"
             const helpBtn = document.querySelector('.choose-help');
             if (helpBtn) {
                 helpBtn.removeEventListener('click', helpBtn._helpHandler);
@@ -354,16 +386,32 @@
                     isSubmittingChoice = true;
 
                     const sendHelpData = (userId) => {
-                        const formData = {
+                        const quizFormData = {
+                            formType: 'Квиз',
+                            quizAnswers: window.quizAnswersRaw || formatQuizAnswers(),
+                            chosenVariant: 'Помощь с выбором (бесплатная консультация)',
+                            role: answers[0] || 'не выбран',
+                            level: answers[1] || 'не выбран',
+                            urgency: answers[2] || 'не выбран',
+                            importance: answers[3] || 'не выбран',
+                            budget: answers[4] || 'не выбран',
+                            userId: userId
+                        };
+                        if (typeof window.sendDataToSheet === 'function') {
+                            window.sendDataToSheet(quizFormData);
+                        }
+
+                        const helpFormData = {
                             formType: 'Помощь с выбором',
-                            quizAnswers: answers.map((a, idx) => `${quizQuestions[idx]?.text} — ${a}`).join('\n'),
+                            quizAnswers: window.quizAnswersRaw || formatQuizAnswers(),
                             name: 'Требуется консультация',
                             comment: 'Пользователь не определился с выбором, просит помощи',
                             userId: userId
                         };
                         if (typeof window.sendDataToSheet === 'function') {
-                            window.sendDataToSheet(formData);
+                            window.sendDataToSheet(helpFormData);
                         }
+
                         const resultDiv = document.getElementById('quizResult');
                         if (resultDiv) {
                             resultDiv.innerHTML = `<strong>✅ Заявка отправлена!</strong><br>Я свяжусь с вами в ближайшее время, чтобы помочь выбрать подходящий вариант.`;
@@ -377,7 +425,6 @@
                         localStorage.removeItem('quizState');
                         localStorage.removeItem('quizCurrentRole');
                     };
-
                     const uid = (typeof currentUserId !== 'undefined' && currentUserId) ? currentUserId : (typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown');
                     sendHelpData(uid);
                 };
@@ -394,7 +441,31 @@
         isRendering = false;
     }
 
-    // Глобальная точка входа
+    // Автоматическая отправка прогресса при уходе со страницы
+    window.addEventListener('beforeunload', function() {
+        if (answers && answers.some(a => a !== null)) {
+            const userId = typeof currentUserId !== 'undefined' && currentUserId
+                ? currentUserId
+                : (typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown');
+
+            const progressData = {
+                formType: 'Квиз (прогресс)',
+                quizAnswers: formatQuizAnswers(),
+                role: answers[0] || 'не выбран',
+                level: answers[1] || 'не выбран',
+                urgency: answers[2] || 'не выбран',
+                importance: answers[3] || 'не выбран',
+                budget: answers[4] || 'не выбран',
+                userId: userId,
+                timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-'
+            };
+            const url = window.SCRIPT_URL;
+            if (url && typeof window.sendDataToSheet === 'function') {
+                navigator.sendBeacon(url, new URLSearchParams(progressData));
+            }
+        }
+    });
+
     window.initQuiz = function() {
         if (quizInitialized) return;
         startQuiz();

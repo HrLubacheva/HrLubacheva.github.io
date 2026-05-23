@@ -2,7 +2,6 @@
 let cart = [];
 let calculatorInitialized = false;
 
-// Получить текстовое представление корзины для отправки (каждый товар с новой строки)
 function getCartData() {
     if (!cart || cart.length === 0) return 'Корзина пуста';
     let total = 0;
@@ -16,31 +15,6 @@ function getCartData() {
     return items.join('\n') + `\n💰 Итого: ${finalTotal.toLocaleString()} ₽` + discount;
 }
 window.getCartData = getCartData;
-
-// Логирование изменения корзины в Лист4 (Google Sheets)
-function logCartToSheet(action) {
-    const url = window.SCRIPT_URL;
-    if (!url) return;
-    const userId = typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown';
-    const cartText = getCartData();
-    let total = '';
-    const match = cartText.match(/Итого:\s*([\d\s]+)₽/);
-    if (match) total = match[1].replace(/\s/g, '');
-
-    const formData = {
-        formType: 'Корзина',
-        action: action,
-        userId: userId,
-        cart: cartText,
-        total: total
-    };
-    fetch(url, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData)
-    }).catch(err => console.error('Ошибка логирования корзины:', err));
-}
 
 function updateSelectsFromData() {
     if (!window.LOCAL_SERVICES) {
@@ -104,12 +78,9 @@ function renderCart() {
         btn._handler = () => {
             cart.splice(parseInt(btn.dataset.idx), 1);
             renderCart();
-            // logCartToSheet('remove'); // закомментировано, чтобы не спамить
         };
         btn.addEventListener('click', btn._handler);
     });
-    // После каждого рендера (добавление/удаление) логируем изменение
-    // logCartToSheet('update'); // закомментировано, чтобы не спамить
 }
 
 function addToCart(cat, selectId, qtyId) {

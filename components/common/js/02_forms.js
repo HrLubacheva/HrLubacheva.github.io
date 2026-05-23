@@ -72,6 +72,8 @@ function initCallbackForm() {
                     comment: comment,
                     quizAnswers: window.quizAnswersRaw || '-',
                     cart: typeof window.getCartData === 'function' ? window.getCartData() : '',
+                    timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-',
+                    visitStats: typeof window.getVisitStatsText === 'function' ? window.getVisitStatsText() : '-',
                     consent: true,
                     userId: userId
                 };
