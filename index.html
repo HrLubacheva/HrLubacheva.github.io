@@ -2070,7 +2070,7 @@ footer a:hover {
                 <a href="#" id="privacyLink">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 23.05.2026 14:36:55
+                Версия: 23.05.2026 14:43:35
             </div>
         </div>
     </div>
@@ -3296,17 +3296,45 @@ window.renderCart = renderCart;
         showSuccessToast('Данные квиза добавлены в комментарий. Вы можете отредактировать их перед отправкой.');
     }
 
-    function scrollToCallbackForm() {
-        const calendarSection = document.getElementById('calendar');
-        if (calendarSection) {
-            const navbar = document.querySelector('.navbar');
-            const navbarHeight = navbar ? navbar.offsetHeight : 80;
-            const targetPosition = calendarSection.getBoundingClientRect().top + window.scrollY - navbarHeight;
-            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+function scrollToCallbackForm() {
+    const calendarSection = document.getElementById('calendar');
+    if (!calendarSection) {
+        // Если секция не найдена, пробуем найти по классу .calendar-card (на случай изменения id)
+        const fallback = document.querySelector('.calendar-card');
+        if (fallback) {
+            window.scrollTo({ top: fallback.offsetTop - 80, behavior: 'smooth' });
         } else {
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
+        return;
     }
+
+    // Получаем высоту навбара (если он есть, иначе 80px)
+    const navbar = document.querySelector('.navbar');
+    let navbarHeight = 80;
+    if (navbar) {
+        const style = getComputedStyle(navbar);
+        navbarHeight = navbar.offsetHeight;
+        // Если меню раскрыто на мобильных, offsetHeight может быть больше,
+        // но скроллинг должен учитывать только видимую часть? Ограничим разумным максимумом.
+        if (navbarHeight > 120) navbarHeight = 80;
+    }
+
+    // Вычисляем позицию с учётом навбара и небольшого дополнительного отступа (для красоты)
+    const targetPosition = calendarSection.getBoundingClientRect().top + window.scrollY - navbarHeight - 20;
+
+    window.scrollTo({ top: Math.max(0, targetPosition), behavior: 'smooth' });
+
+    // На случай, если после рендеринга форма ещё не заняла своё место, повторяем через 300 мс
+    setTimeout(() => {
+        if (calendarSection) {
+            const newPosition = calendarSection.getBoundingClientRect().top + window.scrollY - navbarHeight - 20;
+            if (Math.abs(window.scrollY - newPosition) > 50) {
+                window.scrollTo({ top: Math.max(0, newPosition), behavior: 'smooth' });
+            }
+        }
+    }, 300);
+}
 
     function startQuiz() {
         log('startQuiz вызван');
