@@ -1,4 +1,4 @@
-// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ, цены из текста) ==========
+// ========== КВИЗ (с выбором варианта, без автозаполнения комментария, с сохранением цены) ==========
 (function () {
     let quizQuestions = [];
     let answers = [];
@@ -110,7 +110,7 @@
 
     function findVariant(answersArr) {
         if (!window.VARIANTS_MATRIX || !window.VARIANTS_MATRIX.length) {
-            logError('Матрица вариантов не загружена');
+            console.error('Матрица вариантов не загружена');
             return {
                 variantA: 'Индивидуальная консультация (1ч) — 7 000 ₽',
                 variantB: 'Экспресс-консультация (30мин) — 3 500 ₽'
@@ -136,23 +136,8 @@
         return {variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB};
     }
 
-    function fillCommentFieldWithQuizData(chosenOptionText) {
-        const commentField = document.getElementById('callbackComment');
-        if (!commentField) return;
-        const answersText = formatQuizAnswersOnly();
-        const dateStr = new Date().toLocaleString('ru-RU');
-        const prefix = `🔹 Квиз от ${dateStr}\nВыбран вариант: ${chosenOptionText}\nОтветы:\n${answersText}\n\n---\n`;
-        const existing = commentField.value.trim();
-        if (existing && !existing.includes('Квиз от')) {
-            commentField.value = prefix + existing;
-        } else if (!existing) {
-            commentField.value = prefix;
-        }
-        showSuccessToast('Данные квиза добавлены в комментарий. Вы можете отредактировать их перед отправкой.');
-    }
-
     function startQuiz() {
-        log('startQuiz вызван');
+        console.log('startQuiz вызван');
         answers = [null, null, null, null, null];
         currentQuestionIndex = 0;
         quizState = 'questions';
@@ -237,7 +222,7 @@
         isRendering = true;
         const container = document.getElementById('quizContainer');
         if (!container) {
-            logError('quizContainer не найден!');
+            console.error('quizContainer не найден!');
             isRendering = false;
             return;
         }
@@ -334,22 +319,22 @@
                         <div style="font-size:32px; margin-bottom:12px;">📌</div>
                         <h4>Вариант 1</h4>
                         <p><strong>${window.escapeHtml(variant.variantA)}</strong></p>
-                        <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
-                        <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(variant.variantA)}">Узнать подробнее →</button>
+                        <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
+                        <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(variant.variantA)}" data-price="${priceA}">Узнать подробнее →</button>
                     </div>
                     <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">🎯</div>
                         <h4>Вариант 2</h4>
                         <p><strong>${window.escapeHtml(variant.variantB)}</strong></p>
-                        <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
-                        <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(variant.variantB)}">Узнать подробнее →</button>
+                        <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
+                        <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(variant.variantB)}" data-price="${priceB}">Узнать подробнее →</button>
                     </div>
                     <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">🤔</div>
                         <h4>Вариант 3</h4>
                         <p><strong>Не уверены в выборе?</strong></p>
                         <p style="font-size:0.9rem; margin-bottom:10px;">Позвольте помочь – бесплатная консультация 15 минут.</p>
-                        <button class="btn-secondary choose-help" data-choice="help">Помогите выбрать →</button>
+                        <button class="btn-secondary choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Помогите выбрать →</button>
                     </div>
                 </div>
                 <div style="text-align:center; margin-top:30px;">
@@ -358,6 +343,7 @@
                 </div>
             `;
 
+            // Обработка выбора варианта (без авто-заполнения комментария, но с сохранением выбранного варианта и цены)
             document.querySelectorAll('.choose-option').forEach(btn => {
                 btn.removeEventListener('click', btn._choiceHandler);
                 btn._choiceHandler = () => {
@@ -365,8 +351,12 @@
                     isSubmittingChoice = true;
                     const chosen = btn.dataset.choice;
                     const chosenText = btn.dataset.text;
+                    const chosenPrice = btn.dataset.price || '';
 
-                    fillCommentFieldWithQuizData(chosenText);
+                    // Сохраняем выбранный вариант и цену в глобальные переменные для отправки в форме
+                    window.selectedVariantText = chosenText;
+                    window.selectedVariantPrice = chosenPrice;
+                    window.selectedVariantNumber = chosen;
 
                     const resultDiv = document.getElementById('quizResult');
                     if (resultDiv) {
@@ -374,7 +364,7 @@
                         resultDiv.style.display = 'block';
                     }
 
-                    showSuccessToast('Данные квиза добавлены в комментарий. Заполните форму обратной связи.');
+                    showSuccessToast('Выбор сохранён. Заполните форму обратной связи.');
                     container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
                     isSubmittingChoice = false;
                 };
@@ -388,15 +378,17 @@
                     if (isSubmittingChoice) return;
                     isSubmittingChoice = true;
 
-                    fillCommentFieldWithQuizData('Помогите выбрать (бесплатная консультация)');
+                    window.selectedVariantText = "Помогите выбрать (бесплатная консультация)";
+                    window.selectedVariantPrice = "";
+                    window.selectedVariantNumber = "help";
 
                     const resultDiv = document.getElementById('quizResult');
                     if (resultDiv) {
-                        resultDiv.innerHTML = `<strong>✅ Заполните форму ниже!</strong><br>Я свяжусь с вами, чтобы помочь выбрать подходящий вариант.`;
+                        resultDiv.innerHTML = `<strong>✅ Вы выбрали: Помогите выбрать</strong><br>Я свяжусь с вами, чтобы помочь подобрать подходящий вариант.`;
                         resultDiv.style.display = 'block';
                     }
 
-                    showSuccessToast('Данные квиза добавлены в комментарий. Заполните форму обратной связи.');
+                    showSuccessToast('Спасибо! Заполните форму обратной связи.');
                     container.innerHTML = '<p>✨ Спасибо! Я жду вашу заявку в форме ниже.</p>';
                     isSubmittingChoice = false;
                 };
@@ -412,6 +404,8 @@
                     quizState = 'questions';
                     currentRole = null;
                     window.quizAnswersRaw = null;
+                    window.selectedVariantText = null;
+                    window.selectedVariantPrice = null;
                     renderQuiz();
                 };
                 resetBtn.addEventListener('click', resetBtn._resetHandler);

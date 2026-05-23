@@ -40,7 +40,7 @@ function initCallbackForm() {
             const name = document.getElementById('callbackName').value.trim();
             let phoneField = document.getElementById('callbackPhone').value.trim();
             const emailField = document.getElementById('callbackEmail')?.value.trim() || '';
-            const comment = document.getElementById('callbackComment').value.trim() || 'Не указано';
+            let comment = document.getElementById('callbackComment').value.trim();
 
             if (!name || !phoneField) {
                 showErrorToast('Заполните имя и телефон');
@@ -63,6 +63,14 @@ function initCallbackForm() {
 
             const formattedForDisplay = '+7 ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
 
+            // Получаем выбранный вариант из квиза (если есть)
+            const chosenVariant = window.selectedVariantText || '';
+            const chosenVariantPrice = window.selectedVariantPrice || '';
+
+            // Добавляем информацию о выбранном варианте в комментарий, если нужно? Нет, не надо – она отправится отдельным полем.
+            // Оставляем комментарий как есть (без авто-заполнения)
+            if (comment === '') comment = 'Не указано';
+
             const sendForm = async (userId) => {
                 const geo = await window.getGeoData();
                 const formData = {
@@ -71,7 +79,10 @@ function initCallbackForm() {
                     phone: digits,
                     email: emailField,
                     comment: comment,
+                    consent: true,
                     quizAnswers: window.quizAnswersRaw || '-',
+                    chosenVariant: chosenVariant,
+                    chosenVariantPrice: chosenVariantPrice,
                     cart: typeof window.getCartData === 'function' ? window.getCartData() : '',
                     timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-',
                     visitStats: typeof window.getVisitStatsText === 'function' ? window.getVisitStatsText() : '-',
@@ -79,7 +90,6 @@ function initCallbackForm() {
                     device: typeof window.getDeviceText === 'function' ? window.getDeviceText() : '-',
                     page: typeof window.getPageText === 'function' ? window.getPageText() : '-',
                     geo: geo.geoText,
-                    consent: true,
                     userId: userId
                 };
                 if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
@@ -88,6 +98,10 @@ function initCallbackForm() {
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 isSubmitting = false;
+                // Сброс глобальных переменных квиза после отправки
+                window.selectedVariantText = null;
+                window.selectedVariantPrice = null;
+                window.quizAnswersRaw = null;
             };
 
             if (typeof currentUserId !== 'undefined' && currentUserId) sendForm(currentUserId);
