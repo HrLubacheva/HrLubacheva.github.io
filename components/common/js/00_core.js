@@ -55,10 +55,12 @@ function getOrCreateLocalUserId() {
     }
 }
 let currentUserId = null;
+
 function initUserId() {
     currentUserId = getOrCreateLocalUserId();
-    if (typeof gtag === 'function') gtag('config', 'G-QZJJ2SE117', { 'user_id': currentUserId });
-    if (typeof ym === 'function') ym(109292129, 'setUserID', currentUserId);
+    // Отправка user_id в метрики отключена
+    // if (typeof gtag === 'function') gtag('config', 'G-QZJJ2SE117', { 'user_id': currentUserId });
+    // if (typeof ym === 'function') ym(109292129, 'setUserID', currentUserId);
     return Promise.resolve(currentUserId);
 }
 
@@ -319,14 +321,12 @@ window.getPageText = getPageText;
 
 // ========== IP И ГЕОЛОКАЦИЯ (с кешем) ==========
 async function getGeoData() {
-    // Проверяем кеш
     const cached = localStorage.getItem('hr_geo');
     if (cached) {
         try {
             return JSON.parse(cached);
         } catch(e) {}
     }
-
     try {
         const response = await fetch('https://ipapi.co/json/');
         if (!response.ok) throw new Error('Ошибка геолокации');
@@ -338,7 +338,6 @@ async function getGeoData() {
             country: data.country_name || '-',
             geoText: `${data.city || ''} ${data.region || ''} ${data.country_name || ''} (${data.ip || ''})`.trim().replace(/  +/g, ' ') || '-'
         };
-        // Сохраняем в кеш на 24 часа
         localStorage.setItem('hr_geo', JSON.stringify(result));
         return result;
     } catch(e) {
