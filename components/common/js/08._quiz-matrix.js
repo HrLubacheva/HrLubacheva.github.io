@@ -1,4 +1,4 @@
-// ========== ПОЛНАЯ МАТРИЦА ВАРИАНТОВ КВИЗА (улучшенная, без устаревших тарифов) ==========
+// ========== ПОЛНАЯ МАТРИЦА ВАРИАНТОВ КВИЗА (улучшенная, с добавленными тарифами, корректными названиями) ==========
 window.VARIANTS_MATRIX = [
     // ==================== ДЛЯ СОИСКАТЕЛЕЙ (ИЩУ РАБОТУ) ====================
 
@@ -13,8 +13,8 @@ window.VARIANTS_MATRIX = [
     { priority: 17, role: "Ищу работу", level: "Junior / начинающий", urgency: "3–6 месяцев", importance: "*", budget: "*", variantA: "Профориентационная диагностика", variantB: "План обучения" },
 
     // MIDDLE – уже есть опыт, нужно повышение или смена
-    { priority: 20, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Резюме руководителя", variantB: "Групповой тренинг" },
-    { priority: 21, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Индивидуальный тренинг", variantB: "Подготовка к сложным интервью" },
+    { priority: 20, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "5 000 – 15 000 ₽", variantA: "Резюме руководителя", variantB: "Групповой тренинг «Продай себя дорого»" },
+    { priority: 21, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "15 000 – 50 000 ₽", variantA: "Индивидуальный тренинг «Продай себя дорого»", variantB: "Подготовка к сложным интервью" },
     { priority: 22, role: "Ищу работу", level: "Middle / опытный", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "VIP-коучинг", variantB: "Карьерная стратегия плюс" },
     { priority: 23, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Зарплата", budget: "*", variantA: "Тренинг по переговорам", variantB: "Резюме + сопроводительное" },
     { priority: 24, role: "Ищу работу", level: "Middle / опытный", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "*", variantA: "Развитие управленческих навыков", variantB: "План прокачки экспертизы" },
@@ -75,14 +75,23 @@ window.VARIANTS_MATRIX = [
     // Срочный поиск работы с фокусом на зарплату (любой уровень, бюджет от 50к)
     { priority: 500, role: "Ищу работу", urgency: "Максимально быстро", importance: "Зарплата", budget: "50 000 – 100 000 ₽", variantA: "VIP-коучинг", variantB: "Стратегия трудоустройства" },
     // Карьерный рост без спешки (бюджет средний)
-    { priority: 510, role: "Ищу работу", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "15 000 – 50 000 ₽", variantA: "Карьерная стратегия (пакет)", variantB: "Индивидуальный тренинг" },
+    { priority: 510, role: "Ищу работу", urgency: "1–2 месяца", importance: "Карьерный рост", budget: "15 000 – 50 000 ₽", variantA: "Карьерная стратегия (пакет)", variantB: "Индивидуальный тренинг «Продай себя дорого»" },
     // Комфортные условия важнее зарплаты
     { priority: 520, role: "Ищу работу", importance: "Условия/удаленка", budget: "*", variantA: "Психологическое консультирование", variantB: "Поиск работы с гибким графиком" },
+
+    // ==================== ТАРИФЫ «БРОНЗОВЫЙ», «СЕРЕБРЯНЫЙ», «ЗОЛОТОЙ» (цена по запросу) ====================
+    // Эти правила срабатывают, когда не подошли более точные варианты. В названии указано «цена по запросу».
+    { priority: 800, role: "Ищу работу", level: "Junior / начинающий", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Бронзовый» (цена по запросу)", variantB: "Экспресс-консультация" },
+    { priority: 801, role: "Ищу работу", level: "Middle / опытный", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Серебряный» (цена по запросу)", variantB: "Индивидуальная консультация" },
+    { priority: 802, role: "Ищу работу", level: "Senior / ведущий", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Золотой» (цена по запросу)", variantB: "VIP-коучинг" },
+    { priority: 810, role: "Хочу сменить профессию", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Бронзовый» (профориентация)", variantB: "Индивидуальная консультация" },
+    { priority: 820, role: "Рост в текущей компании", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Серебряный» (рост)", variantB: "План развития" },
+    { priority: 830, role: "Подбираю сотрудников", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Тариф «Золотой» (подбор ключевых сотрудников)", variantB: "Консультация по подбору" },
 
     // ==================== УНИВЕРСАЛЬНЫЕ (FALLBACK) ====================
     { priority: 900, role: "*", level: "*", urgency: "*", importance: "*", budget: "До 5 000 ₽", variantA: "Экспресс-консультация", variantB: "Аудит резюме" },
     { priority: 901, role: "*", level: "*", urgency: "*", importance: "*", budget: "5 000 – 15 000 ₽", variantA: "Резюме специалиста", variantB: "Индивидуальная консультация" },
-    { priority: 902, role: "*", level: "*", urgency: "*", importance: "*", budget: "15 000 – 50 000 ₽", variantA: "Индивидуальный тренинг", variantB: "Карьерная стратегия" },
+    { priority: 902, role: "*", level: "*", urgency: "*", importance: "*", budget: "15 000 – 50 000 ₽", variantA: "Индивидуальный тренинг «Продай себя дорого»", variantB: "Карьерная стратегия" },
     { priority: 903, role: "*", level: "*", urgency: "*", importance: "*", budget: "50 000 – 100 000 ₽", variantA: "VIP-коучинг", variantB: "Executive-коучинг" },
     { priority: 904, role: "*", level: "*", urgency: "*", importance: "*", budget: "Выше 100 000 ₽", variantA: "VIP-коучинг", variantB: "Поиск топ-позиций" },
 
