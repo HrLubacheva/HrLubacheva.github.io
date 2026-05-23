@@ -1554,3 +1554,7 @@ footer a:hover {
     color: var(--primary-dark);
     text-decoration: underline;
 }
+
+.ya-share2, .ya-share, [class*="ya-share"] {
+    display: none !important;
+}
