@@ -6,10 +6,24 @@ function getCartData() {
     if (!cart || cart.length === 0) return 'Корзина пуста';
     let total = 0;
     let items = [];
+
+    // Находим максимальную длину названия
+    let maxNameLength = 0;
+    cart.forEach(item => {
+        const nameWithQty = `${item.name} x${item.qty}`;
+        if (nameWithQty.length > maxNameLength) maxNameLength = nameWithQty.length;
+    });
+    maxNameLength = Math.min(maxNameLength, 45);
+
     cart.forEach(item => {
         total += item.price * item.qty;
-        items.push(`${item.name} x${item.qty} — ${(item.price * item.qty).toLocaleString()} ₽`);
+        const nameWithQty = `${item.name} x${item.qty}`;
+        const priceFormatted = (item.price * item.qty).toLocaleString() + ' ₽';
+        const dotsLength = Math.max(1, maxNameLength + 2 - nameWithQty.length);
+        const dots = '.'.repeat(dotsLength);
+        items.push(`${nameWithQty} ${dots} ${priceFormatted}`);
     });
+
     let discount = cart.length >= 2 ? '\n✅ Скидка 5%' : '';
     let finalTotal = Math.round(total * (cart.length >= 2 ? 0.95 : 1));
     return items.join('\n') + `\n💰 Итого: ${finalTotal.toLocaleString()} ₽` + discount;
