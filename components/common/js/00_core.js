@@ -58,9 +58,6 @@ let currentUserId = null;
 
 function initUserId() {
     currentUserId = getOrCreateLocalUserId();
-    // Отправка user_id в метрики отключена
-    // if (typeof gtag === 'function') gtag('config', window.APP_CONFIG.GOOGLE_ANALYTICS_ID, { 'user_id': currentUserId });
-    // if (typeof ym === 'function') ym(window.APP_CONFIG.YANDEX_METRIKA_ID, 'setUserID', currentUserId);
     return Promise.resolve(currentUserId);
 }
 

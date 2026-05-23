@@ -14,8 +14,5 @@ window.APP_CONFIG = {
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
 
-    // Для уведомлений администратора
-    ADMIN_EMAIL: 'kranerviktit@gmail.com',
-    TELEGRAM_BOT_TOKEN: '8989555029:AAHKC27YSIiroxgcdFrshH7V_RjO0Nloaq8',
-    TELEGRAM_CHAT_ID: '5178588357'
+    ADMIN_EMAIL: 'kranerviktit@gmail.com'
 };

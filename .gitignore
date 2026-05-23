@@ -28,7 +28,3 @@ build_analyzer.py
 # Локальные настройки
 .env
 .local
-
-# Собранные бандлы (ОПЦИОНАЛЬНО - читайте ниже)
-# bundle-public.js
-# bundle-editor.js

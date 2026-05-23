@@ -20,6 +20,16 @@ def get_free_port(start_port=8080):
                 if port - start_port > 100:
                     raise RuntimeError("Не найден свободный порт")
 
+def get_local_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        return "127.0.0.1"
+
 class Handler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
@@ -33,8 +43,12 @@ def main():
         print("❌ Запустите из корневой папки проекта")
         sys.exit(1)
     port = get_free_port()
-    with socketserver.TCPServer(("127.0.0.1", port), Handler) as httpd:
-        print(f"\n🚀 Сервер запущен: http://127.0.0.1:{port}")
+    local_ip = get_local_ip()
+    with socketserver.TCPServer(("0.0.0.0", port), Handler) as httpd:
+        print(f"\n🚀 Сервер запущен:")
+        print(f"   Локально:  http://127.0.0.1:{port}")
+        if local_ip != "127.0.0.1":
+            print(f"   По сети:   http://{local_ip}:{port}")
         print("💡 После изменений в компонентах выполните python build.py и обновите страницу")
         webbrowser.open(f"http://127.0.0.1:{port}")
         try:

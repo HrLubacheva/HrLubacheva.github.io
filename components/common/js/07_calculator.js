@@ -28,7 +28,7 @@ window.getCartData = getCartData;
 
 function updateSelectsFromData() {
     if (!window.LOCAL_SERVICES) {
-        console.error('Данные услуг не загружены (window.LOCAL_SERVICES отсутствует)');
+        logError('Данные услуг не загружены (window.LOCAL_SERVICES отсутствует)');
         return;
     }
     const selects = {
