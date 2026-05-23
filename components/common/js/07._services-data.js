@@ -23,9 +23,6 @@ window.LOCAL_SERVICES = {
         { service: "LinkedIn-профиль под ключ", price: 12000, sort: 13 },
         { service: "Профориентационная диагностика", price: 8000, sort: 14 },
         { service: "Психологическое консультирование (1ч)", price: 7000, sort: 15 },
-        { service: "Тариф «Бронзовый» (по запросу)", price: 0, sort: 16 },
-        { service: "Тариф «Серебряный» (по запросу)", price: 0, sort: 17 },
-        { service: "Тариф «Золотой» (по запросу)", price: 0, sort: 18 }
     ],
     corporate: [
         { service: "Тренинг по запросу (1ч, до 25 чел.)", price: 12000, sort: 1 },
