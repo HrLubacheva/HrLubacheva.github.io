@@ -19,6 +19,49 @@
         elements.forEach(el => observer.observe(el));
     }
 
+    // Анимация цифр в блоке статистики с пробелами-разделителями тысяч
+    function animateStats() {
+        const statNumbers = document.querySelectorAll('.stat-number');
+        if (!statNumbers.length) return;
+
+        // Если цифры уже были анимированы, не трогаем
+        if (window._statsAnimated) return;
+
+        // Функция для форматирования числа с пробелами между тысячами
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = entry.target;
+                    const final = parseInt(target.getAttribute('data-target'), 10);
+                    let current = 0;
+                    const duration = 1500; // 1.5 секунды
+                    const stepTime = 20;
+                    const steps = duration / stepTime;
+                    const increment = final / steps;
+
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= final) {
+                            current = final;
+                            clearInterval(timer);
+                        }
+                        // Применяем форматирование с пробелами
+                        target.innerText = formatNumber(Math.floor(current));
+                    }, stepTime);
+
+                    observer.unobserve(target);
+                    window._statsAnimated = true;
+                }
+            });
+        }, { threshold: 0.3 });
+
+        statNumbers.forEach(el => observer.observe(el));
+    }
+
     // Валидация формы в реальном времени
     function initFormValidation() {
         const phoneInput = document.getElementById('callbackPhone');
@@ -87,7 +130,9 @@
         }
 
         if (typeof initAnimations === 'function') initAnimations();
-        if (typeof initUserId === 'function') initUserId().catch(() => {}); // ← изменено: пустой обработчик
+        animateStats();
+
+        if (typeof initUserId === 'function') initUserId().catch(() => {});
         if (typeof initCalculator === 'function') initCalculator();
         if (typeof initQuiz === 'function') initQuiz();
         if (typeof initModal === 'function') initModal();
@@ -98,10 +143,7 @@
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
         if (typeof initCookieConsent === 'function') initCookieConsent();
 
-        // Валидация формы
         initFormValidation();
-
-        // Кнопка "Наверх"
         initScrollTopButton();
 
         const originalInitCalculator = window.initCalculator;
@@ -109,6 +151,7 @@
             window.initCalculator = async function() {
                 await originalInitCalculator();
                 setTimeout(reinitAnimations, 100);
+                setTimeout(animateStats, 150);
             };
         }
 
@@ -117,19 +160,21 @@
             window.initQuiz = function() {
                 originalInitQuiz();
                 setTimeout(reinitAnimations, 150);
+                setTimeout(animateStats, 200);
             };
         }
 
         document.addEventListener('click', function(e) {
             if (e.target.closest('.tab-btn')) {
                 setTimeout(reinitAnimations, 50);
+                setTimeout(animateStats, 100);
             }
         });
 
         setTimeout(reinitAnimations, 500);
+        setTimeout(animateStats, 600);
     });
 
-    // Принудительный показ видимых элементов после полной загрузки
     window.addEventListener('load', function() {
         setTimeout(function() {
             document.querySelectorAll('.fade-up').forEach(el => {
@@ -139,6 +184,7 @@
                     el.classList.add('visible');
                 }
             });
+            animateStats();
         }, 200);
     });
 })();
