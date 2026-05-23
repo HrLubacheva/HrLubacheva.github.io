@@ -1,4 +1,4 @@
-// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме) ==========
+// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -150,49 +150,8 @@
         } else if (!existing) {
             commentField.value = prefix;
         }
-        // Небольшое уведомление, что комментарий заполнен
         showSuccessToast('Данные квиза добавлены в комментарий. Вы можете отредактировать их перед отправкой.');
     }
-
-function scrollToCallbackForm() {
-    const calendarSection = document.getElementById('calendar');
-    if (!calendarSection) {
-        // Если секция не найдена, пробуем найти по классу .calendar-card (на случай изменения id)
-        const fallback = document.querySelector('.calendar-card');
-        if (fallback) {
-            window.scrollTo({ top: fallback.offsetTop - 80, behavior: 'smooth' });
-        } else {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
-        return;
-    }
-
-    // Получаем высоту навбара (если он есть, иначе 80px)
-    const navbar = document.querySelector('.navbar');
-    let navbarHeight = 80;
-    if (navbar) {
-        const style = getComputedStyle(navbar);
-        navbarHeight = navbar.offsetHeight;
-        // Если меню раскрыто на мобильных, offsetHeight может быть больше,
-        // но скроллинг должен учитывать только видимую часть? Ограничим разумным максимумом.
-        if (navbarHeight > 120) navbarHeight = 80;
-    }
-
-    // Вычисляем позицию с учётом навбара и небольшого дополнительного отступа (для красоты)
-    const targetPosition = calendarSection.getBoundingClientRect().top + window.scrollY - navbarHeight - 20;
-
-    window.scrollTo({ top: Math.max(0, targetPosition), behavior: 'smooth' });
-
-    // На случай, если после рендеринга форма ещё не заняла своё место, повторяем через 300 мс
-    setTimeout(() => {
-        if (calendarSection) {
-            const newPosition = calendarSection.getBoundingClientRect().top + window.scrollY - navbarHeight - 20;
-            if (Math.abs(window.scrollY - newPosition) > 50) {
-                window.scrollTo({ top: Math.max(0, newPosition), behavior: 'smooth' });
-            }
-        }
-    }, 300);
-}
 
     function startQuiz() {
         log('startQuiz вызван');
@@ -412,7 +371,7 @@ function scrollToCallbackForm() {
                 </div>
             `;
 
-            // Обработчики для вариантов 1 и 2
+            // Обработчики для вариантов 1 и 2 (без прокрутки)
             document.querySelectorAll('.choose-option').forEach(btn => {
                 btn.removeEventListener('click', btn._choiceHandler);
                 btn._choiceHandler = () => {
@@ -421,7 +380,6 @@ function scrollToCallbackForm() {
                     const chosen = btn.dataset.choice;
                     const chosenText = btn.dataset.text;
 
-                    // Заполняем комментарий в форме
                     fillCommentFieldWithQuizData(chosenText);
 
                     const resultDiv = document.getElementById('quizResult');
@@ -430,15 +388,15 @@ function scrollToCallbackForm() {
                         resultDiv.style.display = 'block';
                     }
 
-                    scrollToCallbackForm();
-                    showSuccessToast('Перейдите к форме обратной связи, комментарий уже заполнен');
+                    // Прокрутка удалена
+                    showSuccessToast('Данные квиза добавлены в комментарий. Заполните форму обратной связи.');
                     container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
                     isSubmittingChoice = false;
                 };
                 btn.addEventListener('click', btn._choiceHandler);
             });
 
-            // Обработчик для варианта "Помогите выбрать"
+            // Обработчик для варианта "Помогите выбрать" (без прокрутки)
             const helpBtn = document.querySelector('.choose-help');
             if (helpBtn) {
                 helpBtn.removeEventListener('click', helpBtn._helpHandler);
@@ -446,7 +404,6 @@ function scrollToCallbackForm() {
                     if (isSubmittingChoice) return;
                     isSubmittingChoice = true;
 
-                    // Заполняем комментарий в форме
                     fillCommentFieldWithQuizData('Помогите выбрать (бесплатная консультация)');
 
                     const resultDiv = document.getElementById('quizResult');
@@ -455,8 +412,8 @@ function scrollToCallbackForm() {
                         resultDiv.style.display = 'block';
                     }
 
-                    scrollToCallbackForm();
-                    showSuccessToast('Заполните форму – я помогу определиться, комментарий уже заполнен');
+                    // Прокрутка удалена
+                    showSuccessToast('Данные квиза добавлены в комментарий. Заполните форму обратной связи.');
                     container.innerHTML = '<p>✨ Спасибо! Я жду вашу заявку в форме ниже.</p>';
                     isSubmittingChoice = false;
                 };
