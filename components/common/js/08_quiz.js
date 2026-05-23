@@ -1,4 +1,4 @@
-// ========== КВИЗ (без прокрутки экрана, без перемещений) ==========
+// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -134,7 +134,7 @@
         const match = text.match(/(\d[\d\s]*)\s*₽/);
         if (match) return match[1].replace(/\s/g, '') + ' ₽';
         if (text.includes('по запросу')) return 'по запросу';
-        return 'уточняйте';
+        return 'цена по запросу';  // исправлено: было 'уточняйте'
     }
 
     function fillCommentFieldWithQuizData(chosenOptionText) {
@@ -215,7 +215,6 @@
                 quizState = 'questions';
                 currentQuestionIndex = answers.length - 1;
                 renderQuiz();
-                // Без прокрутки
             });
         }
 
@@ -294,11 +293,9 @@
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         quizState = 'confirm';
                         renderQuiz();
-                        // Без прокрутки
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
-                        // Без прокрутки
                     }
                 };
                 opt.addEventListener('click', opt._handler);
@@ -315,7 +312,6 @@
                     currentQuestionIndex++;
                     updateQuizAnswersRaw();
                     renderQuiz();
-                    // Без прокрутки
                 };
                 nextBtn.addEventListener('click', nextBtn._nextHandler);
             }
@@ -329,7 +325,6 @@
                         currentQuestionIndex--;
                         updateQuizAnswersRaw();
                         renderQuiz();
-                        // Без прокрутки
                     }
                 };
                 prevBtn.addEventListener('click', prevBtn._prevHandler);
