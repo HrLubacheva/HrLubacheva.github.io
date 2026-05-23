@@ -1,4 +1,4 @@
-// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ) ==========
+// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ, с ценами из калькулятора) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -59,6 +59,42 @@
             toast.style.opacity = '0';
             setTimeout(() => toast.remove(), 300);
         }, 3000);
+    }
+
+    // Форматирование числа с пробелами между тысячами
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    }
+
+    // Получение цены услуги из данных калькулятора (с учётом группового тренинга – самая дорогая цена)
+    function getServicePrice(serviceName) {
+        if (!window.LOCAL_SERVICES) {
+            console.warn('LOCAL_SERVICES не загружен, цена не определена');
+            return 'цена по запросу';
+        }
+
+        // Особый случай: групповой тренинг «Продай себя дорого»
+        if (serviceName === "Групповой тренинг «Продай себя дорого»") {
+            const groupServices = window.LOCAL_SERVICES.group;
+            if (groupServices && groupServices.length) {
+                const maxPrice = Math.max(...groupServices.map(s => s.price));
+                if (maxPrice > 0) return formatNumber(maxPrice) + ' ₽';
+            }
+            return 'цена по запросу';
+        }
+
+        // Обычный поиск по всем категориям
+        const categories = ['business', 'individual', 'corporate', 'group'];
+        for (const cat of categories) {
+            const services = window.LOCAL_SERVICES[cat];
+            if (services) {
+                const found = services.find(s => s.service === serviceName);
+                if (found && found.price > 0) {
+                    return formatNumber(found.price) + ' ₽';
+                }
+            }
+        }
+        return 'цена по запросу';
     }
 
     const FIRST_QUESTION = {
@@ -128,13 +164,6 @@
             if (match) return { variantA: rule.variantA, variantB: rule.variantB };
         }
         return { variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB };
-    }
-
-    function extractPrice(text) {
-        const match = text.match(/(\d[\d\s]*)\s*₽/);
-        if (match) return match[1].replace(/\s/g, '') + ' ₽';
-        if (text.includes('по запросу')) return 'по запросу';
-        return 'цена по запросу';  // исправлено: было 'уточняйте'
     }
 
     function fillCommentFieldWithQuizData(chosenOptionText) {
@@ -332,8 +361,8 @@
         }
         else if (quizState === 'choice') {
             const variant = findVariant(answers.map(a => a === null ? 'не выбран' : a));
-            const priceA = extractPrice(variant.variantA);
-            const priceB = extractPrice(variant.variantB);
+            const priceA = getServicePrice(variant.variantA);
+            const priceB = getServicePrice(variant.variantB);
 
             container.innerHTML = `
                 <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подготовили 3 варианта:</p>
