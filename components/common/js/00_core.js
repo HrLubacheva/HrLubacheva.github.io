@@ -38,13 +38,13 @@ window.disableLogs = function() {
     showToast('🔇 Логи отключены', 'success');
 };
 
-// User ID
+// User ID (сохраняется в localStorage)
 function getOrCreateLocalUserId() {
     try {
-        let userId = sessionStorage.getItem('hr_user_id');
+        let userId = localStorage.getItem('hr_user_id');
         if (!userId) {
             userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-            sessionStorage.setItem('hr_user_id', userId);
+            localStorage.setItem('hr_user_id', userId);
         }
         return userId;
     } catch(e) {
@@ -169,7 +169,7 @@ function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
 // ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyeFWGqTbq4583D6-m2lqMqsH_O8gN5_HV1aFXSGlnP3bxdvxHTAMxqzjOBc7v-fBuz3Q/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJXHFiie-HpWmYYSCtX0Xzdyhsh7rsU1uO3iOsbHdgFMRN_CwTpLgNGxOumN3ccX_LNA/exec';
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
@@ -316,6 +316,37 @@ function getPageText() {
     return `📄 Страница: ${p.page}\n🔗 Referrer: ${p.referrer || '-'}`;
 }
 window.getPageText = getPageText;
+
+// ========== IP И ГЕОЛОКАЦИЯ (с кешем) ==========
+async function getGeoData() {
+    // Проверяем кеш
+    const cached = localStorage.getItem('hr_geo');
+    if (cached) {
+        try {
+            return JSON.parse(cached);
+        } catch(e) {}
+    }
+
+    try {
+        const response = await fetch('https://ipapi.co/json/');
+        if (!response.ok) throw new Error('Ошибка геолокации');
+        const data = await response.json();
+        const result = {
+            ip: data.ip || '-',
+            city: data.city || '-',
+            region: data.region || '-',
+            country: data.country_name || '-',
+            geoText: `${data.city || ''} ${data.region || ''} ${data.country_name || ''} (${data.ip || ''})`.trim().replace(/  +/g, ' ') || '-'
+        };
+        // Сохраняем в кеш на 24 часа
+        localStorage.setItem('hr_geo', JSON.stringify(result));
+        return result;
+    } catch(e) {
+        console.error('Ошибка получения геоданных:', e);
+        return { ip: '-', city: '-', region: '-', country: '-', geoText: '-' };
+    }
+}
+window.getGeoData = getGeoData;
 
 // ========== ЭКСПОРТ ГЛОБАЛЬНЫХ ФУНКЦИЙ ==========
 window.escapeHtml = escapeHtml;

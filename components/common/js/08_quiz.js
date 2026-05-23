@@ -1,4 +1,4 @@
-// ========== КВИЗ (с 3 вариантами: тариф, альтернатива, помощь, автопереход) ==========
+// ========== КВИЗ (с 3 вариантами, автопереход, без сохранения прогресса) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -75,13 +75,13 @@
         options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "Выше 100 000 ₽"]
     };
 
-    // Форматируем только ответы (без вопросов)
+    // Форматируем только ответы (без вопросов) – каждый ответ на новой строке
     function formatQuizAnswersOnly() {
         if (!answers || answers.length === 0) return '-';
         return answers.map(a => a === null ? 'не выбран' : a).join('\n');
     }
 
-    // Глобальное хранилище ответов квиза
+    // Глобальное хранилище ответов квиза (для отправки в обратном звонке)
     window.quizAnswersRaw = null;
 
     function updateQuizAnswersRaw() {
@@ -121,57 +121,19 @@
         return 'уточняйте';
     }
 
-    function saveQuizProgress() {
-        try {
-            localStorage.setItem('quizAnswers', JSON.stringify(answers));
-            localStorage.setItem('quizCurrentIndex', currentQuestionIndex);
-            localStorage.setItem('quizState', quizState);
-            localStorage.setItem('quizCurrentRole', currentRole || '');
-        } catch(e) {}
-    }
-
-    function restoreQuizProgress() {
-        try {
-            const savedAnswers = localStorage.getItem('quizAnswers');
-            const savedIndex = localStorage.getItem('quizCurrentIndex');
-            const savedState = localStorage.getItem('quizState');
-            const savedRole = localStorage.getItem('quizCurrentRole');
-            if (savedAnswers && savedIndex !== null && savedState) {
-                answers = JSON.parse(savedAnswers);
-                currentQuestionIndex = parseInt(savedIndex);
-                quizState = savedState;
-                currentRole = savedRole || null;
-                return true;
-            }
-        } catch(e) {}
-        return false;
-    }
-
-    function resetAndStart() {
-        quizState = 'questions';
-        currentQuestionIndex = 0;
+    // Нет сохранения прогресса – старт всегда с чистого листа
+    function startQuiz() {
+        console.log('startQuiz вызван');
+        // Всегда начинаем с пустых ответов
         answers = [null, null, null, null, null];
+        currentQuestionIndex = 0;
+        quizState = 'questions';
         currentRole = null;
         window.quizAnswersRaw = null;
-        localStorage.removeItem('quizAnswers');
-        localStorage.removeItem('quizCurrentIndex');
-        localStorage.removeItem('quizState');
-        localStorage.removeItem('quizCurrentRole');
-        startQuiz();
-    }
 
-    function startQuiz() {
-        console.log('startQuiz вызван, роль:', currentRole);
-        const restored = restoreQuizProgress();
-        if (!restored) {
-            answers = [null, null, null, null, null];
-            currentQuestionIndex = 0;
-            quizState = 'questions';
-            currentRole = null;
-        }
         quizQuestions = [
             FIRST_QUESTION,
-            (currentRole === "Подбираю сотрудников") ? { ...LEVEL_RECRUITER } : { ...LEVEL_JOBSEEKER },
+            LEVEL_JOBSEEKER, // будет заменено позже, если роль рекрутер
             URGENCY_QUESTION,
             IMPORTANCE_QUESTION,
             BUDGET_QUESTION
@@ -186,9 +148,10 @@
         } else {
             quizQuestions[1] = { ...LEVEL_JOBSEEKER };
         }
+        // Если ответ на второй вопрос уже был, но он не подходит под новые варианты – сбрасываем
         if (answers[1] && !quizQuestions[1].options.includes(answers[1])) {
             answers[1] = null;
-            saveQuizProgress();
+            updateQuizAnswersRaw();
         }
         if (currentQuestionIndex === 1 && quizState === 'questions') {
             renderQuiz();
@@ -230,7 +193,7 @@
             html += `</div>`;
             container.innerHTML = html;
 
-            // ★★★ ОБРАБОТЧИК КЛИКА НА ОТВЕТ (с автопереходом) ★★★
+            // Обработчики выбора ответа (с автопереходом)
             document.querySelectorAll('.quiz-option').forEach(opt => {
                 opt.removeEventListener('click', opt._handler);
                 opt._handler = (e) => {
@@ -242,9 +205,8 @@
                         updateSecondQuestion(currentRole);
                     }
                     updateQuizAnswersRaw();
-                    saveQuizProgress();
 
-                    // ★★★ АВТОПЕРЕХОД НА СЛЕДУЮЩИЙ ВОПРОС ★★★
+                    // Автопереход на следующий вопрос (кроме последнего)
                     if (currentQuestionIndex < quizQuestions.length - 1) {
                         currentQuestionIndex++;
                         renderQuiz();
@@ -256,7 +218,7 @@
                 opt.addEventListener('click', opt._handler);
             });
 
-            // Кнопка "Далее"
+            // Кнопка "Далее" (запасной вариант)
             const nextBtn = document.getElementById('quizNextBtn');
             if (nextBtn) {
                 nextBtn.removeEventListener('click', nextBtn._nextHandler);
@@ -267,7 +229,6 @@
                     }
                     currentQuestionIndex++;
                     updateQuizAnswersRaw();
-                    saveQuizProgress();
                     renderQuiz();
                     document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 };
@@ -283,7 +244,6 @@
                     if (currentQuestionIndex > 0) {
                         currentQuestionIndex--;
                         updateQuizAnswersRaw();
-                        saveQuizProgress();
                         renderQuiz();
                         document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
@@ -297,12 +257,10 @@
                 submitBtn.removeEventListener('click', submitBtn._submitHandler);
                 submitBtn._submitHandler = () => {
                     if (isAnalyzing) return;
-
                     const missingCount = answers.filter(a => a === null).length;
                     if (missingCount > 0) {
                         showWarningToast(`⚠️ Вы не ответили на ${missingCount} вопрос(ов). Мы подготовим варианты на основе ваших ответов.`);
                     }
-
                     isAnalyzing = true;
                     container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
                     setTimeout(() => {
@@ -351,6 +309,7 @@
                 </div>
             `;
 
+            // Обработчики для вариантов 1 и 2
             document.querySelectorAll('.choose-option').forEach(btn => {
                 btn.removeEventListener('click', btn._choiceHandler);
                 btn._choiceHandler = () => {
@@ -385,10 +344,6 @@
                         document.querySelector('#calendar')?.scrollIntoView({ behavior: 'smooth' });
                         container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
                         isSubmittingChoice = false;
-                        localStorage.removeItem('quizAnswers');
-                        localStorage.removeItem('quizCurrentIndex');
-                        localStorage.removeItem('quizState');
-                        localStorage.removeItem('quizCurrentRole');
                     };
                     const uid = (typeof currentUserId !== 'undefined' && currentUserId) ? currentUserId : (typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown');
                     sendData(uid);
@@ -396,6 +351,7 @@
                 btn.addEventListener('click', btn._choiceHandler);
             });
 
+            // Обработчик для варианта "Помогите выбрать"
             const helpBtn = document.querySelector('.choose-help');
             if (helpBtn) {
                 helpBtn.removeEventListener('click', helpBtn._helpHandler);
@@ -444,10 +400,6 @@
                         document.querySelector('#calendar')?.scrollIntoView({ behavior: 'smooth' });
                         container.innerHTML = '<p>✨ Спасибо! Я скоро свяжусь с вами, чтобы помочь определиться.</p>';
                         isSubmittingChoice = false;
-                        localStorage.removeItem('quizAnswers');
-                        localStorage.removeItem('quizCurrentIndex');
-                        localStorage.removeItem('quizState');
-                        localStorage.removeItem('quizCurrentRole');
                     };
                     const uid = (typeof currentUserId !== 'undefined' && currentUserId) ? currentUserId : (typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown');
                     sendHelpData(uid);
@@ -458,40 +410,20 @@
             const resetBtn = document.getElementById('resetQuizBtn');
             if (resetBtn) {
                 resetBtn.removeEventListener('click', resetBtn._resetHandler);
-                resetBtn._resetHandler = () => resetAndStart();
+                resetBtn._resetHandler = () => {
+                    // Полный сброс
+                    answers = [null, null, null, null, null];
+                    currentQuestionIndex = 0;
+                    quizState = 'questions';
+                    currentRole = null;
+                    window.quizAnswersRaw = null;
+                    renderQuiz();
+                };
                 resetBtn.addEventListener('click', resetBtn._resetHandler);
             }
         }
         isRendering = false;
     }
-
-    // Автоматическая отправка прогресса при уходе со страницы
-    window.addEventListener('beforeunload', function() {
-        if (answers && answers.some(a => a !== null)) {
-            const userId = typeof currentUserId !== 'undefined' && currentUserId
-                ? currentUserId
-                : (typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown');
-
-            const progressData = {
-                formType: 'Квиз (прогресс)',
-                quizAnswers: formatQuizAnswersOnly(),
-                role: answers[0] || 'не выбран',
-                level: answers[1] || 'не выбран',
-                urgency: answers[2] || 'не выбран',
-                importance: answers[3] || 'не выбран',
-                budget: answers[4] || 'не выбран',
-                utm: typeof window.getUTMText === 'function' ? window.getUTMText() : '-',
-                device: typeof window.getDeviceText === 'function' ? window.getDeviceText() : '-',
-                page: typeof window.getPageText === 'function' ? window.getPageText() : '-',
-                userId: userId,
-                timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-'
-            };
-            const url = window.SCRIPT_URL;
-            if (url && typeof window.sendDataToSheet === 'function') {
-                navigator.sendBeacon(url, new URLSearchParams(progressData));
-            }
-        }
-    });
 
     window.initQuiz = function() {
         if (quizInitialized) return;
