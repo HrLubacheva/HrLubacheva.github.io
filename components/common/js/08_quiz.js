@@ -1,5 +1,5 @@
-// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ, с ценами из калькулятора, мягкий призыв) ==========
-(function(){
+// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ, цены из текста) ==========
+(function () {
     let quizQuestions = [];
     let answers = [];
     let quizState = 'questions';   // 'questions', 'confirm', 'choice'
@@ -11,9 +11,9 @@
     let isRendering = false;
 
     if (typeof window.escapeHtml !== 'function') {
-        window.escapeHtml = function(str) {
+        window.escapeHtml = function (str) {
             if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
+            return str.replace(/[&<>]/g, function (m) {
                 if (m === '&') return '&amp;';
                 if (m === '<') return '&lt;';
                 if (m === '>') return '&gt;';
@@ -61,39 +61,11 @@
         }, 3000);
     }
 
-    // Форматирование числа с пробелами между тысячами
-    function formatNumber(num) {
-        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-    }
-
-    // Получение цены услуги из данных калькулятора (с учётом группового тренинга – самая дорогая цена)
-    function getServicePrice(serviceName) {
-        if (!window.LOCAL_SERVICES) {
-            console.warn('LOCAL_SERVICES не загружен, цена не определена');
-            return 'цена по запросу';
-        }
-
-        // Особый случай: групповой тренинг «Продай себя дорого»
-        if (serviceName === "Групповой тренинг «Продай себя дорого»") {
-            const groupServices = window.LOCAL_SERVICES.group;
-            if (groupServices && groupServices.length) {
-                const maxPrice = Math.max(...groupServices.map(s => s.price));
-                if (maxPrice > 0) return formatNumber(maxPrice) + ' ₽';
-            }
-            return 'цена по запросу';
-        }
-
-        // Обычный поиск по всем категориям
-        const categories = ['business', 'individual', 'corporate', 'group'];
-        for (const cat of categories) {
-            const services = window.LOCAL_SERVICES[cat];
-            if (services) {
-                const found = services.find(s => s.service === serviceName);
-                if (found && found.price > 0) {
-                    return formatNumber(found.price) + ' ₽';
-                }
-            }
-        }
+    // Извлекает цену из текста (ищет число и ₽)
+    function extractPrice(text) {
+        const match = text.match(/(\d[\d\s]*)\s*₽/);
+        if (match) return match[1].replace(/\s/g, '') + ' ₽';
+        if (text.includes('по запросу')) return 'по запросу';
         return 'цена по запросу';
     }
 
@@ -103,32 +75,27 @@
     };
     const LEVEL_JOBSEEKER = {
         text: "2. Ваш текущий уровень?",
-        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"]
+        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"]
     };
+
     const LEVEL_RECRUITER = {
         text: "2. Какой уровень сотрудника ищете?",
-        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель"]
+        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"]
     };
     const URGENCY_QUESTION = {
         text: "3. Как быстро нужен результат?",
-        options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "Планирую постепенно"]
+        options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"]
     };
     const IMPORTANCE_QUESTION = {
         text: "4. Что для вас важнее всего?",
-        options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности"]
+        options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"]
     };
     const BUDGET_QUESTION = {
         text: "5. Бюджет на консультацию/подбор?",
-        options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "Выше 100 000 ₽"]
+        options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"]
     };
 
-    const QUESTION_TEXTS = [
-        "Ваша роль",
-        "Ваш уровень / уровень сотрудника",
-        "Срочность",
-        "Важнее всего",
-        "Бюджет"
-    ];
+    const QUESTION_TEXTS = ["Ваша роль", "Ваш уровень / уровень сотрудника", "Срочность", "Важнее всего", "Бюджет"];
 
     function formatQuizAnswersOnly() {
         if (!answers || answers.length === 0) return '-';
@@ -144,7 +111,10 @@
     function findVariant(answersArr) {
         if (!window.VARIANTS_MATRIX || !window.VARIANTS_MATRIX.length) {
             logError('Матрица вариантов не загружена');
-            return { variantA: 'Индивидуальная консультация', variantB: 'Экспресс-консультация' };
+            return {
+                variantA: 'Индивидуальная консультация (1ч) — 7 000 ₽',
+                variantB: 'Экспресс-консультация (30мин) — 3 500 ₽'
+            };
         }
         const user = {
             role: answersArr[0] === null ? '*' : answersArr[0],
@@ -153,7 +123,7 @@
             importance: answersArr[3] === null ? '*' : answersArr[3],
             budget: answersArr[4] === null ? '*' : answersArr[4]
         };
-        const sorted = [...window.VARIANTS_MATRIX].sort((a,b) => a.priority - b.priority);
+        const sorted = [...window.VARIANTS_MATRIX].sort((a, b) => a.priority - b.priority);
         for (const rule of sorted) {
             let match = true;
             if (rule.role !== '*' && rule.role !== user.role) match = false;
@@ -161,9 +131,9 @@
             if (rule.urgency !== '*' && rule.urgency !== user.urgency) match = false;
             if (rule.importance !== '*' && rule.importance !== user.importance) match = false;
             if (rule.budget !== '*' && rule.budget !== user.budget) match = false;
-            if (match) return { variantA: rule.variantA, variantB: rule.variantB };
+            if (match) return {variantA: rule.variantA, variantB: rule.variantB};
         }
-        return { variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB };
+        return {variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB};
     }
 
     function fillCommentFieldWithQuizData(chosenOptionText) {
@@ -189,22 +159,16 @@
         currentRole = null;
         window.quizAnswersRaw = null;
 
-        quizQuestions = [
-            FIRST_QUESTION,
-            LEVEL_JOBSEEKER,
-            URGENCY_QUESTION,
-            IMPORTANCE_QUESTION,
-            BUDGET_QUESTION
-        ];
+        quizQuestions = [FIRST_QUESTION, LEVEL_JOBSEEKER, URGENCY_QUESTION, IMPORTANCE_QUESTION, BUDGET_QUESTION];
         quizInitialized = true;
         renderQuiz();
     }
 
     function updateSecondQuestion(role) {
         if (role === "Подбираю сотрудников") {
-            quizQuestions[1] = { ...LEVEL_RECRUITER };
+            quizQuestions[1] = {...LEVEL_RECRUITER};
         } else {
-            quizQuestions[1] = { ...LEVEL_JOBSEEKER };
+            quizQuestions[1] = {...LEVEL_JOBSEEKER};
         }
         if (answers[1] && !quizQuestions[1].options.includes(answers[1])) {
             answers[1] = null;
@@ -358,11 +322,10 @@
                 };
                 prevBtn.addEventListener('click', prevBtn._prevHandler);
             }
-        }
-        else if (quizState === 'choice') {
+        } else if (quizState === 'choice') {
             const variant = findVariant(answers.map(a => a === null ? 'не выбран' : a));
-            const priceA = getServicePrice(variant.variantA);
-            const priceB = getServicePrice(variant.variantB);
+            const priceA = extractPrice(variant.variantA);
+            const priceB = extractPrice(variant.variantB);
 
             container.innerHTML = `
                 <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подготовили 3 варианта:</p>
@@ -457,7 +420,7 @@
         isRendering = false;
     }
 
-    window.initQuiz = function() {
+    window.initQuiz = function () {
         if (quizInitialized) return;
         startQuiz();
     };
