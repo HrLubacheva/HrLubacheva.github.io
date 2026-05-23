@@ -1,4 +1,4 @@
-// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ) ==========
+// ========== КВИЗ (без прокрутки экрана, без перемещений) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -143,7 +143,6 @@
         const answersText = formatQuizAnswersOnly();
         const dateStr = new Date().toLocaleString('ru-RU');
         const prefix = `🔹 Квиз от ${dateStr}\nВыбран вариант: ${chosenOptionText}\nОтветы:\n${answersText}\n\n---\n`;
-        // Если поле уже содержит какой-то текст, не перезатираем, а добавляем в начало, с разделителем
         const existing = commentField.value.trim();
         if (existing && !existing.includes('Квиз от')) {
             commentField.value = prefix + existing;
@@ -216,7 +215,7 @@
                 quizState = 'questions';
                 currentQuestionIndex = answers.length - 1;
                 renderQuiz();
-                document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Без прокрутки
             });
         }
 
@@ -295,11 +294,11 @@
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         quizState = 'confirm';
                         renderQuiz();
-                        document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Без прокрутки
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
-                        document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Без прокрутки
                     }
                 };
                 opt.addEventListener('click', opt._handler);
@@ -316,7 +315,7 @@
                     currentQuestionIndex++;
                     updateQuizAnswersRaw();
                     renderQuiz();
-                    document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Без прокрутки
                 };
                 nextBtn.addEventListener('click', nextBtn._nextHandler);
             }
@@ -330,7 +329,7 @@
                         currentQuestionIndex--;
                         updateQuizAnswersRaw();
                         renderQuiz();
-                        document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Без прокрутки
                     }
                 };
                 prevBtn.addEventListener('click', prevBtn._prevHandler);
@@ -371,7 +370,6 @@
                 </div>
             `;
 
-            // Обработчики для вариантов 1 и 2 (без прокрутки)
             document.querySelectorAll('.choose-option').forEach(btn => {
                 btn.removeEventListener('click', btn._choiceHandler);
                 btn._choiceHandler = () => {
@@ -388,7 +386,6 @@
                         resultDiv.style.display = 'block';
                     }
 
-                    // Прокрутка удалена
                     showSuccessToast('Данные квиза добавлены в комментарий. Заполните форму обратной связи.');
                     container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
                     isSubmittingChoice = false;
@@ -396,7 +393,6 @@
                 btn.addEventListener('click', btn._choiceHandler);
             });
 
-            // Обработчик для варианта "Помогите выбрать" (без прокрутки)
             const helpBtn = document.querySelector('.choose-help');
             if (helpBtn) {
                 helpBtn.removeEventListener('click', helpBtn._helpHandler);
@@ -412,7 +408,6 @@
                         resultDiv.style.display = 'block';
                     }
 
-                    // Прокрутка удалена
                     showSuccessToast('Данные квиза добавлены в комментарий. Заполните форму обратной связи.');
                     container.innerHTML = '<p>✨ Спасибо! Я жду вашу заявку в форме ниже.</p>';
                     isSubmittingChoice = false;
