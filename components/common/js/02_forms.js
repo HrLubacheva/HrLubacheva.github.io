@@ -64,9 +64,7 @@ function initCallbackForm() {
             const formattedForDisplay = '+7 ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
 
             const sendForm = async (userId) => {
-                // Получаем геоданные ТОЛЬКО для обратного звонка
                 const geo = await window.getGeoData();
-
                 const formData = {
                     formType: 'Обратный звонок',
                     name: name,

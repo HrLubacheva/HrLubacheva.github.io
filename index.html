@@ -40,6 +40,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="preload" href="assets/images/img_1.jpg" as="image" fetchpriority="high">
 
+    <!-- DNS Prefetch для внешних сервисов -->
+    <link rel="dns-prefetch" href="https://mc.yandex.ru">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
     <!-- Schema.org -->
     <script type="application/ld+json">
         {
@@ -57,39 +63,39 @@
         }
     </script>
 
-<!-- Yandex.Metrika counter -->
-<script type="text/javascript">
-    (function(m,e,t,r,i,k,a){
-        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-        m[i].l=1*new Date();
-        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=109380497', 'ym');
+    <!-- Глобальный конфиг (должен загружаться первым) -->
+    <script src="components/common/js/00_config.js"></script>
 
-    ym(109380497, 'init', {
-        clickmap:true,
-        trackLinks:true,
-        accurateTrackBounce:true,
-        webvisor:true
-    });
-</script>
-<noscript><div><img src="https://mc.yandex.ru/watch/109380497" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-<!-- /Yandex.Metrika counter -->
+    <!-- Яндекс.Метрика (ID берётся из конфига) -->
+    <script type="text/javascript">
+        (function(m,e,t,r,i,k,a){
+            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=' + window.APP_CONFIG.YANDEX_METRIKA_ID, 'ym');
+
+        ym(window.APP_CONFIG.YANDEX_METRIKA_ID, 'init', {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/' + window.APP_CONFIG.YANDEX_METRIKA_ID + '" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZJJ2SE117"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=' + window.APP_CONFIG.GOOGLE_ANALYTICS_ID + '"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+        function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('consent', 'default', {
             'ad_storage': 'denied',
             'analytics_storage': 'denied',
             'wait_for_update': 500
         });
-        gtag('config', 'G-QZJJ2SE117');
+        gtag('config', window.APP_CONFIG.GOOGLE_ANALYTICS_ID);
     </script>
 <style>
 /* ========== Базовые переменные и сброс ========== */
@@ -1408,6 +1414,19 @@ footer a:hover {
         font-size: 0.85rem;
     }
 }
+
+/* ========== УБИРАЕМ МИГАНИЕ И СТАНДАРТНУЮ РАМКУ У ВЫПАДАЮЩЕГО СПИСКА ========== */
+.service-select:focus {
+    outline: none !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
+    background-color: white !important;
+}
+
+.add-service-btn:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
+}
 </style>
 </head>
 <body>
@@ -1810,7 +1829,7 @@ footer a:hover {
                 <a href="#" id="privacyLink">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 23.05.2026 10:33:05
+                Версия: 23.05.2026 11:42:55
             </div>
         </div>
     </div>
@@ -1841,7 +1860,28 @@ footer a:hover {
             <button id="closeModalBtn" class="btn-secondary">Закрыть</button>
         </div>
     </div>
-</div><script>
+</div><script defer>
+// ========== ГЛОБАЛЬНЫЕ НАСТРОЙКИ САЙТА ==========
+window.APP_CONFIG = {
+    // URL веб-приложения Google Apps Script (обработчик форм)
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxJXHFiie-HpWmYYSCtX0Xzdyhsh7rsU1uO3iOsbHdgFMRN_CwTpLgNGxOumN3ccX_LNA/exec',
+
+    // Контакты (для ссылок в меню и подвале)
+    TELEGRAM: 'https://t.me/HrLubacheva',
+    WHATSAPP: 'https://wa.me/79217916655',
+    INSTAGRAM: 'https://www.instagram.com/HrLubacheva/',
+    EMAIL: 'hrlubacheva@mail.ru',
+    PHONE: '+79217916655',
+
+    // ID счётчиков аналитики
+    YANDEX_METRIKA_ID: '109380497',
+    GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
+
+    // Для уведомлений администратора
+    ADMIN_EMAIL: 'kranerviktit@gmail.com',
+    TELEGRAM_BOT_TOKEN: '8989555029:AAHKC27YSIiroxgcdFrshH7V_RjO0Nloaq8',
+    TELEGRAM_CHAT_ID: '5178588357'
+};
 // ========== ОБЩИЕ УТИЛИТЫ ==========
 function escapeHtml(str) {
     if (!str) return '';
@@ -1903,8 +1943,8 @@ let currentUserId = null;
 function initUserId() {
     currentUserId = getOrCreateLocalUserId();
     // Отправка user_id в метрики отключена
-    // if (typeof gtag === 'function') gtag('config', 'G-QZJJ2SE117', { 'user_id': currentUserId });
-    // if (typeof ym === 'function') ym(109292129, 'setUserID', currentUserId);
+    // if (typeof gtag === 'function') gtag('config', window.APP_CONFIG.GOOGLE_ANALYTICS_ID, { 'user_id': currentUserId });
+    // if (typeof ym === 'function') ym(window.APP_CONFIG.YANDEX_METRIKA_ID, 'setUserID', currentUserId);
     return Promise.resolve(currentUserId);
 }
 
@@ -2014,8 +2054,8 @@ function showErrorToast(message) { showToast(message, 'error'); }
 function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
-// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJXHFiie-HpWmYYSCtX0Xzdyhsh7rsU1uO3iOsbHdgFMRN_CwTpLgNGxOumN3ccX_LNA/exec';
+// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ (из конфига) ==========
+const SCRIPT_URL = window.APP_CONFIG.SCRIPT_URL;
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
@@ -2293,9 +2333,7 @@ function initCallbackForm() {
             const formattedForDisplay = '+7 ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
 
             const sendForm = async (userId) => {
-                // Получаем геоданные ТОЛЬКО для обратного звонка
                 const geo = await window.getGeoData();
-
                 const formData = {
                     formType: 'Обратный звонок',
                     name: name,
@@ -2653,7 +2691,7 @@ window.VARIANTS_MATRIX = [
     // ==================== АБСОЛЮТНЫЙ FALLBACK ====================
     { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная консультация", variantB: "Экспресс-консультация" }
 ];
-// ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, построчная корзина) ==========
+// ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, построчная корзина, кастомные дропдауны) ==========
 let cart = [];
 let calculatorInitialized = false;
 
@@ -2661,15 +2699,12 @@ function getCartData() {
     if (!cart || cart.length === 0) return 'Корзина пуста';
     let total = 0;
     let items = [];
-
-    // Находим максимальную длину названия
     let maxNameLength = 0;
     cart.forEach(item => {
         const nameWithQty = `${item.name} x${item.qty}`;
         if (nameWithQty.length > maxNameLength) maxNameLength = nameWithQty.length;
     });
     maxNameLength = Math.min(maxNameLength, 45);
-
     cart.forEach(item => {
         total += item.price * item.qty;
         const nameWithQty = `${item.name} x${item.qty}`;
@@ -2678,7 +2713,6 @@ function getCartData() {
         const dots = '.'.repeat(dotsLength);
         items.push(`${nameWithQty} ${dots} ${priceFormatted}`);
     });
-
     let discount = cart.length >= 2 ? '\n✅ Скидка 5%' : '';
     let finalTotal = Math.round(total * (cart.length >= 2 ? 0.95 : 1));
     return items.join('\n') + `\n💰 Итого: ${finalTotal.toLocaleString()} ₽` + discount;
@@ -2706,6 +2740,82 @@ function updateSelectsFromData() {
         }
     }
 }
+
+// ========== КАСТОМНЫЕ ВЫПАДАЮЩИЕ СПИСКИ ==========
+function initCustomDropdowns() {
+    const selects = document.querySelectorAll('.service-select');
+    selects.forEach(select => {
+        // Если уже заменён на кастомный, не трогаем
+        if (select.parentElement.classList.contains('custom-dropdown')) return;
+
+        const container = document.createElement('div');
+        container.className = 'custom-dropdown';
+
+        const button = document.createElement('button');
+        button.className = 'dropdown-button';
+        const selectedText = select.options[select.selectedIndex]?.text || 'Выберите услугу';
+        button.innerHTML = `<span>${escapeHtml(selectedText)}</span><span class="dropdown-arrow">▼</span>`;
+
+        const menu = document.createElement('div');
+        menu.className = 'dropdown-menu';
+
+        // Заполняем опции
+        Array.from(select.options).forEach((opt, idx) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'dropdown-option';
+            if (opt.selected) optionDiv.classList.add('selected');
+            optionDiv.textContent = opt.text;
+            optionDiv.dataset.value = opt.value;
+            optionDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Обновляем оригинальный select
+                select.value = opt.value;
+                // Триггерим событие change для совместимости с addToCart
+                const event = new Event('change', { bubbles: true });
+                select.dispatchEvent(event);
+                // Обновляем текст на кнопке
+                button.querySelector('span:first-child').textContent = opt.text;
+                // Обновляем выделение в меню
+                menu.querySelectorAll('.dropdown-option').forEach(div => div.classList.remove('selected'));
+                optionDiv.classList.add('selected');
+                // Закрываем меню
+                menu.classList.remove('open');
+                button.querySelector('.dropdown-arrow').classList.remove('open');
+            });
+            menu.appendChild(optionDiv);
+        });
+
+        // Открытие/закрытие меню
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = menu.classList.contains('open');
+            // Закрываем все другие открытые меню
+            document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+            document.querySelectorAll('.dropdown-arrow.open').forEach(arrow => arrow.classList.remove('open'));
+            if (!isOpen) {
+                menu.classList.add('open');
+                button.querySelector('.dropdown-arrow').classList.add('open');
+            } else {
+                menu.classList.remove('open');
+                button.querySelector('.dropdown-arrow').classList.remove('open');
+            }
+        });
+
+        container.appendChild(button);
+        container.appendChild(menu);
+        select.style.display = 'none';
+        select.parentNode.insertBefore(container, select.nextSibling);
+    });
+}
+
+// Закрытие меню при клике вне
+document.addEventListener('click', function() {
+    document.querySelectorAll('.dropdown-menu.open').forEach(menu => {
+        menu.classList.remove('open');
+        const btn = menu.previousElementSibling;
+        if (btn) btn.querySelector('.dropdown-arrow')?.classList.remove('open');
+    });
+});
 
 function renderCart() {
     let total = 0, qty = 0;
@@ -2771,6 +2881,7 @@ function initCalculator() {
     calculatorInitialized = true;
 
     updateSelectsFromData();
+    initCustomDropdowns(); // инициализируем кастомные дропдауны
 
     const handlers = [
         { btn: 'business-add', cat: 'business', select: 'business-select', qty: 'business-qty' },
@@ -2802,7 +2913,7 @@ function initCalculator() {
         btn.addEventListener('click', btn._tabHandler);
     });
 
-    log('✅ Калькулятор инициализирован (4 вкладки, данные из внешнего файла)');
+    log('✅ Калькулятор инициализирован (4 вкладки, кастомные дропдауны)');
 }
 
 window.initCalculator = initCalculator;
@@ -3241,16 +3352,16 @@ window.renderCart = renderCart;
     };
 })();
 // ========== ОТПРАВКА ЗАПРОСА МАТЕРИАЛОВ ==========
-// Используем глобальную переменную window.SCRIPT_URL из 00_core.js
+// Используем глобальную переменную window.APP_CONFIG.SCRIPT_URL
 
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
     if (!email || !email.includes('@')) {
         throw new Error('Введите корректный email');
     }
 
-    const url = window.SCRIPT_URL;
+    const url = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
     if (!url) {
-        throw new Error('URL скрипта не задан. Убедитесь, что window.SCRIPT_URL определён в 00_core.js');
+        throw new Error('URL скрипта не задан. Убедитесь, что APP_CONFIG загружен');
     }
 
     const formData = {

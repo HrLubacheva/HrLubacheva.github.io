@@ -59,8 +59,8 @@ let currentUserId = null;
 function initUserId() {
     currentUserId = getOrCreateLocalUserId();
     // Отправка user_id в метрики отключена
-    // if (typeof gtag === 'function') gtag('config', 'G-QZJJ2SE117', { 'user_id': currentUserId });
-    // if (typeof ym === 'function') ym(109292129, 'setUserID', currentUserId);
+    // if (typeof gtag === 'function') gtag('config', window.APP_CONFIG.GOOGLE_ANALYTICS_ID, { 'user_id': currentUserId });
+    // if (typeof ym === 'function') ym(window.APP_CONFIG.YANDEX_METRIKA_ID, 'setUserID', currentUserId);
     return Promise.resolve(currentUserId);
 }
 
@@ -170,8 +170,8 @@ function showErrorToast(message) { showToast(message, 'error'); }
 function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
-// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJXHFiie-HpWmYYSCtX0Xzdyhsh7rsU1uO3iOsbHdgFMRN_CwTpLgNGxOumN3ccX_LNA/exec';
+// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ (из конфига) ==========
+const SCRIPT_URL = window.APP_CONFIG.SCRIPT_URL;
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }

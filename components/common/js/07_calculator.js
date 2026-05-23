@@ -1,4 +1,4 @@
-// ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, построчная корзина) ==========
+// ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, построчная корзина, кастомные дропдауны) ==========
 let cart = [];
 let calculatorInitialized = false;
 
@@ -6,15 +6,12 @@ function getCartData() {
     if (!cart || cart.length === 0) return 'Корзина пуста';
     let total = 0;
     let items = [];
-
-    // Находим максимальную длину названия
     let maxNameLength = 0;
     cart.forEach(item => {
         const nameWithQty = `${item.name} x${item.qty}`;
         if (nameWithQty.length > maxNameLength) maxNameLength = nameWithQty.length;
     });
     maxNameLength = Math.min(maxNameLength, 45);
-
     cart.forEach(item => {
         total += item.price * item.qty;
         const nameWithQty = `${item.name} x${item.qty}`;
@@ -23,7 +20,6 @@ function getCartData() {
         const dots = '.'.repeat(dotsLength);
         items.push(`${nameWithQty} ${dots} ${priceFormatted}`);
     });
-
     let discount = cart.length >= 2 ? '\n✅ Скидка 5%' : '';
     let finalTotal = Math.round(total * (cart.length >= 2 ? 0.95 : 1));
     return items.join('\n') + `\n💰 Итого: ${finalTotal.toLocaleString()} ₽` + discount;
@@ -51,6 +47,82 @@ function updateSelectsFromData() {
         }
     }
 }
+
+// ========== КАСТОМНЫЕ ВЫПАДАЮЩИЕ СПИСКИ ==========
+function initCustomDropdowns() {
+    const selects = document.querySelectorAll('.service-select');
+    selects.forEach(select => {
+        // Если уже заменён на кастомный, не трогаем
+        if (select.parentElement.classList.contains('custom-dropdown')) return;
+
+        const container = document.createElement('div');
+        container.className = 'custom-dropdown';
+
+        const button = document.createElement('button');
+        button.className = 'dropdown-button';
+        const selectedText = select.options[select.selectedIndex]?.text || 'Выберите услугу';
+        button.innerHTML = `<span>${escapeHtml(selectedText)}</span><span class="dropdown-arrow">▼</span>`;
+
+        const menu = document.createElement('div');
+        menu.className = 'dropdown-menu';
+
+        // Заполняем опции
+        Array.from(select.options).forEach((opt, idx) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'dropdown-option';
+            if (opt.selected) optionDiv.classList.add('selected');
+            optionDiv.textContent = opt.text;
+            optionDiv.dataset.value = opt.value;
+            optionDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Обновляем оригинальный select
+                select.value = opt.value;
+                // Триггерим событие change для совместимости с addToCart
+                const event = new Event('change', { bubbles: true });
+                select.dispatchEvent(event);
+                // Обновляем текст на кнопке
+                button.querySelector('span:first-child').textContent = opt.text;
+                // Обновляем выделение в меню
+                menu.querySelectorAll('.dropdown-option').forEach(div => div.classList.remove('selected'));
+                optionDiv.classList.add('selected');
+                // Закрываем меню
+                menu.classList.remove('open');
+                button.querySelector('.dropdown-arrow').classList.remove('open');
+            });
+            menu.appendChild(optionDiv);
+        });
+
+        // Открытие/закрытие меню
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = menu.classList.contains('open');
+            // Закрываем все другие открытые меню
+            document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+            document.querySelectorAll('.dropdown-arrow.open').forEach(arrow => arrow.classList.remove('open'));
+            if (!isOpen) {
+                menu.classList.add('open');
+                button.querySelector('.dropdown-arrow').classList.add('open');
+            } else {
+                menu.classList.remove('open');
+                button.querySelector('.dropdown-arrow').classList.remove('open');
+            }
+        });
+
+        container.appendChild(button);
+        container.appendChild(menu);
+        select.style.display = 'none';
+        select.parentNode.insertBefore(container, select.nextSibling);
+    });
+}
+
+// Закрытие меню при клике вне
+document.addEventListener('click', function() {
+    document.querySelectorAll('.dropdown-menu.open').forEach(menu => {
+        menu.classList.remove('open');
+        const btn = menu.previousElementSibling;
+        if (btn) btn.querySelector('.dropdown-arrow')?.classList.remove('open');
+    });
+});
 
 function renderCart() {
     let total = 0, qty = 0;
@@ -116,6 +188,7 @@ function initCalculator() {
     calculatorInitialized = true;
 
     updateSelectsFromData();
+    initCustomDropdowns(); // инициализируем кастомные дропдауны
 
     const handlers = [
         { btn: 'business-add', cat: 'business', select: 'business-select', qty: 'business-qty' },
@@ -147,7 +220,7 @@ function initCalculator() {
         btn.addEventListener('click', btn._tabHandler);
     });
 
-    log('✅ Калькулятор инициализирован (4 вкладки, данные из внешнего файла)');
+    log('✅ Калькулятор инициализирован (4 вкладки, кастомные дропдауны)');
 }
 
 window.initCalculator = initCalculator;

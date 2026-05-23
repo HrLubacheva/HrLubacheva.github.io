@@ -1314,3 +1314,16 @@ footer a:hover {
         font-size: 0.85rem;
     }
 }
+
+/* ========== УБИРАЕМ МИГАНИЕ И СТАНДАРТНУЮ РАМКУ У ВЫПАДАЮЩЕГО СПИСКА ========== */
+.service-select:focus {
+    outline: none !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
+    background-color: white !important;
+}
+
+.add-service-btn:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
+}

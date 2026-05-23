@@ -1,14 +1,14 @@
 // ========== ОТПРАВКА ЗАПРОСА МАТЕРИАЛОВ ==========
-// Используем глобальную переменную window.SCRIPT_URL из 00_core.js
+// Используем глобальную переменную window.APP_CONFIG.SCRIPT_URL
 
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
     if (!email || !email.includes('@')) {
         throw new Error('Введите корректный email');
     }
 
-    const url = window.SCRIPT_URL;
+    const url = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
     if (!url) {
-        throw new Error('URL скрипта не задан. Убедитесь, что window.SCRIPT_URL определён в 00_core.js');
+        throw new Error('URL скрипта не задан. Убедитесь, что APP_CONFIG загружен');
     }
 
     const formData = {
