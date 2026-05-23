@@ -2070,7 +2070,7 @@ footer a:hover {
                 <a href="#" id="privacyLink">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 23.05.2026 14:43:35
+                Версия: 23.05.2026 14:51:59
             </div>
         </div>
     </div>
@@ -3140,7 +3140,7 @@ function initCalculator() {
 window.initCalculator = initCalculator;
 window.addToCart = addToCart;
 window.renderCart = renderCart;
-// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме) ==========
+// ========== КВИЗ (без прокрутки экрана, без перемещений) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -3285,56 +3285,14 @@ window.renderCart = renderCart;
         const answersText = formatQuizAnswersOnly();
         const dateStr = new Date().toLocaleString('ru-RU');
         const prefix = `🔹 Квиз от ${dateStr}\nВыбран вариант: ${chosenOptionText}\nОтветы:\n${answersText}\n\n---\n`;
-        // Если поле уже содержит какой-то текст, не перезатираем, а добавляем в начало, с разделителем
         const existing = commentField.value.trim();
         if (existing && !existing.includes('Квиз от')) {
             commentField.value = prefix + existing;
         } else if (!existing) {
             commentField.value = prefix;
         }
-        // Небольшое уведомление, что комментарий заполнен
         showSuccessToast('Данные квиза добавлены в комментарий. Вы можете отредактировать их перед отправкой.');
     }
-
-function scrollToCallbackForm() {
-    const calendarSection = document.getElementById('calendar');
-    if (!calendarSection) {
-        // Если секция не найдена, пробуем найти по классу .calendar-card (на случай изменения id)
-        const fallback = document.querySelector('.calendar-card');
-        if (fallback) {
-            window.scrollTo({ top: fallback.offsetTop - 80, behavior: 'smooth' });
-        } else {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-        }
-        return;
-    }
-
-    // Получаем высоту навбара (если он есть, иначе 80px)
-    const navbar = document.querySelector('.navbar');
-    let navbarHeight = 80;
-    if (navbar) {
-        const style = getComputedStyle(navbar);
-        navbarHeight = navbar.offsetHeight;
-        // Если меню раскрыто на мобильных, offsetHeight может быть больше,
-        // но скроллинг должен учитывать только видимую часть? Ограничим разумным максимумом.
-        if (navbarHeight > 120) navbarHeight = 80;
-    }
-
-    // Вычисляем позицию с учётом навбара и небольшого дополнительного отступа (для красоты)
-    const targetPosition = calendarSection.getBoundingClientRect().top + window.scrollY - navbarHeight - 20;
-
-    window.scrollTo({ top: Math.max(0, targetPosition), behavior: 'smooth' });
-
-    // На случай, если после рендеринга форма ещё не заняла своё место, повторяем через 300 мс
-    setTimeout(() => {
-        if (calendarSection) {
-            const newPosition = calendarSection.getBoundingClientRect().top + window.scrollY - navbarHeight - 20;
-            if (Math.abs(window.scrollY - newPosition) > 50) {
-                window.scrollTo({ top: Math.max(0, newPosition), behavior: 'smooth' });
-            }
-        }
-    }, 300);
-}
 
     function startQuiz() {
         log('startQuiz вызван');
@@ -3399,7 +3357,7 @@ function scrollToCallbackForm() {
                 quizState = 'questions';
                 currentQuestionIndex = answers.length - 1;
                 renderQuiz();
-                document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Без прокрутки
             });
         }
 
@@ -3478,11 +3436,11 @@ function scrollToCallbackForm() {
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         quizState = 'confirm';
                         renderQuiz();
-                        document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Без прокрутки
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
-                        document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Без прокрутки
                     }
                 };
                 opt.addEventListener('click', opt._handler);
@@ -3499,7 +3457,7 @@ function scrollToCallbackForm() {
                     currentQuestionIndex++;
                     updateQuizAnswersRaw();
                     renderQuiz();
-                    document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    // Без прокрутки
                 };
                 nextBtn.addEventListener('click', nextBtn._nextHandler);
             }
@@ -3513,7 +3471,7 @@ function scrollToCallbackForm() {
                         currentQuestionIndex--;
                         updateQuizAnswersRaw();
                         renderQuiz();
-                        document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        // Без прокрутки
                     }
                 };
                 prevBtn.addEventListener('click', prevBtn._prevHandler);
@@ -3554,7 +3512,6 @@ function scrollToCallbackForm() {
                 </div>
             `;
 
-            // Обработчики для вариантов 1 и 2
             document.querySelectorAll('.choose-option').forEach(btn => {
                 btn.removeEventListener('click', btn._choiceHandler);
                 btn._choiceHandler = () => {
@@ -3563,7 +3520,6 @@ function scrollToCallbackForm() {
                     const chosen = btn.dataset.choice;
                     const chosenText = btn.dataset.text;
 
-                    // Заполняем комментарий в форме
                     fillCommentFieldWithQuizData(chosenText);
 
                     const resultDiv = document.getElementById('quizResult');
@@ -3572,15 +3528,13 @@ function scrollToCallbackForm() {
                         resultDiv.style.display = 'block';
                     }
 
-                    scrollToCallbackForm();
-                    showSuccessToast('Перейдите к форме обратной связи, комментарий уже заполнен');
+                    showSuccessToast('Данные квиза добавлены в комментарий. Заполните форму обратной связи.');
                     container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
                     isSubmittingChoice = false;
                 };
                 btn.addEventListener('click', btn._choiceHandler);
             });
 
-            // Обработчик для варианта "Помогите выбрать"
             const helpBtn = document.querySelector('.choose-help');
             if (helpBtn) {
                 helpBtn.removeEventListener('click', helpBtn._helpHandler);
@@ -3588,7 +3542,6 @@ function scrollToCallbackForm() {
                     if (isSubmittingChoice) return;
                     isSubmittingChoice = true;
 
-                    // Заполняем комментарий в форме
                     fillCommentFieldWithQuizData('Помогите выбрать (бесплатная консультация)');
 
                     const resultDiv = document.getElementById('quizResult');
@@ -3597,8 +3550,7 @@ function scrollToCallbackForm() {
                         resultDiv.style.display = 'block';
                     }
 
-                    scrollToCallbackForm();
-                    showSuccessToast('Заполните форму – я помогу определиться, комментарий уже заполнен');
+                    showSuccessToast('Данные квиза добавлены в комментарий. Заполните форму обратной связи.');
                     container.innerHTML = '<p>✨ Спасибо! Я жду вашу заявку в форме ниже.</p>';
                     isSubmittingChoice = false;
                 };
