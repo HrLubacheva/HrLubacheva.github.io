@@ -1,4 +1,4 @@
-// ========== КАЛЬКУЛЯТОР (4 вкладки, кастомные дропдауны без иконок) ==========
+// ========== КАЛЬКУЛЯТОР (4 вкладки, кастомные дропдауны, с категорией training) ==========
 let cart = [];
 let calculatorInitialized = false;
 
@@ -15,7 +15,7 @@ function getCartData() {
     cart.forEach(item => {
         total += item.price * item.qty;
         const nameWithQty = `${item.name} x${item.qty}`;
-        const priceFormatted = (item.price * item.qty).toLocaleString() + ' ₽';
+        const priceFormatted = item.price > 0 ? (item.price * item.qty).toLocaleString() + ' ₽' : 'по запросу';
         const dotsLength = Math.max(1, maxNameLength + 2 - nameWithQty.length);
         const dots = '.'.repeat(dotsLength);
         items.push(`${nameWithQty} ${dots} ${priceFormatted}`);
@@ -28,14 +28,14 @@ window.getCartData = getCartData;
 
 function updateSelectsFromData() {
     if (!window.LOCAL_SERVICES) {
-        console.error('Данные услуг не загружены (window.LOCAL_SERVICES отсутствует)');
+        logError('Данные услуг не загружены (window.LOCAL_SERVICES отсутствует)');
         return;
     }
     const selects = {
         'business-select': window.LOCAL_SERVICES.business,
         'individual-select': window.LOCAL_SERVICES.individual,
         'corporate-select': window.LOCAL_SERVICES.corporate,
-        'group-select': window.LOCAL_SERVICES.group
+        'training-select': window.LOCAL_SERVICES.training
     };
     for (const [id, data] of Object.entries(selects)) {
         const select = document.getElementById(id);
@@ -52,7 +52,6 @@ function updateSelectsFromData() {
 function initCustomDropdowns() {
     const selects = document.querySelectorAll('.service-select');
     selects.forEach(select => {
-        // Проверяем, не заменён ли уже
         if (select.nextElementSibling && select.nextElementSibling.classList.contains('custom-dropdown')) return;
 
         const container = document.createElement('div');
@@ -66,7 +65,6 @@ function initCustomDropdowns() {
         const menu = document.createElement('div');
         menu.className = 'dropdown-menu';
 
-        // Заполняем меню
         Array.from(select.options).forEach(opt => {
             const optionDiv = document.createElement('div');
             optionDiv.className = 'dropdown-option';
@@ -78,24 +76,20 @@ function initCustomDropdowns() {
                 menu.querySelectorAll('.dropdown-option').forEach(div => div.classList.remove('selected'));
                 optionDiv.classList.add('selected');
                 menu.classList.remove('open');
-                // Триггерим событие change на оригинальном select, чтобы обновить корзину
                 const event = new Event('change', { bubbles: true });
                 select.dispatchEvent(event);
             });
             menu.appendChild(optionDiv);
         });
 
-        // Выделяем текущий выбранный пункт
         const selectedOpt = Array.from(select.options).find(opt => opt.selected);
         if (selectedOpt) {
             const selectedDiv = Array.from(menu.children).find(div => div.textContent === selectedOpt.text);
             if (selectedDiv) selectedDiv.classList.add('selected');
         }
 
-        // Клик по кнопке
         button.addEventListener('click', (e) => {
             e.stopPropagation();
-            // Закрываем все остальные открытые меню
             document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
             menu.classList.toggle('open');
         });
@@ -106,7 +100,6 @@ function initCustomDropdowns() {
         select.parentNode.insertBefore(container, select.nextSibling);
     });
 
-    // Закрываем меню при клике вне
     document.addEventListener('click', () => {
         document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
     });
@@ -128,7 +121,7 @@ function renderCart() {
         business: 'business-list',
         individual: 'individual-list',
         corporate: 'corporate-list',
-        group: 'group-list'
+        training: 'training-list'
     };
     for (const cat of Object.keys(containers)) {
         const container = document.getElementById(containers[cat]);
@@ -182,7 +175,7 @@ function initCalculator() {
         { btn: 'business-add', cat: 'business', select: 'business-select', qty: 'business-qty' },
         { btn: 'individual-add', cat: 'individual', select: 'individual-select', qty: 'individual-qty' },
         { btn: 'corporate-add', cat: 'corporate', select: 'corporate-select', qty: 'corporate-qty' },
-        { btn: 'group-add', cat: 'group', select: 'group-select', qty: 'group-qty' }
+        { btn: 'training-add', cat: 'training', select: 'training-select', qty: 'training-qty' }
     ];
     handlers.forEach(({ btn, cat, select, qty }) => {
         const button = document.getElementById(btn);
