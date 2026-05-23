@@ -41,14 +41,17 @@ window.disableLogs = function() {
 // User ID
 function getOrCreateLocalUserId() {
     try {
-        let userId = localStorage.getItem('hr_user_id');
+        let userId = sessionStorage.getItem('hr_user_id');
         if (!userId) {
-            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
-            localStorage.setItem('hr_user_id', userId);
+            userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+            sessionStorage.setItem('hr_user_id', userId);
         }
         return userId;
     } catch(e) {
-        return 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 8);
+        if (!window._tempUserId) {
+            window._tempUserId = 'temp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+        }
+        return window._tempUserId;
     }
 }
 let currentUserId = null;
@@ -148,7 +151,6 @@ function hideLoading() {
 function showToast(message, type = 'error') {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
-
     const toast = document.createElement('div');
     toast.className = `custom-toast custom-toast-${type}`;
     let icon = '⚠️';
@@ -157,19 +159,17 @@ function showToast(message, type = 'error') {
     if (type === 'error') icon = '❌';
     toast.innerHTML = `${icon} ${message}`;
     document.body.appendChild(toast);
-
     setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
-
 function showErrorToast(message) { showToast(message, 'error'); }
 function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
 // ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ ==========
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTRTkBsdo-hffs8S1WczL_afnfRM7YD0ePlOB3oCmEIXZ_NvoVUwqVtQFCNLL0m_5jkg/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzTLHeIi4JShcJ1IGq_66kvdg5pHyJuWCSbmK-C5PGEDgjkwCkYwB05eiofKRNA-u2MeQ/exec';
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
@@ -208,7 +208,6 @@ function formatPhoneNumber(input) {
 
 // ========== ВРЕМЯ НА САЙТЕ ==========
 window.sessionStartTime = Date.now();
-
 function getTimeOnSite() {
     if (!window.sessionStartTime) return '-';
     const seconds = Math.floor((Date.now() - window.sessionStartTime) / 1000);
@@ -225,7 +224,6 @@ function getVisitStats() {
     const oneDay = 24 * 60 * 60 * 1000;
     const oneWeek = 7 * oneDay;
     const oneMonth = 30 * oneDay;
-
     let visits = [];
     try {
         const stored = localStorage.getItem('hr_visits');
@@ -235,32 +233,89 @@ function getVisitStats() {
             visits = visits.filter(v => v > monthAgo);
         }
     } catch(e) {}
-
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
     if (now.getTime() - lastVisit > 30 * 60 * 1000) {
         visits.push(now.getTime());
     }
-
     try {
         localStorage.setItem('hr_visits', JSON.stringify(visits));
     } catch(e) {}
-
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
-
     return {
         week: visits.filter(v => v > weekAgo).length,
         month: visits.length,
         total: visits.length
     };
 }
-
 function getVisitStatsText() {
     const stats = getVisitStats();
     return `📊 Визиты: ${stats.week} за неделю, ${stats.month} за месяц`;
 }
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
+
+// ========== UTM-МЕТКИ ==========
+function getUTMParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return {
+        source: urlParams.get('utm_source') || '-',
+        medium: urlParams.get('utm_medium') || '-',
+        campaign: urlParams.get('utm_campaign') || '-',
+        content: urlParams.get('utm_content') || '-',
+        term: urlParams.get('utm_term') || '-'
+    };
+}
+window.getUTMParams = getUTMParams;
+function getUTMText() {
+    const u = getUTMParams();
+    return `📊 UTM: source=${u.source}, medium=${u.medium}, campaign=${u.campaign}, content=${u.content}, term=${u.term}`;
+}
+window.getUTMText = getUTMText;
+
+// ========== ТИП УСТРОЙСТВА, БРАУЗЕР, ОС ==========
+function getDeviceInfo() {
+    const ua = navigator.userAgent;
+    const isMobile = /Mobile|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(ua);
+    const isTablet = /iPad|Android(?!.*Mobile)/i.test(ua);
+    let device = 'ПК';
+    if (isTablet) device = 'планшет';
+    else if (isMobile) device = 'мобильное';
+    let browser = 'другой';
+    if (ua.includes('Chrome') && !ua.includes('Edg')) browser = 'Chrome';
+    else if (ua.includes('Firefox')) browser = 'Firefox';
+    else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
+    else if (ua.includes('Edg')) browser = 'Edge';
+    else if (ua.includes('Opera') || ua.includes('OPR')) browser = 'Opera';
+    let os = 'другая';
+    if (ua.includes('Windows')) os = 'Windows';
+    else if (ua.includes('Mac OS')) os = 'macOS';
+    else if (ua.includes('Linux')) os = 'Linux';
+    else if (ua.includes('Android')) os = 'Android';
+    else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
+    return { device, browser, os };
+}
+window.getDeviceInfo = getDeviceInfo;
+function getDeviceText() {
+    const d = getDeviceInfo();
+    return `📱 Устройство: ${d.device}, браузер: ${d.browser}, ОС: ${d.os}`;
+}
+window.getDeviceText = getDeviceText;
+
+// ========== СТРАНИЦА ВХОДА И РЕФЕРЕР ==========
+function getPageInfo() {
+    return {
+        page: window.location.pathname + window.location.search,
+        referrer: document.referrer || '-',
+        fullUrl: window.location.href
+    };
+}
+window.getPageInfo = getPageInfo;
+function getPageText() {
+    const p = getPageInfo();
+    return `📄 Страница: ${p.page}\n🔗 Referrer: ${p.referrer || '-'}`;
+}
+window.getPageText = getPageText;
 
 // ========== ЭКСПОРТ ГЛОБАЛЬНЫХ ФУНКЦИЙ ==========
 window.escapeHtml = escapeHtml;

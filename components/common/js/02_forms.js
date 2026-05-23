@@ -74,6 +74,9 @@ function initCallbackForm() {
                     cart: typeof window.getCartData === 'function' ? window.getCartData() : '',
                     timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-',
                     visitStats: typeof window.getVisitStatsText === 'function' ? window.getVisitStatsText() : '-',
+                    utm: typeof window.getUTMText === 'function' ? window.getUTMText() : '-',
+                    device: typeof window.getDeviceText === 'function' ? window.getDeviceText() : '-',
+                    page: typeof window.getPageText === 'function' ? window.getPageText() : '-',
                     consent: true,
                     userId: userId
                 };
