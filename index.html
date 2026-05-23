@@ -66,36 +66,82 @@
     <!-- Глобальный конфиг (должен загружаться первым) -->
     <script src="components/common/js/00_config.js"></script>
 
-    <!-- Яндекс.Метрика (ID берётся из конфига) -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=' + window.APP_CONFIG.YANDEX_METRIKA_ID, 'ym');
-
-        ym(window.APP_CONFIG.YANDEX_METRIKA_ID, 'init', {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
-        });
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/' + window.APP_CONFIG.YANDEX_METRIKA_ID + '" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=' + window.APP_CONFIG.GOOGLE_ANALYTICS_ID + '"></script>
+    <!-- Динамическая загрузка счётчиков аналитики -->
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('consent', 'default', {
-            'ad_storage': 'denied',
-            'analytics_storage': 'denied',
-            'wait_for_update': 500
-        });
-        gtag('config', window.APP_CONFIG.GOOGLE_ANALYTICS_ID);
+        (function() {
+            // Ждём, пока APP_CONFIG загрузится
+            function loadAnalytics() {
+                if (!window.APP_CONFIG) {
+                    setTimeout(loadAnalytics, 50);
+                    return;
+                }
+
+                const ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
+                const gaId = window.APP_CONFIG.GOOGLE_ANALYTICS_ID;
+
+                // === Яндекс.Метрика ===
+                if (ymId) {
+                    (function(m,e,t,r,i,k,a){
+                        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                        m[i].l=1*new Date();
+                        for (var j = 0; j < document.scripts.length; j++) {
+                            if (document.scripts[j].src === r) { return; }
+                        }
+                        k=e.createElement(t), a=e.getElementsByTagName(t)[0];
+                        k.async=1; k.src=r; a.parentNode.insertBefore(k,a);
+                    })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=' + ymId, 'ym');
+
+                    ym(ymId, 'init', {
+                        clickmap: true,
+                        trackLinks: true,
+                        accurateTrackBounce: true,
+                        webvisor: true
+                    });
+
+                    // <noscript> версия (вставляем в body)
+                    var noscript = document.createElement('noscript');
+                    var div = document.createElement('div');
+                    var img = document.createElement('img');
+                    img.src = 'https://mc.yandex.ru/watch/' + ymId;
+                    img.style.position = 'absolute';
+                    img.style.left = '-9999px';
+                    img.alt = '';
+                    div.appendChild(img);
+                    noscript.appendChild(div);
+                    document.body.appendChild(noscript);
+                }
+
+                // === Google Analytics (GA4) ===
+                if (gaId) {
+                    // Загружаем gtag.js
+                    var gtagScript = document.createElement('script');
+                    gtagScript.async = true;
+                    gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+                    document.head.appendChild(gtagScript);
+
+                    // Инициализируем gtag
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    window.gtag = gtag;
+                    gtag('js', new Date());
+
+                    // Устанавливаем consent по умолчанию (запрещено)
+                    gtag('consent', 'default', {
+                        'ad_storage': 'denied',
+                        'analytics_storage': 'denied',
+                        'wait_for_update': 500
+                    });
+                    gtag('config', gaId);
+                }
+            }
+
+            // Запускаем загрузку после того, как DOM готов (но можно и сразу)
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadAnalytics);
+            } else {
+                loadAnalytics();
+            }
+        })();
     </script>
 <style>
 /* ========== Базовые переменные и сброс ========== */
@@ -2042,13 +2088,11 @@ footer a:hover {
                 <textarea id="callbackComment" rows="3"
                           placeholder="💬 Удобное время для звонка или дополнительная информация"></textarea>
                 <div class="consent-checkbox">
-                    <div class="consent-checkbox">
-                        <input type="checkbox" id="callbackConsent" required>
-                        <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку
-                            персональных данных</a></label>
-                    </div>
+                    <input type="checkbox" id="callbackConsent" required>
+                    <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку
+                        персональных данных</a></label>
                 </div>
-                <button type="submit" class="btn-primary">Заказать звонок</button>
+                <button type="submit" class="btn-primary">Получить консультацию</button>
             </form>
             <p class="callback-note">После отправки мы свяжемся с вами в рабочее время.</p>
         </div>
@@ -2079,7 +2123,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 23.05.2026 16:08:25
+                Версия: 23.05.2026 16:34:41
             </div>
         </div>
     </div>
@@ -2832,14 +2876,54 @@ window.LOCAL_SERVICES = {
         { service: "Резюме руководителя", price: 9000, sort: 5 },
         { service: "CV на английском", price: 15000, sort: 6 },
         { service: "Сопроводительное письмо", price: 3000, sort: 7 },
-        { service: "Групповой тренинг «Продай себя дорого»", price: 5500, sort: 8 },
-        { service: "Индивидуальный тренинг «Продай себя дорого»", price: 14000, sort: 9 },
         { service: "Подготовка к собеседованию (1ч)", price: 5000, sort: 10 },
         { service: "Карьерная стратегия (пакет 3 консультации)", price: 18000, sort: 11 },
         { service: "Переговоры о зарплате (1ч)", price: 6000, sort: 12 },
         { service: "LinkedIn-профиль под ключ", price: 12000, sort: 13 },
         { service: "Профориентационная диагностика", price: 8000, sort: 14 },
         { service: "Психологическое консультирование (1ч)", price: 7000, sort: 15 },
+        // Добавленные услуги для квиза (цены ориентировочные, вы можете изменить)
+        { service: "VIP-коучинг", price: 30000, sort: 16 },
+        { service: "Executive-коучинг", price: 50000, sort: 17 },
+        { service: "Карьерная стратегия (пакет)", price: 18000, sort: 18 },   // дублирует с пакетом 3 консультаций, но название короче
+        { service: "Стратегия трудоустройства", price: 15000, sort: 19 },
+        { service: "Поиск позиции C-level", price: 80000, sort: 20 },
+        { service: "Поиск топ-позиций", price: 100000, sort: 21 },
+        { service: "Executive-сопровождение", price: 60000, sort: 22 },
+        { service: "Стратегия поиска работы", price: 8000, sort: 23 },
+        { service: "План развития до Senior", price: 12000, sort: 24 },
+        { service: "Развитие управленческих навыков", price: 15000, sort: 25 },
+        { service: "Подготовка к повышению", price: 10000, sort: 26 },
+        { service: "Коучинг для руководителей", price: 25000, sort: 27 },
+        { service: "Стратегия роста до C-level", price: 45000, sort: 28 },
+        { service: "Переговоры о зарплате", price: 6000, sort: 29 },  // уже есть выше, но для совпадения
+        { service: "Повышение грейда", price: 12000, sort: 30 },
+        { service: "Массовый подбор джуниоров", price: 30000, sort: 31 },
+        { service: "Скрининг резюме", price: 15000, sort: 32 },
+        { service: "Подбор джуниора (до 5 дней)", price: 25000, sort: 33 },
+        { service: "База кандидатов + тестирование", price: 20000, sort: 34 },
+        { service: "Постепенный найм джуниоров", price: 40000, sort: 35 },
+        { service: "Ассессмент стажёров", price: 18000, sort: 36 },
+        { service: "Подбор на долгосрок (Junior)", price: 50000, sort: 37 },
+        { service: "Программа стажировки", price: 60000, sort: 38 },
+        { service: "Подбор Middle-специалиста", price: 60000, sort: 39 },
+        { service: "Классический рекрутинг", price: 70000, sort: 40 },
+        { service: "Подбор Middle+ с кейсами", price: 80000, sort: 41 },
+        { service: "Глубокое интервью", price: 10000, sort: 42 },
+        { service: "Подбор на долгосрок (Middle)", price: 90000, sort: 43 },
+        { service: "Программа удержания", price: 120000, sort: 44 },
+        { service: "Хэдхантинг Senior-специалиста", price: 150000, sort: 45 },
+        { service: "Картографирование рынка", price: 50000, sort: 46 },
+        { service: "Поиск Senior+ с гарантией", price: 120000, sort: 47 },
+        { service: "Оценка компетенций", price: 25000, sort: 48 },
+        { service: "Executive search Senior", price: 200000, sort: 49 },
+        { service: "Эксклюзивный хэдхантинг", price: 250000, sort: 50 },
+        { service: "Подбор руководителя отдела", price: 100000, sort: 51 },
+        { service: "Оценка управленческого потенциала", price: 40000, sort: 52 },
+        { service: "HR-стратегия + подбор ключевых людей", price: 300000, sort: 53 },
+        { service: "Коучинг топ-менеджеров", price: 80000, sort: 54 },
+        { service: "Консультация по услугам подбора", price: 5000, sort: 55 },
+        { service: "Диагностика вакансии", price: 10000, sort: 56 }
     ],
     corporate: [
         { service: "Тренинг по запросу (1ч, до 25 чел.)", price: 12000, sort: 1 },
@@ -2847,9 +2931,13 @@ window.LOCAL_SERVICES = {
         { service: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000, sort: 3 }
     ],
     group: [
-        { service: "Групповой тренинг (до 10 чел.)", price: 5500, sort: 1 },
-        { service: "Групповой тренинг (11-20 чел.)", price: 5000, sort: 2 },
-        { service: "Групповой тренинг (21+ чел.)", price: 4500, sort: 3 }
+        { service: "Индивидуальный тренинг «Продай себя дорого»", price: 14000, sort: 1 },
+        { service: "Групповой тренинг «Продай себя дорого»", price: 5500, sort: 2 },
+        { service: "Групповой тренинг (до 10 чел.)", price: 5500, sort: 3 },
+        { service: "Групповой тренинг (11-20 чел.)", price: 5000, sort: 4 },
+        { service: "Групповой тренинг (21+ чел.)", price: 4500, sort: 5 },
+
+
     ]
 };
 // ========== КАЛЬКУЛЯТОР (4 вкладки, кастомные дропдауны без иконок) ==========
@@ -3166,7 +3254,7 @@ window.VARIANTS_MATRIX = [
     // АБСОЛЮТНЫЙ FALLBACK (на случай, если ничего не подошло)
     { priority: 999, role: "*", level: "*", urgency: "*", importance: "*", budget: "*", variantA: "Индивидуальная консультация", variantB: "Экспресс-консультация" }
 ];
-// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ, с ценами из калькулятора) ==========
+// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ, с ценами из калькулятора, мягкий призыв) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -3540,14 +3628,14 @@ window.VARIANTS_MATRIX = [
                         <h4>Вариант 1</h4>
                         <p><strong>${window.escapeHtml(variant.variantA)}</strong></p>
                         <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
-                        <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(variant.variantA)}">Выбрать →</button>
+                        <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(variant.variantA)}">Узнать подробнее →</button>
                     </div>
                     <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">🎯</div>
                         <h4>Вариант 2</h4>
                         <p><strong>${window.escapeHtml(variant.variantB)}</strong></p>
                         <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
-                        <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(variant.variantB)}">Выбрать →</button>
+                        <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(variant.variantB)}">Узнать подробнее →</button>
                     </div>
                     <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">🤔</div>
@@ -3558,6 +3646,7 @@ window.VARIANTS_MATRIX = [
                     </div>
                 </div>
                 <div style="text-align:center; margin-top:30px;">
+                    <p style="font-size:0.9rem; color: var(--secondary); margin-bottom: 15px;">⚠️ Этот вариант — отличная основа для консультации. Запишитесь на бесплатную диагностику, чтобы обсудить детали.</p>
                     <button id="resetQuizBtn" class="btn-secondary">🔁 Пройти заново</button>
                 </div>
             `;
