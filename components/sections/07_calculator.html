@@ -8,7 +8,7 @@
                 <button class="tab-btn active" data-tab="business">🏢 Бизнесу</button>
                 <button class="tab-btn" data-tab="individual">👤 Индивидуально</button>
                 <button class="tab-btn" data-tab="corporate">🎓 Тренинги для бизнеса</button>
-                <button class="tab-btn" data-tab="group">👥 Групповые тренинги</button>
+                <button class="tab-btn" data-tab="training">🚀 Тренинги "Продай себя дорого"</button>
             </div>
 
             <!-- Вкладка Бизнесу -->
@@ -44,12 +44,12 @@
                 <div class="calc-pdf-section" style="visibility: hidden; height: 0; margin: 0; padding: 0;"></div>
             </div>
 
-            <!-- Вкладка Групповые тренинги -->
-            <div id="tab-group" class="tab-pane">
+            <!-- Вкладка Тренинги "Продай себя дорого" -->
+            <div id="tab-training" class="tab-pane">
                 <div class="add-service">
-                    <select id="group-select" class="service-select"></select>
-                    <input type="number" id="group-qty" min="1" value="1" class="calc-qty">
-                    <button id="group-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="training-select" class="service-select"></select>
+                    <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
+                    <button id="training-add" class="btn-primary add-service-btn">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section">
                     <a href="assets/docs/checklist.pdf" class="btn-secondary" target="_blank">📄 Скачать чек-лист (PDF)</a>
@@ -57,19 +57,18 @@
                 </div>
             </div>
 
-            <!-- ОБЩИЙ БЛОК ИТОГА И КОРЗИНЫ (внизу) -->
+            <!-- ОБЩИЙ БЛОК ИТОГА И КОРЗИНЫ -->
             <div class="total-block">
                 <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
                 <div id="discountInfo" class="discount-info"></div>
             </div>
 
-            <!-- Корзина (список добавленных услуг) – теперь под ценником -->
             <div class="cart-section">
                 <h3>🛒 Выбранные услуги</h3>
                 <div id="business-list" class="services-list"></div>
                 <div id="individual-list" class="services-list"></div>
                 <div id="corporate-list" class="services-list"></div>
-                <div id="group-list" class="services-list"></div>
+                <div id="training-list" class="services-list"></div>
             </div>
         </div>
     </div>
