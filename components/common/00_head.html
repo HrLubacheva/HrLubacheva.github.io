@@ -66,36 +66,82 @@
     <!-- Глобальный конфиг (должен загружаться первым) -->
     <script src="components/common/js/00_config.js"></script>
 
-    <!-- Яндекс.Метрика (ID берётся из конфига) -->
-    <script type="text/javascript">
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-            m[i].l=1*new Date();
-            for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
-            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
-        })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=' + window.APP_CONFIG.YANDEX_METRIKA_ID, 'ym');
-
-        ym(window.APP_CONFIG.YANDEX_METRIKA_ID, 'init', {
-            clickmap:true,
-            trackLinks:true,
-            accurateTrackBounce:true,
-            webvisor:true
-        });
-    </script>
-    <noscript><div><img src="https://mc.yandex.ru/watch/' + window.APP_CONFIG.YANDEX_METRIKA_ID + '" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=' + window.APP_CONFIG.GOOGLE_ANALYTICS_ID + '"></script>
+    <!-- Динамическая загрузка счётчиков аналитики -->
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('consent', 'default', {
-            'ad_storage': 'denied',
-            'analytics_storage': 'denied',
-            'wait_for_update': 500
-        });
-        gtag('config', window.APP_CONFIG.GOOGLE_ANALYTICS_ID);
+        (function() {
+            // Ждём, пока APP_CONFIG загрузится
+            function loadAnalytics() {
+                if (!window.APP_CONFIG) {
+                    setTimeout(loadAnalytics, 50);
+                    return;
+                }
+
+                const ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
+                const gaId = window.APP_CONFIG.GOOGLE_ANALYTICS_ID;
+
+                // === Яндекс.Метрика ===
+                if (ymId) {
+                    (function(m,e,t,r,i,k,a){
+                        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+                        m[i].l=1*new Date();
+                        for (var j = 0; j < document.scripts.length; j++) {
+                            if (document.scripts[j].src === r) { return; }
+                        }
+                        k=e.createElement(t), a=e.getElementsByTagName(t)[0];
+                        k.async=1; k.src=r; a.parentNode.insertBefore(k,a);
+                    })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=' + ymId, 'ym');
+
+                    ym(ymId, 'init', {
+                        clickmap: true,
+                        trackLinks: true,
+                        accurateTrackBounce: true,
+                        webvisor: true
+                    });
+
+                    // <noscript> версия (вставляем в body)
+                    var noscript = document.createElement('noscript');
+                    var div = document.createElement('div');
+                    var img = document.createElement('img');
+                    img.src = 'https://mc.yandex.ru/watch/' + ymId;
+                    img.style.position = 'absolute';
+                    img.style.left = '-9999px';
+                    img.alt = '';
+                    div.appendChild(img);
+                    noscript.appendChild(div);
+                    document.body.appendChild(noscript);
+                }
+
+                // === Google Analytics (GA4) ===
+                if (gaId) {
+                    // Загружаем gtag.js
+                    var gtagScript = document.createElement('script');
+                    gtagScript.async = true;
+                    gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+                    document.head.appendChild(gtagScript);
+
+                    // Инициализируем gtag
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){ dataLayer.push(arguments); }
+                    window.gtag = gtag;
+                    gtag('js', new Date());
+
+                    // Устанавливаем consent по умолчанию (запрещено)
+                    gtag('consent', 'default', {
+                        'ad_storage': 'denied',
+                        'analytics_storage': 'denied',
+                        'wait_for_update': 500
+                    });
+                    gtag('config', gaId);
+                }
+            }
+
+            // Запускаем загрузку после того, как DOM готов (но можно и сразу)
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', loadAnalytics);
+            } else {
+                loadAnalytics();
+            }
+        })();
     </script>
 </head>
 <body>
