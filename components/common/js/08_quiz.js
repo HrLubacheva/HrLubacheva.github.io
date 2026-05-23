@@ -1,5 +1,5 @@
-// ========== КВИЗ (с 3 вариантами: тариф, альтернатива, помощь) ==========
-(function () {
+// ========== КВИЗ (с 3 вариантами: тариф, альтернатива, помощь, автопереход) ==========
+(function(){
     let quizQuestions = [];
     let answers = [];
     let quizState = 'questions';
@@ -12,9 +12,9 @@
 
     // Резервная функция экранирования
     if (typeof window.escapeHtml !== 'function') {
-        window.escapeHtml = function (str) {
+        window.escapeHtml = function(str) {
             if (!str) return '';
-            return str.replace(/[&<>]/g, function (m) {
+            return str.replace(/[&<>]/g, function(m) {
                 if (m === '&') return '&amp;';
                 if (m === '<') return '&lt;';
                 if (m === '>') return '&gt;';
@@ -75,10 +75,10 @@
         options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "Выше 100 000 ₽"]
     };
 
-    // ★★★ ФОРМАТИРУЕМ ТОЛЬКО ОТВЕТЫ (без вопросов) ★★★
+    // Форматируем только ответы (без вопросов)
     function formatQuizAnswersOnly() {
         if (!answers || answers.length === 0) return '-';
-        return answers.map(a => a === null ? 'не выбран' : a).join(' | ');
+        return answers.map(a => a === null ? 'не выбран' : a).join('\n');
     }
 
     // Глобальное хранилище ответов квиза
@@ -92,7 +92,7 @@
     function findVariant(answersArr) {
         if (!window.VARIANTS_MATRIX || !window.VARIANTS_MATRIX.length) {
             console.error('Матрица вариантов не загружена');
-            return {variantA: 'Индивидуальная консультация', variantB: 'Экспресс-консультация'};
+            return { variantA: 'Индивидуальная консультация', variantB: 'Экспресс-консультация' };
         }
         const user = {
             role: answersArr[0] === null ? '*' : answersArr[0],
@@ -101,7 +101,7 @@
             importance: answersArr[3] === null ? '*' : answersArr[3],
             budget: answersArr[4] === null ? '*' : answersArr[4]
         };
-        const sorted = [...window.VARIANTS_MATRIX].sort((a, b) => a.priority - b.priority);
+        const sorted = [...window.VARIANTS_MATRIX].sort((a,b) => a.priority - b.priority);
         for (const rule of sorted) {
             let match = true;
             if (rule.role !== '*' && rule.role !== user.role) match = false;
@@ -109,9 +109,9 @@
             if (rule.urgency !== '*' && rule.urgency !== user.urgency) match = false;
             if (rule.importance !== '*' && rule.importance !== user.importance) match = false;
             if (rule.budget !== '*' && rule.budget !== user.budget) match = false;
-            if (match) return {variantA: rule.variantA, variantB: rule.variantB};
+            if (match) return { variantA: rule.variantA, variantB: rule.variantB };
         }
-        return {variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB};
+        return { variantA: window.VARIANTS_MATRIX[0].variantA, variantB: window.VARIANTS_MATRIX[0].variantB };
     }
 
     function extractPrice(text) {
@@ -127,8 +127,7 @@
             localStorage.setItem('quizCurrentIndex', currentQuestionIndex);
             localStorage.setItem('quizState', quizState);
             localStorage.setItem('quizCurrentRole', currentRole || '');
-        } catch (e) {
-        }
+        } catch(e) {}
     }
 
     function restoreQuizProgress() {
@@ -144,8 +143,7 @@
                 currentRole = savedRole || null;
                 return true;
             }
-        } catch (e) {
-        }
+        } catch(e) {}
         return false;
     }
 
@@ -173,7 +171,7 @@
         }
         quizQuestions = [
             FIRST_QUESTION,
-            (currentRole === "Подбираю сотрудников") ? {...LEVEL_RECRUITER} : {...LEVEL_JOBSEEKER},
+            (currentRole === "Подбираю сотрудников") ? { ...LEVEL_RECRUITER } : { ...LEVEL_JOBSEEKER },
             URGENCY_QUESTION,
             IMPORTANCE_QUESTION,
             BUDGET_QUESTION
@@ -184,9 +182,9 @@
 
     function updateSecondQuestion(role) {
         if (role === "Подбираю сотрудников") {
-            quizQuestions[1] = {...LEVEL_RECRUITER};
+            quizQuestions[1] = { ...LEVEL_RECRUITER };
         } else {
-            quizQuestions[1] = {...LEVEL_JOBSEEKER};
+            quizQuestions[1] = { ...LEVEL_JOBSEEKER };
         }
         if (answers[1] && !quizQuestions[1].options.includes(answers[1])) {
             answers[1] = null;
@@ -232,6 +230,7 @@
             html += `</div>`;
             container.innerHTML = html;
 
+            // ★★★ ОБРАБОТЧИК КЛИКА НА ОТВЕТ (с автопереходом) ★★★
             document.querySelectorAll('.quiz-option').forEach(opt => {
                 opt.removeEventListener('click', opt._handler);
                 opt._handler = (e) => {
@@ -244,11 +243,20 @@
                     }
                     updateQuizAnswersRaw();
                     saveQuizProgress();
-                    renderQuiz();
+
+                    // ★★★ АВТОПЕРЕХОД НА СЛЕДУЮЩИЙ ВОПРОС ★★★
+                    if (currentQuestionIndex < quizQuestions.length - 1) {
+                        currentQuestionIndex++;
+                        renderQuiz();
+                        document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        renderQuiz();
+                    }
                 };
                 opt.addEventListener('click', opt._handler);
             });
 
+            // Кнопка "Далее"
             const nextBtn = document.getElementById('quizNextBtn');
             if (nextBtn) {
                 nextBtn.removeEventListener('click', nextBtn._nextHandler);
@@ -261,11 +269,12 @@
                     updateQuizAnswersRaw();
                     saveQuizProgress();
                     renderQuiz();
-                    document.querySelector('.quiz-card')?.scrollIntoView({behavior: 'smooth', block: 'start'});
+                    document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 };
                 nextBtn.addEventListener('click', nextBtn._nextHandler);
             }
 
+            // Кнопка "Назад"
             const prevBtn = document.getElementById('quizPrevBtn');
             if (prevBtn) {
                 prevBtn.removeEventListener('click', prevBtn._prevHandler);
@@ -276,12 +285,13 @@
                         updateQuizAnswersRaw();
                         saveQuizProgress();
                         renderQuiz();
-                        document.querySelector('.quiz-card')?.scrollIntoView({behavior: 'smooth', block: 'start'});
+                        document.querySelector('.quiz-card')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }
                 };
                 prevBtn.addEventListener('click', prevBtn._prevHandler);
             }
 
+            // Кнопка "Показать варианты"
             const submitBtn = document.getElementById('submitQuizBtn');
             if (submitBtn) {
                 submitBtn.removeEventListener('click', submitBtn._submitHandler);
@@ -305,7 +315,8 @@
                 };
                 submitBtn.addEventListener('click', submitBtn._submitHandler);
             }
-        } else if (quizState === 'choice') {
+        }
+        else if (quizState === 'choice') {
             const variant = findVariant(answers.map(a => a === null ? 'не выбран' : a));
             const priceA = extractPrice(variant.variantA);
             const priceB = extractPrice(variant.variantB);
@@ -371,7 +382,7 @@
                             resultDiv.innerHTML = `<strong>✅ Вы выбрали вариант ${chosen}:</strong><br>${chosenText}<br><br>📋 Напишите мне в Telegram: <a href="https://t.me/HrLubacheva" target="_blank">@HrLubacheva</a>`;
                             resultDiv.style.display = 'block';
                         }
-                        document.querySelector('#calendar')?.scrollIntoView({behavior: 'smooth'});
+                        document.querySelector('#calendar')?.scrollIntoView({ behavior: 'smooth' });
                         container.innerHTML = '<p>✨ Спасибо! Результат появился ниже.</p>';
                         isSubmittingChoice = false;
                         localStorage.removeItem('quizAnswers');
@@ -430,7 +441,7 @@
                             resultDiv.innerHTML = `<strong>✅ Заявка отправлена!</strong><br>Я свяжусь с вами в ближайшее время, чтобы помочь выбрать подходящий вариант.`;
                             resultDiv.style.display = 'block';
                         }
-                        document.querySelector('#calendar')?.scrollIntoView({behavior: 'smooth'});
+                        document.querySelector('#calendar')?.scrollIntoView({ behavior: 'smooth' });
                         container.innerHTML = '<p>✨ Спасибо! Я скоро свяжусь с вами, чтобы помочь определиться.</p>';
                         isSubmittingChoice = false;
                         localStorage.removeItem('quizAnswers');
@@ -455,7 +466,7 @@
     }
 
     // Автоматическая отправка прогресса при уходе со страницы
-    window.addEventListener('beforeunload', function () {
+    window.addEventListener('beforeunload', function() {
         if (answers && answers.some(a => a !== null)) {
             const userId = typeof currentUserId !== 'undefined' && currentUserId
                 ? currentUserId
@@ -482,8 +493,8 @@
         }
     });
 
-        window.initQuiz = function () {
-            if (quizInitialized) return;
-            startQuiz();
-        };
-    })();
+    window.initQuiz = function() {
+        if (quizInitialized) return;
+        startQuiz();
+    };
+})();
