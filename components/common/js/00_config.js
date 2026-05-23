@@ -1,7 +1,7 @@
 // ========== ГЛОБАЛЬНЫЕ НАСТРОЙКИ САЙТА ==========
 window.APP_CONFIG = {
     // URL веб-приложения Google Apps Script (обработчик форм)
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxN7_BBMffHS_SCt-00z21IdRjJJgnc8Lw2TFdq117pnNO8cHoENMbfFwEYkCYcmZp8gw/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwllU7wotk5_Y_0eaYAD2W6FPMyHlwpxTVhfY2t2GWAmEtKrva9QrBi72ctyG_eS5hZzA/exec',
 
     // Контакты (для ссылок в меню и подвале)
     TELEGRAM: 'https://t.me/HrLubacheva',
@@ -16,3 +16,4 @@ window.APP_CONFIG = {
 
     ADMIN_EMAIL: 'kranerviktit@gmail.com'
 };
+

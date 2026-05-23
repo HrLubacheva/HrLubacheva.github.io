@@ -67,7 +67,6 @@ function initCallbackForm() {
             const chosenVariant = window.selectedVariantText || '';
             const chosenVariantPrice = window.selectedVariantPrice || '';
 
-            // Добавляем информацию о выбранном варианте в комментарий, если нужно? Нет, не надо – она отправится отдельным полем.
             // Оставляем комментарий как есть (без авто-заполнения)
             if (comment === '') comment = 'Не указано';
 

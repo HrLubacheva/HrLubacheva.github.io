@@ -2122,7 +2122,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 23.05.2026 19:37:47
+                Версия: 23.05.2026 19:51:03
             </div>
         </div>
     </div>
@@ -2158,7 +2158,7 @@ footer a:hover {
 // ========== ГЛОБАЛЬНЫЕ НАСТРОЙКИ САЙТА ==========
 window.APP_CONFIG = {
     // URL веб-приложения Google Apps Script (обработчик форм)
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxN7_BBMffHS_SCt-00z21IdRjJJgnc8Lw2TFdq117pnNO8cHoENMbfFwEYkCYcmZp8gw/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwllU7wotk5_Y_0eaYAD2W6FPMyHlwpxTVhfY2t2GWAmEtKrva9QrBi72ctyG_eS5hZzA/exec',
 
     // Контакты (для ссылок в меню и подвале)
     TELEGRAM: 'https://t.me/HrLubacheva',
@@ -2173,6 +2173,8 @@ window.APP_CONFIG = {
 
     ADMIN_EMAIL: 'kranerviktit@gmail.com'
 };
+
+
 // ========== ОБЩИЕ УТИЛИТЫ ==========
 function escapeHtml(str) {
     if (!str) return '';
@@ -2624,7 +2626,6 @@ function initCallbackForm() {
             const chosenVariant = window.selectedVariantText || '';
             const chosenVariantPrice = window.selectedVariantPrice || '';
 
-            // Добавляем информацию о выбранном варианте в комментарий, если нужно? Нет, не надо – она отправится отдельным полем.
             // Оставляем комментарий как есть (без авто-заполнения)
             if (comment === '') comment = 'Не указано';
 
