@@ -63,8 +63,15 @@ function initCallbackForm() {
                 return;
             }
             const formattedForDisplay = '+7 ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
-            const chosenVariant = window.selectedVariantText || '';
-            const chosenVariantPrice = window.selectedVariantPrice || '';
+
+            // Читаем данные квиза из скрытых полей формы обратной связи
+            const chosenVariant = document.querySelector('#callbackForm [name="chosenVariant"]')?.value || '';
+            const chosenVariantPrice = document.querySelector('#callbackForm [name="chosenVariantPrice"]')?.value || '';
+            const originalChosenVariant = document.querySelector('#callbackForm [name="originalChosenVariant"]')?.value || '';
+            const originalChosenVariantPrice = document.querySelector('#callbackForm [name="originalChosenVariantPrice"]')?.value || '';
+            const recommendedVariants = document.querySelector('#callbackForm [name="recommendedVariants"]')?.value || '';
+            const quizAnswersRaw = document.querySelector('#callbackForm [name="quizAnswersRaw"]')?.value || '';
+
             if (comment === '') comment = 'Не указано';
 
             const sendForm = async (userId) => {
@@ -76,9 +83,12 @@ function initCallbackForm() {
                     email: emailField,
                     comment: comment,
                     consent: true,
-                    quizAnswers: window.quizAnswersRaw || '-',
+                    quizAnswersRaw: quizAnswersRaw,
+                    recommendedVariants: recommendedVariants,
                     chosenVariant: chosenVariant,
                     chosenVariantPrice: chosenVariantPrice,
+                    originalChosenVariant: originalChosenVariant,
+                    originalChosenVariantPrice: originalChosenVariantPrice,
                     cart: '',
                     timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-',
                     visitStats: typeof window.getVisitStatsText === 'function' ? window.getVisitStatsText() : '-',
@@ -94,9 +104,15 @@ function initCallbackForm() {
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;
                 isSubmitting = false;
-                window.selectedVariantText = null;
-                window.selectedVariantPrice = null;
-                window.quizAnswersRaw = null;
+                // Очистить скрытые поля
+                const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
+                hiddenFields.forEach(field => {
+                    const input = document.querySelector(`#callbackForm [name="${field}"]`);
+                    if (input) input.value = '';
+                });
+                // Сбросить блок выбора квиза
+                const quizBlock = document.getElementById('quizSelectionBlock');
+                if (quizBlock) quizBlock.style.display = 'none';
             };
             const uid = (typeof currentUserId !== 'undefined' && currentUserId) ? currentUserId : (typeof getOrCreateLocalUserId === 'function' ? getOrCreateLocalUserId() : 'unknown');
             sendForm(uid);
@@ -133,18 +149,30 @@ function initCallbackForm() {
                 return;
             }
             let customerName = nameInput ? nameInput.value.trim() : '';
-            if (customerName === '') customerName = 'Быстрый заказ (без имени)';
+            if (customerName === '') customerName = '';
+
+            // Читаем данные квиза из скрытых полей формы быстрого заказа
+            const chosenVariant = document.querySelector('#quickOrderForm [name="chosenVariant"]')?.value || '';
+            const chosenVariantPrice = document.querySelector('#quickOrderForm [name="chosenVariantPrice"]')?.value || '';
+            const originalChosenVariant = document.querySelector('#quickOrderForm [name="originalChosenVariant"]')?.value || '';
+            const originalChosenVariantPrice = document.querySelector('#quickOrderForm [name="originalChosenVariantPrice"]')?.value || '';
+            const recommendedVariants = document.querySelector('#quickOrderForm [name="recommendedVariants"]')?.value || '';
+            const quizAnswersRaw = document.querySelector('#quickOrderForm [name="quizAnswersRaw"]')?.value || '';
+
             const geo = await window.getGeoData();
             const formData = {
                 formType: 'Быстрый заказ',
                 name: customerName,
                 phone: digits,
                 email: '',
-                comment: `Быстрый заказ из калькулятора\nКорзина:\n${cartData}`,
+                comment: '',
                 consent: true,
-                quizAnswers: '-',
-                chosenVariant: '-',
-                chosenVariantPrice: '-',
+                quizAnswersRaw: quizAnswersRaw,
+                recommendedVariants: recommendedVariants,
+                chosenVariant: chosenVariant,
+                chosenVariantPrice: chosenVariantPrice,
+                originalChosenVariant: originalChosenVariant,
+                originalChosenVariantPrice: originalChosenVariantPrice,
                 cart: cartData,
                 timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-',
                 visitStats: typeof window.getVisitStatsText === 'function' ? window.getVisitStatsText() : '-',
@@ -160,6 +188,12 @@ function initCallbackForm() {
             consentCheck.checked = false;
             if (phoneInput) phoneInput.value = '';
             if (nameInput) nameInput.value = '';
+            // Очистить скрытые поля квиза
+            const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
+            hiddenFields.forEach(field => {
+                const input = document.querySelector(`#quickOrderForm [name="${field}"]`);
+                if (input) input.value = '';
+            });
         });
     }
 }

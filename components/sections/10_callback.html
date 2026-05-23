@@ -3,16 +3,36 @@
         <div class="calendar-card fade-up">
             <h2 class="section-title">📞 Бесплатная 20-минутная диагностика</h2>
             <p>Разберём вашу ситуацию: для соискателя — что мешает получить оффер выше; для бизнеса — почему вакансия не закрывается.</p>
+
             <form id="callbackForm" class="callback-form">
-                <input type="text" id="callbackName" placeholder="👤 Ваше имя (необязательно)">
-                <input type="tel" id="callbackPhone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
-                <input type="email" id="callbackEmail" placeholder="📧 Email (необязательно)">
-                <textarea id="callbackComment" rows="3" placeholder="💬 Удобное время для звонка или дополнительная информация"></textarea>
+                <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя (необязательно)">
+                <input type="tel" id="callbackPhone" name="phone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
+                <input type="email" id="callbackEmail" name="email" placeholder="📧 Email (необязательно)">
+
+                <!-- Блок выбранного варианта из квиза (стиль корзины) -->
+                <div id="quizSelectionBlock" class="calc-item" style="display: none;">
+                    <div class="service-name"></div>
+                    <div class="service-price"></div>
+                    <div class="service-remove">
+                        <button type="button" id="removeQuizSelection" class="remove-item">✖</button>
+                    </div>
+                </div>
+
+                <!-- Скрытые поля для данных квиза -->
+                <input type="hidden" name="chosenVariant" id="chosenVariant">
+                <input type="hidden" name="chosenVariantPrice" id="chosenVariantPrice">
+                <input type="hidden" name="originalChosenVariant" id="originalChosenVariant">
+                <input type="hidden" name="originalChosenVariantPrice" id="originalChosenVariantPrice">
+                <input type="hidden" name="recommendedVariants" id="recommendedVariants">
+                <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
+
+                <textarea id="callbackComment" name="comment" rows="3" placeholder="💬 Удобное время для звонка или дополнительная информация"></textarea>
 
                 <div class="consent-checkbox">
-                    <input type="checkbox" id="callbackConsent" required>
+                    <input type="checkbox" id="callbackConsent" name="consent" required>
                     <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                 </div>
+
                 <button type="submit" class="btn-primary">Получить консультацию</button>
             </form>
             <p class="callback-note">После отправки мы свяжемся с вами в рабочее время.</p>

@@ -120,11 +120,20 @@
                 <p style="margin-bottom: 24px; color: var(--secondary);">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
                 <form id="quickOrderForm" class="callback-form" style="max-width: 100%;">
                     <div style="display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap;">
-                        <input type="text" id="quickName" placeholder="👤 Ваше имя (необязательно)" style="flex: 1; padding: 14px 20px; border-radius: 60px; border: 1px solid var(--border); font-size: 1rem;">
-                        <input type="tel" id="quickPhone" placeholder="📞 +7 912 345 67 89" required style="flex: 1; padding: 14px 20px; border-radius: 60px; border: 1px solid var(--border); font-size: 1rem;">
+                        <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)" style="flex: 1; padding: 14px 20px; border-radius: 60px; border: 1px solid var(--border); font-size: 1rem;">
+                        <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required style="flex: 1; padding: 14px 20px; border-radius: 60px; border: 1px solid var(--border); font-size: 1rem;">
                     </div>
+
+                    <!-- Скрытые поля для данных квиза -->
+                    <input type="hidden" name="chosenVariant" id="quickChosenVariant">
+                    <input type="hidden" name="chosenVariantPrice" id="quickChosenVariantPrice">
+                    <input type="hidden" name="originalChosenVariant" id="quickOriginalChosenVariant">
+                    <input type="hidden" name="originalChosenVariantPrice" id="quickOriginalChosenVariantPrice">
+                    <input type="hidden" name="recommendedVariants" id="quickRecommendedVariants">
+                    <input type="hidden" name="quizAnswersRaw" id="quickQuizAnswersRaw">
+
                     <div class="consent-checkbox" style="margin-bottom: 24px;">
-                        <input type="checkbox" id="quickConsent" required>
+                        <input type="checkbox" id="quickConsent" name="consent" required>
                         <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                     </div>
                     <button type="submit" class="btn-primary" style="width:100%; padding:14px; font-weight:700;">📞 Заказать звонок</button>
