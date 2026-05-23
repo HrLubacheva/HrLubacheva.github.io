@@ -7,7 +7,7 @@ function initCopyButtons() {
             navigator.clipboard.writeText(textToCopy).then(() => {
                 showToast('✅ Скопировано!');
             }).catch(err => {
-                console.error('Ошибка копирования:', err);
+                logError('Ошибка копирования:', err);
                 alert('Не удалось скопировать. Попробуйте вручную.');
             });
         });

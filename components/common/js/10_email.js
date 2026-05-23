@@ -19,7 +19,7 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
         userId: typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown'
     };
 
-    console.log('📤 Отправка данных на скрипт:', formData);
+    log('📤 Отправка данных на скрипт:', formData);
 
     try {
         const body = new URLSearchParams(formData);
@@ -31,10 +31,10 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
             },
             body: body
         });
-        console.log('✅ Запрос отправлен (режим no-cors)');
+        log('✅ Запрос отправлен (режим no-cors)');
         return true;
     } catch (err) {
-        console.error('❌ Ошибка отправки:', err);
+        logError('❌ Ошибка отправки:', err);
         throw new Error('Не удалось отправить запрос. Попробуйте позже.');
     }
 }

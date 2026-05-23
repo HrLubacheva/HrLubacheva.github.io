@@ -87,7 +87,7 @@
         }
 
         if (typeof initAnimations === 'function') initAnimations();
-        if (typeof initUserId === 'function') initUserId().catch(e => console.warn(e));
+        if (typeof initUserId === 'function') initUserId().catch(() => {}); // ← изменено: пустой обработчик
         if (typeof initCalculator === 'function') initCalculator();
         if (typeof initQuiz === 'function') initQuiz();
         if (typeof initModal === 'function') initModal();

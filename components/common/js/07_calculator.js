@@ -1,4 +1,4 @@
-// ========== КАЛЬКУЛЯТОР (4 вкладки, данные из внешнего файла, построчная корзина, кастомные дропдауны) ==========
+// ========== КАЛЬКУЛЯТОР (4 вкладки, кастомные дропдауны, без иконок) ==========
 let cart = [];
 let calculatorInitialized = false;
 
@@ -48,11 +48,10 @@ function updateSelectsFromData() {
     }
 }
 
-// ========== КАСТОМНЫЕ ВЫПАДАЮЩИЕ СПИСКИ ==========
+// ========== КАСТОМНЫЙ ВЫПАДАЮЩИЙ СПИСОК ==========
 function initCustomDropdowns() {
     const selects = document.querySelectorAll('.service-select');
     selects.forEach(select => {
-        // Если уже заменён на кастомный, не трогаем
         if (select.parentElement.classList.contains('custom-dropdown')) return;
 
         const container = document.createElement('div');
@@ -66,8 +65,7 @@ function initCustomDropdowns() {
         const menu = document.createElement('div');
         menu.className = 'dropdown-menu';
 
-        // Заполняем опции
-        Array.from(select.options).forEach((opt, idx) => {
+        Array.from(select.options).forEach(opt => {
             const optionDiv = document.createElement('div');
             optionDiv.className = 'dropdown-option';
             if (opt.selected) optionDiv.classList.add('selected');
@@ -75,36 +73,33 @@ function initCustomDropdowns() {
             optionDiv.dataset.value = opt.value;
             optionDiv.addEventListener('click', (e) => {
                 e.stopPropagation();
-                // Обновляем оригинальный select
                 select.value = opt.value;
-                // Триггерим событие change для совместимости с addToCart
                 const event = new Event('change', { bubbles: true });
                 select.dispatchEvent(event);
-                // Обновляем текст на кнопке
                 button.querySelector('span:first-child').textContent = opt.text;
-                // Обновляем выделение в меню
                 menu.querySelectorAll('.dropdown-option').forEach(div => div.classList.remove('selected'));
                 optionDiv.classList.add('selected');
-                // Закрываем меню
                 menu.classList.remove('open');
                 button.querySelector('.dropdown-arrow').classList.remove('open');
+                button.classList.remove('active');
             });
             menu.appendChild(optionDiv);
         });
 
-        // Открытие/закрытие меню
         button.addEventListener('click', (e) => {
             e.stopPropagation();
             const isOpen = menu.classList.contains('open');
-            // Закрываем все другие открытые меню
             document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
             document.querySelectorAll('.dropdown-arrow.open').forEach(arrow => arrow.classList.remove('open'));
+            document.querySelectorAll('.dropdown-button.active').forEach(btn => btn.classList.remove('active'));
             if (!isOpen) {
                 menu.classList.add('open');
                 button.querySelector('.dropdown-arrow').classList.add('open');
+                button.classList.add('active');
             } else {
                 menu.classList.remove('open');
                 button.querySelector('.dropdown-arrow').classList.remove('open');
+                button.classList.remove('active');
             }
         });
 
@@ -115,12 +110,14 @@ function initCustomDropdowns() {
     });
 }
 
-// Закрытие меню при клике вне
 document.addEventListener('click', function() {
     document.querySelectorAll('.dropdown-menu.open').forEach(menu => {
         menu.classList.remove('open');
         const btn = menu.previousElementSibling;
-        if (btn) btn.querySelector('.dropdown-arrow')?.classList.remove('open');
+        if (btn) {
+            btn.querySelector('.dropdown-arrow')?.classList.remove('open');
+            btn.classList.remove('active');
+        }
     });
 });
 
@@ -188,7 +185,7 @@ function initCalculator() {
     calculatorInitialized = true;
 
     updateSelectsFromData();
-    initCustomDropdowns(); // инициализируем кастомные дропдауны
+    initCustomDropdowns();
 
     const handlers = [
         { btn: 'business-add', cat: 'business', select: 'business-select', qty: 'business-qty' },
@@ -219,8 +216,6 @@ function initCalculator() {
         };
         btn.addEventListener('click', btn._tabHandler);
     });
-
-    log('✅ Калькулятор инициализирован (4 вкладки, кастомные дропдауны)');
 }
 
 window.initCalculator = initCalculator;

@@ -91,7 +91,7 @@
     // Поиск варианта ответа во внешней матрице
     function findVariant(answersArr) {
         if (!window.VARIANTS_MATRIX || !window.VARIANTS_MATRIX.length) {
-            console.error('Матрица вариантов не загружена');
+            logError('Матрица вариантов не загружена');
             return { variantA: 'Индивидуальная консультация', variantB: 'Экспресс-консультация' };
         }
         const user = {
@@ -123,7 +123,7 @@
 
     // Нет сохранения прогресса – старт всегда с чистого листа
     function startQuiz() {
-        console.log('startQuiz вызван');
+        log('startQuiz вызван');
         // Всегда начинаем с пустых ответов
         answers = [null, null, null, null, null];
         currentQuestionIndex = 0;
@@ -163,7 +163,7 @@
         isRendering = true;
         const container = document.getElementById('quizContainer');
         if (!container) {
-            console.error('quizContainer не найден!');
+            logError('quizContainer не найден!');
             isRendering = false;
             return;
         }
