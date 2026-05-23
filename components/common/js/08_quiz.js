@@ -1,4 +1,4 @@
-// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ, с ценами из калькулятора) ==========
+// ========== КВИЗ (с автоматическим переходом на подтверждение, с заполнением комментария в форме, БЕЗ ПРОКРУТКИ, с ценами из калькулятора, мягкий призыв) ==========
 (function(){
     let quizQuestions = [];
     let answers = [];
@@ -372,14 +372,14 @@
                         <h4>Вариант 1</h4>
                         <p><strong>${window.escapeHtml(variant.variantA)}</strong></p>
                         <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
-                        <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(variant.variantA)}">Выбрать →</button>
+                        <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(variant.variantA)}">Узнать подробнее →</button>
                     </div>
                     <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">🎯</div>
                         <h4>Вариант 2</h4>
                         <p><strong>${window.escapeHtml(variant.variantB)}</strong></p>
                         <p style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
-                        <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(variant.variantB)}">Выбрать →</button>
+                        <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(variant.variantB)}">Узнать подробнее →</button>
                     </div>
                     <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                         <div style="font-size:32px; margin-bottom:12px;">🤔</div>
@@ -390,6 +390,7 @@
                     </div>
                 </div>
                 <div style="text-align:center; margin-top:30px;">
+                    <p style="font-size:0.9rem; color: var(--secondary); margin-bottom: 15px;">⚠️ Этот вариант — отличная основа для консультации. Запишитесь на бесплатную диагностику, чтобы обсудить детали.</p>
                     <button id="resetQuizBtn" class="btn-secondary">🔁 Пройти заново</button>
                 </div>
             `;
