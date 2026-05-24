@@ -85,70 +85,59 @@
         if (!block) return;
         const nameSpan = block.querySelector('.service-name');
         const priceSpan = block.querySelector('.service-price');
-        if (variantText && variantText !== '') {
+        if (variantText && variantText.trim() !== '') {
             if (nameSpan) nameSpan.innerHTML = window.escapeHtml(variantText);
-            if (variantPrice && variantPrice !== '') {
-                if (priceSpan) priceSpan.innerHTML = variantPrice;
-            } else {
-                if (priceSpan) priceSpan.innerHTML = '';
+            if (priceSpan && variantPrice && variantPrice !== '') {
+                priceSpan.innerHTML = variantPrice;
+            } else if (priceSpan) {
+                priceSpan.innerHTML = '';
             }
-            block.style.display = 'grid';
-            const forms = ['callbackForm', 'quickOrderForm'];
-            forms.forEach(formId => {
-                const form = document.getElementById(formId);
-                if (!form) return;
-                const chosenField = form.querySelector('[name="chosenVariant"]');
-                if (chosenField) chosenField.value = variantText;
-                const priceField = form.querySelector('[name="chosenVariantPrice"]');
-                if (priceField) priceField.value = variantPrice || '';
-            });
+            block.style.display = '';
+            // Устанавливаем display в зависимости от ширины экрана (чтобы не ломался грид/флекс)
+            if (window.innerWidth <= 768) {
+                block.style.display = 'flex';
+            } else {
+                block.style.display = 'grid';
+            }
         } else {
             block.style.display = 'none';
             if (nameSpan) nameSpan.innerHTML = '';
             if (priceSpan) priceSpan.innerHTML = '';
-            const forms = ['callbackForm', 'quickOrderForm'];
-            forms.forEach(formId => {
-                const form = document.getElementById(formId);
-                if (!form) return;
-                const chosenField = form.querySelector('[name="chosenVariant"]');
-                if (chosenField) chosenField.value = '';
-                const priceField = form.querySelector('[name="chosenVariantPrice"]');
-                if (priceField) priceField.value = '';
-            });
         }
     }
 
 // Отправка данных квиза в Google Sheets (без уведомлений) с повторными попытками
-function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, originalText, originalPrice) {
-    const scriptUrl = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
-    if (!scriptUrl) return;
-    const formData = {
-        formType: 'Квиз ответы',
-        quizAnswersRaw: answersStr,
-        recommendedVariants: recommendedStr,
-        chosenVariant: chosenText,
-        chosenVariantPrice: chosenPrice,
-        originalChosenVariant: originalText,
-        originalChosenVariantPrice: originalPrice,
-        userId: typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : ''
-    };
-    if (typeof window.getTimeOnSite === 'function') formData.timeOnSite = window.getTimeOnSite();
-    if (typeof window.getVisitStatsText === 'function') formData.visitStats = window.getVisitStatsText();
-    if (typeof window.getUTMText === 'function') formData.utm = window.getUTMText();
-    if (typeof window.getDeviceText === 'function') formData.device = window.getDeviceText();
-    if (typeof window.getPageText === 'function') formData.page = window.getPageText();
+    function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, originalText, originalPrice) {
+        const scriptUrl = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
+        if (!scriptUrl) return;
+        const formData = {
+            formType: 'Квиз ответы',
+            quizAnswersRaw: answersStr,
+            recommendedVariants: recommendedStr,
+            chosenVariant: chosenText,
+            chosenVariantPrice: chosenPrice,
+            originalChosenVariant: originalText,
+            originalChosenVariantPrice: originalPrice,
+            userId: typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : ''
+        };
+        if (typeof window.getTimeOnSite === 'function') formData.timeOnSite = window.getTimeOnSite();
+        if (typeof window.getVisitStatsText === 'function') formData.visitStats = window.getVisitStatsText();
+        if (typeof window.getUTMText === 'function') formData.utm = window.getUTMText();
+        if (typeof window.getDeviceText === 'function') formData.device = window.getDeviceText();
+        if (typeof window.getPageText === 'function') formData.page = window.getPageText();
 
-    if (typeof window.postWithRetry === 'function') {
-        window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => console.warn('Ошибка отправки статистики квиза:', err));
-    } else {
-        console.warn('postWithRetry не определён, отправка через fallback fetch');
-        fetch(scriptUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams(formData)
-        }).catch(e => console.warn('Fallback ошибка:', e));
+        if (typeof window.postWithRetry === 'function') {
+            window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => console.warn('Ошибка отправки статистики квиза:', err));
+        } else {
+            console.warn('postWithRetry не определён, отправка через fallback fetch');
+            fetch(scriptUrl, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: new URLSearchParams(formData)
+            }).catch(e => console.warn('Fallback ошибка:', e));
+        }
     }
-}
+
     const FIRST_QUESTION = {
         text: "1. Ваша роль?",
         options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"]
@@ -192,8 +181,8 @@ function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, orig
     }
 
     function updateSecondQuestion(role) {
-        if (role === "Подбираю сотрудников") quizQuestions[1] = { ...LEVEL_RECRUITER };
-        else quizQuestions[1] = { ...LEVEL_JOBSEEKER };
+        if (role === "Подбираю сотрудников") quizQuestions[1] = {...LEVEL_RECRUITER};
+        else quizQuestions[1] = {...LEVEL_JOBSEEKER};
         if (answers[1] && !quizQuestions[1].options.includes(answers[1])) answers[1] = null;
         if (currentQuestionIndex === 1 && quizState === 'questions') renderQuiz();
     }
@@ -399,11 +388,11 @@ function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, orig
             `;
             document.getElementById('goToCallbackBtn')?.addEventListener('click', () => {
                 const target = document.getElementById('calendar');
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
             });
             document.getElementById('goToCalculatorBtn')?.addEventListener('click', () => {
                 const target = document.getElementById('calculator');
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
             });
             document.getElementById('resetQuizBtnAfter')?.addEventListener('click', () => startQuiz());
         }

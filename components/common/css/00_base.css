@@ -1628,13 +1628,82 @@ footer a:hover {
 }
 
 /* ==================================================================
-   БЛОК ВЫБРАННОЙ УСЛУГИ ИЗ КВИЗА (единый стиль с корзиной)
+   БЛОК ВЫБРАННОЙ УСЛУГИ ИЗ КВИЗА (полная копия механики корзины)
    ================================================================== */
 #quizSelectionBlock {
     background: #f0f7ff;
     border-left: 4px solid #2D6A9F;
     margin-bottom: 16px;
 }
+
+/* Десктоп: сетка из трёх колонок (название, цена, удаление) */
+@media (min-width: 769px) {
+    #quizSelectionBlock {
+        display: grid !important;
+        grid-template-columns: 1fr auto 40px !important;
+        gap: 12px !important;
+        align-items: center !important;
+        padding: 12px 8px !important;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.2s;
+        animation: slideIn 0.3s ease;
+    }
+    #quizSelectionBlock:hover {
+        background: var(--light-bg);
+    }
+    #quizSelectionBlock .service-name {
+        padding-left: 12px;
+        font-weight: 500;
+        word-break: break-word;
+        white-space: normal;
+        line-height: 1.4;
+    }
+    #quizSelectionBlock .service-price {
+        text-align: center;
+        font-weight: 500;
+    }
+    #quizSelectionBlock .service-remove {
+        text-align: center;
+    }
+}
+
+/* Мобильные: вертикальная карточка (название, цена, крестик справа сверху) */
+@media (max-width: 768px) {
+    #quizSelectionBlock {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        position: relative !important;
+        padding: 16px !important;
+        gap: 8px !important;
+        border-bottom: 1px solid var(--border);
+        transition: background 0.2s;
+        animation: slideIn 0.3s ease;
+    }
+    #quizSelectionBlock:hover {
+        background: var(--light-bg);
+    }
+    #quizSelectionBlock .service-name {
+        padding-right: 40px;
+        font-weight: 600;
+        font-size: 1rem;
+        line-height: 1.4;
+    }
+    #quizSelectionBlock .service-price {
+        text-align: left;
+        font-size: 0.9rem;
+        color: var(--primary);
+        font-weight: 600;
+        margin-top: 4px;
+    }
+    #quizSelectionBlock .service-remove {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+    }
+}
+
+/* Общие стили для элементов внутри блока */
 #quizSelectionBlock .service-name {
     word-break: break-word;
 }
@@ -1662,32 +1731,10 @@ footer a:hover {
     transform: scale(1.05);
 }
 
-/* Специально для мобильных: название на первой строке, цена на второй, крестик справа сверху */
-@media (max-width: 768px) {
-    #quizSelectionBlock {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-        position: relative !important;
-        padding: 16px !important;
-        gap: 8px !important;
-    }
-    #quizSelectionBlock .service-name {
-        padding-right: 40px;
-        font-weight: 600;
-        font-size: 1rem;
-        line-height: 1.4;
-    }
-    #quizSelectionBlock .service-price {
-        text-align: left;
-        font-size: 0.9rem;
-        margin-top: 4px;
-    }
-    #quizSelectionBlock .service-remove {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-    }
+/* Анимация появления такая же, как у корзины */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 /* ==================================================================
@@ -1966,4 +2013,19 @@ footer a:hover {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* ==================================================================
+   ДОПОЛНИТЕЛЬНО: СКРЫВАЕМ БЛОК ВЫБРАННОЙ УСЛУГИ, ЕСЛИ ОН ПУСТ
+   ================================================================== */
+#quizSelectionBlock:empty {
+    display: none !important;
+}
+#quizSelectionBlock .service-name:empty,
+#quizSelectionBlock .service-price:empty {
+    display: none; /* не влияет на сам блок, но на всякий случай */
+}
+/* Если название пустое, то и весь блок не нужен (но лучше скрыть блок) */
+#quizSelectionBlock:has(.service-name:empty) {
+    display: none !important;
 }
