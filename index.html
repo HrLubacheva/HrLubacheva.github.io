@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="format-detection" content="telephone=no">
     <meta name="theme-color" content="#2D6A9F">
-    <title>Виктория Любачева | Карьерный консультант · HR-эксперт · Бизнес-тренер</title>
+    <title>Виктория Любачева | Карьерный консультант · HR-эксперт · Бизнес-тренер · Психолог · Коуч</title>
 
     <!-- Основные SEO-теги -->
     <meta name="description"
           content="Карьерный консультант, HR-эксперт, бизнес-тренер. Помощь в трудоустройстве, подборе персонала, тренинги. Запись на бесплатную диагностику.">
-    <meta name="keywords" content="карьерный консультант, HR, подбор персонала, тренинг, резюме, консультация, коучинг, профориентация, онбординг, хэдхантинг, hr-эксперт, бизнес-тренер, психолог, карьерный рост, трудоустройство, рекрутинг">
+    <meta name="keywords"
+          content="карьерный консультант, HR, подбор персонала, тренинг, резюме, консультация, коучинг, профориентация, онбординг, хэдхантинг, hr-эксперт, бизнес-тренер, психолог, карьерный рост, трудоустройство, рекрутинг">
     <meta name="author" content="Виктория Любачева">
     <meta name="robots" content="index, follow">
     <meta name="revisit-after" content="7 days">
@@ -29,7 +30,8 @@
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Виктория Любачева | Карьерный консультант · HR-эксперт · Бизнес-тренер">
-    <meta name="twitter:description" content="Помогаю компаниям находить и развивать персонал. Кандидатам — найти работу, построить карьеру и повысить доход. Бесплатная диагностика.">
+    <meta name="twitter:description"
+          content="Помогаю компаниям находить и развивать персонал. Кандидатам — найти работу, построить карьеру и повысить доход. Бесплатная диагностика.">
     <meta name="twitter:image" content="https://hrlubacheva.github.io/assets/images/img_1.jpg">
 
     <link rel="canonical" href="https://hrlubacheva.github.io/">
@@ -70,7 +72,7 @@
 
     <!-- Динамическая загрузка счётчиков аналитики -->
     <script>
-        (function() {
+        (function () {
             function loadAnalytics() {
                 if (!window.APP_CONFIG) {
                     setTimeout(loadAnalytics, 50);
@@ -79,16 +81,22 @@
                 const ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
                 const gaId = window.APP_CONFIG.GOOGLE_ANALYTICS_ID;
                 if (ymId) {
-                    (function(m,e,t,r,i,k,a){
-                        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-                        m[i].l=1*new Date();
+                    (function (m, e, t, r, i, k, a) {
+                        m[i] = m[i] || function () {
+                            (m[i].a = m[i].a || []).push(arguments)
+                        };
+                        m[i].l = 1 * new Date();
                         for (var j = 0; j < document.scripts.length; j++) {
-                            if (document.scripts[j].src === r) { return; }
+                            if (document.scripts[j].src === r) {
+                                return;
+                            }
                         }
-                        k=e.createElement(t), a=e.getElementsByTagName(t)[0];
-                        k.async=1; k.src=r; a.parentNode.insertBefore(k,a);
+                        k = e.createElement(t), a = e.getElementsByTagName(t)[0];
+                        k.async = 1;
+                        k.src = r;
+                        a.parentNode.insertBefore(k, a);
                     })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=' + ymId, 'ym');
-                    ym(ymId, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true });
+                    ym(ymId, 'init', {clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true});
                     var noscript = document.createElement('noscript');
                     var div = document.createElement('div');
                     var img = document.createElement('img');
@@ -106,13 +114,22 @@
                     gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
                     document.head.appendChild(gtagScript);
                     window.dataLayer = window.dataLayer || [];
-                    function gtag(){ dataLayer.push(arguments); }
+
+                    function gtag() {
+                        dataLayer.push(arguments);
+                    }
+
                     window.gtag = gtag;
                     gtag('js', new Date());
-                    gtag('consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied', wait_for_update: 500 });
+                    gtag('consent', 'default', {
+                        ad_storage: 'denied',
+                        analytics_storage: 'denied',
+                        wait_for_update: 500
+                    });
                     gtag('config', gaId);
                 }
             }
+
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', loadAnalytics);
             } else {
@@ -3365,7 +3382,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 24.05.2026 17:42:34
+                Версия: 24.05.2026 20:18:48
             </div>
         </div>
     </div>
