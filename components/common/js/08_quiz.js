@@ -85,6 +85,7 @@
         if (!block) return;
         const nameSpan = block.querySelector('.service-name');
         const priceSpan = block.querySelector('.service-price');
+
         if (variantText && variantText.trim() !== '') {
             if (nameSpan) nameSpan.innerHTML = window.escapeHtml(variantText);
             if (priceSpan && variantPrice && variantPrice !== '') {
@@ -92,14 +93,16 @@
             } else if (priceSpan) {
                 priceSpan.innerHTML = '';
             }
+            // Показываем блок
             block.style.display = '';
-            // Устанавливаем display в зависимости от ширины экрана (чтобы не ломался грид/флекс)
+            // Устанавливаем правильный тип отображения в зависимости от ширины экрана
             if (window.innerWidth <= 768) {
                 block.style.display = 'flex';
             } else {
                 block.style.display = 'grid';
             }
         } else {
+            // Скрываем блок
             block.style.display = 'none';
             if (nameSpan) nameSpan.innerHTML = '';
             if (priceSpan) priceSpan.innerHTML = '';
