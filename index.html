@@ -565,13 +565,26 @@ body {
 /* ==================================================================
    КАРТОЧКИ И СЕТКИ (ОБЩИЕ)
    ================================================================== */
-.roles-grid, .services-flex, .process-grid {
+.roles-grid, .process-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 30px;
     margin: 40px 0;
 }
 
+.services-flex {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin: 40px 0;
+}
+
+@media (max-width: 768px) {
+    .services-flex {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
 .role-card, .service-card, .process-card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -3018,7 +3031,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 24.05.2026 11:06:23
+                Версия: 24.05.2026 11:11:20
             </div>
         </div>
     </div>
