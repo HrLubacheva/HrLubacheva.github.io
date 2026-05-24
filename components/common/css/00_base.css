@@ -1744,3 +1744,50 @@ body.modal-open {
         gap: 30px !important;
     }
 }
+
+/* ========== УЛУЧШЕННЫЙ КОНТРАСТ НА ТЁМНОМ ФОНЕ ========== */
+.section-dark {
+    background: var(--dark-bg);
+    color: #e2e8f0; /* вместо var(--text-light) для лучшего контраста */
+}
+.section-dark .section-title {
+    color: white;
+}
+.section-dark a {
+    color: #90cdf4; /* светлый голубой для ссылок на тёмном фоне */
+}
+.section-dark a:hover {
+    color: white;
+}
+footer {
+    background: var(--dark-bg);
+    color: #cbd5e0;
+}
+footer a {
+    color: #90cdf4;
+}
+footer a:hover {
+    color: white;
+}
+
+/* ========== A11Y: УЛУЧШЕННЫЙ ФОКУС ДЛЯ КНОПОК БЕЗ ТЕКСТА ========== */
+.qty-btn:focus-visible,
+.remove-item:focus-visible,
+#removeQuizSelection:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+
+/* ========== ПРОИЗВОДИТЕЛЬНОСТЬ: ОПТИМИЗАЦИЯ АНИМАЦИЙ ========== */
+@media (prefers-reduced-motion: reduce) {
+    .qty-btn,
+    .remove-item,
+    .quiz-option,
+    .btn-primary,
+    .btn-secondary {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+}

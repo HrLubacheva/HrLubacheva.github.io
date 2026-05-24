@@ -13,7 +13,4 @@ window.APP_CONFIG = {
     // ID счётчиков аналитики
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
-
-    ADMIN_EMAIL: 'kranerviktit@gmail.com'
 };
-

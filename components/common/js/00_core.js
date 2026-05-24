@@ -143,7 +143,6 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
-// ========== КАСТОМНЫЕ ТОСТЫ (с a11y) ==========
 function showToast(message, type = 'error') {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -155,7 +154,11 @@ function showToast(message, type = 'error') {
     if (type === 'error') icon = '❌';
     toast.innerHTML = `${icon} ${message}`;
     toast.setAttribute('role', 'status');
-    toast.setAttribute('aria-live', 'polite');
+    if (type === 'error') {
+        toast.setAttribute('aria-live', 'assertive');
+    } else {
+        toast.setAttribute('aria-live', 'polite');
+    }
     document.body.appendChild(toast);
     setTimeout(() => {
         toast.style.opacity = '0';
@@ -171,7 +174,41 @@ if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
 
-function sendDataToSheet(data) {
+// ========== УНИВЕРСАЛЬНАЯ ОТПРАВКА POST С ПОВТОРНЫМИ ПОПЫТКАМИ ==========
+async function postWithRetry(url, data, retries = 3, baseDelay = 2000) {
+    let lastError = null;
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            const body = new URLSearchParams(data);
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body
+            });
+            if (response.ok) {
+                const result = await response.json();
+                if (result && result.result === 'ok') {
+                    return true;
+                } else {
+                    throw new Error(result?.message || 'Сервер вернул ошибку');
+                }
+            } else {
+                throw new Error(`HTTP ${response.status}`);
+            }
+        } catch (err) {
+            lastError = err;
+            console.warn(`Попытка ${attempt} из ${retries} не удалась:`, err);
+            if (attempt < retries) {
+                await new Promise(resolve => setTimeout(resolve, baseDelay * Math.pow(2, attempt - 1)));
+            }
+        }
+    }
+    throw lastError;
+}
+window.postWithRetry = postWithRetry;
+
+// ========== ОТПРАВКА ДАННЫХ В GOOGLE SHEETS ==========
+async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
     if (typeof window.getCartData === 'function') {
@@ -179,13 +216,17 @@ function sendDataToSheet(data) {
     } else {
         data.cart = '';
     }
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(data)
-    }).catch(err => logError('❌ Ошибка отправки в Google Sheets:', err));
+    return postWithRetry(SCRIPT_URL, data, retries, delay);
 }
+
+function sendDataToSheet(data) {
+    sendDataToSheetWithRetry(data).catch(err => {
+        logError('❌ Ошибка отправки в Google Sheets:', err);
+        showErrorToast('Ошибка связи. Попробуйте ещё раз или свяжитесь с нами напрямую.');
+    });
+}
+window.sendDataToSheet = sendDataToSheet;
+window.sendDataToSheetWithRetry = sendDataToSheetWithRetry;
 
 function formatPhoneNumber(input) {
     let digits = input.replace(/\D/g, '');
@@ -338,7 +379,6 @@ window.getGeoData = getGeoData;
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
-window.sendDataToSheet = sendDataToSheet;
 window.formatPhoneNumber = formatPhoneNumber;
 window.fetchWithRetry = fetchWithRetry;
 window.fetchTextWithRetry = fetchTextWithRetry;
@@ -352,3 +392,90 @@ window.showToast = showToast;
 window.showErrorToast = showErrorToast;
 window.showSuccessToast = showSuccessToast;
 window.showWarningToast = showWarningToast;
+
+// ========== ЕДИНЫЙ МОДУЛЬ ОТПРАВКИ ФОРМ ==========
+window.submitForm = async function(formId, formType, getAdditionalData = null) {
+    const form = document.getElementById(formId);
+    if (!form) return false;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.innerText : 'Отправить';
+
+    try {
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            submitBtn.innerText = 'Отправка...';
+        }
+
+        const name = form.querySelector('[name="name"]')?.value.trim() || '';
+        const phone = form.querySelector('[name="phone"]')?.value.trim() || '';
+        const email = form.querySelector('[name="email"]')?.value.trim() || '';
+        const comment = form.querySelector('[name="comment"]')?.value.trim() || '';
+        const consent = form.querySelector('[name="consent"]')?.checked || false;
+
+        let additional = {};
+        if (getAdditionalData) {
+            additional = await getAdditionalData(form);
+        }
+
+        if (!phone && formType !== 'Запрос материалов') {
+            showErrorToast('Введите номер телефона');
+            throw new Error('Телефон обязателен');
+        }
+        if (phone) {
+            let digits = phone.replace(/\D/g, '');
+            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+            if (!digits.startsWith('7')) digits = '7' + digits;
+            if (digits.length !== 11) {
+                showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
+                throw new Error('Неверный номер');
+            }
+        }
+
+        const geo = await window.getGeoData();
+        const formData = {
+            formType: formType,
+            name: name || ' ',
+            phone: phone ? phone.replace(/\D/g, '') : ' ',
+            email: email || ' ',
+            comment: comment || 'Не указано',
+            consent: consent ? 'Да' : 'Нет',
+            timeOnSite: window.getTimeOnSite(),
+            visitStats: window.getVisitStatsText(),
+            utm: window.getUTMText(),
+            device: window.getDeviceText(),
+            page: window.getPageText(),
+            geo: geo.geoText,
+            userId: window.getOrCreateLocalUserId(),
+            ...additional
+        };
+
+        await window.sendDataToSheetWithRetry(formData);
+        showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
+        form.reset();
+        return true;
+    } catch (err) {
+        console.error('Ошибка отправки:', err);
+        showErrorToast('Не удалось отправить заявку. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
+        return false;
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+            submitBtn.innerText = originalBtnText;
+        }
+    }
+};
+
+window.getQuizDataFromForm = function(form) {
+    return {
+        chosenVariant: form.querySelector('[name="chosenVariant"]')?.value || '',
+        chosenVariantPrice: form.querySelector('[name="chosenVariantPrice"]')?.value || '',
+        originalChosenVariant: form.querySelector('[name="originalChosenVariant"]')?.value || '',
+        originalChosenVariantPrice: form.querySelector('[name="originalChosenVariantPrice"]')?.value || '',
+        recommendedVariants: form.querySelector('[name="recommendedVariants"]')?.value || '',
+        quizAnswersRaw: form.querySelector('[name="quizAnswersRaw"]')?.value || '',
+        cart: window.getCartData ? window.getCartData() : ''
+    };
+};

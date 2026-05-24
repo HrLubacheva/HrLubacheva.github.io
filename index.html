@@ -1867,6 +1867,53 @@ body.modal-open {
         gap: 30px !important;
     }
 }
+
+/* ========== УЛУЧШЕННЫЙ КОНТРАСТ НА ТЁМНОМ ФОНЕ ========== */
+.section-dark {
+    background: var(--dark-bg);
+    color: #e2e8f0; /* вместо var(--text-light) для лучшего контраста */
+}
+.section-dark .section-title {
+    color: white;
+}
+.section-dark a {
+    color: #90cdf4; /* светлый голубой для ссылок на тёмном фоне */
+}
+.section-dark a:hover {
+    color: white;
+}
+footer {
+    background: var(--dark-bg);
+    color: #cbd5e0;
+}
+footer a {
+    color: #90cdf4;
+}
+footer a:hover {
+    color: white;
+}
+
+/* ========== A11Y: УЛУЧШЕННЫЙ ФОКУС ДЛЯ КНОПОК БЕЗ ТЕКСТА ========== */
+.qty-btn:focus-visible,
+.remove-item:focus-visible,
+#removeQuizSelection:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+
+/* ========== ПРОИЗВОДИТЕЛЬНОСТЬ: ОПТИМИЗАЦИЯ АНИМАЦИЙ ========== */
+@media (prefers-reduced-motion: reduce) {
+    .qty-btn,
+    .remove-item,
+    .quiz-option,
+    .btn-primary,
+    .btn-secondary {
+        transition: none !important;
+        animation: none !important;
+        transform: none !important;
+    }
+}
 </style>
 </head>
 <body>
@@ -2113,7 +2160,6 @@ body.modal-open {
                 </div>
             </div>
         </div>
-        <!-- Блок тренинга с классом training-grid для 3 колонок -->
         <div class="training-grid">
             <h3 class="process-title fade-up">🎓 Тренинг «Продай себя дорого»</h3>
             <div class="process-grid">
@@ -2383,7 +2429,7 @@ body.modal-open {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 24.05.2026 03:43:06
+                Версия: 24.05.2026 04:21:16
             </div>
         </div>
     </div>
@@ -2431,11 +2477,7 @@ window.APP_CONFIG = {
     // ID счётчиков аналитики
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
-
-    ADMIN_EMAIL: 'kranerviktit@gmail.com'
 };
-
-
 // ========== ОБЩИЕ УТИЛИТЫ ==========
 function escapeHtml(str) {
     if (!str) return '';
@@ -2581,7 +2623,6 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
-// ========== КАСТОМНЫЕ ТОСТЫ (с a11y) ==========
 function showToast(message, type = 'error') {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -2593,7 +2634,11 @@ function showToast(message, type = 'error') {
     if (type === 'error') icon = '❌';
     toast.innerHTML = `${icon} ${message}`;
     toast.setAttribute('role', 'status');
-    toast.setAttribute('aria-live', 'polite');
+    if (type === 'error') {
+        toast.setAttribute('aria-live', 'assertive');
+    } else {
+        toast.setAttribute('aria-live', 'polite');
+    }
     document.body.appendChild(toast);
     setTimeout(() => {
         toast.style.opacity = '0';
@@ -2609,7 +2654,41 @@ if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
 
-function sendDataToSheet(data) {
+// ========== УНИВЕРСАЛЬНАЯ ОТПРАВКА POST С ПОВТОРНЫМИ ПОПЫТКАМИ ==========
+async function postWithRetry(url, data, retries = 3, baseDelay = 2000) {
+    let lastError = null;
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            const body = new URLSearchParams(data);
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body
+            });
+            if (response.ok) {
+                const result = await response.json();
+                if (result && result.result === 'ok') {
+                    return true;
+                } else {
+                    throw new Error(result?.message || 'Сервер вернул ошибку');
+                }
+            } else {
+                throw new Error(`HTTP ${response.status}`);
+            }
+        } catch (err) {
+            lastError = err;
+            console.warn(`Попытка ${attempt} из ${retries} не удалась:`, err);
+            if (attempt < retries) {
+                await new Promise(resolve => setTimeout(resolve, baseDelay * Math.pow(2, attempt - 1)));
+            }
+        }
+    }
+    throw lastError;
+}
+window.postWithRetry = postWithRetry;
+
+// ========== ОТПРАВКА ДАННЫХ В GOOGLE SHEETS ==========
+async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
     if (typeof window.getCartData === 'function') {
@@ -2617,13 +2696,17 @@ function sendDataToSheet(data) {
     } else {
         data.cart = '';
     }
-    fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(data)
-    }).catch(err => logError('❌ Ошибка отправки в Google Sheets:', err));
+    return postWithRetry(SCRIPT_URL, data, retries, delay);
 }
+
+function sendDataToSheet(data) {
+    sendDataToSheetWithRetry(data).catch(err => {
+        logError('❌ Ошибка отправки в Google Sheets:', err);
+        showErrorToast('Ошибка связи. Попробуйте ещё раз или свяжитесь с нами напрямую.');
+    });
+}
+window.sendDataToSheet = sendDataToSheet;
+window.sendDataToSheetWithRetry = sendDataToSheetWithRetry;
 
 function formatPhoneNumber(input) {
     let digits = input.replace(/\D/g, '');
@@ -2776,7 +2859,6 @@ window.getGeoData = getGeoData;
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
-window.sendDataToSheet = sendDataToSheet;
 window.formatPhoneNumber = formatPhoneNumber;
 window.fetchWithRetry = fetchWithRetry;
 window.fetchTextWithRetry = fetchTextWithRetry;
@@ -2790,6 +2872,93 @@ window.showToast = showToast;
 window.showErrorToast = showErrorToast;
 window.showSuccessToast = showSuccessToast;
 window.showWarningToast = showWarningToast;
+
+// ========== ЕДИНЫЙ МОДУЛЬ ОТПРАВКИ ФОРМ ==========
+window.submitForm = async function(formId, formType, getAdditionalData = null) {
+    const form = document.getElementById(formId);
+    if (!form) return false;
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.innerText : 'Отправить';
+
+    try {
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('loading');
+            submitBtn.innerText = 'Отправка...';
+        }
+
+        const name = form.querySelector('[name="name"]')?.value.trim() || '';
+        const phone = form.querySelector('[name="phone"]')?.value.trim() || '';
+        const email = form.querySelector('[name="email"]')?.value.trim() || '';
+        const comment = form.querySelector('[name="comment"]')?.value.trim() || '';
+        const consent = form.querySelector('[name="consent"]')?.checked || false;
+
+        let additional = {};
+        if (getAdditionalData) {
+            additional = await getAdditionalData(form);
+        }
+
+        if (!phone && formType !== 'Запрос материалов') {
+            showErrorToast('Введите номер телефона');
+            throw new Error('Телефон обязателен');
+        }
+        if (phone) {
+            let digits = phone.replace(/\D/g, '');
+            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+            if (!digits.startsWith('7')) digits = '7' + digits;
+            if (digits.length !== 11) {
+                showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
+                throw new Error('Неверный номер');
+            }
+        }
+
+        const geo = await window.getGeoData();
+        const formData = {
+            formType: formType,
+            name: name || ' ',
+            phone: phone ? phone.replace(/\D/g, '') : ' ',
+            email: email || ' ',
+            comment: comment || 'Не указано',
+            consent: consent ? 'Да' : 'Нет',
+            timeOnSite: window.getTimeOnSite(),
+            visitStats: window.getVisitStatsText(),
+            utm: window.getUTMText(),
+            device: window.getDeviceText(),
+            page: window.getPageText(),
+            geo: geo.geoText,
+            userId: window.getOrCreateLocalUserId(),
+            ...additional
+        };
+
+        await window.sendDataToSheetWithRetry(formData);
+        showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
+        form.reset();
+        return true;
+    } catch (err) {
+        console.error('Ошибка отправки:', err);
+        showErrorToast('Не удалось отправить заявку. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
+        return false;
+    } finally {
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('loading');
+            submitBtn.innerText = originalBtnText;
+        }
+    }
+};
+
+window.getQuizDataFromForm = function(form) {
+    return {
+        chosenVariant: form.querySelector('[name="chosenVariant"]')?.value || '',
+        chosenVariantPrice: form.querySelector('[name="chosenVariantPrice"]')?.value || '',
+        originalChosenVariant: form.querySelector('[name="originalChosenVariant"]')?.value || '',
+        originalChosenVariantPrice: form.querySelector('[name="originalChosenVariantPrice"]')?.value || '',
+        recommendedVariants: form.querySelector('[name="recommendedVariants"]')?.value || '',
+        quizAnswersRaw: form.querySelector('[name="quizAnswersRaw"]')?.value || '',
+        cart: window.getCartData ? window.getCartData() : ''
+    };
+};
 function initAnimations() {
     const elements = document.querySelectorAll('.fade-up');
     if (!elements.length) return;
@@ -2809,7 +2978,6 @@ function initAnimations() {
 }
 window.initAnimations = initAnimations;
 function initCallbackForm() {
-    // Форматирование телефона
     function formatPhoneField(inputElement) {
         let rawValue = inputElement.value.replace(/\D/g, '');
         if (typeof formatPhoneNumber === 'function') {
@@ -2828,181 +2996,33 @@ function initCallbackForm() {
 
     const callbackPhone = document.getElementById('callbackPhone');
     if (callbackPhone) callbackPhone.addEventListener('input', function() { formatPhoneField(this); });
-
     const quickPhone = document.getElementById('quickPhone');
     if (quickPhone) quickPhone.addEventListener('input', function() { formatPhoneField(this); });
 
-    // ----- ОСНОВНАЯ ФОРМА (Обратный звонок) -----
     const callbackForm = document.getElementById('callbackForm');
-    let isSubmitting = false;
     if (callbackForm) {
-        callbackForm.addEventListener('submit', function(e) {
+        callbackForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            if (isSubmitting) return;
-            const consentCheck = document.getElementById('callbackConsent');
-            if (!consentCheck || !consentCheck.checked) {
-                showErrorToast('Подтвердите согласие на обработку данных');
-                return;
-            }
-            const submitBtn = callbackForm.querySelector('button[type="submit"]');
-            submitBtn.classList.add('loading');
-            submitBtn.disabled = true;
-            isSubmitting = true;
-
-            let name = document.getElementById('callbackName').value.trim();
-            let phoneField = document.getElementById('callbackPhone').value.trim();
-            const emailField = document.getElementById('callbackEmail')?.value.trim() || '';
-            let comment = document.getElementById('callbackComment').value.trim();
-
-            if (name === '') name = 'Не указано';
-            if (!phoneField) {
-                showErrorToast('Заполните телефон');
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
-                isSubmitting = false;
-                return;
-            }
-            let digits = phoneField.replace(/\D/g, '');
-            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-            if (!digits.startsWith('7')) digits = '7' + digits;
-            if (digits.length !== 11) {
-                showErrorToast('Некорректный номер телефона');
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
-                isSubmitting = false;
-                return;
-            }
-            const formattedForDisplay = '+7 ' + digits.slice(1,4) + ' ' + digits.slice(4,7) + ' ' + digits.slice(7,9) + ' ' + digits.slice(9);
-
-            // Читаем данные квиза из скрытых полей формы обратной связи
-            const chosenVariant = document.querySelector('#callbackForm [name="chosenVariant"]')?.value || '';
-            const chosenVariantPrice = document.querySelector('#callbackForm [name="chosenVariantPrice"]')?.value || '';
-            const originalChosenVariant = document.querySelector('#callbackForm [name="originalChosenVariant"]')?.value || '';
-            const originalChosenVariantPrice = document.querySelector('#callbackForm [name="originalChosenVariantPrice"]')?.value || '';
-            const recommendedVariants = document.querySelector('#callbackForm [name="recommendedVariants"]')?.value || '';
-            const quizAnswersRaw = document.querySelector('#callbackForm [name="quizAnswersRaw"]')?.value || '';
-
-            if (comment === '') comment = 'Не указано';
-
-            const sendForm = async (userId) => {
-                const geo = await window.getGeoData();
-                const formData = {
-                    formType: 'Обратный звонок',
-                    name: name,
-                    phone: digits,
-                    email: emailField,
-                    comment: comment,
-                    consent: true,
-                    quizAnswersRaw: quizAnswersRaw,
-                    recommendedVariants: recommendedVariants,
-                    chosenVariant: chosenVariant,
-                    chosenVariantPrice: chosenVariantPrice,
-                    originalChosenVariant: originalChosenVariant,
-                    originalChosenVariantPrice: originalChosenVariantPrice,
-                    cart: '',
-                    timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-',
-                    visitStats: typeof window.getVisitStatsText === 'function' ? window.getVisitStatsText() : '-',
-                    utm: typeof window.getUTMText === 'function' ? window.getUTMText() : '-',
-                    device: typeof window.getDeviceText === 'function' ? window.getDeviceText() : '-',
-                    page: typeof window.getPageText === 'function' ? window.getPageText() : '-',
-                    geo: geo.geoText,
-                    userId: userId
-                };
-                if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
-                showSuccessToast(`Спасибо, ${name}! Мы перезвоним на ${formattedForDisplay}`);
-                callbackForm.reset();
-                submitBtn.classList.remove('loading');
-                submitBtn.disabled = false;
-                isSubmitting = false;
-                // Очистить скрытые поля
-                const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
-                hiddenFields.forEach(field => {
-                    const input = document.querySelector(`#callbackForm [name="${field}"]`);
-                    if (input) input.value = '';
-                });
-                // Сбросить блок выбора квиза
+            await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
                 const quizBlock = document.getElementById('quizSelectionBlock');
                 if (quizBlock) quizBlock.style.display = 'none';
-            };
-            const uid = (typeof currentUserId !== 'undefined' && currentUserId) ? currentUserId : (typeof getOrCreateLocalUserId === 'function' ? getOrCreateLocalUserId() : 'unknown');
-            sendForm(uid);
+                return window.getQuizDataFromForm(form);
+            });
         });
     }
 
-    // ----- БЫСТРЫЙ ЗАКАЗ (под калькулятором) -----
     const quickForm = document.getElementById('quickOrderForm');
     if (quickForm) {
         quickForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const cartData = typeof window.getCartData === 'function' ? window.getCartData() : '';
+            const cartData = window.getCartData ? window.getCartData() : '';
             if (!cartData || cartData === 'Корзина пуста') {
                 showErrorToast('Добавьте хотя бы одну услугу в корзину перед заказом');
                 return;
             }
-            const phoneInput = document.getElementById('quickPhone');
-            const nameInput = document.getElementById('quickName');
-            const consentCheck = document.getElementById('quickConsent');
-            if (!consentCheck.checked) {
-                showErrorToast('Подтвердите согласие на обработку данных');
-                return;
-            }
-            let phone = phoneInput.value.trim();
-            if (!phone) {
-                showErrorToast('Введите номер телефона');
-                return;
-            }
-            let digits = phone.replace(/\D/g, '');
-            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-            if (!digits.startsWith('7')) digits = '7' + digits;
-            if (digits.length !== 11) {
-                showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
-                return;
-            }
-            let customerName = nameInput ? nameInput.value.trim() : '';
-            if (customerName === '') customerName = '';
-
-            // Читаем данные квиза из скрытых полей формы быстрого заказа
-            const chosenVariant = document.querySelector('#quickOrderForm [name="chosenVariant"]')?.value || '';
-            const chosenVariantPrice = document.querySelector('#quickOrderForm [name="chosenVariantPrice"]')?.value || '';
-            const originalChosenVariant = document.querySelector('#quickOrderForm [name="originalChosenVariant"]')?.value || '';
-            const originalChosenVariantPrice = document.querySelector('#quickOrderForm [name="originalChosenVariantPrice"]')?.value || '';
-            const recommendedVariants = document.querySelector('#quickOrderForm [name="recommendedVariants"]')?.value || '';
-            const quizAnswersRaw = document.querySelector('#quickOrderForm [name="quizAnswersRaw"]')?.value || '';
-
-            const geo = await window.getGeoData();
-            const formData = {
-                formType: 'Быстрый заказ',
-                name: customerName,
-                phone: digits,
-                email: '',
-                comment: '',
-                consent: true,
-                quizAnswersRaw: quizAnswersRaw,
-                recommendedVariants: recommendedVariants,
-                chosenVariant: chosenVariant,
-                chosenVariantPrice: chosenVariantPrice,
-                originalChosenVariant: originalChosenVariant,
-                originalChosenVariantPrice: originalChosenVariantPrice,
-                cart: cartData,
-                timeOnSite: typeof window.getTimeOnSite === 'function' ? window.getTimeOnSite() : '-',
-                visitStats: typeof window.getVisitStatsText === 'function' ? window.getVisitStatsText() : '-',
-                utm: typeof window.getUTMText === 'function' ? window.getUTMText() : '-',
-                device: typeof window.getDeviceText === 'function' ? window.getDeviceText() : '-',
-                page: typeof window.getPageText === 'function' ? window.getPageText() : '-',
-                geo: geo.geoText,
-                userId: typeof getOrCreateLocalUserId === 'function' ? getOrCreateLocalUserId() : ''
-            };
-            if (typeof sendDataToSheet === 'function') sendDataToSheet(formData);
-            showSuccessToast('Спасибо! Я перезвоню вам в ближайшее время.');
-            quickForm.reset();
-            consentCheck.checked = false;
-            if (phoneInput) phoneInput.value = '';
-            if (nameInput) nameInput.value = '';
-            // Очистить скрытые поля квиза
-            const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
-            hiddenFields.forEach(field => {
-                const input = document.querySelector(`#quickOrderForm [name="${field}"]`);
-                if (input) input.value = '';
+            await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
+                const quizData = window.getQuizDataFromForm(form);
+                return { ...quizData, cart: cartData };
             });
         });
     }
@@ -3028,20 +3048,15 @@ let lastFocusedElement = null;
 
 function showModal(modal) {
     if (!modal) return;
-    // Сохраняем элемент, который открыл модалку
     lastFocusedElement = document.activeElement;
-
     modal.style.display = 'flex';
     modal.offsetHeight;
     modal.classList.add('show');
     document.body.classList.add('modal-open');
-
-    // Перемещаем фокус на первый интерактивный элемент внутри модалки
     const focusable = modal.querySelectorAll('button, a, input, textarea, select, [tabindex]:not([tabindex="-1"])');
     if (focusable.length) {
         focusable[0].focus();
     } else {
-        // Если нет фокусируемых элементов, фокусируемся на самой модалке (не рекомендуется, но запасной вариант)
         modal.setAttribute('tabindex', '-1');
         modal.focus();
     }
@@ -3055,8 +3070,6 @@ function hideModal(modal) {
         if (!modal.classList.contains('show')) modal.style.display = 'none';
         modal.removeEventListener('transitionend', onEnd);
     }, { once: true });
-
-    // Возвращаем фокус на элемент, который открывал модалку
     if (lastFocusedElement && lastFocusedElement.focus) {
         lastFocusedElement.focus();
         lastFocusedElement = null;
@@ -3069,10 +3082,7 @@ function initModal() {
     const closeModalBtn = document.getElementById('closeModalBtn');
     const sendBtn = document.getElementById('sendMaterialsBtn');
 
-    if (openModal) {
-        openModal.addEventListener('click', () => showModal(modal));
-        // Для a11y: делаем кнопку открытия доступной через клавиатуру (уже есть)
-    }
+    if (openModal) openModal.addEventListener('click', () => showModal(modal));
     if (closeModalBtn) closeModalBtn.addEventListener('click', () => hideModal(modal));
 
     if (sendBtn) {
@@ -3104,7 +3114,6 @@ function initModal() {
                 const closeAfterBtn = document.getElementById('closeAfterSendBtn');
                 if (closeAfterBtn) {
                     closeAfterBtn.addEventListener('click', () => hideModal(modal));
-                    // После замены содержимого фокусируемся на новой кнопке
                     setTimeout(() => closeAfterBtn.focus(), 50);
                 }
             } catch (err) {
@@ -3474,11 +3483,11 @@ function renderCart() {
             <div class="service-name">${escapeHtml(item.name)}</div>
             <div class="service-price">${item.price > 0 ? (item.price * item.qty).toLocaleString() + ' ₽' : 'по запросу'}</div>
             <div class="service-qty-control">
-                <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
+                <button class="qty-btn qty-minus" data-idx="${idx}" aria-label="Уменьшить количество">−</button>
                 <span class="qty-value">${item.qty}</span>
-                <button class="qty-btn qty-plus" data-idx="${idx}">+</button>
+                <button class="qty-btn qty-plus" data-idx="${idx}" aria-label="Увеличить количество">+</button>
             </div>
-            <div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>
+            <div class="service-remove"><button class="remove-item" data-idx="${idx}" aria-label="Удалить услугу">✖</button></div>
         `;
         container.appendChild(div);
     });
@@ -3529,7 +3538,6 @@ function addToCart(cat, selectId, qtyId) {
     const name = fullText.replace(/ — .*/, '');
     let quantity = parseInt(document.getElementById(qtyId).value);
     if (isNaN(quantity) || quantity < 1) quantity = 1;
-    // Все бизнес-услуги (обе вкладки) попадают в общую категорию 'business'
     let displayCat = cat;
     if (cat === 'business_recruitment' || cat === 'business_retention') {
         displayCat = 'business';
@@ -3985,7 +3993,10 @@ window.PRICE_CATEGORY = { base: [], standard: [], premium: [] };
         toast.className = 'custom-toast-success';
         toast.innerHTML = `✅ ${msg}`;
         document.body.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
     }
 
     function showWarningToast(msg) {
@@ -3993,7 +4004,10 @@ window.PRICE_CATEGORY = { base: [], standard: [], premium: [] };
         toast.className = 'custom-toast-warning';
         toast.innerHTML = `🔔 ${msg}`;
         document.body.appendChild(toast);
-        setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 2500);
     }
 
     function getPrice(serviceName) {
@@ -4030,77 +4044,91 @@ window.PRICE_CATEGORY = { base: [], standard: [], premium: [] };
         });
     }
 
-function updateSelectionBlock(variantText, variantPrice) {
-    const block = document.getElementById('quizSelectionBlock');
-    if (!block) return;
-    const nameSpan = block.querySelector('.service-name');
-    const priceSpan = block.querySelector('.service-price');
-    if (variantText && variantText !== '') {
-        if (nameSpan) nameSpan.innerHTML = window.escapeHtml(variantText);
-        // Если цена не указана (пусто или null), не показываем цену вообще
-        if (variantPrice && variantPrice !== '') {
-            if (priceSpan) priceSpan.innerHTML = variantPrice;
+    function updateSelectionBlock(variantText, variantPrice) {
+        const block = document.getElementById('quizSelectionBlock');
+        if (!block) return;
+        const nameSpan = block.querySelector('.service-name');
+        const priceSpan = block.querySelector('.service-price');
+        if (variantText && variantText !== '') {
+            if (nameSpan) nameSpan.innerHTML = window.escapeHtml(variantText);
+            if (variantPrice && variantPrice !== '') {
+                if (priceSpan) priceSpan.innerHTML = variantPrice;
+            } else {
+                if (priceSpan) priceSpan.innerHTML = '';
+            }
+            block.style.display = 'grid';
+            const forms = ['callbackForm', 'quickOrderForm'];
+            forms.forEach(formId => {
+                const form = document.getElementById(formId);
+                if (!form) return;
+                const chosenField = form.querySelector('[name="chosenVariant"]');
+                if (chosenField) chosenField.value = variantText;
+                const priceField = form.querySelector('[name="chosenVariantPrice"]');
+                if (priceField) priceField.value = variantPrice || '';
+            });
         } else {
+            block.style.display = 'none';
+            if (nameSpan) nameSpan.innerHTML = '';
             if (priceSpan) priceSpan.innerHTML = '';
+            const forms = ['callbackForm', 'quickOrderForm'];
+            forms.forEach(formId => {
+                const form = document.getElementById(formId);
+                if (!form) return;
+                const chosenField = form.querySelector('[name="chosenVariant"]');
+                if (chosenField) chosenField.value = '';
+                const priceField = form.querySelector('[name="chosenVariantPrice"]');
+                if (priceField) priceField.value = '';
+            });
         }
-        block.style.display = 'grid';
-        const forms = ['callbackForm', 'quickOrderForm'];
-        forms.forEach(formId => {
-            const form = document.getElementById(formId);
-            if (!form) return;
-            const chosenField = form.querySelector('[name="chosenVariant"]');
-            if (chosenField) chosenField.value = variantText;
-            const priceField = form.querySelector('[name="chosenVariantPrice"]');
-            if (priceField) priceField.value = variantPrice || '';
-        });
-    } else {
-        block.style.display = 'none';
-        if (nameSpan) nameSpan.innerHTML = '';
-        if (priceSpan) priceSpan.innerHTML = '';
-        const forms = ['callbackForm', 'quickOrderForm'];
-        forms.forEach(formId => {
-            const form = document.getElementById(formId);
-            if (!form) return;
-            const chosenField = form.querySelector('[name="chosenVariant"]');
-            if (chosenField) chosenField.value = '';
-            const priceField = form.querySelector('[name="chosenVariantPrice"]');
-            if (priceField) priceField.value = '';
-        });
     }
+
+// Отправка данных квиза в Google Sheets (без уведомлений) с повторными попытками
+function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, originalText, originalPrice) {
+    const scriptUrl = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
+    if (!scriptUrl) return;
+    const formData = {
+        formType: 'Квиз ответы',
+        quizAnswersRaw: answersStr,
+        recommendedVariants: recommendedStr,
+        chosenVariant: chosenText,
+        chosenVariantPrice: chosenPrice,
+        originalChosenVariant: originalText,
+        originalChosenVariantPrice: originalPrice,
+        userId: typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : ''
+    };
+    if (typeof window.getTimeOnSite === 'function') formData.timeOnSite = window.getTimeOnSite();
+    if (typeof window.getVisitStatsText === 'function') formData.visitStats = window.getVisitStatsText();
+    if (typeof window.getUTMText === 'function') formData.utm = window.getUTMText();
+    if (typeof window.getDeviceText === 'function') formData.device = window.getDeviceText();
+    if (typeof window.getPageText === 'function') formData.page = window.getPageText();
+
+    // postWithRetry всегда определена в 00_core.js
+    window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => console.warn('Ошибка отправки статистики квиза:', err));
 }
-
-    function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, originalText, originalPrice) {
-        const scriptUrl = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
-        if (!scriptUrl) return;
-        const formData = new URLSearchParams();
-        formData.append('formType', 'Квиз ответы');
-        formData.append('quizAnswersRaw', answersStr);
-        formData.append('recommendedVariants', recommendedStr);
-        formData.append('chosenVariant', chosenText);
-        formData.append('chosenVariantPrice', chosenPrice);
-        formData.append('originalChosenVariant', originalText);
-        formData.append('originalChosenVariantPrice', originalPrice);
-        formData.append('userId', typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : '');
-        if (typeof window.getTimeOnSite === 'function') formData.append('timeOnSite', window.getTimeOnSite());
-        if (typeof window.getVisitStatsText === 'function') formData.append('visitStats', window.getVisitStatsText());
-        if (typeof window.getUTMText === 'function') formData.append('utm', window.getUTMText());
-        if (typeof window.getDeviceText === 'function') formData.append('device', window.getDeviceText());
-        if (typeof window.getPageText === 'function') formData.append('page', window.getPageText());
-
-        fetch(scriptUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: formData
-        }).catch(err => console.warn('Ошибка отправки статистики квиза:', err));
-    }
-
-    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] };
-    const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
-    const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
-    const URGENCY_QUESTION = { text: "3. Как быстро нужен результат?", options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"] };
-    const IMPORTANCE_QUESTION = { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"] };
-    const BUDGET_QUESTION = { text: "5. Бюджет на консультацию/подбор?", options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"] };
+    const FIRST_QUESTION = {
+        text: "1. Ваша роль?",
+        options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"]
+    };
+    const LEVEL_JOBSEEKER = {
+        text: "2. Ваш текущий уровень?",
+        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"]
+    };
+    const LEVEL_RECRUITER = {
+        text: "2. Какой уровень сотрудника ищете?",
+        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"]
+    };
+    const URGENCY_QUESTION = {
+        text: "3. Как быстро нужен результат?",
+        options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"]
+    };
+    const IMPORTANCE_QUESTION = {
+        text: "4. Что для вас важнее всего?",
+        options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"]
+    };
+    const BUDGET_QUESTION = {
+        text: "5. Бюджет на консультацию/подбор?",
+        options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"]
+    };
 
     let currentRole = null;
 
@@ -4158,7 +4186,6 @@ function updateSelectionBlock(variantText, variantPrice) {
                         currentRole = selected;
                         updateSecondQuestion(currentRole);
                     }
-                    // Если это последний вопрос, автоматически запускаем анализ
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         isAnalyzing = true;
                         container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
@@ -4181,13 +4208,11 @@ function updateSelectionBlock(variantText, variantPrice) {
                 nextBtn.removeEventListener('click', nextBtn._nextHandler);
                 nextBtn._nextHandler = () => {
                     if (isAnalyzing) return;
-                    // Проверка: если ответ на текущий вопрос не выбран, не переходить
                     if (answers[currentQuestionIndex] === null) {
                         showWarningToast('📌 Выберите вариант ответа, чтобы продолжить');
                         return;
                     }
                     if (currentQuestionIndex === quizQuestions.length - 1) {
-                        // Для последнего вопроса – запуск анализа
                         isAnalyzing = true;
                         container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
                         setTimeout(() => {
@@ -4207,143 +4232,145 @@ function updateSelectionBlock(variantText, variantPrice) {
             const prevBtn = document.getElementById('quizPrevBtn');
             if (prevBtn) {
                 prevBtn.removeEventListener('click', prevBtn._prevHandler);
-                prevBtn._prevHandler = () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuiz(); } };
+                prevBtn._prevHandler = () => {
+                    if (currentQuestionIndex > 0) {
+                        currentQuestionIndex--;
+                        renderQuiz();
+                    }
+                };
                 prevBtn.addEventListener('click', prevBtn._prevHandler);
             }
         }
     }
 
-function renderResult(topTwo) {
-    const container = document.getElementById('quizContainer');
-    if (!container) return;
-    const priceA = getPrice(topTwo.variantA);
-    const priceB = getPrice(topTwo.variantB);
-    const recommendations = `📌 Рекомендация 1: ${topTwo.variantA} (${priceA})\n🎯 Рекомендация 2: ${topTwo.variantB} (${priceB})`;
+    function renderResult(topTwo) {
+        const container = document.getElementById('quizContainer');
+        if (!container) return;
+        const priceA = getPrice(topTwo.variantA);
+        const priceB = getPrice(topTwo.variantB);
+        const recommendations = `📌 Рекомендация 1: ${topTwo.variantA} (${priceA})\n🎯 Рекомендация 2: ${topTwo.variantB} (${priceB})`;
 
-    let html = `
-        <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подобрали оптимальные варианты:</p>
-        <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
-            <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
-                <div style="font-size:32px; margin-bottom:12px;">📌</div>
-                <h4>Рекомендация 1</h4>
-                <p><strong>${window.escapeHtml(topTwo.variantA)}</strong></p>
-                <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
-                <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(topTwo.variantA)}" data-price="${priceA}">Узнать подробнее →</button>
-            </div>
-            <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
-                <div style="font-size:32px; margin-bottom:12px;">🎯</div>
-                <h4>Рекомендация 2</h4>
-                <p><strong>${window.escapeHtml(topTwo.variantB)}</strong></p>
-                <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
-                <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(topTwo.variantB)}" data-price="${priceB}">Узнать подробнее →</button>
-            </div>
-            <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
-                <div style="font-size:32px; margin-bottom:12px;">🤔</div>
-                <h4>Вариант 3</h4>
-                <p><strong>Не уверены в выборе?</strong></p>
-                <p style="font-size:0.9rem; margin-bottom:10px;">Позвольте помочь – бесплатная консультация 15 минут.</p>
-                <button class="btn-secondary choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Помогите выбрать →</button>
-            </div>
-        </div>
-        <div style="text-align:center; margin-top:20px;">
-            <button id="resetQuizBtn" class="btn-secondary">🔁 Пройти заново</button>
-        </div>
-    `;
-    container.innerHTML = html;
-
-    // Выбор варианта 1 или 2
-    document.querySelectorAll('.choose-option').forEach(btn => {
-        btn.removeEventListener('click', btn._choiceHandler);
-        btn._choiceHandler = () => {
-            if (isSubmittingChoice) return;
-            isSubmittingChoice = true;
-            const variantText = btn.dataset.text;
-            const variantPrice = btn.dataset.price;
-            selectedVariantText = variantText;
-            selectedVariantPrice = variantPrice;
-            selectedOriginalText = variantText;
-            selectedOriginalPrice = variantPrice;
-
-            const answersStr = answers.map((a, idx) => {
-                const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
-                return `${qText}: ${a || 'не выбран'}`;
-            }).join('\n');
-
-            updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
-            updateSelectionBlock(selectedVariantText, selectedVariantPrice);
-            sendQuizStats(answersStr, recommendations, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
-            showSuccessToast('Выбор сохранён');
-            showFinalScreen();
-            isSubmittingChoice = false;
-        };
-        btn.addEventListener('click', btn._choiceHandler);
-    });
-
-    // Выбор варианта 3 (бесплатная консультация) – теперь блок тоже появляется
-    const helpBtn = document.querySelector('.choose-help');
-    if (helpBtn) {
-        helpBtn.removeEventListener('click', helpBtn._helpHandler);
-        helpBtn._helpHandler = () => {
-            if (isSubmittingChoice) return;
-            isSubmittingChoice = true;
-            selectedVariantText = '';
-            selectedVariantPrice = '';
-            selectedOriginalText = 'Помогите выбрать (бесплатная консультация)';
-            selectedOriginalPrice = '';
-
-            const answersStr = answers.map((a, idx) => {
-                const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
-                return `${qText}: ${a || 'не выбран'}`;
-            }).join('\n');
-
-            updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
-            // Показываем блок выбора с текстом бесплатной консультации
-            updateSelectionBlock(selectedOriginalText, selectedOriginalPrice);
-            sendQuizStats(answersStr, recommendations, '', '', selectedOriginalText, selectedOriginalPrice);
-            showSuccessToast('Спасибо!');
-            showFinalScreen();
-            isSubmittingChoice = false;
-        };
-        helpBtn.addEventListener('click', helpBtn._helpHandler);
-    }
-
-    const resetBtn = document.getElementById('resetQuizBtn');
-    if (resetBtn) {
-        resetBtn.removeEventListener('click', resetBtn._resetHandler);
-        resetBtn._resetHandler = () => startQuiz();
-        resetBtn.addEventListener('click', resetBtn._resetHandler);
-    }
-
-    function showFinalScreen() {
-        container.innerHTML = `
-            <p style="text-align:center; font-size:1.2rem; margin-bottom:20px;">✨ Спасибо за прохождение квиза! ✨</p>
-            <p style="text-align:center; margin-bottom:20px;">📋 Заполните форму ниже, и я свяжусь с вами.</p>
-            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-                <button id="goToCallbackBtn" class="btn-primary" style="min-width: 200px;">📝 Перейти к форме заявки</button>
-                <button id="goToCalculatorBtn" class="btn-secondary" style="min-width: 200px;">🔍 Посмотреть все услуги</button>
+        let html = `
+            <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подобрали оптимальные варианты:</p>
+            <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
+                <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
+                    <div style="font-size:32px; margin-bottom:12px;">📌</div>
+                    <h4>Рекомендация 1</h4>
+                    <p><strong>${window.escapeHtml(topTwo.variantA)}</strong></p>
+                    <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
+                    <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(topTwo.variantA)}" data-price="${priceA}">Узнать подробнее →</button>
+                </div>
+                <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
+                    <div style="font-size:32px; margin-bottom:12px;">🎯</div>
+                    <h4>Рекомендация 2</h4>
+                    <p><strong>${window.escapeHtml(topTwo.variantB)}</strong></p>
+                    <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
+                    <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(topTwo.variantB)}" data-price="${priceB}">Узнать подробнее →</button>
+                </div>
+                <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
+                    <div style="font-size:32px; margin-bottom:12px;">🤔</div>
+                    <h4>Вариант 3</h4>
+                    <p><strong>Не уверены в выборе?</strong></p>
+                    <p style="font-size:0.9rem; margin-bottom:10px;">Позвольте помочь – бесплатная консультация 15 минут.</p>
+                    <button class="btn-secondary choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Помогите выбрать →</button>
+                </div>
             </div>
             <div style="text-align:center; margin-top:20px;">
-                <button id="resetQuizBtnAfter" class="btn-secondary">🔁 Пройти заново</button>
+                <button id="resetQuizBtn" class="btn-secondary">🔁 Пройти заново</button>
             </div>
         `;
-        document.getElementById('goToCallbackBtn')?.addEventListener('click', () => {
-            const target = document.getElementById('calendar');
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        container.innerHTML = html;
+
+        document.querySelectorAll('.choose-option').forEach(btn => {
+            btn.removeEventListener('click', btn._choiceHandler);
+            btn._choiceHandler = () => {
+                if (isSubmittingChoice) return;
+                isSubmittingChoice = true;
+                const variantText = btn.dataset.text;
+                const variantPrice = btn.dataset.price;
+                selectedVariantText = variantText;
+                selectedVariantPrice = variantPrice;
+                selectedOriginalText = variantText;
+                selectedOriginalPrice = variantPrice;
+
+                const answersStr = answers.map((a, idx) => {
+                    const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
+                    return `${qText}: ${a || 'не выбран'}`;
+                }).join('\n');
+
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
+                updateSelectionBlock(selectedVariantText, selectedVariantPrice);
+                sendQuizStats(answersStr, recommendations, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
+                showSuccessToast('Выбор сохранён');
+                showFinalScreen();
+                isSubmittingChoice = false;
+            };
+            btn.addEventListener('click', btn._choiceHandler);
         });
-        document.getElementById('goToCalculatorBtn')?.addEventListener('click', () => {
-            const target = document.getElementById('calculator');
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-        document.getElementById('resetQuizBtnAfter')?.addEventListener('click', () => startQuiz());
+
+        const helpBtn = document.querySelector('.choose-help');
+        if (helpBtn) {
+            helpBtn.removeEventListener('click', helpBtn._helpHandler);
+            helpBtn._helpHandler = () => {
+                if (isSubmittingChoice) return;
+                isSubmittingChoice = true;
+                selectedVariantText = '';
+                selectedVariantPrice = '';
+                selectedOriginalText = 'Помогите выбрать (бесплатная консультация)';
+                selectedOriginalPrice = '';
+
+                const answersStr = answers.map((a, idx) => {
+                    const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
+                    return `${qText}: ${a || 'не выбран'}`;
+                }).join('\n');
+
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
+                updateSelectionBlock(selectedOriginalText, selectedOriginalPrice);
+                sendQuizStats(answersStr, recommendations, '', '', selectedOriginalText, selectedOriginalPrice);
+                showSuccessToast('Спасибо!');
+                showFinalScreen();
+                isSubmittingChoice = false;
+            };
+            helpBtn.addEventListener('click', helpBtn._helpHandler);
+        }
+
+        const resetBtn = document.getElementById('resetQuizBtn');
+        if (resetBtn) {
+            resetBtn.removeEventListener('click', resetBtn._resetHandler);
+            resetBtn._resetHandler = () => startQuiz();
+            resetBtn.addEventListener('click', resetBtn._resetHandler);
+        }
+
+        function showFinalScreen() {
+            container.innerHTML = `
+                <p style="text-align:center; font-size:1.2rem; margin-bottom:20px;">✨ Спасибо за прохождение квиза! ✨</p>
+                <p style="text-align:center; margin-bottom:20px;">📋 Заполните форму ниже, и я свяжусь с вами.</p>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+                    <button id="goToCallbackBtn" class="btn-primary" style="min-width: 200px;">📝 Перейти к форме заявки</button>
+                    <button id="goToCalculatorBtn" class="btn-secondary" style="min-width: 200px;">🔍 Посмотреть все услуги</button>
+                </div>
+                <div style="text-align:center; margin-top:20px;">
+                    <button id="resetQuizBtnAfter" class="btn-secondary">🔁 Пройти заново</button>
+                </div>
+            `;
+            document.getElementById('goToCallbackBtn')?.addEventListener('click', () => {
+                const target = document.getElementById('calendar');
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            document.getElementById('goToCalculatorBtn')?.addEventListener('click', () => {
+                const target = document.getElementById('calculator');
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            document.getElementById('resetQuizBtnAfter')?.addEventListener('click', () => startQuiz());
+        }
     }
-}
 
     window.initQuiz = function () {
         startQuiz();
         const removeBtn = document.getElementById('removeQuizSelection');
         if (removeBtn) {
             removeBtn.removeEventListener('click', removeBtn._removeHandler);
-            removeBtn._removeHandler = function() {
+            removeBtn._removeHandler = function () {
                 selectedVariantText = '';
                 selectedVariantPrice = '';
                 updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', '');
@@ -4354,17 +4381,22 @@ function renderResult(topTwo) {
         }
     };
 })();
-// ========== ОТПРАВКА ЗАПРОСА МАТЕРИАЛОВ ==========
-// Используем глобальную переменную window.APP_CONFIG.SCRIPT_URL
+// ========== ОТПРАВКА МАТЕРИАЛОВ С ПОВТОРНЫМИ ПОПЫТКАМИ ==========
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000;
+
+function isValidEmail(email) {
+    return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email);
+}
 
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
-    if (!email || !email.includes('@')) {
+    if (!email || !isValidEmail(email)) {
         throw new Error('Введите корректный email');
     }
 
     const url = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
     if (!url) {
-        throw new Error('URL скрипта не задан. Убедитесь, что APP_CONFIG загружен');
+        throw new Error('URL скрипта не задан');
     }
 
     const formData = {
@@ -4372,27 +4404,11 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
         name: email,
         comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`,
         consent: true,
-        userId: typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown'
+        userId: window.getOrCreateLocalUserId()
     };
 
-    log('📤 Отправка данных на скрипт:', formData);
-
-    try {
-        const body = new URLSearchParams(formData);
-        await fetch(url, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: body
-        });
-        log('✅ Запрос отправлен (режим no-cors)');
-        return true;
-    } catch (err) {
-        logError('❌ Ошибка отправки:', err);
-        throw new Error('Не удалось отправить запрос. Попробуйте позже.');
-    }
+    // postWithRetry определена в 00_core.js
+    return window.postWithRetry(url, formData, MAX_RETRIES, RETRY_DELAY);
 }
 
 window.sendMaterialsEmail = sendMaterialsEmail;

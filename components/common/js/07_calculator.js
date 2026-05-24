@@ -133,11 +133,11 @@ function renderCart() {
             <div class="service-name">${escapeHtml(item.name)}</div>
             <div class="service-price">${item.price > 0 ? (item.price * item.qty).toLocaleString() + ' ₽' : 'по запросу'}</div>
             <div class="service-qty-control">
-                <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
+                <button class="qty-btn qty-minus" data-idx="${idx}" aria-label="Уменьшить количество">−</button>
                 <span class="qty-value">${item.qty}</span>
-                <button class="qty-btn qty-plus" data-idx="${idx}">+</button>
+                <button class="qty-btn qty-plus" data-idx="${idx}" aria-label="Увеличить количество">+</button>
             </div>
-            <div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>
+            <div class="service-remove"><button class="remove-item" data-idx="${idx}" aria-label="Удалить услугу">✖</button></div>
         `;
         container.appendChild(div);
     });
@@ -188,7 +188,6 @@ function addToCart(cat, selectId, qtyId) {
     const name = fullText.replace(/ — .*/, '');
     let quantity = parseInt(document.getElementById(qtyId).value);
     if (isNaN(quantity) || quantity < 1) quantity = 1;
-    // Все бизнес-услуги (обе вкладки) попадают в общую категорию 'business'
     let displayCat = cat;
     if (cat === 'business_recruitment' || cat === 'business_retention') {
         displayCat = 'business';

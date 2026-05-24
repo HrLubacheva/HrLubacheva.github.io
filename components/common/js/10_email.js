@@ -1,14 +1,19 @@
-// ========== ОТПРАВКА ЗАПРОСА МАТЕРИАЛОВ ==========
-// Используем глобальную переменную window.APP_CONFIG.SCRIPT_URL
+// ========== ОТПРАВКА МАТЕРИАЛОВ С ПОВТОРНЫМИ ПОПЫТКАМИ ==========
+const MAX_RETRIES = 3;
+const RETRY_DELAY = 2000;
+
+function isValidEmail(email) {
+    return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email);
+}
 
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
-    if (!email || !email.includes('@')) {
+    if (!email || !isValidEmail(email)) {
         throw new Error('Введите корректный email');
     }
 
     const url = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
     if (!url) {
-        throw new Error('URL скрипта не задан. Убедитесь, что APP_CONFIG загружен');
+        throw new Error('URL скрипта не задан');
     }
 
     const formData = {
@@ -16,27 +21,11 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
         name: email,
         comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`,
         consent: true,
-        userId: typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : 'unknown'
+        userId: window.getOrCreateLocalUserId()
     };
 
-    log('📤 Отправка данных на скрипт:', formData);
-
-    try {
-        const body = new URLSearchParams(formData);
-        await fetch(url, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: body
-        });
-        log('✅ Запрос отправлен (режим no-cors)');
-        return true;
-    } catch (err) {
-        logError('❌ Ошибка отправки:', err);
-        throw new Error('Не удалось отправить запрос. Попробуйте позже.');
-    }
+    // postWithRetry определена в 00_core.js
+    return window.postWithRetry(url, formData, MAX_RETRIES, RETRY_DELAY);
 }
 
 window.sendMaterialsEmail = sendMaterialsEmail;
