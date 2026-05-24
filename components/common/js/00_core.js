@@ -538,6 +538,36 @@ function bindLiveValidation(input, type = 'phone') {
     input.addEventListener('input', () => clearFieldError(input));
 }
 
+// Отправка материалов на email
+async function sendMaterialsToEmail(email, type) {
+    if (!email || !email.includes('@')) {
+        showErrorToast('Введите корректный email');
+        return false;
+    }
+
+    let wantChecklist = false;
+    let wantTraining = false;
+
+    if (type === 'checklist') {
+        wantChecklist = true;
+    } else if (type === 'training') {
+        wantTraining = true;
+    } else if (type === 'both') {
+        wantChecklist = true;
+        wantTraining = true;
+    }
+
+    try {
+        await window.sendMaterialsEmail(email, wantChecklist, wantTraining);
+        showSuccessToast('✅ Материалы отправлены! Проверьте почту');
+        return true;
+    } catch (err) {
+        showErrorToast('❌ Ошибка: ' + err.message);
+        return false;
+    }
+}
+window.sendMaterialsToEmail = sendMaterialsToEmail;
+
 // ========== ЭКСПОРТ ВСЕХ ФУНКЦИЙ В ГЛОБАЛЬНЫЙ ОБЪЕКТ ==========
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;

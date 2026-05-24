@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
 
     // Функция для повторной инициализации анимации на ещё не видимых элементах
@@ -66,7 +66,7 @@
     function initFormValidation() {
         const phoneInput = document.getElementById('callbackPhone');
         if (phoneInput) {
-            phoneInput.addEventListener('input', function() {
+            phoneInput.addEventListener('input', function () {
                 const digits = this.value.replace(/\D/g, '');
                 if (digits.length === 11) {
                     this.style.borderColor = '#28a745';
@@ -83,7 +83,7 @@
 
         const nameInput = document.getElementById('callbackName');
         if (nameInput) {
-            nameInput.addEventListener('input', function() {
+            nameInput.addEventListener('input', function () {
                 if (this.value.length >= 2) {
                     this.style.borderColor = '#28a745';
                     this.style.boxShadow = '0 0 0 2px rgba(40,167,69,0.2)';
@@ -119,6 +119,68 @@
         });
     }
 
+    // Инициализация кнопок "на email" в блоке бесплатных материалов
+function initMaterialsEmailButtons() {
+    const buttons = document.querySelectorAll('.material-email-btn');
+    const modal = document.getElementById('materialsModal');
+    const closeBtn = document.getElementById('closeMaterialsModal');
+    const sendBtn = document.getElementById('sendMaterialsBtn');
+    let currentMaterial = null;
+
+    if (!modal) return;
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentMaterial = btn.dataset.material;
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
+            document.body.classList.add('modal-open');
+        });
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+            }, 200);
+        });
+    }
+
+    if (sendBtn) {
+        sendBtn.addEventListener('click', async () => {
+            const email = document.getElementById('materialsEmail').value;
+            if (await window.sendMaterialsToEmail(email, currentMaterial)) {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                    document.getElementById('materialsEmail').value = '';
+                }, 200);
+            }
+        });
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+            }, 200);
+        }
+    });
+}
+
+// Вызов в DOMContentLoaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMaterialsEmailButtons);
+} else {
+    initMaterialsEmailButtons();
+}
+
+    // Основная инициализация
     document.addEventListener('DOMContentLoaded', function () {
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.querySelectorAll('.fade-up').forEach(el => {
@@ -126,7 +188,7 @@
                 el.style.opacity = '1';
                 el.style.transform = 'none';
             });
-            if (typeof initAnimations === 'function') window.initAnimations = function() {};
+            if (typeof initAnimations === 'function') window.initAnimations = function () {};
         }
 
         if (typeof initAnimations === 'function') initAnimations();
@@ -148,7 +210,7 @@
 
         const originalInitCalculator = window.initCalculator;
         if (originalInitCalculator) {
-            window.initCalculator = async function() {
+            window.initCalculator = async function () {
                 await originalInitCalculator();
                 setTimeout(reinitAnimations, 100);
                 setTimeout(animateStats, 150);
@@ -157,14 +219,14 @@
 
         const originalInitQuiz = window.initQuiz;
         if (originalInitQuiz) {
-            window.initQuiz = function() {
+            window.initQuiz = function () {
                 originalInitQuiz();
                 setTimeout(reinitAnimations, 150);
                 setTimeout(animateStats, 200);
             };
         }
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (e.target.closest('.tab-btn')) {
                 setTimeout(reinitAnimations, 50);
                 setTimeout(animateStats, 100);
@@ -175,8 +237,8 @@
         setTimeout(animateStats, 600);
     });
 
-    window.addEventListener('load', function() {
-        setTimeout(function() {
+    window.addEventListener('load', function () {
+        setTimeout(function () {
             document.querySelectorAll('.fade-up').forEach(el => {
                 const rect = el.getBoundingClientRect();
                 const windowHeight = window.innerHeight;

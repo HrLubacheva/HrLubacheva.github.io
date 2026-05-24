@@ -1,13 +1,57 @@
 <section>
     <div class="container">
         <div class="checklist-card fade-up">
-            <h2 class="section-title">📥 Скачайте гайды и чек-листы</h2>
-            <p>Чек-лист «Идеальное резюме» + программа тренинга «Продай себя дорого»</p>
-            <div class="freebies-buttons">
-                <a href="assets/docs/checklist.pdf" class="btn-primary" target="_blank">📄 Чек-лист «Идеальное резюме»</a>
-                <a href="assets/docs/training_program.pdf" class="btn-primary" target="_blank">📘 Программа тренинга</a>
-                <button id="openChecklistModal" class="btn-primary">📧 Отправить на почту</button>
+            <h2 class="section-title">📥 Бесплатный набор для уверенного старта</h2>
+
+            <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 24px;">
+
+                <!-- Чек-лист -->
+                <div style="text-align: center; min-width: 160px; background: var(--light-bg); border-radius: var(--radius-lg); padding: 20px 16px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 8px;">📄</div>
+                    <div style="font-weight: 700; margin-bottom: 12px; color: var(--primary-dark);">Чек-лист</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="assets/docs/checklist.pdf" target="_blank" class="btn-secondary btn-small" style="display: inline-block; padding: 6px 16px; font-size: 0.8rem;">
+                            ⬇️ Скачать PDF
+                        </a>
+                        <button class="material-email-simple btn-small" data-material="checklist" style="background: none; border: 1px solid var(--border); padding: 6px 16px; border-radius: 40px; font-size: 0.8rem; cursor: pointer; font-family: inherit; color: var(--primary); transition: all 0.2s;">
+                            ✉️ На email
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Программа тренинга -->
+                <div style="text-align: center; min-width: 160px; background: var(--light-bg); border-radius: var(--radius-lg); padding: 20px 16px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 8px;">📘</div>
+                    <div style="font-weight: 700; margin-bottom: 12px; color: var(--primary-dark);">Программа тренинга</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="assets/docs/training_program.pdf" target="_blank" class="btn-secondary btn-small" style="display: inline-block; padding: 6px 16px; font-size: 0.8rem;">
+                            ⬇️ Скачать PDF
+                        </a>
+                        <button class="material-email-simple btn-small" data-material="training" style="background: none; border: 1px solid var(--border); padding: 6px 16px; border-radius: 40px; font-size: 0.8rem; cursor: pointer; font-family: inherit; color: var(--primary); transition: all 0.2s;">
+                            ✉️ На email
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Оба сразу -->
+                <div style="text-align: center; min-width: 160px; background: var(--primary); border-radius: var(--radius-lg); padding: 20px 16px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 8px;">📦</div>
+                    <div style="font-weight: 700; margin-bottom: 12px; color: white;">Оба сразу</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="assets/docs/checklist.pdf" target="_blank" class="btn-primary btn-small" style="display: inline-block; padding: 6px 16px; font-size: 0.8rem; background: white; color: var(--primary);">
+                            ⬇️ Скачать оба
+                        </a>
+                        <button class="material-email-simple btn-small" data-material="both" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 6px 16px; border-radius: 40px; font-size: 0.8rem; cursor: pointer; font-family: inherit; color: white; transition: all 0.2s;">
+                            ✉️ На email
+                        </button>
+                    </div>
+                </div>
+
             </div>
+
+            <p style="text-align: center; font-size: 0.75rem; color: var(--secondary);">
+                🔐 Без спама. Отправляю за 1 минуту.
+            </p>
         </div>
     </div>
 </section>

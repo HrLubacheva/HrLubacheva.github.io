@@ -2515,6 +2515,141 @@ footer a:hover {
 #quizSelectionBlock:has(.service-name:empty) {
     display: none !important;
 }
+
+/* ========== КАСТОМНЫЙ ДРОПДАУН ДЛЯ МАТЕРИАЛОВ ========== */
+.materials-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.materials-dropdown-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.dropdown-arrow {
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+}
+
+.materials-dropdown-btn.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.materials-dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 240px;
+    background: var(--surface-soft);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+    z-index: 100;
+}
+
+.materials-dropdown-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 12px 20px;
+    text-align: left;
+    text-decoration: none;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background: var(--light-bg);
+    color: var(--primary);
+}
+
+
+.material-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.material-link:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+}
+
+.material-email-btn {
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.material-email-btn:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+}
+
+@media (max-width: 560px) {
+    .checklist-card [style*="justify-content: space-between"] {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 10px;
+    }
+}
+
+/* ==================================================================
+   СТИЛИ ДЛЯ МАТЕРИАЛОВ (material-link, material-email-btn)
+   ================================================================== */
+.material-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.material-link:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+}
+
+.material-email-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
+    color: var(--primary);
+    padding: 0;
+    transition: opacity 0.2s;
+}
+
+.material-email-btn:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+}
 </style>
 </head>
 <body>
@@ -2758,23 +2893,31 @@ footer a:hover {
 </section>
 <section class="section-dark" id="about">
     <div class="container">
-        <h2 class="section-title fade-up">Почему мне доверяют компании и специалисты?</h2>
+        <h2 class="section-title fade-up">Почему выбирают меня</h2>
         <div class="benefits-grid">
             <div class="benefit-card fade-up">
                 <h4>🌱 Junior → Middle</h4>
-                <p>Помогаю начинающим найти первую работу и заложить фундамент роста.</p>
+                <p>Помогаю начинающим найти первую работу и вырасти.</p>
             </div>
             <div class="benefit-card fade-up">
                 <h4>📈 Middle → Senior</h4>
                 <p>Разбираюсь, где вас недооценивают, готовлю к переходу на новый уровень.</p>
             </div>
             <div class="benefit-card fade-up">
-                <h4>🏆 Senior/Lead → Executive</h4>
-                <p>Упаковываю опыт так, чтобы Вас искали хедхантеры.</p>
+                <h4>🏆 Senior → Executive</h4>
+                <p>Упаковываю опыт так, чтобы вас искали хедхантеры.</p>
             </div>
             <div class="benefit-card fade-up">
-                <h4>🤝 Бизнес-системность</h4>
-                <p>Отбираю топ-5 кандидатов под бюджет и культуру компании, сокращаю время найма в 2 раза.</p>
+                <h4>⚡ Системность и скорость</h4>
+                <p>Отбираю топ-5 кандидатов под бюджет и культуру, сокращаю время найма в 2 раза.</p>
+            </div>
+            <div class="benefit-card fade-up">
+                <h4>🎯 Подход без шаблонов</h4>
+                <p>Решение под ваш запрос, а не готовая упаковка.</p>
+            </div>
+            <div class="benefit-card fade-up">
+                <h4>⏱️ Работа на результат</h4>
+                <p>Оплата за факт, а не за количество часов.</p>
             </div>
         </div>
     </div>
@@ -2782,8 +2925,9 @@ footer a:hover {
 <section id="process">
     <div class="container">
         <h2 class="section-title fade-up">Как мы будем работать вместе</h2>
-        <p style="text-align: center; margin-bottom: 40px; font-size: 1.1rem;">В процессе совместной работы вы обретаете
-            ясность в своих целях и находите устойчивую опору в себе для их достижения.</p>
+        <p style="text-align: center; margin-bottom: 40px; font-size: 1rem; color: var(--secondary);">
+            Прозрачный процесс без лишних этапов. Вы всегда знаете, что будет дальше.
+        </p>
         <div class="process-row">
             <div class="process-col">
                 <h3 class="process-title fade-up">📌 Карьерная консультация</h3>
@@ -2842,12 +2986,12 @@ footer a:hover {
                 <div class="process-card fade-up">
                     <div class="process-step">1</div>
                     <h4>Самодиагностика</h4>
-                    <p>Оценка навыков.</p>
+                    <p>Оценка навыков и точек роста.</p>
                 </div>
                 <div class="process-card fade-up">
                     <div class="process-step">2</div>
                     <h4>Резюме‑бомба</h4>
-                    <p>Правила, ключевые слова.</p>
+                    <p>Правила, ключевые слова, структура.</p>
                 </div>
                 <div class="process-card fade-up">
                     <div class="process-step">3</div>
@@ -2857,17 +3001,17 @@ footer a:hover {
                 <div class="process-card fade-up">
                     <div class="process-step">4</div>
                     <h4>Торги за зарплату</h4>
-                    <p>Как просить +30%.</p>
+                    <p>Как просить +30% и получать.</p>
                 </div>
                 <div class="process-card fade-up">
                     <div class="process-step">5</div>
-                    <h4>Изучаем АТС и ботов</h4>
-                    <p>Как работают системы отбора.</p>
+                    <h4>Обход ИИ и АТС</h4>
+                    <p>Адаптация под автоматические фильтры.</p>
                 </div>
                 <div class="process-card fade-up">
                     <div class="process-step">6</div>
-                    <h4>Стратегия обхода ИИ</h4>
-                    <p>Адаптация под автоматические фильтры.</p>
+                    <h4>Закрепление и обратная связь</h4>
+                    <p>Разбор результатов, ответы на вопросы.</p>
                 </div>
             </div>
         </div>
@@ -3030,21 +3174,65 @@ footer a:hover {
 <section>
     <div class="container">
         <div class="checklist-card fade-up">
-            <h2 class="section-title">📥 Скачайте гайды и чек-листы</h2>
-            <p>Чек-лист «Идеальное резюме» + программа тренинга «Продай себя дорого»</p>
-            <div class="freebies-buttons">
-                <a href="assets/docs/checklist.pdf" class="btn-primary" target="_blank">📄 Чек-лист «Идеальное резюме»</a>
-                <a href="assets/docs/training_program.pdf" class="btn-primary" target="_blank">📘 Программа тренинга</a>
-                <button id="openChecklistModal" class="btn-primary">📧 Отправить на почту</button>
+            <h2 class="section-title">📥 Бесплатный набор для уверенного старта</h2>
+
+            <div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-bottom: 24px;">
+
+                <!-- Чек-лист -->
+                <div style="text-align: center; min-width: 160px; background: var(--light-bg); border-radius: var(--radius-lg); padding: 20px 16px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 8px;">📄</div>
+                    <div style="font-weight: 700; margin-bottom: 12px; color: var(--primary-dark);">Чек-лист</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="assets/docs/checklist.pdf" target="_blank" class="btn-secondary btn-small" style="display: inline-block; padding: 6px 16px; font-size: 0.8rem;">
+                            ⬇️ Скачать PDF
+                        </a>
+                        <button class="material-email-simple btn-small" data-material="checklist" style="background: none; border: 1px solid var(--border); padding: 6px 16px; border-radius: 40px; font-size: 0.8rem; cursor: pointer; font-family: inherit; color: var(--primary); transition: all 0.2s;">
+                            ✉️ На email
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Программа тренинга -->
+                <div style="text-align: center; min-width: 160px; background: var(--light-bg); border-radius: var(--radius-lg); padding: 20px 16px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 8px;">📘</div>
+                    <div style="font-weight: 700; margin-bottom: 12px; color: var(--primary-dark);">Программа тренинга</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="assets/docs/training_program.pdf" target="_blank" class="btn-secondary btn-small" style="display: inline-block; padding: 6px 16px; font-size: 0.8rem;">
+                            ⬇️ Скачать PDF
+                        </a>
+                        <button class="material-email-simple btn-small" data-material="training" style="background: none; border: 1px solid var(--border); padding: 6px 16px; border-radius: 40px; font-size: 0.8rem; cursor: pointer; font-family: inherit; color: var(--primary); transition: all 0.2s;">
+                            ✉️ На email
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Оба сразу -->
+                <div style="text-align: center; min-width: 160px; background: var(--primary); border-radius: var(--radius-lg); padding: 20px 16px;">
+                    <div style="font-size: 2.5rem; margin-bottom: 8px;">📦</div>
+                    <div style="font-weight: 700; margin-bottom: 12px; color: white;">Оба сразу</div>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="assets/docs/checklist.pdf" target="_blank" class="btn-primary btn-small" style="display: inline-block; padding: 6px 16px; font-size: 0.8rem; background: white; color: var(--primary);">
+                            ⬇️ Скачать оба
+                        </a>
+                        <button class="material-email-simple btn-small" data-material="both" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); padding: 6px 16px; border-radius: 40px; font-size: 0.8rem; cursor: pointer; font-family: inherit; color: white; transition: all 0.2s;">
+                            ✉️ На email
+                        </button>
+                    </div>
+                </div>
+
             </div>
+
+            <p style="text-align: center; font-size: 0.75rem; color: var(--secondary);">
+                🔐 Без спама. Отправляю за 1 минуту.
+            </p>
         </div>
     </div>
 </section>
 <section id="calendar">
     <div class="container">
         <div class="calendar-card fade-up">
-            <h2 class="section-title">📞 Экспресс-консультация 15 минут — без обязательств</h2>
-            <p>Разберём вашу ситуацию: для соискателя — что мешает получить оффер выше; для бизнеса — почему вакансия не закрывается.</p>
+            <h2 class="section-title">📞 Экспресс-консультация 15 минут</h2>
+            <p>Разберём вашу ситуацию и найдём точки роста. Для соискателя и бизнеса.</p>
 
             <form id="callbackForm" class="callback-form responsive-form">
                 <div class="form-row">
@@ -3053,7 +3241,6 @@ footer a:hover {
                 </div>
                 <input type="email" id="callbackEmail" name="email" placeholder="📧 Email (необязательно)">
 
-                <!-- Блок выбранного варианта из квиза (единый стиль с корзиной) -->
                 <div id="quizSelectionBlock" class="calc-item" style="display: none;">
                     <div class="service-name"></div>
                     <div class="service-price"></div>
@@ -3062,7 +3249,6 @@ footer a:hover {
                     </div>
                 </div>
 
-                <!-- Скрытые поля для данных квиза -->
                 <input type="hidden" name="chosenVariant" id="chosenVariant">
                 <input type="hidden" name="chosenVariantPrice" id="chosenVariantPrice">
                 <input type="hidden" name="originalChosenVariant" id="originalChosenVariant">
@@ -3114,7 +3300,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 24.05.2026 15:02:33
+                Версия: 24.05.2026 16:37:17
             </div>
         </div>
     </div>
@@ -3131,20 +3317,6 @@ footer a:hover {
         <p><a href="privacy.html" target="_blank">Открыть политику конфиденциальности</a></p>
         <p>Ваши данные используются только для связи с вами и не передаются третьим лицам.</p>
         <button id="closePrivacyModalBtn" class="btn-secondary">Закрыть</button>
-    </div>
-</div><div id="checklistModal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <h3>📥 Получить бесплатные материалы</h3>
-        <p>Введите ваш email, и мы отправим ссылки на скачивание чек-листа и программы тренинга.</p>
-        <input type="email" id="checklistEmail" placeholder="Ваш email" required style="width:100%; margin:15px 0; padding:12px; border-radius:40px; border:1px solid #ccc;">
-        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <label><input type="checkbox" id="checklistCheck" checked> Чек-лист «Идеальное резюме»</label>
-            <label><input type="checkbox" id="trainingCheck" checked> Программа тренинга</label>
-        </div>
-        <div style="display: flex; gap: 10px; justify-content: flex-end;">
-            <button id="sendMaterialsBtn" class="btn-primary">Отправить на email</button>
-            <button id="closeModalBtn" class="btn-secondary">Закрыть</button>
-        </div>
     </div>
 </div><script defer>
 // ========== ГЛОБАЛЬНЫЕ НАСТРОЙКИ САЙТА ==========
@@ -3703,6 +3875,36 @@ function bindLiveValidation(input, type = 'phone') {
     input.addEventListener('input', () => clearFieldError(input));
 }
 
+// Отправка материалов на email
+async function sendMaterialsToEmail(email, type) {
+    if (!email || !email.includes('@')) {
+        showErrorToast('Введите корректный email');
+        return false;
+    }
+
+    let wantChecklist = false;
+    let wantTraining = false;
+
+    if (type === 'checklist') {
+        wantChecklist = true;
+    } else if (type === 'training') {
+        wantTraining = true;
+    } else if (type === 'both') {
+        wantChecklist = true;
+        wantTraining = true;
+    }
+
+    try {
+        await window.sendMaterialsEmail(email, wantChecklist, wantTraining);
+        showSuccessToast('✅ Материалы отправлены! Проверьте почту');
+        return true;
+    } catch (err) {
+        showErrorToast('❌ Ошибка: ' + err.message);
+        return false;
+    }
+}
+window.sendMaterialsToEmail = sendMaterialsToEmail;
+
 // ========== ЭКСПОРТ ВСЕХ ФУНКЦИЙ В ГЛОБАЛЬНЫЙ ОБЪЕКТ ==========
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
@@ -3891,61 +4093,15 @@ function hideModal(modal) {
 }
 
 function initModal() {
-    const modal = document.getElementById('checklistModal');
-    const openModal = document.getElementById('openChecklistModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const sendBtn = document.getElementById('sendMaterialsBtn');
-
-    if (openModal) openModal.addEventListener('click', () => showModal(modal));
-    if (closeModalBtn) closeModalBtn.addEventListener('click', () => hideModal(modal));
-
-    if (sendBtn) {
-        sendBtn.addEventListener('click', async () => {
-            const email = document.getElementById('checklistEmail').value;
-            const wantChecklist = document.getElementById('checklistCheck').checked;
-            const wantTraining = document.getElementById('trainingCheck').checked;
-
-            const originalText = sendBtn.innerText;
-            sendBtn.disabled = true;
-            sendBtn.innerText = 'Отправляю...';
-
-            try {
-                await window.sendMaterialsEmail(email, wantChecklist, wantTraining);
-                if (typeof window.sendDataToSheet === 'function') {
-                    window.sendDataToSheet({
-                        formType: 'Запрос материалов',
-                        name: email,
-                        comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`,
-                        quizAnswersRaw: '-'
-                    });
-                }
-                const modalContent = modal.querySelector('.modal-content');
-                modalContent.innerHTML = `
-                    <h3>✅ Письмо отправлено!</h3>
-                    <p>Проверьте вашу почту (и папку «Спам»). Ссылки на материалы уже в письме.</p>
-                    <button id="closeAfterSendBtn" class="btn-primary">Закрыть</button>
-                `;
-                const closeAfterBtn = document.getElementById('closeAfterSendBtn');
-                if (closeAfterBtn) {
-                    closeAfterBtn.addEventListener('click', () => hideModal(modal));
-                    setTimeout(() => closeAfterBtn.focus(), 50);
-                }
-            } catch (err) {
-                showErrorToast('Ошибка: ' + err.message);
-                sendBtn.disabled = false;
-                sendBtn.innerText = originalText;
-            }
-        });
-    }
-
+    // Только модальное окно политики конфиденциальности
     const privacyModal = document.getElementById('privacyModal');
     const closePrivacyBtn = document.getElementById('closePrivacyModalBtn');
     const closePrivacy = document.getElementById('closePrivacyModal');
+
     if (closePrivacyBtn) closePrivacyBtn.addEventListener('click', () => hideModal(privacyModal));
     if (closePrivacy) closePrivacy.addEventListener('click', () => hideModal(privacyModal));
 
     window.addEventListener('click', (e) => {
-        if (e.target === modal) hideModal(modal);
         if (e.target === privacyModal) hideModal(privacyModal);
     });
 }
@@ -5226,7 +5382,7 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
 }
 
 window.sendMaterialsEmail = sendMaterialsEmail;
-(function() {
+(function () {
     'use strict';
 
     // Функция для повторной инициализации анимации на ещё не видимых элементах
@@ -5294,7 +5450,7 @@ window.sendMaterialsEmail = sendMaterialsEmail;
     function initFormValidation() {
         const phoneInput = document.getElementById('callbackPhone');
         if (phoneInput) {
-            phoneInput.addEventListener('input', function() {
+            phoneInput.addEventListener('input', function () {
                 const digits = this.value.replace(/\D/g, '');
                 if (digits.length === 11) {
                     this.style.borderColor = '#28a745';
@@ -5311,7 +5467,7 @@ window.sendMaterialsEmail = sendMaterialsEmail;
 
         const nameInput = document.getElementById('callbackName');
         if (nameInput) {
-            nameInput.addEventListener('input', function() {
+            nameInput.addEventListener('input', function () {
                 if (this.value.length >= 2) {
                     this.style.borderColor = '#28a745';
                     this.style.boxShadow = '0 0 0 2px rgba(40,167,69,0.2)';
@@ -5347,6 +5503,68 @@ window.sendMaterialsEmail = sendMaterialsEmail;
         });
     }
 
+    // Инициализация кнопок "на email" в блоке бесплатных материалов
+function initMaterialsEmailButtons() {
+    const buttons = document.querySelectorAll('.material-email-btn');
+    const modal = document.getElementById('materialsModal');
+    const closeBtn = document.getElementById('closeMaterialsModal');
+    const sendBtn = document.getElementById('sendMaterialsBtn');
+    let currentMaterial = null;
+
+    if (!modal) return;
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentMaterial = btn.dataset.material;
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('show'), 10);
+            document.body.classList.add('modal-open');
+        });
+    });
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+            }, 200);
+        });
+    }
+
+    if (sendBtn) {
+        sendBtn.addEventListener('click', async () => {
+            const email = document.getElementById('materialsEmail').value;
+            if (await window.sendMaterialsToEmail(email, currentMaterial)) {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                    document.getElementById('materialsEmail').value = '';
+                }, 200);
+            }
+        });
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('show');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+            }, 200);
+        }
+    });
+}
+
+// Вызов в DOMContentLoaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMaterialsEmailButtons);
+} else {
+    initMaterialsEmailButtons();
+}
+
+    // Основная инициализация
     document.addEventListener('DOMContentLoaded', function () {
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.querySelectorAll('.fade-up').forEach(el => {
@@ -5354,7 +5572,7 @@ window.sendMaterialsEmail = sendMaterialsEmail;
                 el.style.opacity = '1';
                 el.style.transform = 'none';
             });
-            if (typeof initAnimations === 'function') window.initAnimations = function() {};
+            if (typeof initAnimations === 'function') window.initAnimations = function () {};
         }
 
         if (typeof initAnimations === 'function') initAnimations();
@@ -5376,7 +5594,7 @@ window.sendMaterialsEmail = sendMaterialsEmail;
 
         const originalInitCalculator = window.initCalculator;
         if (originalInitCalculator) {
-            window.initCalculator = async function() {
+            window.initCalculator = async function () {
                 await originalInitCalculator();
                 setTimeout(reinitAnimations, 100);
                 setTimeout(animateStats, 150);
@@ -5385,14 +5603,14 @@ window.sendMaterialsEmail = sendMaterialsEmail;
 
         const originalInitQuiz = window.initQuiz;
         if (originalInitQuiz) {
-            window.initQuiz = function() {
+            window.initQuiz = function () {
                 originalInitQuiz();
                 setTimeout(reinitAnimations, 150);
                 setTimeout(animateStats, 200);
             };
         }
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (e.target.closest('.tab-btn')) {
                 setTimeout(reinitAnimations, 50);
                 setTimeout(animateStats, 100);
@@ -5403,8 +5621,8 @@ window.sendMaterialsEmail = sendMaterialsEmail;
         setTimeout(animateStats, 600);
     });
 
-    window.addEventListener('load', function() {
-        setTimeout(function() {
+    window.addEventListener('load', function () {
+        setTimeout(function () {
             document.querySelectorAll('.fade-up').forEach(el => {
                 const rect = el.getBoundingClientRect();
                 const windowHeight = window.innerHeight;
