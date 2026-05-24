@@ -1732,3 +1732,58 @@ footer a:hover {
         grid-template-columns: repeat(3, 1fr);
     }
 }
+
+/* ========== КВИЗ: КРАСИВЫЕ ВАРИАНТЫ ОТВЕТОВ ========== */
+.quiz-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.quiz-option {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 60px;
+    padding: 12px 28px;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #1e4663;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    text-align: center;
+    flex: 0 1 auto;
+    min-width: 140px;
+}
+
+.quiz-option:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(45,106,159,0.25);
+}
+
+.quiz-option.selected {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(45,106,159,0.3);
+    background-image: none;
+    transform: scale(0.98);
+}
+
+/* Адаптив для мобильных */
+@media (max-width: 640px) {
+    .quiz-options {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .quiz-option {
+        width: 100%;
+        text-align: center;
+        padding: 14px 20px;
+    }
+}
