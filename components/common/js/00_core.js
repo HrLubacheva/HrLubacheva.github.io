@@ -538,24 +538,33 @@ function bindLiveValidation(input, type = 'phone') {
     input.addEventListener('input', () => clearFieldError(input));
 }
 
-// Отправка материалов на email
-async function sendMaterialsToEmail(email, type) {
-    if (!email || !email.includes('@')) {
-        showErrorToast('Введите корректный email');
+// ========== ОТПРАВКА МАТЕРИАЛОВ НА EMAIL (ВЫЗОВ ИЗ МОДАЛКИ) ==========
+let isSendingEmail = false;
+
+async function sendMaterialsToEmail(email, materialType) {
+    if (isSendingEmail) {
+        showErrorToast('⏳ Отправка уже выполняется, подождите...');
+        return false;
+    }
+
+    if (!email || !validateEmailFormat(email)) {
+        showErrorToast('❌ Введите корректный email');
         return false;
     }
 
     let wantChecklist = false;
     let wantTraining = false;
 
-    if (type === 'checklist') {
+    if (materialType === 'checklist') {
         wantChecklist = true;
-    } else if (type === 'training') {
+    } else if (materialType === 'training') {
         wantTraining = true;
-    } else if (type === 'both') {
+    } else if (materialType === 'both') {
         wantChecklist = true;
         wantTraining = true;
     }
+
+    isSendingEmail = true;
 
     try {
         await window.sendMaterialsEmail(email, wantChecklist, wantTraining);
@@ -564,9 +573,52 @@ async function sendMaterialsToEmail(email, type) {
     } catch (err) {
         showErrorToast('❌ Ошибка: ' + err.message);
         return false;
+    } finally {
+        setTimeout(() => {
+            isSendingEmail = false;
+        }, 1000);
     }
 }
 window.sendMaterialsToEmail = sendMaterialsToEmail;
+
+// ========== КНОПКА «ПОДЕЛИТЬСЯ» ==========
+function initShareButtons() {
+    const shareButtons = document.querySelectorAll('#shareButtonHero, #shareButtonContacts, .floating-share-btn button');
+
+    function handleShare() {
+        const shareData = {
+            title: 'Виктория Любачева | Карьерный консультант',
+            text: 'Помогаю с трудоустройством, подбором персонала и карьерным ростом. Бесплатная диагностика.',
+            url: window.location.href
+        };
+
+        if (navigator.share) {
+            navigator.share(shareData).catch(err => {
+                if (err.name !== 'AbortError') {
+                    console.log('Ошибка шеринга:', err);
+                    fallbackCopy();
+                }
+            });
+        } else {
+            fallbackCopy();
+        }
+    }
+
+    function fallbackCopy() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            showToast('✅ Ссылка скопирована! Поделитесь с друзьями.', 'success');
+        }).catch(() => {
+            showErrorToast('Не удалось скопировать. Попробуйте вручную.');
+        });
+    }
+
+    shareButtons.forEach(btn => {
+        if (btn) {
+            btn.removeEventListener('click', handleShare);
+            btn.addEventListener('click', handleShare);
+        }
+    });
+}
 
 // ========== ЭКСПОРТ ВСЕХ ФУНКЦИЙ В ГЛОБАЛЬНЫЙ ОБЪЕКТ ==========
 window.escapeHtml = escapeHtml;
@@ -595,3 +647,6 @@ window.clearFieldError = clearFieldError;
 window.validatePhoneField = validatePhoneField;
 window.validateEmailField = validateEmailField;
 window.bindLiveValidation = bindLiveValidation;
+
+// Экспорт функции шеринга
+window.initShareButtons = initShareButtons;

@@ -24,10 +24,8 @@
         const statNumbers = document.querySelectorAll('.stat-number');
         if (!statNumbers.length) return;
 
-        // Если цифры уже были анимированы, не трогаем
         if (window._statsAnimated) return;
 
-        // Функция для форматирования числа с пробелами между тысячами
         function formatNumber(num) {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
         }
@@ -38,7 +36,7 @@
                     const target = entry.target;
                     const final = parseInt(target.getAttribute('data-target'), 10);
                     let current = 0;
-                    const duration = 1500; // 1.5 секунды
+                    const duration = 1500;
                     const stepTime = 20;
                     const steps = duration / stepTime;
                     const increment = final / steps;
@@ -49,7 +47,6 @@
                             current = final;
                             clearInterval(timer);
                         }
-                        // Применяем форматирование с пробелами
                         target.innerText = formatNumber(Math.floor(current));
                     }, stepTime);
 
@@ -120,65 +117,93 @@
     }
 
     // Инициализация кнопок "на email" в блоке бесплатных материалов
-function initMaterialsEmailButtons() {
-    const buttons = document.querySelectorAll('.material-email-btn');
-    const modal = document.getElementById('materialsModal');
-    const closeBtn = document.getElementById('closeMaterialsModal');
-    const sendBtn = document.getElementById('sendMaterialsBtn');
-    let currentMaterial = null;
+    function initMaterialsEmailButtons() {
+        const buttons = document.querySelectorAll('.material-email-simple');
+        const modal = document.getElementById('materialsModal');
+        const closeBtn = document.getElementById('closeMaterialsModal');
+        const sendBtn = document.getElementById('sendMaterialsBtn');
+        let currentMaterial = null;
+        let isModalSending = false;
 
-    if (!modal) return;
+        if (!modal) return;
 
-    buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            currentMaterial = btn.dataset.material;
-            modal.style.display = 'flex';
-            setTimeout(() => modal.classList.add('show'), 10);
-            document.body.classList.add('modal-open');
+        buttons.forEach(btn => {
+            btn.removeEventListener('click', btn._materialsHandler);
+            btn._materialsHandler = () => {
+                currentMaterial = btn.dataset.material;
+                modal.style.display = 'flex';
+                setTimeout(() => modal.classList.add('show'), 10);
+                document.body.classList.add('modal-open');
+                setTimeout(() => {
+                    const emailInput = document.getElementById('materialsEmail');
+                    if (emailInput) emailInput.focus();
+                }, 100);
+            };
+            btn.addEventListener('click', btn._materialsHandler);
         });
-    });
 
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = 'none';
-                document.body.classList.remove('modal-open');
-            }, 200);
-        });
-    }
-
-    if (sendBtn) {
-        sendBtn.addEventListener('click', async () => {
-            const email = document.getElementById('materialsEmail').value;
-            if (await window.sendMaterialsToEmail(email, currentMaterial)) {
+        if (closeBtn) {
+            closeBtn.removeEventListener('click', closeBtn._closeHandler);
+            closeBtn._closeHandler = () => {
                 modal.classList.remove('show');
                 setTimeout(() => {
                     modal.style.display = 'none';
                     document.body.classList.remove('modal-open');
                     document.getElementById('materialsEmail').value = '';
+                    isModalSending = false;
+                }, 200);
+            };
+            closeBtn.addEventListener('click', closeBtn._closeHandler);
+        }
+
+        if (sendBtn) {
+            sendBtn.removeEventListener('click', sendBtn._sendHandler);
+            sendBtn._sendHandler = async () => {
+                if (isModalSending) {
+                    window.showWarningToast('⏳ Отправка уже выполняется, подождите...');
+                    return;
+                }
+
+                const email = document.getElementById('materialsEmail').value;
+                const originalText = sendBtn.innerText;
+
+                isModalSending = true;
+                sendBtn.disabled = true;
+                sendBtn.innerText = 'Отправка...';
+
+                try {
+                    const success = await window.sendMaterialsToEmail(email, currentMaterial);
+                    if (success) {
+                        modal.classList.remove('show');
+                        setTimeout(() => {
+                            modal.style.display = 'none';
+                            document.body.classList.remove('modal-open');
+                            document.getElementById('materialsEmail').value = '';
+                        }, 200);
+                    }
+                } finally {
+                    sendBtn.disabled = false;
+                    sendBtn.innerText = originalText;
+                    setTimeout(() => {
+                        isModalSending = false;
+                    }, 500);
+                }
+            };
+            sendBtn.addEventListener('click', sendBtn._sendHandler);
+        }
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                    document.getElementById('materialsEmail').value = '';
+                    isModalSending = false;
                 }, 200);
             }
         });
     }
-
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.remove('show');
-            setTimeout(() => {
-                modal.style.display = 'none';
-                document.body.classList.remove('modal-open');
-            }, 200);
-        }
-    });
-}
-
-// Вызов в DOMContentLoaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMaterialsEmailButtons);
-} else {
-    initMaterialsEmailButtons();
-}
 
     // Основная инициализация
     document.addEventListener('DOMContentLoaded', function () {
@@ -204,9 +229,11 @@ if (document.readyState === 'loading') {
         if (typeof initBurgerMenu === 'function') initBurgerMenu();
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
         if (typeof initCookieConsent === 'function') initCookieConsent();
+        if (typeof initShareButtons === 'function') initShareButtons();
 
         initFormValidation();
         initScrollTopButton();
+        initMaterialsEmailButtons();
 
         const originalInitCalculator = window.initCalculator;
         if (originalInitCalculator) {

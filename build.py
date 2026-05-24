@@ -34,7 +34,8 @@ def build_page():
     footer = read_file(os.path.join(COMMON_DIR, "02_footer.html"))
     cookie = read_file(os.path.join(COMMON_DIR, "03_cookie-banner.html"))
     privacy = read_file(os.path.join(COMMON_DIR, "04_privacy-modal.html"))
-    # checklist больше не нужен — удалён
+    floating_share = read_file(os.path.join(COMMON_DIR, "05_floating-share.html"))
+    materials_modal = read_file(os.path.join(COMMON_DIR, "06_materials-modal.html"))
 
     footer = footer.replace("{{VERSION}}", datetime.now().strftime("%d.%m.%Y %H:%M:%S"))
 
@@ -44,8 +45,7 @@ def build_page():
     if head_close_pos != -1:
         head = head[:head_close_pos] + f'<style>\n{full_css}\n</style>\n' + head[head_close_pos:]
 
-    # checklist больше не добавляем
-    body_content = navbar + sections_html + footer + cookie + privacy
+    body_content = navbar + sections_html + footer + cookie + privacy + floating_share + materials_modal
     body_with_script = body_content + f'<script defer>\n{full_js}\n</script>'
 
     full_html = head + body_with_script
