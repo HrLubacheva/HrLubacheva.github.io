@@ -9,7 +9,7 @@
 
     <!-- Основные SEO-теги -->
     <meta name="description"
-          content="Карьерный консультант, HR-эксперт, бизнес-тренер. Помощь в трудоустройстве, подборе персонала, тренинги. 1 Экспресс-консультация 15 минут без обязательств.">
+          content="Карьерный консультант, HR-эксперт, бизнес-тренер. Помощь в трудоустройстве, подборе персонала, тренинги. Бесплатная Экспресс-консультация 15 минут.">
     <meta name="keywords"
           content="карьерный консультант, HR, подбор персонала, тренинг, резюме, консультация, коучинг, профориентация, онбординг, хэдхантинг, hr-эксперт, бизнес-тренер, психолог, карьерный рост, трудоустройство, рекрутинг">
     <meta name="author" content="Виктория Любачева">
@@ -20,7 +20,7 @@
     <!-- Open Graph (для соцсетей) -->
     <meta property="og:title" content="Виктория Любачева | Карьерный консультант">
     <meta property="og:description"
-          content="Помогаю компаниям и специалистам достигать карьерных целей. 2 Экспресс-консультация 15 минут без обязательств.">
+          content="Помогаю компаниям и специалистам достигать карьерных целей. Бесплатная Экспресс-консультация 15 минут.">
     <meta property="og:image" content="https://hrlubacheva.github.io/assets/images/img_1.jpg">
     <meta property="og:url" content="https://hrlubacheva.github.io/">
     <meta property="og:type" content="website">
@@ -31,7 +31,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Виктория Любачева | Карьерный консультант · HR-эксперт · Бизнес-тренер">
     <meta name="twitter:description"
-          content="Помогаю компаниям находить и развивать персонал. Кандидатам — найти работу, построить карьеру и повысить доход. 3 Экспресс-консультация 15 минут без обязательств.">
+          content="Помогаю компаниям находить и развивать персонал. Кандидатам — найти работу, построить карьеру и повысить доход. Бесплатная Экспресс-консультация 15 минут.">
     <meta name="twitter:image" content="https://hrlubacheva.github.io/assets/images/img_1.jpg">
 
     <link rel="canonical" href="https://hrlubacheva.github.io/">
@@ -3306,15 +3306,29 @@ footer a:hover {
 <section id="calendar">
     <div class="container">
         <div class="calendar-card fade-up">
-            <h2 class="section-title">📞 Экспресс-консультация 15 минут</h2>
-            <p>Разберём вашу ситуацию и найдём точки роста. Для соискателя и бизнеса.</p>
+            <h2 class="section-title">
+                📋 Экспресс-диагностика 15 минут
+                <span style="font-size: 0.8rem; display: block; color: var(--primary); font-weight: normal;">Разберём вашу ситуацию — без обязательств</span>
+            </h2>
+
+            <div style="text-align: center; margin-bottom: 24px;">
+                <p style="font-size: 1rem;">Для соискателей, специалистов, руководителей и бизнеса.</p>
+                <p style="font-size: 0.9rem; color: var(--secondary); margin-top: 8px;">Найдём точки роста, дадим рекомендации и предложим решение.</p>
+                <div style="display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 16px;">
+                    <span>🔒 Конфиденциально</span>
+                    <span>⏱️ 15 минут</span>
+                    <span>🤝 Без обязательств</span>
+                </div>
+            </div>
 
             <form id="callbackForm" class="callback-form responsive-form">
                 <div class="form-row">
-                    <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя (необязательно)">
+                    <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя">
                     <input type="tel" id="callbackPhone" name="phone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
                 </div>
-                <input type="email" id="callbackEmail" name="email" placeholder="📧 Email (необязательно)">
+
+                <!-- Email теперь в той же строке, что и телефон? Нет, лучше сделаем отдельную строку, но компактнее -->
+                <input type="email" id="callbackEmail" name="email" placeholder="📧 Email (необязательно)" style="margin-bottom: 16px;">
 
                 <div id="quizSelectionBlock" class="calc-item" style="display: none;">
                     <div class="service-name"></div>
@@ -3331,16 +3345,19 @@ footer a:hover {
                 <input type="hidden" name="recommendedVariants" id="recommendedVariants">
                 <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
 
-                <textarea id="callbackComment" name="comment" rows="3" placeholder="💬 Удобное время для звонка или дополнительная информация"></textarea>
+                <textarea id="callbackComment" name="comment" rows="3" placeholder="💬 Удобное время или дополнительная информация"></textarea>
 
                 <div class="consent-checkbox">
                     <input type="checkbox" id="callbackConsent" name="consent" required>
                     <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                 </div>
 
-                <button type="submit" class="btn-primary btn-block">Получить консультацию</button>
+                <button type="submit" class="btn-primary btn-block">📋 Записаться →</button>
             </form>
-            <p class="callback-note">После отправки мы свяжемся с вами в рабочее время.</p>
+
+            <p class="callback-note" style="margin-top: 16px; font-size: 0.8rem;">
+                После отправки мы свяжемся с вами для уточнения времени.
+            </p>
         </div>
     </div>
 </section>
@@ -3382,7 +3399,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 24.05.2026 20:29:06
+                Версия: 24.05.2026 20:41:16
             </div>
         </div>
     </div>
