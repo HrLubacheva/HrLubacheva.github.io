@@ -138,8 +138,16 @@ function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, orig
     if (typeof window.getDeviceText === 'function') formData.device = window.getDeviceText();
     if (typeof window.getPageText === 'function') formData.page = window.getPageText();
 
-    // postWithRetry всегда определена в 00_core.js
-    window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => console.warn('Ошибка отправки статистики квиза:', err));
+    if (typeof window.postWithRetry === 'function') {
+        window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => console.warn('Ошибка отправки статистики квиза:', err));
+    } else {
+        console.warn('postWithRetry не определён, отправка через fallback fetch');
+        fetch(scriptUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData)
+        }).catch(e => console.warn('Fallback ошибка:', e));
+    }
 }
     const FIRST_QUESTION = {
         text: "1. Ваша роль?",

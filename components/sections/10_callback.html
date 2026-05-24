@@ -4,12 +4,14 @@
             <h2 class="section-title">📞 Бесплатная 20-минутная диагностика</h2>
             <p>Разберём вашу ситуацию: для соискателя — что мешает получить оффер выше; для бизнеса — почему вакансия не закрывается.</p>
 
-            <form id="callbackForm" class="callback-form">
-                <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя (необязательно)">
-                <input type="tel" id="callbackPhone" name="phone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
+            <form id="callbackForm" class="callback-form responsive-form">
+                <div class="form-row">
+                    <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя (необязательно)">
+                    <input type="tel" id="callbackPhone" name="phone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
+                </div>
                 <input type="email" id="callbackEmail" name="email" placeholder="📧 Email (необязательно)">
 
-                <!-- Блок выбранного варианта из квиза (стиль корзины) -->
+                <!-- Блок выбранного варианта из квиза (единый стиль с корзиной) -->
                 <div id="quizSelectionBlock" class="calc-item" style="display: none;">
                     <div class="service-name"></div>
                     <div class="service-price"></div>
@@ -33,7 +35,7 @@
                     <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                 </div>
 
-                <button type="submit" class="btn-primary">Получить консультацию</button>
+                <button type="submit" class="btn-primary btn-block">Получить консультацию</button>
             </form>
             <p class="callback-note">После отправки мы свяжемся с вами в рабочее время.</p>
         </div>

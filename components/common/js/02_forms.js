@@ -1,8 +1,8 @@
 function initCallbackForm() {
     function formatPhoneField(inputElement) {
         let rawValue = inputElement.value.replace(/\D/g, '');
-        if (typeof formatPhoneNumber === 'function') {
-            let masked = formatPhoneNumber(rawValue);
+        if (typeof window.formatPhoneNumber === 'function') {
+            let masked = window.formatPhoneNumber(rawValue);
             inputElement.value = masked || '';
         } else {
             if (rawValue.length > 11) rawValue = rawValue.slice(0, 11);
@@ -20,10 +20,42 @@ function initCallbackForm() {
     const quickPhone = document.getElementById('quickPhone');
     if (quickPhone) quickPhone.addEventListener('input', function() { formatPhoneField(this); });
 
+    // Живая валидация
+    if (callbackPhone && typeof window.bindLiveValidation === 'function') {
+        window.bindLiveValidation(callbackPhone, 'phone');
+    }
+    const callbackEmail = document.getElementById('callbackEmail');
+    if (callbackEmail && typeof window.bindLiveValidation === 'function') {
+        window.bindLiveValidation(callbackEmail, 'email');
+    }
+    if (quickPhone && typeof window.bindLiveValidation === 'function') {
+        window.bindLiveValidation(quickPhone, 'phone');
+    }
+
+    // Форма обратного звонка
     const callbackForm = document.getElementById('callbackForm');
     if (callbackForm) {
         callbackForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            const phoneInput = document.getElementById('callbackPhone');
+            const isPhoneValid = window.validatePhoneField(phoneInput, true);
+            if (!isPhoneValid) {
+                window.showErrorToast('📞 Исправьте номер телефона');
+                phoneInput.focus();
+                return;
+            }
+
+            const emailInput = document.getElementById('callbackEmail');
+            if (emailInput && emailInput.value.trim() !== '') {
+                const isEmailValid = window.validateEmailField(emailInput, true);
+                if (!isEmailValid) {
+                    window.showErrorToast('✉️ Исправьте email');
+                    emailInput.focus();
+                    return;
+                }
+            }
+
             await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
                 const quizBlock = document.getElementById('quizSelectionBlock');
                 if (quizBlock) quizBlock.style.display = 'none';
@@ -32,15 +64,26 @@ function initCallbackForm() {
         });
     }
 
+    // Форма быстрого заказа
     const quickForm = document.getElementById('quickOrderForm');
     if (quickForm) {
         quickForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const cartData = window.getCartData ? window.getCartData() : '';
-            if (!cartData || cartData === 'Корзина пуста') {
-                showErrorToast('Добавьте хотя бы одну услугу в корзину перед заказом');
+
+            const phoneInput = document.getElementById('quickPhone');
+            const isPhoneValid = window.validatePhoneField(phoneInput, true);
+            if (!isPhoneValid) {
+                window.showErrorToast('📞 Исправьте номер телефона');
+                phoneInput.focus();
                 return;
             }
+
+            const cartData = window.getCartData ? window.getCartData() : '';
+            if (!cartData || cartData === 'Корзина пуста') {
+                window.showErrorToast('🛒 Добавьте хотя бы одну услугу в корзину');
+                return;
+            }
+
             await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
                 const quizData = window.getQuizDataFromForm(form);
                 return { ...quizData, cart: cartData };

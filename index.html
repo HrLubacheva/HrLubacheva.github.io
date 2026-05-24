@@ -630,7 +630,7 @@ body {
 .benefit-card p {
     font-size: 1rem;
     line-height: 1.5;
-    color: var(--secondary-dark);  /* улучшенный контраст */
+    color: var(--secondary-dark);
     margin: 0;
 }
 @media (max-width: 768px) {
@@ -1696,16 +1696,18 @@ footer a:hover {
     display: none !important;
 }
 
+/* ========== Блок выбранной услуги из квиза (единый стиль с корзиной) ========== */
 #quizSelectionBlock {
     background: #f0f7ff;
     border-left: 4px solid #2D6A9F;
-    border-radius: 12px;
-    padding: 12px 16px;
     margin-bottom: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.9rem;
+}
+#quizSelectionBlock .service-name {
+    word-break: break-word;
+}
+#quizSelectionBlock .service-price {
+    font-weight: 600;
+    color: var(--primary);
 }
 #removeQuizSelection {
     background: none;
@@ -1715,10 +1717,16 @@ footer a:hover {
     color: #dc3545;
     padding: 0 8px;
     transition: transform 0.1s;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 #removeQuizSelection:hover {
-    transform: scale(1.1);
-    color: #a71d2a;
+    background: #fee2e2;
+    transform: scale(1.05);
 }
 
 /* ========== ВЫРАВНИВАНИЕ КАРТОЧЕК ПРОЦЕССОВ (единый стиль) ========== */
@@ -1871,13 +1879,13 @@ body.modal-open {
 /* ========== УЛУЧШЕННЫЙ КОНТРАСТ НА ТЁМНОМ ФОНЕ ========== */
 .section-dark {
     background: var(--dark-bg);
-    color: #e2e8f0; /* вместо var(--text-light) для лучшего контраста */
+    color: #e2e8f0;
 }
 .section-dark .section-title {
     color: white;
 }
 .section-dark a {
-    color: #90cdf4; /* светлый голубой для ссылок на тёмном фоне */
+    color: #90cdf4;
 }
 .section-dark a:hover {
     color: white;
@@ -1912,6 +1920,70 @@ footer a:hover {
         transition: none !important;
         animation: none !important;
         transform: none !important;
+    }
+}
+
+/* ========== АДАПТИВНЫЕ ФОРМЫ (быстрый заказ и обратная связь) ========== */
+.responsive-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+.responsive-form .form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.responsive-form input,
+.responsive-form textarea,
+.responsive-form .btn-block {
+    width: 100%;
+    box-sizing: border-box;
+}
+.btn-block {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+@media (max-width: 640px) {
+    .responsive-form .form-row {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .responsive-form input,
+    .responsive-form textarea,
+    .responsive-form .btn-primary {
+        font-size: 16px;
+    }
+    .calendar-card {
+        padding: 24px 16px !important;
+    }
+    .callback-form input,
+    .callback-form textarea {
+        margin: 8px 0;
+    }
+}
+
+/* ========== ВАЛИДАЦИЯ ПОЛЕЙ ========== */
+.input-error {
+    border-color: #dc3545 !important;
+    box-shadow: 0 0 0 2px rgba(220,53,69,0.2) !important;
+}
+.field-error-message {
+    color: #dc3545;
+    font-size: 0.75rem;
+    margin-top: 4px;
+    display: block;
+    animation: fadeInUp 0.2s ease;
+}
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
 </style>
@@ -2205,9 +2277,9 @@ footer a:hover {
 
             <div class="calculator-tabs">
                 <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 10px;">
-                    <button class="tab-btn" data-tab="business-recruitment">👥 Поиск сотрудников</button>
+                    <button class="tab-btn active" data-tab="business-recruitment">👥 Поиск сотрудников</button>
                     <button class="tab-btn" data-tab="business-retention">🏆 Удержание и развитие</button>
-                    <button class="tab-btn active" data-tab="corporate">🎓 Тренинги для бизнеса</button>
+                    <button class="tab-btn" data-tab="corporate">🎓 Тренинги для бизнеса</button>
                 </div>
                 <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 10px;">
                     <button class="tab-btn" data-tab="individual-base">👤 Базовые (до 10 000 ₽)</button>
@@ -2217,7 +2289,7 @@ footer a:hover {
                 </div>
             </div>
 
-            <!-- Вкладка Поиск сотрудников -->
+            <!-- Вкладка Поиск сотрудников (активна по умолчанию) -->
             <div id="tab-business-recruitment" class="tab-pane active">
                 <div class="add-service">
                     <select id="business-recruitment-select" class="service-select"></select>
@@ -2313,14 +2385,14 @@ footer a:hover {
                 <div id="training-list" class="services-list"></div>
             </div>
 
-            <!-- Быстрый заказ -->
+            <!-- Быстрый заказ (адаптивная форма) -->
             <div class="calendar-card" style="margin-top: 40px; padding: 32px; background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%); border-radius: 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.1);">
-                <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark);">📞 Быстрый заказ</h3>
-                <p style="margin-bottom: 24px; color: var(--secondary);">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
-                <form id="quickOrderForm" class="callback-form" style="max-width: 100%;">
-                    <div style="display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap;">
-                        <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)" style="flex: 1; padding: 14px 20px; border-radius: 60px; border: 1px solid var(--border); font-size: 1rem;">
-                        <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required style="flex: 1; padding: 14px 20px; border-radius: 60px; border: 1px solid var(--border); font-size: 1rem;">
+                <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark); text-align: center;">📞 Быстрый заказ</h3>
+                <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
+                <form id="quickOrderForm" class="callback-form responsive-form">
+                    <div class="form-row">
+                        <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)">
+                        <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required>
                     </div>
 
                     <!-- Скрытые поля для данных квиза -->
@@ -2331,11 +2403,12 @@ footer a:hover {
                     <input type="hidden" name="recommendedVariants" id="quickRecommendedVariants">
                     <input type="hidden" name="quizAnswersRaw" id="quickQuizAnswersRaw">
 
-                    <div class="consent-checkbox" style="margin-bottom: 24px;">
+                    <div class="consent-checkbox" style="margin: 20px 0;">
                         <input type="checkbox" id="quickConsent" name="consent" required>
                         <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                     </div>
-                    <button type="submit" class="btn-primary" style="width:100%; padding:14px; font-weight:700;">📞 Заказать звонок</button>
+
+                    <button type="submit" class="btn-primary btn-block">📞 Заказать звонок</button>
                 </form>
             </div>
         </div>
@@ -2369,12 +2442,14 @@ footer a:hover {
             <h2 class="section-title">📞 Бесплатная 20-минутная диагностика</h2>
             <p>Разберём вашу ситуацию: для соискателя — что мешает получить оффер выше; для бизнеса — почему вакансия не закрывается.</p>
 
-            <form id="callbackForm" class="callback-form">
-                <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя (необязательно)">
-                <input type="tel" id="callbackPhone" name="phone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
+            <form id="callbackForm" class="callback-form responsive-form">
+                <div class="form-row">
+                    <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя (необязательно)">
+                    <input type="tel" id="callbackPhone" name="phone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
+                </div>
                 <input type="email" id="callbackEmail" name="email" placeholder="📧 Email (необязательно)">
 
-                <!-- Блок выбранного варианта из квиза (стиль корзины) -->
+                <!-- Блок выбранного варианта из квиза (единый стиль с корзиной) -->
                 <div id="quizSelectionBlock" class="calc-item" style="display: none;">
                     <div class="service-name"></div>
                     <div class="service-price"></div>
@@ -2398,7 +2473,7 @@ footer a:hover {
                     <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                 </div>
 
-                <button type="submit" class="btn-primary">Получить консультацию</button>
+                <button type="submit" class="btn-primary btn-block">Получить консультацию</button>
             </form>
             <p class="callback-note">После отправки мы свяжемся с вами в рабочее время.</p>
         </div>
@@ -2429,7 +2504,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 24.05.2026 04:21:16
+                Версия: 24.05.2026 10:47:15
             </div>
         </div>
     </div>
@@ -2856,23 +2931,6 @@ async function getGeoData() {
 }
 window.getGeoData = getGeoData;
 
-window.escapeHtml = escapeHtml;
-window.getOrCreateLocalUserId = getOrCreateLocalUserId;
-window.initUserId = initUserId;
-window.formatPhoneNumber = formatPhoneNumber;
-window.fetchWithRetry = fetchWithRetry;
-window.fetchTextWithRetry = fetchTextWithRetry;
-window.loadWithCache = loadWithCache;
-window.showLoading = showLoading;
-window.hideLoading = hideLoading;
-window.log = log;
-window.logError = logError;
-window.logWarn = logWarn;
-window.showToast = showToast;
-window.showErrorToast = showErrorToast;
-window.showSuccessToast = showSuccessToast;
-window.showWarningToast = showWarningToast;
-
 // ========== ЕДИНЫЙ МОДУЛЬ ОТПРАВКИ ФОРМ ==========
 window.submitForm = async function(formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
@@ -2959,6 +3017,109 @@ window.getQuizDataFromForm = function(form) {
         cart: window.getCartData ? window.getCartData() : ''
     };
 };
+
+// ========== ВАЛИДАЦИЯ ТЕЛЕФОНА И EMAIL ==========
+function normalizePhoneDigits(phone) {
+    let digits = phone.replace(/\D/g, '');
+    if (digits.length === 0) return '';
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (!digits.startsWith('7')) digits = '7' + digits;
+    return digits;
+}
+
+function validatePhoneDigits(phone) {
+    const digits = normalizePhoneDigits(phone);
+    return digits.length === 11 && /^7\d{10}$/.test(digits);
+}
+
+function validateEmailFormat(email) {
+    if (!email) return true;
+    const re = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+    return re.test(email);
+}
+
+function showFieldError(input, message) {
+    if (input._errorElement) input._errorElement.remove();
+    const errorSpan = document.createElement('span');
+    errorSpan.className = 'field-error-message';
+    errorSpan.textContent = message;
+    input.insertAdjacentElement('afterend', errorSpan);
+    input._errorElement = errorSpan;
+    input.classList.add('input-error');
+}
+
+function clearFieldError(input) {
+    if (input._errorElement) {
+        input._errorElement.remove();
+        input._errorElement = null;
+    }
+    input.classList.remove('input-error');
+}
+
+function validatePhoneField(input, showImmediate = true) {
+    const phone = input.value.trim();
+    if (!phone) {
+        if (showImmediate) showFieldError(input, '❌ Введите номер телефона');
+        return false;
+    }
+    const isValid = validatePhoneDigits(phone);
+    if (!isValid && showImmediate) {
+        showFieldError(input, '❌ Некорректный номер. Нужно 11 цифр, например +7 921 791-66-55');
+    } else {
+        clearFieldError(input);
+    }
+    return isValid;
+}
+
+function validateEmailField(input, showImmediate = true) {
+    const email = input.value.trim();
+    if (!email) {
+        clearFieldError(input);
+        return true;
+    }
+    const isValid = validateEmailFormat(email);
+    if (!isValid && showImmediate) {
+        showFieldError(input, '❌ Введите корректный email, например name@domain.ru');
+    } else {
+        clearFieldError(input);
+    }
+    return isValid;
+}
+
+function bindLiveValidation(input, type = 'phone') {
+    if (!input) return;
+    const validateFn = type === 'phone' ? validatePhoneField : validateEmailField;
+    input.addEventListener('blur', () => validateFn(input, true));
+    input.addEventListener('input', () => clearFieldError(input));
+}
+
+// ========== ЭКСПОРТ ВСЕХ ФУНКЦИЙ В ГЛОБАЛЬНЫЙ ОБЪЕКТ ==========
+window.escapeHtml = escapeHtml;
+window.getOrCreateLocalUserId = getOrCreateLocalUserId;
+window.initUserId = initUserId;
+window.formatPhoneNumber = formatPhoneNumber;
+window.fetchWithRetry = fetchWithRetry;
+window.fetchTextWithRetry = fetchTextWithRetry;
+window.loadWithCache = loadWithCache;
+window.showLoading = showLoading;
+window.hideLoading = hideLoading;
+window.log = log;
+window.logError = logError;
+window.logWarn = logWarn;
+window.showToast = showToast;
+window.showErrorToast = showErrorToast;
+window.showSuccessToast = showSuccessToast;
+window.showWarningToast = showWarningToast;
+
+// Экспорт функций валидации
+window.normalizePhoneDigits = normalizePhoneDigits;
+window.validatePhoneDigits = validatePhoneDigits;
+window.validateEmailFormat = validateEmailFormat;
+window.showFieldError = showFieldError;
+window.clearFieldError = clearFieldError;
+window.validatePhoneField = validatePhoneField;
+window.validateEmailField = validateEmailField;
+window.bindLiveValidation = bindLiveValidation;
 function initAnimations() {
     const elements = document.querySelectorAll('.fade-up');
     if (!elements.length) return;
@@ -2980,8 +3141,8 @@ window.initAnimations = initAnimations;
 function initCallbackForm() {
     function formatPhoneField(inputElement) {
         let rawValue = inputElement.value.replace(/\D/g, '');
-        if (typeof formatPhoneNumber === 'function') {
-            let masked = formatPhoneNumber(rawValue);
+        if (typeof window.formatPhoneNumber === 'function') {
+            let masked = window.formatPhoneNumber(rawValue);
             inputElement.value = masked || '';
         } else {
             if (rawValue.length > 11) rawValue = rawValue.slice(0, 11);
@@ -2999,10 +3160,42 @@ function initCallbackForm() {
     const quickPhone = document.getElementById('quickPhone');
     if (quickPhone) quickPhone.addEventListener('input', function() { formatPhoneField(this); });
 
+    // Живая валидация
+    if (callbackPhone && typeof window.bindLiveValidation === 'function') {
+        window.bindLiveValidation(callbackPhone, 'phone');
+    }
+    const callbackEmail = document.getElementById('callbackEmail');
+    if (callbackEmail && typeof window.bindLiveValidation === 'function') {
+        window.bindLiveValidation(callbackEmail, 'email');
+    }
+    if (quickPhone && typeof window.bindLiveValidation === 'function') {
+        window.bindLiveValidation(quickPhone, 'phone');
+    }
+
+    // Форма обратного звонка
     const callbackForm = document.getElementById('callbackForm');
     if (callbackForm) {
         callbackForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+
+            const phoneInput = document.getElementById('callbackPhone');
+            const isPhoneValid = window.validatePhoneField(phoneInput, true);
+            if (!isPhoneValid) {
+                window.showErrorToast('📞 Исправьте номер телефона');
+                phoneInput.focus();
+                return;
+            }
+
+            const emailInput = document.getElementById('callbackEmail');
+            if (emailInput && emailInput.value.trim() !== '') {
+                const isEmailValid = window.validateEmailField(emailInput, true);
+                if (!isEmailValid) {
+                    window.showErrorToast('✉️ Исправьте email');
+                    emailInput.focus();
+                    return;
+                }
+            }
+
             await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
                 const quizBlock = document.getElementById('quizSelectionBlock');
                 if (quizBlock) quizBlock.style.display = 'none';
@@ -3011,15 +3204,26 @@ function initCallbackForm() {
         });
     }
 
+    // Форма быстрого заказа
     const quickForm = document.getElementById('quickOrderForm');
     if (quickForm) {
         quickForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            const cartData = window.getCartData ? window.getCartData() : '';
-            if (!cartData || cartData === 'Корзина пуста') {
-                showErrorToast('Добавьте хотя бы одну услугу в корзину перед заказом');
+
+            const phoneInput = document.getElementById('quickPhone');
+            const isPhoneValid = window.validatePhoneField(phoneInput, true);
+            if (!isPhoneValid) {
+                window.showErrorToast('📞 Исправьте номер телефона');
+                phoneInput.focus();
                 return;
             }
+
+            const cartData = window.getCartData ? window.getCartData() : '';
+            if (!cartData || cartData === 'Корзина пуста') {
+                window.showErrorToast('🛒 Добавьте хотя бы одну услугу в корзину');
+                return;
+            }
+
             await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
                 const quizData = window.getQuizDataFromForm(form);
                 return { ...quizData, cart: cartData };
@@ -4102,8 +4306,16 @@ function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, orig
     if (typeof window.getDeviceText === 'function') formData.device = window.getDeviceText();
     if (typeof window.getPageText === 'function') formData.page = window.getPageText();
 
-    // postWithRetry всегда определена в 00_core.js
-    window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => console.warn('Ошибка отправки статистики квиза:', err));
+    if (typeof window.postWithRetry === 'function') {
+        window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => console.warn('Ошибка отправки статистики квиза:', err));
+    } else {
+        console.warn('postWithRetry не определён, отправка через fallback fetch');
+        fetch(scriptUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams(formData)
+        }).catch(e => console.warn('Fallback ошибка:', e));
+    }
 }
     const FIRST_QUESTION = {
         text: "1. Ваша роль?",

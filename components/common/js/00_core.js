@@ -376,23 +376,6 @@ async function getGeoData() {
 }
 window.getGeoData = getGeoData;
 
-window.escapeHtml = escapeHtml;
-window.getOrCreateLocalUserId = getOrCreateLocalUserId;
-window.initUserId = initUserId;
-window.formatPhoneNumber = formatPhoneNumber;
-window.fetchWithRetry = fetchWithRetry;
-window.fetchTextWithRetry = fetchTextWithRetry;
-window.loadWithCache = loadWithCache;
-window.showLoading = showLoading;
-window.hideLoading = hideLoading;
-window.log = log;
-window.logError = logError;
-window.logWarn = logWarn;
-window.showToast = showToast;
-window.showErrorToast = showErrorToast;
-window.showSuccessToast = showSuccessToast;
-window.showWarningToast = showWarningToast;
-
 // ========== ЕДИНЫЙ МОДУЛЬ ОТПРАВКИ ФОРМ ==========
 window.submitForm = async function(formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
@@ -479,3 +462,106 @@ window.getQuizDataFromForm = function(form) {
         cart: window.getCartData ? window.getCartData() : ''
     };
 };
+
+// ========== ВАЛИДАЦИЯ ТЕЛЕФОНА И EMAIL ==========
+function normalizePhoneDigits(phone) {
+    let digits = phone.replace(/\D/g, '');
+    if (digits.length === 0) return '';
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (!digits.startsWith('7')) digits = '7' + digits;
+    return digits;
+}
+
+function validatePhoneDigits(phone) {
+    const digits = normalizePhoneDigits(phone);
+    return digits.length === 11 && /^7\d{10}$/.test(digits);
+}
+
+function validateEmailFormat(email) {
+    if (!email) return true;
+    const re = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+    return re.test(email);
+}
+
+function showFieldError(input, message) {
+    if (input._errorElement) input._errorElement.remove();
+    const errorSpan = document.createElement('span');
+    errorSpan.className = 'field-error-message';
+    errorSpan.textContent = message;
+    input.insertAdjacentElement('afterend', errorSpan);
+    input._errorElement = errorSpan;
+    input.classList.add('input-error');
+}
+
+function clearFieldError(input) {
+    if (input._errorElement) {
+        input._errorElement.remove();
+        input._errorElement = null;
+    }
+    input.classList.remove('input-error');
+}
+
+function validatePhoneField(input, showImmediate = true) {
+    const phone = input.value.trim();
+    if (!phone) {
+        if (showImmediate) showFieldError(input, '❌ Введите номер телефона');
+        return false;
+    }
+    const isValid = validatePhoneDigits(phone);
+    if (!isValid && showImmediate) {
+        showFieldError(input, '❌ Некорректный номер. Нужно 11 цифр, например +7 921 791-66-55');
+    } else {
+        clearFieldError(input);
+    }
+    return isValid;
+}
+
+function validateEmailField(input, showImmediate = true) {
+    const email = input.value.trim();
+    if (!email) {
+        clearFieldError(input);
+        return true;
+    }
+    const isValid = validateEmailFormat(email);
+    if (!isValid && showImmediate) {
+        showFieldError(input, '❌ Введите корректный email, например name@domain.ru');
+    } else {
+        clearFieldError(input);
+    }
+    return isValid;
+}
+
+function bindLiveValidation(input, type = 'phone') {
+    if (!input) return;
+    const validateFn = type === 'phone' ? validatePhoneField : validateEmailField;
+    input.addEventListener('blur', () => validateFn(input, true));
+    input.addEventListener('input', () => clearFieldError(input));
+}
+
+// ========== ЭКСПОРТ ВСЕХ ФУНКЦИЙ В ГЛОБАЛЬНЫЙ ОБЪЕКТ ==========
+window.escapeHtml = escapeHtml;
+window.getOrCreateLocalUserId = getOrCreateLocalUserId;
+window.initUserId = initUserId;
+window.formatPhoneNumber = formatPhoneNumber;
+window.fetchWithRetry = fetchWithRetry;
+window.fetchTextWithRetry = fetchTextWithRetry;
+window.loadWithCache = loadWithCache;
+window.showLoading = showLoading;
+window.hideLoading = hideLoading;
+window.log = log;
+window.logError = logError;
+window.logWarn = logWarn;
+window.showToast = showToast;
+window.showErrorToast = showErrorToast;
+window.showSuccessToast = showSuccessToast;
+window.showWarningToast = showWarningToast;
+
+// Экспорт функций валидации
+window.normalizePhoneDigits = normalizePhoneDigits;
+window.validatePhoneDigits = validatePhoneDigits;
+window.validateEmailFormat = validateEmailFormat;
+window.showFieldError = showFieldError;
+window.clearFieldError = clearFieldError;
+window.validatePhoneField = validatePhoneField;
+window.validateEmailField = validateEmailField;
+window.bindLiveValidation = bindLiveValidation;
