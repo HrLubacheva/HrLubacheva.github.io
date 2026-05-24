@@ -1,7 +1,7 @@
 // ========== ГЛОБАЛЬНЫЕ НАСТРОЙКИ САЙТА ==========
 window.APP_CONFIG = {
     // URL веб-приложения Google Apps Script (обработчик форм)
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycby8YnbCDoou8gKJ6OI_GN4fUAx88Ophxh3KG-_ynRDboc3is82B3f79qSjq2wSlwLrlng/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxVTgwEAboqfFpMmfEwyoPBzXoCTbM0xMQhLYnyXzyX1_cq7PGVct562CVfLmLDnooHUA/exec',
 
     // Контакты (для ссылок в меню и подвале)
     TELEGRAM: 'https://t.me/HrLubacheva',
