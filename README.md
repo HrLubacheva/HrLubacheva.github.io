@@ -32,7 +32,7 @@
 
 - 📱 **Telegram:** [@HrLubacheva](https://t.me/HrLubacheva)  
 - 💬 **WhatsApp:** [+7 921 791‑66‑55](https://wa.me/79217916655)  
-- ✉️ **Email:** [hrlubacheva@mail.ru](mailto:hrlubacheva@mail.ru)  
+- ✉️ **Email:** [hrlubacheva@yandex.ru](mailto:hrlubacheva@yandex.ru)  
 - 🌐 **Сайт:** [hrlubacheva.github.io](https://hrlubacheva.github.io)
 
 ---

@@ -223,7 +223,7 @@ git push origin main
 - **Автор / поддержка**:
   - Telegram: `@HrLubacheva`
   - WhatsApp: `+7 921 791-66-55`
-  - Email: `hrlubacheva@mail.ru`
+  - Email: `hrlubacheva@yandex.ru`
 
 ---
 

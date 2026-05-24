@@ -6,8 +6,7 @@ window.APP_CONFIG = {
     // Контакты (для ссылок в меню и подвале)
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
-    INSTAGRAM: 'https://www.instagram.com/HrLubacheva/',
-    EMAIL: 'hrlubacheva@mail.ru',
+    EMAIL: 'hrlubacheva@yandex.ru',
     PHONE: '+79217916655',
 
     // ID счётчиков аналитики
