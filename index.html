@@ -531,12 +531,14 @@ body {
     display: block;
     margin: 0 auto;
     border-radius: 20px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
 }
 
 @media (min-width: 1024px) {
     .hero-image img {
-        max-width: 480px;
+        max-width: 100%;
+        max-height: 550px;
+        width: auto;
     }
 }
 
@@ -2557,17 +2559,25 @@ footer a:hover {
         <div class="hero-grid">
             <div class="hero-content cell-text fade-up" data-cell-type="text">
                 <h1 class="hero-title">Виктория Любачева</h1>
-                <div class="hero-subtitle">Карьерный консультант · HR‑эксперт · Бизнес‑тренер · Психолог · Коуч </div>
+                <div class="hero-subtitle">Карьерный консультант · HR‑эксперт · Бизнес‑тренер · Психолог · Коуч</div>
                 <div class="hero-text">
                     <p>Помогаю компаниям находить и развивать персонал. Кандидатам — найти работу, построить карьеру и повысить свой доход. <br>24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.</p>
                     <p><strong>Для бизнеса</strong> — подбор, онбординг, тренинги, обучение и удержание персонала, аудит HR-процессов.<br><strong>Для специалистов и руководителей</strong> — резюме, подготовка к интервью, стратегия поиска работы, управление персоналом.</p>
                 </div>
-                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 5px;">
+
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                     <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a>
                     <a href="#calendar" class="btn-secondary">Экспресс-консультация</a>
                 </div>
-                <div class="small-note">Мои клиенты — люди различных профессий и разных сфер бизнеса: специалисты, руководители и собственники бизнеса.</div>
-                <div class="small-note">Работаю с профессионалами от Junior до C-level и с бизнесом любого масштаба.</div>
+
+                <div style="margin-top: 20px;">
+                    <a href="#quiz" style="color: var(--primary); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">
+                        🤔 Не знаете, с чего начать? → Квиз за 1 минуту
+                    </a>
+                </div>
+
+                <div class="small-note" style="margin-top: 28px;">Мои клиенты — люди различных профессий и разных сфер бизнеса: специалисты, руководители и собственники бизнеса.</div>
+                <div class="small-note" style="margin-top: 8px;">Работаю с профессионалами от Junior до C-level и с бизнесом любого масштаба.</div>
             </div>
             <div class="hero-image cell-image fade-up" data-cell-type="image">
                 <img src="assets/images/img_1.jpg" alt="Виктория Любачева" style="width: 100%; height: auto; max-width: 420px; object-fit: contain; display: block; margin: 0 auto;">
@@ -2614,27 +2624,57 @@ footer a:hover {
             <h2 class="section-title fade-up">Услуги</h2>
         </div>
         <div class="services-flex cells-grid" data-grid-type="cards">
+
+            <!-- HR для бизнеса -->
             <div class="service-card cell-card fade-up" itemscope itemtype="https://schema.org/Service">
                 <h3 itemprop="name">🏢&nbsp;HR для бизнеса</h3>
-                <p itemprop="description">Подбор персонала (Junior → C-level), онбординг, оценка, аутсорсинг подбора, кадровый аудит.</p>
+                <ul style="margin-top: 12px; padding-left: 20px; text-align: left;">
+                    <li>Подбор персонала (Junior → C-level)</li>
+                    <li>Онбординг и оценка</li>
+                    <li>Аутсорсинг подбора</li>
+                    <li>Кадровый аудит</li>
+                </ul>
                 <meta itemprop="provider" content="Виктория Любачева">
             </div>
+
+            <!-- Карьерный консалтинг -->
             <div class="service-card cell-card fade-up" itemscope itemtype="https://schema.org/Service">
                 <h3 itemprop="name">🧑&nbsp;Карьерный консалтинг</h3>
-                <p itemprop="description">Карьерная стратегия, упаковка резюме, подготовка к интервью и переговоры о зарплате. Помогаю заявить о ценности и получить достойный оффер.</p>
-                <p><strong>➕</strong> Изучаем АТС и ботов. Стратегия обхода ИИ-фильтров.</p>
+                <ul style="margin-top: 12px; padding-left: 20px; text-align: left;">
+                    <li>Карьерная стратегия</li>
+                    <li>Упаковка резюме</li>
+                    <li>Подготовка к интервью</li>
+                    <li>Переговоры о зарплате</li>
+                    <li>Обход ИИ-фильтров АТС</li>
+                </ul>
                 <meta itemprop="provider" content="Виктория Любачева">
             </div>
+
+            <!-- Бизнес-тренинги -->
             <div class="service-card cell-card fade-up" itemscope itemtype="https://schema.org/Service">
-                <h3 itemprop="name">🎓&nbsp;Бизнес–тренинги, обучение и коучинг персонала</h3>
-                <p itemprop="description">Корпоративные тренинги (до 25 чел.), обучение сотрудников, мастер-классы, стратегические сессии, индивидуальный коучинг топ-менеджеров.</p>
+                <h3 itemprop="name">🎓&nbsp;Бизнес‑тренинги, обучение и коучинг персонала</h3>
+                <ul style="margin-top: 12px; padding-left: 20px; text-align: left;">
+                    <li>Корпоративные тренинги (до 25 чел.)</li>
+                    <li>Развитие управленческих навыков</li>
+                    <li>Мастер-классы</li>
+                    <li>Стратегические сессии</li>
+                    <li>Коучинг топ-менеджеров</li>
+                </ul>
                 <meta itemprop="provider" content="Виктория Любачева">
             </div>
+
+            <!-- Профориентация -->
             <div class="service-card cell-card fade-up" itemscope itemtype="https://schema.org/Service">
                 <h3 itemprop="name">🎯&nbsp;Профориентация</h3>
-                <p itemprop="description">Для взрослых и подростков. Помогаю определиться с профессией, направлением развития, выбрать путь, который принесёт удовлетворение и доход.</p>
+                <ul style="margin-top: 12px; padding-left: 20px; text-align: left;">
+                    <li>Для взрослых и подростков</li>
+                    <li>Определение профессии</li>
+                    <li>Направление развития</li>
+                    <li>Поиск высокооплачиваемой ниши</li>
+                </ul>
                 <meta itemprop="provider" content="Виктория Любачева">
             </div>
+
         </div>
     </div>
 </section>
@@ -3039,7 +3079,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 24.05.2026 13:14:31
+                Версия: 24.05.2026 13:51:33
             </div>
         </div>
     </div>

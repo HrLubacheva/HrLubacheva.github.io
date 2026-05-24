@@ -408,12 +408,14 @@ body {
     display: block;
     margin: 0 auto;
     border-radius: 20px;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
 }
 
 @media (min-width: 1024px) {
     .hero-image img {
-        max-width: 480px;
+        max-width: 100%;
+        max-height: 550px;
+        width: auto;
     }
 }
 
