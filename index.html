@@ -127,6 +127,7 @@
     --primary-dark: #1F4A6E;
     --primary-light: #4A8BC2;
     --secondary: #6c757d;
+    --secondary-dark: #4a5568;
     --dark-bg: #1a2a3a;
     --light-bg: #f8f9fa;
     --surface-soft: #ffffff;
@@ -201,17 +202,13 @@ body {
     opacity: 0;
     transform: translateY(10px);
 }
-
 .quiz-options .quiz-option:nth-child(1) { animation-delay: 0.00s; }
 .quiz-options .quiz-option:nth-child(2) { animation-delay: 0.05s; }
 .quiz-options .quiz-option:nth-child(3) { animation-delay: 0.10s; }
 .quiz-options .quiz-option:nth-child(4) { animation-delay: 0.15s; }
 
 @keyframes quizOptionFadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px) {
@@ -447,33 +444,9 @@ body {
 /* ========== Карточки и сетки (общие) ========== */
 .roles-grid, .services-flex, .process-grid {
     display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 30px;
     margin: 40px 0;
-}
-
-/* Явно 3 колонки для ролей на десктопе (с приоритетом) */
-@media (min-width: 992px) {
-    .roles-grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-    }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-    .roles-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-}
-@media (max-width: 767px) {
-    .roles-grid {
-        grid-template-columns: 1fr !important;
-    }
-}
-
-/* Сетка для услуг и процессов (адаптивная) */
-.services-flex {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-}
-.process-grid {
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
 .role-card, .service-card, .process-card {
@@ -657,7 +630,7 @@ body {
 .benefit-card p {
     font-size: 1rem;
     line-height: 1.5;
-    color: var(--secondary);
+    color: var(--secondary-dark);  /* улучшенный контраст */
     margin: 0;
 }
 @media (max-width: 768px) {
@@ -717,6 +690,7 @@ body {
     to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Строка добавления услуги */
 .add-service {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -798,6 +772,7 @@ body {
     transform: translateY(1px);
 }
 
+/* Общий итог */
 .total-block {
     margin-top: 30px;
     padding-top: 20px;
@@ -812,6 +787,7 @@ body {
     margin-top: 8px;
 }
 
+/* Корзина */
 .cart-section {
     margin-top: 30px;
     border-top: 1px solid var(--border);
@@ -925,6 +901,7 @@ body {
     justify-content: center;
 }
 
+/* Адаптивность калькулятора */
 @media (max-width: 768px) {
     .services-header {
         display: none;
@@ -1008,7 +985,7 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     gap: 12px;
-    margin-top: 20px;
+    margin-top: 15px;
 }
 .quiz-option {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -1106,6 +1083,9 @@ body {
         text-align: center;
         padding: 14px 20px;
     }
+    .quiz-question p {
+        font-size: 1rem;
+    }
     .quiz-nav {
         flex-direction: column;
         gap: 12px;
@@ -1115,13 +1095,13 @@ body {
     }
 }
 
-/* ========== Принудительные стили для квиза (всегда видимы) ========== */
+/* Принудительные стили для квиза (всегда видимы) */
 .quiz-option,
 .quiz-options .quiz-option,
 div[class*="quiz-option"] {
-    background: #f8f9fa !important;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
     border: 1px solid #dee2e6 !important;
-    color: #212529 !important;
+    color: #1e4663 !important;
     padding: 12px 24px !important;
     border-radius: 40px !important;
     cursor: pointer !important;
@@ -1338,10 +1318,6 @@ div[class*="quiz-option"] {
     transform: scale(1);
 }
 
-body.modal-open {
-    overflow: hidden;
-}
-
 /* ========== Контакты ========== */
 .contact-block {
     text-align: center;
@@ -1505,17 +1481,17 @@ footer a:hover {
 .custom-toast-error {
     background: #dc3545;
     color: white;
-    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    box-shadow: 0 4px 15px rgba(220,53,69,0.3);
 }
 .custom-toast-success {
     background: #28a745;
     color: white;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    box-shadow: 0 4px 15px rgba(40,167,69,0.3);
 }
 .custom-toast-warning {
     background: #ffc107;
     color: #212529;
-    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+    box-shadow: 0 4px 15px rgba(255,193,7,0.3);
 }
 @keyframes toastFadeIn {
     from { opacity: 0; transform: translateX(-50%) translateY(20px); }
@@ -1534,12 +1510,12 @@ footer a:hover {
 .service-select:focus {
     outline: none !important;
     border-color: var(--primary) !important;
-    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
+    box-shadow: 0 0 0 2px rgba(45,106,159,0.3) !important;
     background-color: white !important;
 }
 .add-service-btn:focus {
     outline: none !important;
-    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
+    box-shadow: 0 0 0 2px rgba(45,106,159,0.3) !important;
 }
 
 /* ========== УЛУЧШЕННЫЙ КАСТОМНЫЙ ДРОПДАУН ========== */
@@ -1720,7 +1696,6 @@ footer a:hover {
     display: none !important;
 }
 
-/* ========== БЛОК ВЫБРАННОГО ВАРИАНТА КВИЗА В ФОРМЕ ========== */
 #quizSelectionBlock {
     background: #f0f7ff;
     border-left: 4px solid #2D6A9F;
@@ -1746,7 +1721,7 @@ footer a:hover {
     color: #a71d2a;
 }
 
-/* ========== ВЫРАВНИВАНИЕ КАРТОЧЕК ПРОЦЕССОВ ========== */
+/* ========== ВЫРАВНИВАНИЕ КАРТОЧЕК ПРОЦЕССОВ (единый стиль) ========== */
 .process-row {
     display: flex;
     flex-wrap: wrap;
@@ -1758,6 +1733,12 @@ footer a:hover {
     min-width: 280px;
     display: flex;
     flex-direction: column;
+}
+.process-title {
+    text-align: center;
+    margin: 40px 0 20px;
+    font-size: 1.8rem;
+    color: var(--primary-dark);
 }
 .process-grid {
     flex: 1;
@@ -1852,7 +1833,7 @@ footer a:hover {
     flex-grow: 1;
 }
 
-/* ========== A11Y: ФОКУС ДЛЯ ИНТЕРАКТИВНЫХ ЭЛЕМЕНТОВ ========== */
+/* ========== A11Y: Фокус для интерактивных элементов ========== */
 a:focus-visible,
 button:focus-visible,
 .quiz-option:focus-visible,
@@ -1864,6 +1845,27 @@ button:focus-visible,
     outline: 2px solid var(--primary);
     outline-offset: 2px;
     border-radius: 4px;
+}
+
+/* ========== A11Y: Блокировка скролла при открытой модалке ========== */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* ========== ФИКС: 3 КОЛОНКИ ДЛЯ РОЛЕЙ ========== */
+@media (min-width: 992px) {
+    .roles-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 30px !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    .roles-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 30px !important;
+    }
 }
 </style>
 </head>
@@ -2381,7 +2383,7 @@ button:focus-visible,
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 24.05.2026 03:34:06
+                Версия: 24.05.2026 03:43:06
             </div>
         </div>
     </div>
@@ -3022,12 +3024,27 @@ function initFormEnterSubmit() {
 
 window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
+let lastFocusedElement = null;
+
 function showModal(modal) {
     if (!modal) return;
+    // Сохраняем элемент, который открыл модалку
+    lastFocusedElement = document.activeElement;
+
     modal.style.display = 'flex';
     modal.offsetHeight;
     modal.classList.add('show');
     document.body.classList.add('modal-open');
+
+    // Перемещаем фокус на первый интерактивный элемент внутри модалки
+    const focusable = modal.querySelectorAll('button, a, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+    if (focusable.length) {
+        focusable[0].focus();
+    } else {
+        // Если нет фокусируемых элементов, фокусируемся на самой модалке (не рекомендуется, но запасной вариант)
+        modal.setAttribute('tabindex', '-1');
+        modal.focus();
+    }
 }
 
 function hideModal(modal) {
@@ -3038,6 +3055,12 @@ function hideModal(modal) {
         if (!modal.classList.contains('show')) modal.style.display = 'none';
         modal.removeEventListener('transitionend', onEnd);
     }, { once: true });
+
+    // Возвращаем фокус на элемент, который открывал модалку
+    if (lastFocusedElement && lastFocusedElement.focus) {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+    }
 }
 
 function initModal() {
@@ -3046,7 +3069,10 @@ function initModal() {
     const closeModalBtn = document.getElementById('closeModalBtn');
     const sendBtn = document.getElementById('sendMaterialsBtn');
 
-    if (openModal) openModal.addEventListener('click', () => showModal(modal));
+    if (openModal) {
+        openModal.addEventListener('click', () => showModal(modal));
+        // Для a11y: делаем кнопку открытия доступной через клавиатуру (уже есть)
+    }
     if (closeModalBtn) closeModalBtn.addEventListener('click', () => hideModal(modal));
 
     if (sendBtn) {
@@ -3075,7 +3101,12 @@ function initModal() {
                     <p>Проверьте вашу почту (и папку «Спам»). Ссылки на материалы уже в письме.</p>
                     <button id="closeAfterSendBtn" class="btn-primary">Закрыть</button>
                 `;
-                document.getElementById('closeAfterSendBtn').addEventListener('click', () => hideModal(modal));
+                const closeAfterBtn = document.getElementById('closeAfterSendBtn');
+                if (closeAfterBtn) {
+                    closeAfterBtn.addEventListener('click', () => hideModal(modal));
+                    // После замены содержимого фокусируемся на новой кнопке
+                    setTimeout(() => closeAfterBtn.focus(), 50);
+                }
             } catch (err) {
                 showErrorToast('Ошибка: ' + err.message);
                 sendBtn.disabled = false;
