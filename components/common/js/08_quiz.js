@@ -74,21 +74,44 @@
         });
     }
 
-    function updateSelectionBlock(variantText, variantPrice) {
-        const block = document.getElementById('quizSelectionBlock');
-        if (!block) return;
-        const nameSpan = block.querySelector('.service-name');
-        const priceSpan = block.querySelector('.service-price');
-        if (variantText && variantText !== '') {
-            if (nameSpan) nameSpan.innerHTML = window.escapeHtml(variantText);
-            if (priceSpan) priceSpan.innerHTML = variantPrice || 'цена по запросу';
-            block.style.display = 'grid';
+function updateSelectionBlock(variantText, variantPrice) {
+    const block = document.getElementById('quizSelectionBlock');
+    if (!block) return;
+    const nameSpan = block.querySelector('.service-name');
+    const priceSpan = block.querySelector('.service-price');
+    if (variantText && variantText !== '') {
+        if (nameSpan) nameSpan.innerHTML = window.escapeHtml(variantText);
+        // Если цена не указана (пусто или null), не показываем цену вообще
+        if (variantPrice && variantPrice !== '') {
+            if (priceSpan) priceSpan.innerHTML = variantPrice;
         } else {
-            block.style.display = 'none';
-            if (nameSpan) nameSpan.innerHTML = '';
             if (priceSpan) priceSpan.innerHTML = '';
         }
+        block.style.display = 'grid';
+        const forms = ['callbackForm', 'quickOrderForm'];
+        forms.forEach(formId => {
+            const form = document.getElementById(formId);
+            if (!form) return;
+            const chosenField = form.querySelector('[name="chosenVariant"]');
+            if (chosenField) chosenField.value = variantText;
+            const priceField = form.querySelector('[name="chosenVariantPrice"]');
+            if (priceField) priceField.value = variantPrice || '';
+        });
+    } else {
+        block.style.display = 'none';
+        if (nameSpan) nameSpan.innerHTML = '';
+        if (priceSpan) priceSpan.innerHTML = '';
+        const forms = ['callbackForm', 'quickOrderForm'];
+        forms.forEach(formId => {
+            const form = document.getElementById(formId);
+            if (!form) return;
+            const chosenField = form.querySelector('[name="chosenVariant"]');
+            if (chosenField) chosenField.value = '';
+            const priceField = form.querySelector('[name="chosenVariantPrice"]');
+            if (priceField) priceField.value = '';
+        });
     }
+}
 
     function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, originalText, originalPrice) {
         const scriptUrl = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
@@ -234,127 +257,130 @@
         }
     }
 
-    function renderResult(topTwo) {
-        const container = document.getElementById('quizContainer');
-        if (!container) return;
-        const priceA = getPrice(topTwo.variantA);
-        const priceB = getPrice(topTwo.variantB);
-        const recommendations = `📌 Рекомендация 1: ${topTwo.variantA} (${priceA})\n🎯 Рекомендация 2: ${topTwo.variantB} (${priceB})`;
+function renderResult(topTwo) {
+    const container = document.getElementById('quizContainer');
+    if (!container) return;
+    const priceA = getPrice(topTwo.variantA);
+    const priceB = getPrice(topTwo.variantB);
+    const recommendations = `📌 Рекомендация 1: ${topTwo.variantA} (${priceA})\n🎯 Рекомендация 2: ${topTwo.variantB} (${priceB})`;
 
-        let html = `
-            <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подобрали оптимальные варианты:</p>
-            <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
-                <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
-                    <div style="font-size:32px; margin-bottom:12px;">📌</div>
-                    <h4>Рекомендация 1</h4>
-                    <p><strong>${window.escapeHtml(topTwo.variantA)}</strong></p>
-                    <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
-                    <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(topTwo.variantA)}" data-price="${priceA}">Узнать подробнее →</button>
-                </div>
-                <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
-                    <div style="font-size:32px; margin-bottom:12px;">🎯</div>
-                    <h4>Рекомендация 2</h4>
-                    <p><strong>${window.escapeHtml(topTwo.variantB)}</strong></p>
-                    <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
-                    <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(topTwo.variantB)}" data-price="${priceB}">Узнать подробнее →</button>
-                </div>
-                <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
-                    <div style="font-size:32px; margin-bottom:12px;">🤔</div>
-                    <h4>Вариант 3</h4>
-                    <p><strong>Не уверены в выборе?</strong></p>
-                    <p style="font-size:0.9rem; margin-bottom:10px;">Позвольте помочь – бесплатная консультация 15 минут.</p>
-                    <button class="btn-secondary choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Помогите выбрать →</button>
-                </div>
+    let html = `
+        <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подобрали оптимальные варианты:</p>
+        <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
+            <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
+                <div style="font-size:32px; margin-bottom:12px;">📌</div>
+                <h4>Рекомендация 1</h4>
+                <p><strong>${window.escapeHtml(topTwo.variantA)}</strong></p>
+                <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
+                <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(topTwo.variantA)}" data-price="${priceA}">Узнать подробнее →</button>
+            </div>
+            <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
+                <div style="font-size:32px; margin-bottom:12px;">🎯</div>
+                <h4>Рекомендация 2</h4>
+                <p><strong>${window.escapeHtml(topTwo.variantB)}</strong></p>
+                <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
+                <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(topTwo.variantB)}" data-price="${priceB}">Узнать подробнее →</button>
+            </div>
+            <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
+                <div style="font-size:32px; margin-bottom:12px;">🤔</div>
+                <h4>Вариант 3</h4>
+                <p><strong>Не уверены в выборе?</strong></p>
+                <p style="font-size:0.9rem; margin-bottom:10px;">Позвольте помочь – бесплатная консультация 15 минут.</p>
+                <button class="btn-secondary choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Помогите выбрать →</button>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+            <button id="resetQuizBtn" class="btn-secondary">🔁 Пройти заново</button>
+        </div>
+    `;
+    container.innerHTML = html;
+
+    // Выбор варианта 1 или 2
+    document.querySelectorAll('.choose-option').forEach(btn => {
+        btn.removeEventListener('click', btn._choiceHandler);
+        btn._choiceHandler = () => {
+            if (isSubmittingChoice) return;
+            isSubmittingChoice = true;
+            const variantText = btn.dataset.text;
+            const variantPrice = btn.dataset.price;
+            selectedVariantText = variantText;
+            selectedVariantPrice = variantPrice;
+            selectedOriginalText = variantText;
+            selectedOriginalPrice = variantPrice;
+
+            const answersStr = answers.map((a, idx) => {
+                const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
+                return `${qText}: ${a || 'не выбран'}`;
+            }).join('\n');
+
+            updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
+            updateSelectionBlock(selectedVariantText, selectedVariantPrice);
+            sendQuizStats(answersStr, recommendations, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
+            showSuccessToast('Выбор сохранён');
+            showFinalScreen();
+            isSubmittingChoice = false;
+        };
+        btn.addEventListener('click', btn._choiceHandler);
+    });
+
+    // Выбор варианта 3 (бесплатная консультация) – теперь блок тоже появляется
+    const helpBtn = document.querySelector('.choose-help');
+    if (helpBtn) {
+        helpBtn.removeEventListener('click', helpBtn._helpHandler);
+        helpBtn._helpHandler = () => {
+            if (isSubmittingChoice) return;
+            isSubmittingChoice = true;
+            selectedVariantText = '';
+            selectedVariantPrice = '';
+            selectedOriginalText = 'Помогите выбрать (бесплатная консультация)';
+            selectedOriginalPrice = '';
+
+            const answersStr = answers.map((a, idx) => {
+                const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
+                return `${qText}: ${a || 'не выбран'}`;
+            }).join('\n');
+
+            updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
+            // Показываем блок выбора с текстом бесплатной консультации
+            updateSelectionBlock(selectedOriginalText, selectedOriginalPrice);
+            sendQuizStats(answersStr, recommendations, '', '', selectedOriginalText, selectedOriginalPrice);
+            showSuccessToast('Спасибо!');
+            showFinalScreen();
+            isSubmittingChoice = false;
+        };
+        helpBtn.addEventListener('click', helpBtn._helpHandler);
+    }
+
+    const resetBtn = document.getElementById('resetQuizBtn');
+    if (resetBtn) {
+        resetBtn.removeEventListener('click', resetBtn._resetHandler);
+        resetBtn._resetHandler = () => startQuiz();
+        resetBtn.addEventListener('click', resetBtn._resetHandler);
+    }
+
+    function showFinalScreen() {
+        container.innerHTML = `
+            <p style="text-align:center; font-size:1.2rem; margin-bottom:20px;">✨ Спасибо за прохождение квиза! ✨</p>
+            <p style="text-align:center; margin-bottom:20px;">📋 Заполните форму ниже, и я свяжусь с вами.</p>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
+                <button id="goToCallbackBtn" class="btn-primary" style="min-width: 200px;">📝 Перейти к форме заявки</button>
+                <button id="goToCalculatorBtn" class="btn-secondary" style="min-width: 200px;">🔍 Посмотреть все услуги</button>
             </div>
             <div style="text-align:center; margin-top:20px;">
-                <button id="resetQuizBtn" class="btn-secondary">🔁 Пройти заново</button>
+                <button id="resetQuizBtnAfter" class="btn-secondary">🔁 Пройти заново</button>
             </div>
         `;
-        container.innerHTML = html;
-
-        document.querySelectorAll('.choose-option').forEach(btn => {
-            btn.removeEventListener('click', btn._choiceHandler);
-            btn._choiceHandler = () => {
-                if (isSubmittingChoice) return;
-                isSubmittingChoice = true;
-                const variantText = btn.dataset.text;
-                const variantPrice = btn.dataset.price;
-                selectedVariantText = variantText;
-                selectedVariantPrice = variantPrice;
-                selectedOriginalText = variantText;
-                selectedOriginalPrice = variantPrice;
-
-                const answersStr = answers.map((a, idx) => {
-                    const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
-                    return `${qText}: ${a || 'не выбран'}`;
-                }).join('\n');
-
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
-                updateSelectionBlock(selectedVariantText, selectedVariantPrice);
-                sendQuizStats(answersStr, recommendations, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
-                showSuccessToast('Выбор сохранён');
-                showFinalScreen();
-                isSubmittingChoice = false;
-            };
-            btn.addEventListener('click', btn._choiceHandler);
+        document.getElementById('goToCallbackBtn')?.addEventListener('click', () => {
+            const target = document.getElementById('calendar');
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
-
-        const helpBtn = document.querySelector('.choose-help');
-        if (helpBtn) {
-            helpBtn.removeEventListener('click', helpBtn._helpHandler);
-            helpBtn._helpHandler = () => {
-                if (isSubmittingChoice) return;
-                isSubmittingChoice = true;
-                selectedVariantText = '';
-                selectedVariantPrice = '';
-                selectedOriginalText = 'Помогите выбрать (бесплатная консультация)';
-                selectedOriginalPrice = '';
-
-                const answersStr = answers.map((a, idx) => {
-                    const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
-                    return `${qText}: ${a || 'не выбран'}`;
-                }).join('\n');
-
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
-                updateSelectionBlock('', '');
-                sendQuizStats(answersStr, recommendations, '', '', selectedOriginalText, selectedOriginalPrice);
-                showSuccessToast('Спасибо!');
-                showFinalScreen();
-                isSubmittingChoice = false;
-            };
-            helpBtn.addEventListener('click', helpBtn._helpHandler);
-        }
-
-        const resetBtn = document.getElementById('resetQuizBtn');
-        if (resetBtn) {
-            resetBtn.removeEventListener('click', resetBtn._resetHandler);
-            resetBtn._resetHandler = () => startQuiz();
-            resetBtn.addEventListener('click', resetBtn._resetHandler);
-        }
-
-        function showFinalScreen() {
-            container.innerHTML = `
-                <p style="text-align:center; font-size:1.2rem; margin-bottom:20px;">✨ Спасибо за прохождение квиза! ✨</p>
-                <p style="text-align:center; margin-bottom:20px;">📋 Заполните форму ниже, и я свяжусь с вами.</p>
-                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-                    <button id="goToCallbackBtn" class="btn-primary" style="min-width: 200px;">📝 Перейти к форме заявки</button>
-                    <button id="goToCalculatorBtn" class="btn-secondary" style="min-width: 200px;">🔍 Посмотреть все услуги</button>
-                </div>
-                <div style="text-align:center; margin-top:20px;">
-                    <button id="resetQuizBtnAfter" class="btn-secondary">🔁 Пройти заново</button>
-                </div>
-            `;
-            document.getElementById('goToCallbackBtn')?.addEventListener('click', () => {
-                const target = document.getElementById('calendar');
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-            document.getElementById('goToCalculatorBtn')?.addEventListener('click', () => {
-                const target = document.getElementById('calculator');
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-            document.getElementById('resetQuizBtnAfter')?.addEventListener('click', () => startQuiz());
-        }
+        document.getElementById('goToCalculatorBtn')?.addEventListener('click', () => {
+            const target = document.getElementById('calculator');
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        document.getElementById('resetQuizBtnAfter')?.addEventListener('click', () => startQuiz());
     }
+}
 
     window.initQuiz = function () {
         startQuiz();
