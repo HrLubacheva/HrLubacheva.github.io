@@ -26,10 +26,16 @@ function initBurgerMenu() {
 
     if (!burger || !navBottom) return;
 
+    function updateAria() {
+        const isOpen = navBottom.classList.contains('open');
+        burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
     burger.addEventListener('click', function() {
         this.classList.toggle('active');
         navBottom.classList.toggle('open');
         document.body.classList.toggle('menu-open');
+        updateAria();
     });
 
     navBottom.querySelectorAll('a').forEach(link => {
@@ -37,6 +43,7 @@ function initBurgerMenu() {
             burger.classList.remove('active');
             navBottom.classList.remove('open');
             document.body.classList.remove('menu-open');
+            updateAria();
         });
     });
 
@@ -45,8 +52,11 @@ function initBurgerMenu() {
             burger.classList.remove('active');
             navBottom.classList.remove('open');
             document.body.classList.remove('menu-open');
+            updateAria();
         }
     });
+
+    updateAria();
 }
 
 window.initSmoothScroll = initSmoothScroll;

@@ -1,17 +1,40 @@
+let lastFocusedElement = null;
+
 function showModal(modal) {
     if (!modal) return;
+    // Сохраняем элемент, который открыл модалку
+    lastFocusedElement = document.activeElement;
+
     modal.style.display = 'flex';
     modal.offsetHeight;
     modal.classList.add('show');
+    document.body.classList.add('modal-open');
+
+    // Перемещаем фокус на первый интерактивный элемент внутри модалки
+    const focusable = modal.querySelectorAll('button, a, input, textarea, select, [tabindex]:not([tabindex="-1"])');
+    if (focusable.length) {
+        focusable[0].focus();
+    } else {
+        // Если нет фокусируемых элементов, фокусируемся на самой модалке (не рекомендуется, но запасной вариант)
+        modal.setAttribute('tabindex', '-1');
+        modal.focus();
+    }
 }
 
 function hideModal(modal) {
     if (!modal) return;
     modal.classList.remove('show');
+    document.body.classList.remove('modal-open');
     modal.addEventListener('transitionend', function onEnd() {
         if (!modal.classList.contains('show')) modal.style.display = 'none';
         modal.removeEventListener('transitionend', onEnd);
     }, { once: true });
+
+    // Возвращаем фокус на элемент, который открывал модалку
+    if (lastFocusedElement && lastFocusedElement.focus) {
+        lastFocusedElement.focus();
+        lastFocusedElement = null;
+    }
 }
 
 function initModal() {
@@ -20,7 +43,10 @@ function initModal() {
     const closeModalBtn = document.getElementById('closeModalBtn');
     const sendBtn = document.getElementById('sendMaterialsBtn');
 
-    if (openModal) openModal.addEventListener('click', () => showModal(modal));
+    if (openModal) {
+        openModal.addEventListener('click', () => showModal(modal));
+        // Для a11y: делаем кнопку открытия доступной через клавиатуру (уже есть)
+    }
     if (closeModalBtn) closeModalBtn.addEventListener('click', () => hideModal(modal));
 
     if (sendBtn) {
@@ -40,7 +66,7 @@ function initModal() {
                         formType: 'Запрос материалов',
                         name: email,
                         comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`,
-                        quizAnswers: '-'
+                        quizAnswersRaw: '-'
                     });
                 }
                 const modalContent = modal.querySelector('.modal-content');
@@ -49,7 +75,12 @@ function initModal() {
                     <p>Проверьте вашу почту (и папку «Спам»). Ссылки на материалы уже в письме.</p>
                     <button id="closeAfterSendBtn" class="btn-primary">Закрыть</button>
                 `;
-                document.getElementById('closeAfterSendBtn').addEventListener('click', () => hideModal(modal));
+                const closeAfterBtn = document.getElementById('closeAfterSendBtn');
+                if (closeAfterBtn) {
+                    closeAfterBtn.addEventListener('click', () => hideModal(modal));
+                    // После замены содержимого фокусируемся на новой кнопке
+                    setTimeout(() => closeAfterBtn.focus(), 50);
+                }
             } catch (err) {
                 showErrorToast('Ошибка: ' + err.message);
                 sendBtn.disabled = false;

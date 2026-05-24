@@ -40,13 +40,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="preload" href="assets/images/img_1.jpg" as="image" fetchpriority="high">
 
-    <!-- DNS Prefetch для внешних сервисов -->
+    <!-- DNS Prefetch -->
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
-    <!-- Schema.org -->
+    <!-- Schema.org Person -->
     <script type="application/ld+json">
         {
             "@context": "https://schema.org",
@@ -63,23 +63,21 @@
         }
     </script>
 
-    <!-- Глобальный конфиг (должен загружаться первым) -->
+    <!-- Schema.org для услуг (будет добавлено в HTML) -->
+
+    <!-- Глобальный конфиг -->
     <script src="components/common/js/00_config.js"></script>
 
     <!-- Динамическая загрузка счётчиков аналитики -->
     <script>
         (function() {
-            // Ждём, пока APP_CONFIG загрузится
             function loadAnalytics() {
                 if (!window.APP_CONFIG) {
                     setTimeout(loadAnalytics, 50);
                     return;
                 }
-
                 const ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
                 const gaId = window.APP_CONFIG.GOOGLE_ANALYTICS_ID;
-
-                // === Яндекс.Метрика ===
                 if (ymId) {
                     (function(m,e,t,r,i,k,a){
                         m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -90,15 +88,7 @@
                         k=e.createElement(t), a=e.getElementsByTagName(t)[0];
                         k.async=1; k.src=r; a.parentNode.insertBefore(k,a);
                     })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=' + ymId, 'ym');
-
-                    ym(ymId, 'init', {
-                        clickmap: true,
-                        trackLinks: true,
-                        accurateTrackBounce: true,
-                        webvisor: true
-                    });
-
-                    // <noscript> версия (вставляем в body)
+                    ym(ymId, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true });
                     var noscript = document.createElement('noscript');
                     var div = document.createElement('div');
                     var img = document.createElement('img');
@@ -110,32 +100,19 @@
                     noscript.appendChild(div);
                     document.body.appendChild(noscript);
                 }
-
-                // === Google Analytics (GA4) ===
                 if (gaId) {
-                    // Загружаем gtag.js
                     var gtagScript = document.createElement('script');
                     gtagScript.async = true;
                     gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
                     document.head.appendChild(gtagScript);
-
-                    // Инициализируем gtag
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){ dataLayer.push(arguments); }
                     window.gtag = gtag;
                     gtag('js', new Date());
-
-                    // Устанавливаем consent по умолчанию (запрещено)
-                    gtag('consent', 'default', {
-                        'ad_storage': 'denied',
-                        'analytics_storage': 'denied',
-                        'wait_for_update': 500
-                    });
+                    gtag('consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied', wait_for_update: 500 });
                     gtag('config', gaId);
                 }
             }
-
-            // Запускаем загрузку после того, как DOM готов (но можно и сразу)
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', loadAnalytics);
             } else {
@@ -199,6 +176,7 @@ body {
 .roles-grid .fade-up:nth-child(3) { transition-delay: 0.10s; }
 .roles-grid .fade-up:nth-child(4) { transition-delay: 0.15s; }
 .roles-grid .fade-up:nth-child(5) { transition-delay: 0.20s; }
+.roles-grid .fade-up:nth-child(6) { transition-delay: 0.25s; }
 
 .services-flex .fade-up:nth-child(1) { transition-delay: 0.00s; }
 .services-flex .fade-up:nth-child(2) { transition-delay: 0.05s; }
@@ -469,9 +447,33 @@ body {
 /* ========== Карточки и сетки (общие) ========== */
 .roles-grid, .services-flex, .process-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 30px;
     margin: 40px 0;
+}
+
+/* Явно 3 колонки для ролей на десктопе (с приоритетом) */
+@media (min-width: 992px) {
+    .roles-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    .roles-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+@media (max-width: 767px) {
+    .roles-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Сетка для услуг и процессов (адаптивная) */
+.services-flex {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.process-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
 .role-card, .service-card, .process-card {
@@ -518,7 +520,7 @@ body {
     }
 }
 
-/* ========== БЛОК СТАТИСТИКИ: 1/2/3 КОЛОНКИ ========== */
+/* ========== БЛОК СТАТИСТИКИ ========== */
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -598,7 +600,7 @@ body {
     }
 }
 
-/* ========== БЛОК ПРЕИМУЩЕСТВ: 2 КОЛОНКИ НА ДЕСКТОПЕ ========== */
+/* ========== БЛОК ПРЕИМУЩЕСТВ ========== */
 .benefits-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -715,7 +717,6 @@ body {
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Строка добавления услуги */
 .add-service {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -797,7 +798,6 @@ body {
     transform: translateY(1px);
 }
 
-/* Общий итог */
 .total-block {
     margin-top: 30px;
     padding-top: 20px;
@@ -812,7 +812,6 @@ body {
     margin-top: 8px;
 }
 
-/* Корзина */
 .cart-section {
     margin-top: 30px;
     border-top: 1px solid var(--border);
@@ -926,7 +925,6 @@ body {
     justify-content: center;
 }
 
-/* Адаптивность калькулятора */
 @media (max-width: 768px) {
     .services-header {
         display: none;
@@ -987,7 +985,7 @@ body {
     }
 }
 
-/* ========== КВИЗ: ГИБКАЯ СЕТКА (без дубликатов) ========== */
+/* ========== КВИЗ ========== */
 .quiz-card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -1006,40 +1004,41 @@ body {
     color: var(--text-dark);
 }
 .quiz-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 12px;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 .quiz-option {
-    background: var(--light-bg);
-    border: 1px solid var(--border);
-    color: var(--text-dark);
-    padding: 10px 12px;
-    border-radius: 40px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 60px;
+    padding: 12px 28px;
     font-weight: 500;
-    font-size: 0.95rem;
+    font-size: 1rem;
+    color: #1e4663;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     text-align: center;
-    white-space: normal;
-    word-break: break-word;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    flex: 0 1 auto;
+    min-width: 140px;
 }
 .quiz-option:hover {
     background: var(--primary);
     border-color: var(--primary);
     color: white;
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-sm);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(45,106,159,0.25);
 }
 .quiz-option.selected {
     background: var(--primary);
     border-color: var(--primary);
     color: white;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 12px rgba(45,106,159,0.3);
+    background-image: none;
+    transform: scale(0.98);
 }
 .quiz-nav {
     display: flex;
@@ -1099,15 +1098,13 @@ body {
         padding: 24px 16px;
     }
     .quiz-options {
-        grid-template-columns: 1fr;
-        gap: 10px;
+        flex-direction: column;
+        align-items: stretch;
     }
     .quiz-option {
-        padding: 12px 16px;
         width: 100%;
-    }
-    .quiz-question p {
-        font-size: 1rem;
+        text-align: center;
+        padding: 14px 20px;
     }
     .quiz-nav {
         flex-direction: column;
@@ -1339,6 +1336,10 @@ div[class*="quiz-option"] {
 }
 .modal.show .modal-content {
     transform: scale(1);
+}
+
+body.modal-open {
+    overflow: hidden;
 }
 
 /* ========== Контакты ========== */
@@ -1719,6 +1720,7 @@ footer a:hover {
     display: none !important;
 }
 
+/* ========== БЛОК ВЫБРАННОГО ВАРИАНТА КВИЗА В ФОРМЕ ========== */
 #quizSelectionBlock {
     background: #f0f7ff;
     border-left: 4px solid #2D6A9F;
@@ -1744,28 +1746,19 @@ footer a:hover {
     color: #a71d2a;
 }
 
-/* ========== ВЫРАВНИВАНИЕ КАРТОЧЕК ПРОЦЕССОВ (единый стиль) ========== */
+/* ========== ВЫРАВНИВАНИЕ КАРТОЧЕК ПРОЦЕССОВ ========== */
 .process-row {
     display: flex;
     flex-wrap: wrap;
     gap: 40px;
     align-items: stretch;
 }
-
 .process-col {
     flex: 1;
     min-width: 280px;
     display: flex;
     flex-direction: column;
 }
-
-.process-title {
-    text-align: center;
-    margin: 40px 0 20px;
-    font-size: 1.8rem;
-    color: var(--primary-dark);
-}
-
 .process-grid {
     flex: 1;
     display: grid;
@@ -1773,7 +1766,6 @@ footer a:hover {
     gap: 30px;
     height: 100%;
 }
-
 .process-card {
     display: flex;
     flex-direction: column;
@@ -1786,12 +1778,10 @@ footer a:hover {
     border: 1px solid var(--border);
     text-align: center;
 }
-
 .process-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
 }
-
 .process-step {
     width: 44px;
     height: 44px;
@@ -1805,14 +1795,12 @@ footer a:hover {
     font-size: 1.3rem;
     margin: 0 auto 16px auto;
 }
-
 .process-card h4 {
     font-size: 1.2rem;
     font-weight: 700;
     margin: 8px 0 12px;
     color: var(--primary-dark);
 }
-
 .process-card p {
     flex-grow: 1;
     font-size: 0.95rem;
@@ -1820,8 +1808,6 @@ footer a:hover {
     color: var(--secondary);
     margin: 0;
 }
-
-/* Адаптация для мобильных устройств */
 @media (max-width: 768px) {
     .process-row {
         flex-direction: column;
@@ -1846,23 +1832,17 @@ footer a:hover {
     grid-template-columns: repeat(3, 1fr);
     gap: 30px;
 }
-
-/* На планшетах – 2 колонки */
 @media (max-width: 900px) {
     .training-grid .process-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
-
-/* На телефонах – 1 колонка */
 @media (max-width: 600px) {
     .training-grid .process-grid {
         grid-template-columns: 1fr;
         gap: 20px;
     }
 }
-
-/* Чтобы карточки были одинаковой высоты (если ещё нет) */
 .training-grid .process-card {
     display: flex;
     flex-direction: column;
@@ -1872,66 +1852,18 @@ footer a:hover {
     flex-grow: 1;
 }
 
-/* ========== 3 КОЛОНКИ ДЛЯ РОЛЕЙ НА ДЕСКТОПЕ ========== */
-@media (min-width: 992px) {
-    .roles-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-/* ========== КВИЗ: КРАСИВЫЕ ВАРИАНТЫ ОТВЕТОВ ========== */
-.quiz-options {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.quiz-option {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border: 1px solid #dee2e6;
-    border-radius: 60px;
-    padding: 12px 28px;
-    font-weight: 500;
-    font-size: 1rem;
-    color: #1e4663;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    text-align: center;
-    flex: 0 1 auto;
-    min-width: 140px;
-}
-
-.quiz-option:hover {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: white;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(45,106,159,0.25);
-}
-
-.quiz-option.selected {
-    background: var(--primary);
-    border-color: var(--primary);
-    color: white;
-    box-shadow: 0 4px 12px rgba(45,106,159,0.3);
-    background-image: none;
-    transform: scale(0.98);
-}
-
-/* Адаптив для мобильных */
-@media (max-width: 640px) {
-    .quiz-options {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .quiz-option {
-        width: 100%;
-        text-align: center;
-        padding: 14px 20px;
-    }
+/* ========== A11Y: ФОКУС ДЛЯ ИНТЕРАКТИВНЫХ ЭЛЕМЕНТОВ ========== */
+a:focus-visible,
+button:focus-visible,
+.quiz-option:focus-visible,
+.add-service-btn:focus-visible,
+.remove-item:focus-visible,
+.tab-btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 4px;
 }
 </style>
 </head>
@@ -1943,7 +1875,7 @@ footer a:hover {
                 <div class="logo-triangle"></div>
                 <span>HR <span class="logo-sub">HrLubacheva</span></span>
             </a>
-            <button class="burger-menu" id="burgerMenu" aria-label="Меню">
+            <button class="burger-menu" id="burgerMenu" aria-label="Меню" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -1998,30 +1930,29 @@ footer a:hover {
             <h2 class="section-title fade-up">Мои экспертные роли</h2>
         </div>
         <div class="roles-grid cells-grid" data-grid-type="cards">
-            <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>🧑&nbsp;Карьерный консультант</h3>
-                <p>Индивидуальные стратегии, резюме, подготовка к интервью, повышение дохода. Продайте себя дорого.</p>
+            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="name">🧑&nbsp;Карьерный консультант</h3>
+                <p itemprop="description">Индивидуальные стратегии, резюме, подготовка к интервью, повышение дохода. Продайте себя дорого.</p>
             </div>
-            <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>🏢&nbsp;HR‑эксперт для организаций</h3>
-                <p>Подбор персонала, онбординг, УТП, аудит HR-процессов. Закрываю вакансии с гарантией.</p>
+            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="name">🏢&nbsp;HR‑эксперт для организаций</h3>
+                <p itemprop="description">Подбор персонала, онбординг, УТП, аудит HR-процессов. Закрываю вакансии с гарантией.</p>
             </div>
-            <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>💬&nbsp;HR‑эксперт для людей</h3>
-                <p>Консультации по трудовым отношениям, карьерные карты, переговоры с работодателем.</p>
+            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="name">💬&nbsp;HR‑эксперт для людей</h3>
+                <p itemprop="description">Консультации по трудовым отношениям, карьерные карты, переговоры с работодателем.</p>
             </div>
-            <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>🎓&nbsp;Бизнес‑тренер</h3>
-                <p>Тренинги для команд и индивидуальный коучинг для руководителей. Развиваю навыки, которые приносят прибыль.</p>
+            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="name">🎓&nbsp;Бизнес‑тренер</h3>
+                <p itemprop="description">Тренинги для команд и индивидуальный коучинг для руководителей. Развиваю навыки, которые приносят прибыль.</p>
             </div>
-            <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>🧠&nbsp;Психолог</h3>
-                <p>Помогаю найти себя, разобраться в своей жизни, определить цели и реализацию. Выявляю истинные ценности и жизненные ориентиры.</p>
+            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="name">🧠&nbsp;Психолог</h3>
+                <p itemprop="description">Помогаю найти себя, разобраться в своей жизни, определить цели и реализацию. Выявляю истинные ценности и жизненные ориентиры.</p>
             </div>
-            <!-- Новая роль: Коуч для бизнеса и людей -->
-            <div class="role-card cell-card fade-up" data-cell-type="card">
-                <h3>🗣️&nbsp;Коуч (бизнес и личный)</h3>
-                <p>Помогаю собственникам, топ-менеджерам и специалистам достигать амбициозных целей, повышать личную эффективность и находить баланс между работой и жизнью.</p>
+            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="name">🗣️&nbsp;Коуч (бизнес и личный)</h3>
+                <p itemprop="description">Помогаю собственникам, топ-менеджерам и специалистам достигать амбициозных целей, повышать личную эффективность и находить баланс между работой и жизнью.</p>
             </div>
         </div>
     </div>
@@ -2032,23 +1963,27 @@ footer a:hover {
             <h2 class="section-title fade-up">Услуги</h2>
         </div>
         <div class="services-flex cells-grid" data-grid-type="cards">
-            <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3>🏢&nbsp;HR для бизнеса</h3>
-                <p>Подбор персонала (Junior → C-level), онбординг, оценка, аутсорсинг подбора, кадровый аудит.</p>
+            <div class="service-card cell-card fade-up" itemscope itemtype="https://schema.org/Service">
+                <h3 itemprop="name">🏢&nbsp;HR для бизнеса</h3>
+                <p itemprop="description">Подбор персонала (Junior → C-level), онбординг, оценка, аутсорсинг подбора, кадровый аудит.</p>
+                <meta itemprop="provider" content="Виктория Любачева">
             </div>
-            <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3>🧑&nbsp;Карьерный консалтинг</h3>
-                <p>Карьерная стратегия, упаковка резюме, подготовка к интервью и переговоры о зарплате. Помогаю заявить о ценности и получить достойный оффер.</p>
+            <div class="service-card cell-card fade-up" itemscope itemtype="https://schema.org/Service">
+                <h3 itemprop="name">🧑&nbsp;Карьерный консалтинг</h3>
+                <p itemprop="description">Карьерная стратегия, упаковка резюме, подготовка к интервью и переговоры о зарплате. Помогаю заявить о ценности и получить достойный оффер.</p>
                 <p><strong>➕</strong> Изучаем АТС и ботов. Стратегия обхода ИИ-фильтров.</p>
                 <a href="assets/docs/training_program.pdf" class="btn-secondary" target="_blank">📘 Скачать программу тренинга (PDF)</a>
+                <meta itemprop="provider" content="Виктория Любачева">
             </div>
-            <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3>🎓&nbsp;Бизнес–тренинги, обучение и коучинг персонала</h3>
-                <p>Корпоративные тренинги (до 25 чел.), обучение сотрудников, мастер-классы, стратегические сессии, индивидуальный коучинг топ-менеджеров.</p>
+            <div class="service-card cell-card fade-up" itemscope itemtype="https://schema.org/Service">
+                <h3 itemprop="name">🎓&nbsp;Бизнес–тренинги, обучение и коучинг персонала</h3>
+                <p itemprop="description">Корпоративные тренинги (до 25 чел.), обучение сотрудников, мастер-классы, стратегические сессии, индивидуальный коучинг топ-менеджеров.</p>
+                <meta itemprop="provider" content="Виктория Любачева">
             </div>
-            <div class="service-card cell-card fade-up" data-cell-type="card">
-                <h3>🎯&nbsp;Профориентация</h3>
-                <p>Для взрослых и подростков. Помогаю определиться с профессией, направлением развития, выбрать путь, который принесёт удовлетворение и доход.</p>
+            <div class="service-card cell-card fade-up" itemscope itemtype="https://schema.org/Service">
+                <h3 itemprop="name">🎯&nbsp;Профориентация</h3>
+                <p itemprop="description">Для взрослых и подростков. Помогаю определиться с профессией, направлением развития, выбрать путь, который принесёт удовлетворение и доход.</p>
+                <meta itemprop="provider" content="Виктория Любачева">
             </div>
         </div>
     </div>
@@ -2446,7 +2381,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 24.05.2026 03:18:37
+                Версия: 24.05.2026 03:34:06
             </div>
         </div>
     </div>
@@ -2539,7 +2474,6 @@ window.disableLogs = function() {
     showToast('🔇 Логи отключены', 'success');
 };
 
-// User ID (сохраняется в localStorage)
 function getOrCreateLocalUserId() {
     try {
         let userId = localStorage.getItem('hr_user_id');
@@ -2562,7 +2496,6 @@ function initUserId() {
     return Promise.resolve(currentUserId);
 }
 
-// Fetch utils
 async function fetchWithRetry(url, options = {}, retries = 3, timeout = 10000) {
     let lastError = null;
     for (let attempt = 1; attempt <= retries; attempt++) {
@@ -2597,7 +2530,6 @@ async function loadWithCache(cacheKey, fetchFn, ttl = CACHE_TTL) {
     return data;
 }
 
-// Loading indicator
 let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
 function showLoading(message = 'Загрузка...') {
     if (isLoadingActive) return;
@@ -2647,7 +2579,7 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
-// ========== КАСТОМНЫЕ ТОСТЫ ==========
+// ========== КАСТОМНЫЕ ТОСТЫ (с a11y) ==========
 function showToast(message, type = 'error') {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -2658,6 +2590,8 @@ function showToast(message, type = 'error') {
     if (type === 'warning') icon = '🔔';
     if (type === 'error') icon = '❌';
     toast.innerHTML = `${icon} ${message}`;
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
     document.body.appendChild(toast);
     setTimeout(() => {
         toast.style.opacity = '0';
@@ -2668,13 +2602,11 @@ function showErrorToast(message) { showToast(message, 'error'); }
 function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
-// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ (из конфига) ==========
 const SCRIPT_URL = window.APP_CONFIG.SCRIPT_URL;
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
 
-// ========== ОТПРАВКА ДАННЫХ ==========
 function sendDataToSheet(data) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
@@ -2706,7 +2638,6 @@ function formatPhoneNumber(input) {
     return formatted;
 }
 
-// ========== ВРЕМЯ НА САЙТЕ ==========
 window.sessionStartTime = Date.now();
 function getTimeOnSite() {
     if (!window.sessionStartTime) return '-';
@@ -2718,7 +2649,6 @@ function getTimeOnSite() {
 }
 window.getTimeOnSite = getTimeOnSite;
 
-// ========== СЧЁТЧИК ВИЗИТОВ ==========
 function getVisitStats() {
     const now = new Date();
     const oneDay = 24 * 60 * 60 * 1000;
@@ -2755,7 +2685,6 @@ function getVisitStatsText() {
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
 
-// ========== UTM-МЕТКИ ==========
 function getUTMParams() {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -2773,7 +2702,6 @@ function getUTMText() {
 }
 window.getUTMText = getUTMText;
 
-// ========== ТИП УСТРОЙСТВА, БРАУЗЕР, ОС ==========
 function getDeviceInfo() {
     const ua = navigator.userAgent;
     const isMobile = /Mobile|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(ua);
@@ -2802,7 +2730,6 @@ function getDeviceText() {
 }
 window.getDeviceText = getDeviceText;
 
-// ========== СТРАНИЦА ВХОДА И РЕФЕРЕР ==========
 function getPageInfo() {
     return {
         page: window.location.pathname + window.location.search,
@@ -2817,7 +2744,6 @@ function getPageText() {
 }
 window.getPageText = getPageText;
 
-// ========== IP И ГЕОЛОКАЦИЯ (с кешем) ==========
 async function getGeoData() {
     const cached = localStorage.getItem('hr_geo');
     if (cached) {
@@ -2845,7 +2771,6 @@ async function getGeoData() {
 }
 window.getGeoData = getGeoData;
 
-// ========== ЭКСПОРТ ГЛОБАЛЬНЫХ ФУНКЦИЙ ==========
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
@@ -3102,11 +3027,13 @@ function showModal(modal) {
     modal.style.display = 'flex';
     modal.offsetHeight;
     modal.classList.add('show');
+    document.body.classList.add('modal-open');
 }
 
 function hideModal(modal) {
     if (!modal) return;
     modal.classList.remove('show');
+    document.body.classList.remove('modal-open');
     modal.addEventListener('transitionend', function onEnd() {
         if (!modal.classList.contains('show')) modal.style.display = 'none';
         modal.removeEventListener('transitionend', onEnd);
@@ -3139,7 +3066,7 @@ function initModal() {
                         formType: 'Запрос материалов',
                         name: email,
                         comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`,
-                        quizAnswers: '-'
+                        quizAnswersRaw: '-'
                     });
                 }
                 const modalContent = modal.querySelector('.modal-content');
@@ -3235,10 +3162,16 @@ function initBurgerMenu() {
 
     if (!burger || !navBottom) return;
 
+    function updateAria() {
+        const isOpen = navBottom.classList.contains('open');
+        burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
     burger.addEventListener('click', function() {
         this.classList.toggle('active');
         navBottom.classList.toggle('open');
         document.body.classList.toggle('menu-open');
+        updateAria();
     });
 
     navBottom.querySelectorAll('a').forEach(link => {
@@ -3246,6 +3179,7 @@ function initBurgerMenu() {
             burger.classList.remove('active');
             navBottom.classList.remove('open');
             document.body.classList.remove('menu-open');
+            updateAria();
         });
     });
 
@@ -3254,8 +3188,11 @@ function initBurgerMenu() {
             burger.classList.remove('active');
             navBottom.classList.remove('open');
             document.body.classList.remove('menu-open');
+            updateAria();
         }
     });
+
+    updateAria();
 }
 
 window.initSmoothScroll = initSmoothScroll;

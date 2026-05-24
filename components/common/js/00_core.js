@@ -38,7 +38,6 @@ window.disableLogs = function() {
     showToast('🔇 Логи отключены', 'success');
 };
 
-// User ID (сохраняется в localStorage)
 function getOrCreateLocalUserId() {
     try {
         let userId = localStorage.getItem('hr_user_id');
@@ -61,7 +60,6 @@ function initUserId() {
     return Promise.resolve(currentUserId);
 }
 
-// Fetch utils
 async function fetchWithRetry(url, options = {}, retries = 3, timeout = 10000) {
     let lastError = null;
     for (let attempt = 1; attempt <= retries; attempt++) {
@@ -96,7 +94,6 @@ async function loadWithCache(cacheKey, fetchFn, ttl = CACHE_TTL) {
     return data;
 }
 
-// Loading indicator
 let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
 function showLoading(message = 'Загрузка...') {
     if (isLoadingActive) return;
@@ -146,7 +143,7 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
-// ========== КАСТОМНЫЕ ТОСТЫ ==========
+// ========== КАСТОМНЫЕ ТОСТЫ (с a11y) ==========
 function showToast(message, type = 'error') {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -157,6 +154,8 @@ function showToast(message, type = 'error') {
     if (type === 'warning') icon = '🔔';
     if (type === 'error') icon = '❌';
     toast.innerHTML = `${icon} ${message}`;
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
     document.body.appendChild(toast);
     setTimeout(() => {
         toast.style.opacity = '0';
@@ -167,13 +166,11 @@ function showErrorToast(message) { showToast(message, 'error'); }
 function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
-// ========== ЕДИНЫЙ URL ДЛЯ ВСЕХ ЗАПРОСОВ (из конфига) ==========
 const SCRIPT_URL = window.APP_CONFIG.SCRIPT_URL;
 if (typeof window !== 'undefined') {
     window.SCRIPT_URL = SCRIPT_URL;
 }
 
-// ========== ОТПРАВКА ДАННЫХ ==========
 function sendDataToSheet(data) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
@@ -205,7 +202,6 @@ function formatPhoneNumber(input) {
     return formatted;
 }
 
-// ========== ВРЕМЯ НА САЙТЕ ==========
 window.sessionStartTime = Date.now();
 function getTimeOnSite() {
     if (!window.sessionStartTime) return '-';
@@ -217,7 +213,6 @@ function getTimeOnSite() {
 }
 window.getTimeOnSite = getTimeOnSite;
 
-// ========== СЧЁТЧИК ВИЗИТОВ ==========
 function getVisitStats() {
     const now = new Date();
     const oneDay = 24 * 60 * 60 * 1000;
@@ -254,7 +249,6 @@ function getVisitStatsText() {
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
 
-// ========== UTM-МЕТКИ ==========
 function getUTMParams() {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -272,7 +266,6 @@ function getUTMText() {
 }
 window.getUTMText = getUTMText;
 
-// ========== ТИП УСТРОЙСТВА, БРАУЗЕР, ОС ==========
 function getDeviceInfo() {
     const ua = navigator.userAgent;
     const isMobile = /Mobile|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(ua);
@@ -301,7 +294,6 @@ function getDeviceText() {
 }
 window.getDeviceText = getDeviceText;
 
-// ========== СТРАНИЦА ВХОДА И РЕФЕРЕР ==========
 function getPageInfo() {
     return {
         page: window.location.pathname + window.location.search,
@@ -316,7 +308,6 @@ function getPageText() {
 }
 window.getPageText = getPageText;
 
-// ========== IP И ГЕОЛОКАЦИЯ (с кешем) ==========
 async function getGeoData() {
     const cached = localStorage.getItem('hr_geo');
     if (cached) {
@@ -344,7 +335,6 @@ async function getGeoData() {
 }
 window.getGeoData = getGeoData;
 
-// ========== ЭКСПОРТ ГЛОБАЛЬНЫХ ФУНКЦИЙ ==========
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
