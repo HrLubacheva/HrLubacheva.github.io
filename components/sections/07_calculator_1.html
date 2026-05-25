@@ -625,285 +625,293 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="quiz-card">
-            <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
-            <p class="calculator-desc">Выберите категорию, добавьте услуги. Скидка 5% при заказе 2+ позиций из любого раздела.</p>
+<div class="container">
+    <div class="quiz-card">
+        <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
+        <p class="calculator-desc">Выберите категорию, добавьте услуги. Скидка 5% при заказе 2+ позиций из любого
+            раздела.</p>
 
-            <!-- Вкладки -->
-            <div class="calculator-tabs">
-                <button class="tab-btn active" data-tab="recruitment">🎯 Подбор персонала</button>
-                <button class="tab-btn" data-tab="retention">💎 Удержание и развитие</button>
-                <button class="tab-btn" data-tab="business-training">🎓 Бизнес-тренинги</button>
-                <button class="tab-btn" data-tab="corporate">🤝 Корпоративным клиентам</button>
-            </div>
+        <!-- Вкладки -->
+        <div class="calculator-tabs">
+            <button class="tab-btn active" data-tab="recruitment">🎯 Подбор персонала</button>
+            <button class="tab-btn" data-tab="retention">💎 Удержание и развитие</button>
+            <button class="tab-btn" data-tab="business-training">🎓 Бизнес-тренинги</button>
+            <button class="tab-btn" data-tab="corporate">🤝 Корпоративным клиентам</button>
+        </div>
 
-                        <!-- Вкладки -->
-            <div class="calculator-tabs">
-                <button class="tab-btn" data-tab="start">🎯 Старт и развитие</button>
-                <button class="tab-btn" data-tab="growth">📈 Карьерный рост</button>
-                <button class="tab-btn" data-tab="executive">👑 Executive</button>
-                <button class="tab-btn" data-tab="training">🎓 Тренинги</button>
-                <button class="tab-btn" data-tab="courses">📚 Авторские курсы</button>
-            </div>
+        <!-- Вкладки -->
+        <div class="calculator-tabs">
+            <button class="tab-btn" data-tab="start">🎯 Старт и развитие</button>
+            <button class="tab-btn" data-tab="growth">📈 Карьерный рост</button>
+            <button class="tab-btn" data-tab="executive">👑 Executive</button>
+            <button class="tab-btn" data-tab="training">🎓 Тренинги</button>
+            <button class="tab-btn" data-tab="courses">📚 Авторские курсы</button>
+        </div>
 
-            <!-- Вкладка: Подбор персонала -->
-            <div id="tab-recruitment" class="tab-pane active">
-                <div class="service-group">
-                    <h3>🎯 Подбор персонала</h3>
-                    <div class="add-service">
-                        <select id="recruitment-select" class="service-select"></select>
-                        <input type="number" id="recruitment-qty" min="1" value="1" class="calc-qty">
-                        <button id="recruitment-add" class="add-service-btn" data-category="recruitment">➕ Добавить</button>
-                    </div>
+        <!-- Вкладка: Подбор персонала -->
+        <div id="tab-recruitment" class="tab-pane active">
+            <div class="service-group">
+                <h3>🎯 Подбор персонала</h3>
+                <div class="add-service">
+                    <select id="recruitment-select" class="service-select"></select>
+                    <input type="number" id="recruitment-qty" min="1" value="1" class="calc-qty">
+                    <button id="recruitment-add" class="add-service-btn" data-category="recruitment">➕ Добавить</button>
                 </div>
-            </div>
-
-            <!-- Вкладка: Удержание и развитие -->
-            <div id="tab-retention" class="tab-pane">
-                <div class="service-group">
-                    <h3>💎 Удержание и развитие</h3>
-                    <div class="add-service">
-                        <select id="retention-select" class="service-select"></select>
-                        <input type="number" id="retention-qty" min="1" value="1" class="calc-qty">
-                        <button id="retention-add" class="add-service-btn" data-category="retention">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Вкладка: Бизнес-тренинги -->
-            <div id="tab-business-training" class="tab-pane">
-                <div class="service-group">
-                    <h3>🎓 Бизнес-тренинги</h3>
-                    <div class="add-service">
-                        <select id="business-training-select" class="service-select"></select>
-                        <input type="number" id="business-training-qty" min="1" value="1" class="calc-qty">
-                        <button id="business-training-add" class="add-service-btn" data-category="businessTraining">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Вкладка: Корпоративным клиентам -->
-            <div id="tab-corporate" class="tab-pane">
-                <div class="service-group">
-                    <h3>🤝 Корпоративным клиентам</h3>
-                    <div class="add-service">
-                        <select id="corporate-select" class="service-select"></select>
-                        <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty">
-                        <button id="corporate-add" class="add-service-btn" data-category="corporate">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Вкладка: Старт и развитие -->
-            <div id="tab-start" class="tab-pane">
-                <div class="service-group">
-                    <h3>🎯 Старт и развитие</h3>
-                    <div class="add-service">
-                        <select id="start-select" class="service-select"></select>
-                        <input type="number" id="start-qty" min="1" value="1" class="calc-qty">
-                        <button id="start-add" class="add-service-btn" data-category="start">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Вкладка: Карьерный рост -->
-            <div id="tab-growth" class="tab-pane">
-                <div class="service-group">
-                    <h3>📈 Карьерный рост</h3>
-                    <div class="add-service">
-                        <select id="growth-select" class="service-select"></select>
-                        <input type="number" id="growth-qty" min="1" value="1" class="calc-qty">
-                        <button id="growth-add" class="add-service-btn" data-category="growth">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Вкладка: Executive -->
-            <div id="tab-executive" class="tab-pane">
-                <div class="service-group">
-                    <h3>👑 Executive</h3>
-                    <div class="add-service">
-                        <select id="executive-select" class="service-select"></select>
-                        <input type="number" id="executive-qty" min="1" value="1" class="calc-qty">
-                        <button id="executive-add" class="add-service-btn" data-category="executive">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Вкладка: Тренинги -->
-            <div id="tab-training" class="tab-pane">
-                <div class="service-group">
-                    <h3>🎓 Тренинги</h3>
-                    <div class="add-service">
-                        <select id="training-select" class="service-select"></select>
-                        <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
-                        <button id="training-add" class="add-service-btn" data-category="training">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Вкладка: Авторские курсы -->
-            <div id="tab-courses" class="tab-pane">
-                <div class="service-group">
-                    <h3>📚 Авторские курсы</h3>
-                    <div class="add-service">
-                        <select id="courses-select" class="service-select"></select>
-                        <input type="number" id="courses-qty" min="1" value="1" class="calc-qty">
-                        <button id="courses-add" class="add-service-btn" data-category="courses">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Итоговая сумма -->
-            <div class="total-block">
-                <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
-                <div id="discountInfo" class="discount-info"></div>
-            </div>
-
-            <!-- Корзина -->
-            <div class="cart-section">
-                <h3>🛒 Выбранные услуги</h3>
-                <div id="servicesList" class="services-list"></div>
-            </div>
-
-            <!-- Форма быстрого заказа -->
-            <div class="calendar-card">
-                <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark); text-align: center;">📞 Быстрый заказ</h3>
-                <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
-                <form id="quickOrderForm" class="callback-form">
-                    <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)">
-                    <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required>
-                    <div class="consent-checkbox">
-                        <input type="checkbox" id="quickConsent" name="consent" required>
-                        <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
-                    </div>
-                    <button type="submit" class="btn-primary btn-block">📞 Заказать звонок</button>
-                </form>
             </div>
         </div>
+
+        <!-- Вкладка: Удержание и развитие -->
+        <div id="tab-retention" class="tab-pane">
+            <div class="service-group">
+                <h3>💎 Удержание и развитие</h3>
+                <div class="add-service">
+                    <select id="retention-select" class="service-select"></select>
+                    <input type="number" id="retention-qty" min="1" value="1" class="calc-qty">
+                    <button id="retention-add" class="add-service-btn" data-category="retention">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Бизнес-тренинги -->
+        <div id="tab-business-training" class="tab-pane">
+            <div class="service-group">
+                <h3>🎓 Бизнес-тренинги</h3>
+                <div class="add-service">
+                    <select id="business-training-select" class="service-select"></select>
+                    <input type="number" id="business-training-qty" min="1" value="1" class="calc-qty">
+                    <button id="business-training-add" class="add-service-btn" data-category="businessTraining">➕
+                        Добавить
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Корпоративным клиентам -->
+        <div id="tab-corporate" class="tab-pane">
+            <div class="service-group">
+                <h3>🤝 Корпоративным клиентам</h3>
+                <div class="add-service">
+                    <select id="corporate-select" class="service-select"></select>
+                    <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty">
+                    <button id="corporate-add" class="add-service-btn" data-category="corporate">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Старт и развитие -->
+        <div id="tab-start" class="tab-pane">
+            <div class="service-group">
+                <h3>🎯 Старт и развитие</h3>
+                <div class="add-service">
+                    <select id="start-select" class="service-select"></select>
+                    <input type="number" id="start-qty" min="1" value="1" class="calc-qty">
+                    <button id="start-add" class="add-service-btn" data-category="start">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Карьерный рост -->
+        <div id="tab-growth" class="tab-pane">
+            <div class="service-group">
+                <h3>📈 Карьерный рост</h3>
+                <div class="add-service">
+                    <select id="growth-select" class="service-select"></select>
+                    <input type="number" id="growth-qty" min="1" value="1" class="calc-qty">
+                    <button id="growth-add" class="add-service-btn" data-category="growth">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Executive -->
+        <div id="tab-executive" class="tab-pane">
+            <div class="service-group">
+                <h3>👑 Executive</h3>
+                <div class="add-service">
+                    <select id="executive-select" class="service-select"></select>
+                    <input type="number" id="executive-qty" min="1" value="1" class="calc-qty">
+                    <button id="executive-add" class="add-service-btn" data-category="executive">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Тренинги -->
+        <div id="tab-training" class="tab-pane">
+            <div class="service-group">
+                <h3>🎓 Тренинги</h3>
+                <div class="add-service">
+                    <select id="training-select" class="service-select"></select>
+                    <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
+                    <button id="training-add" class="add-service-btn" data-category="training">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Авторские курсы -->
+        <div id="tab-courses" class="tab-pane">
+            <div class="service-group">
+                <h3>📚 Авторские курсы</h3>
+                <div class="add-service">
+                    <select id="courses-select" class="service-select"></select>
+                    <input type="number" id="courses-qty" min="1" value="1" class="calc-qty">
+                    <button id="courses-add" class="add-service-btn" data-category="courses">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Итоговая сумма -->
+        <div class="total-block">
+            <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
+            <div id="discountInfo" class="discount-info"></div>
+        </div>
+
+        <!-- Корзина -->
+        <div class="cart-section">
+            <h3>🛒 Выбранные услуги</h3>
+            <div id="servicesList" class="services-list"></div>
+        </div>
+
+        <!-- Форма быстрого заказа -->
+        <div class="calendar-card">
+            <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark); text-align: center;">📞
+                Быстрый заказ</h3>
+            <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я
+                перезвоню, чтобы обсудить выбранные услуги.</p>
+            <form id="quickOrderForm" class="callback-form">
+                <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)">
+                <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required>
+                <div class="consent-checkbox">
+                    <input type="checkbox" id="quickConsent" name="consent" required>
+                    <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку
+                        персональных данных</a></label>
+                </div>
+                <button type="submit" class="btn-primary btn-block">📞 Заказать звонок</button>
+            </form>
+        </div>
     </div>
+</div>
 
-    <script>
-        // ========== ПОЛНЫЙ ПЕРЕЧЕНЬ УСЛУГ С ГРУППИРОВКОЙ ==========
-        const SERVICES_DATA = {
-            // Подбор персонала
-            recruitment: [
-                { name: "Подбор специалиста", price: 40000 },
-                { name: "Подбор резюме под вакансию", price: 15000 },
-                { name: "База кандидатов + тестирование", price: 20000 },
-                { name: "Подбор специалиста + гарантия", price: 60000 },
-                { name: "Классический рекрутинг", price: 70000 },
-                { name: "Подбор руководителя", price: 90000 },
-                { name: "Аутсорсинг подбора (абонемент)", price: 100000 },
-                { name: "Хэдхантинг", price: 120000 },
-                { name: "IT Поиск Senior+ с гарантией", price: 150000 },
-                { name: "IT Хэдхантинг Senior-специалиста", price: 150000 },
-                { name: "IT Executive search Senior", price: 200000 },
-                { name: "Эксклюзивный хэдхантинг", price: 250000 }
-            ],
-            // Удержание и развитие
-            retention: [
-                { name: "Разработка УТП компании", price: 25000 },
-                { name: "Оценка компетенций", price: 25000 },
-                { name: "Оценка управленческого потенциала", price: 50000 },
-                { name: "Консультация по внедрению гибких форматов", price: 10000 },
-                { name: "Оценка удовлетворённости персонала", price: null },
-                { name: "Разработка программы удержания", price: 120000 },
-                { name: "Разработка проекта адаптации персонала", price: 250000 },
-                { name: "HR-стратегия + подбор ключевых людей", price: 300000 },
-                { name: "Разработка HR-бренда", price: 150000 },
-                { name: "Стратегическая сессия с собственниками", price: 200000 }
-            ],
-            // Бизнес-тренинги
-            businessTraining: [
-                { name: "Бизнес-тренинг под запрос (1ч, до 25 чел.)", price: 12000 },
-                { name: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000 },
-                { name: "Мастер-класс (3ч, до 25 чел.)", price: 30000 },
-                { name: "Тренинг 'Удержание персонала'", price: 12000 },
-                { name: "Тренинг 'Профилактика выгорания'", price: 12000 },
-                { name: "Тренинг 'Я хочу здесь работать' мотивация", price: 15000 }
-            ],
-            // Корпоративным клиентам
-            corporate: [
-                { name: "Корпоративная подписка на рекрутинг", price: 500000 },
-                { name: "Абонемент на HR-консультации", price: 100000 }
-            ],
-            // Старт и развитие (B2C базовые)
-            start: [
-                { name: "Экспресс-диагностика (15мин)", price: 0 },
-                { name: "Экспресс-консультация (30мин)", price: 3500 },
-                { name: "Аудит резюме", price: 4000 },
-                { name: "Сопроводительное письмо", price: 3000 },
-                { name: "Резюме специалиста", price: 6500 },
-                { name: "Профориентация для подростков", price: 6000 },
-                { name: "Профориентация для взрослых", price: 8000 },
-                { name: "Стратегия поиска работы", price: 8000 },
-                { name: "Подготовка к собеседованию (1ч)", price: 7000 },
-                { name: "Индивидуальная консультация (1ч)", price: 7000 },
-                { name: "Психологическое консультирование (1ч)", price: 7000 },
-                { name: "Тренинг по переговорам", price: 7000 },
-                { name: "Переговоры о зарплате (1ч)", price: 7000 }
-            ],
-            // Карьерный рост (B2C стандартные)
-            growth: [
-                { name: "Резюме руководителя", price: 9000 },
-                { name: "Подготовка к повышению", price: 10000 },
-                { name: "Поиск работы с гибким графиком", price: 10000 },
-                { name: "LinkedIn-профиль под ключ", price: 15000 },
-                { name: "План развития (рост в должности)", price: 12000 },
-                { name: "Повышение грейда", price: 12000 },
-                { name: "Индивидуальный тренинг «Продай себя дорого»", price: 14000 },
-                { name: "CV на английском", price: 15000 },
-                { name: "Развитие управленческих навыков", price: 15000 },
-                { name: "Стратегия трудоустройства", price: 15000 },
-                { name: "Карьерная стратегия (пакет 3 консультации)", price: 18000 },
-                { name: "Коучинг для руководителей", price: 10000 },
-                { name: "Коучинг для руководителей (пакет 4 сессии)", price: 30000 }
-            ],
-            // Executive (B2C премиальные)
-            executive: [
-                { name: "VIP-коучинг", price: 30000 },
-                { name: "Стратегия роста", price: 45000 },
-                { name: "Executive-сопровождение/мес", price: 60000 },
-                { name: "Поиск позиции C-level", price: 80000 },
-                { name: "Executive-коучинг/мес", price: 100000 },
-                { name: "Коучинг топ-менеджеров", price: 150000 }
-            ],
-            // Тренинги для соискателей
-            training: [
-                { name: "Индивидуальный тренинг «Продай себя дорого»", price: 14000 },
-                { name: "Групповой тренинг «Продай себя дорого»", price: 5500 },
-                { name: "Наставничество для HR", price: 7000 }
-            ],
-            // Авторские курсы
-            courses: [
-                { name: "Авторский курс 'Рекрутер для недвижимости'", price: 25000 },
-                { name: "Обучение с '0' менеджер по продажам", price: 50000 }
-            ]
-        };
+<script>
+    // ========== ПОЛНЫЙ ПЕРЕЧЕНЬ УСЛУГ С ГРУППИРОВКОЙ ==========
+    const SERVICES_DATA = {
+        // Подбор персонала
+        recruitment: [
+            {name: "Составление вакансии (с УТП)", price: 10000},
+            {name: "Подбор резюме под вакансию", price: 15000},
+            {name: "База кандидатов + тестирование", price: 20000},
+            {name: "Подбор специалиста", price: 40000},
+            {name: "Подбор специалиста + гарантия", price: 60000},
+            {name: "Составить 'Программу стажировки'", price: 70000},
+            {name: "Классический рекрутинг", price: 70000},
+            {name: "Подбор руководителя", price: 90000},
+            {name: "Аутсорсинг подбора (абонемент)", price: 100000},
+            {name: "Хэдхантинг", price: 120000},
+            {name: "IT Поиск Senior+ с гарантией", price: 150000},
+            {name: "IT Хэдхантинг Senior-специалиста", price: 150000},
+            {name: "IT Executive search Senior", price: 200000},
+            {name: "Эксклюзивный хэдхантинг", price: 250000}
+        ],
+        // Удержание и развитие
+        retention: [
+            {"name": "Разработка УТП компании", "price": 25000},
+            {"name": "Оценка компетенций", "price": 25000},
+            {"name": "Оценка управленческого потенциала", "price": 50000},
+            {"name": "Консультация по внедрению гибких форматов", "price": 10000},
+            {"name": "Оценка удовлетворённости персонала", "price": "по запросу"},
+            {"name": "Разработка программы удержания", "price": 120000},
+            {"name": "Разработка проекта адаптации персонала", "price": 250000},
+            {"name": "HR-стратегия + подбор ключевых людей", "price": 300000},
+            {"name": "Разработка HR-бренда", "price": 150000},
+            {"name": "Стратегическая сессия с собственниками", "price": 200000},
+            {"name": "Стратегическая сессия в компании", "price": "по запросу"}
+        ],
+        // Бизнес-тренинги
+        businessTraining: [
+            {"name": "Тренинг под запрос (1ч, до 25 чел.)", "price": 12000},
+            {"name": "Стратегическая сессия (1ч, до 12 чел.)", "price": 13000},
+            {"name": "Тренинг 'Профилактика выгорания'", "price": 12000},
+            {"name": "Тренинг 'Я хочу здесь работать' мотивация", "price": 15000},
+            {"name": "Тренинг 'Удержание персонала'", "price": 12000}
+        ],
+        // Корпоративным клиентам
+        corporate: [
+            {"name": "Корпоративная подписка на рекрутинг", "price": 500000},
+            {"name": "Абонемент на HR-консультации", "price": 100000}
+        ],
+        // Старт и развитие (B2C базовые)
+        start: [
+            {"name": "Экспресс-диагностика (15мин)", "price": 0},
+            {"name": "Сопроводительное письмо", "price": 3000},
+            {"name": "Экспресс-консультация (30мин)", "price": 3500},
+            {"name": "Аудит резюме", "price": 4000},
+            {"name": "Профориентация для подростков", "price": 6000},
+            {"name": "Резюме специалиста", "price": 6500},
+            {"name": "Подготовка к собеседованию (1ч)", "price": 7000},
+            {"name": "Тренинг по переговорам", "price": 7000},
+            {"name": "Переговоры о зарплате (1ч)", "price": 7000},
+            {"name": "Индивидуальная консультация (1ч)", "price": 7000},
+            {"name": "Психологическое консультирование (1ч)", "price": 7000},
+            {"name": "Профориентация для взрослых", "price": 8000},
+            {"name": "Стратегия поиска работы", "price": 8000},
+            {"name": "Резюме руководителя", "price": 9000}
+        ],
+        // Карьерный рост (B2C стандартные)
+        growth: [
+            {name: "Подготовка к повышению", price: 10000},
+            {name: "Поиск работы с гибким графиком", price: 10000},
+            {name: "Коучинг для руководителей", price: 10000},
+            {name: "План развития (рост в должности)", price: 12000},
+            {name: "Повышение грейда", price: 12000},
+            {name: "Индивидуальный тренинг «Продай себя дорого»", price: 14000},
+            {name: "LinkedIn-профиль под ключ", price: 15000},
+            {name: "CV на английском", price: 15000},
+            {name: "Развитие управленческих навыков", price: 15000},
+            {name: "Стратегия трудоустройства", price: 15000},
+            {name: "Карьерная стратегия (пакет 3 консультации)", price: 18000},
+            {name: "Коучинг для руководителей (пакет 4 сессии)", price: 30000},
+            {name: "VIP-коучинг", price: 30000},
+            {name: "Стратегия роста", price: 45000}
+        ],
+        // Executive (B2C премиальные)
+        executive: [
+            {"name": "Executive-коучинг/мес", "price": 100000},
+            {"name": "Executive-сопровождение/мес", "price": 60000},
+            {"name": "Поиск позиции C-level", "price": 80000},
+            {"name": "Коучинг топ-менеджеров", "price": 150000}
+        ],
+        // Тренинги для соискателей
+        training: [
+            {"name": "Индивидуальный тренинг «Продай себя дорого»", "price": 14000},
+            {"name": "Групповой тренинг «Продай себя дорого»", "price": 5500},
+            {"name": "Наставничество для HR", "price": 7000}
+        ],
+        // Авторские курсы
+        courses: [
+            {name: "Авторский курс 'Рекрутер для недвижимости'", price: 25000},
+            {name: "Обучение с '0' менеджер по продажам", price: 50000}
+        ]
+    };
 
-        let cart = [];
+    let cart = [];
 
-        // Форматирование цены
-        function formatPrice(price) {
-            if (price === null || price === 0) return 'по запросу';
-            return price.toLocaleString() + ' ₽';
-        }
+    // Форматирование цены
+    function formatPrice(price) {
+        if (price === null || price === 0) return 'по запросу';
+        return price.toLocaleString() + ' ₽';
+    }
 
-        // Получение числовой цены для расчётов
-        function getNumericPrice(price) {
-            return (price !== null && price !== 0) ? price : 0;
-        }
+    // Получение числовой цены для расчётов
+    function getNumericPrice(price) {
+        return (price !== null && price !== 0) ? price : 0;
+    }
 
-        // Показать уведомление
-        function showToast(message, isError = false) {
-            const existingToast = document.querySelector('.custom-toast');
-            if (existingToast) existingToast.remove();
+    // Показать уведомление
+    function showToast(message, isError = false) {
+        const existingToast = document.querySelector('.custom-toast');
+        if (existingToast) existingToast.remove();
 
-            const toast = document.createElement('div');
-            toast.className = 'custom-toast';
-            toast.style.cssText = `
+        const toast = document.createElement('div');
+        toast.className = 'custom-toast';
+        toast.style.cssText = `
                 position: fixed;
                 bottom: 20px;
                 left: 50%;
@@ -918,78 +926,78 @@
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15);
                 white-space: nowrap;
             `;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2000);
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    // Добавление услуги в корзину
+    function addToCart(serviceName, price, quantity) {
+        const existing = cart.find(item => item.name === serviceName);
+        if (existing) {
+            existing.qty += quantity;
+            showToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`);
+        } else {
+            cart.push({name: serviceName, price: price, qty: quantity});
+            showToast(`✅ "${serviceName}" добавлен(а) в корзину`);
+        }
+        renderCart();
+    }
+
+    // Обновление корзины
+    function renderCart() {
+        let total = 0;
+        let totalQty = 0;
+
+        cart.forEach(item => {
+            const itemPrice = getNumericPrice(item.price);
+            total += itemPrice * item.qty;
+            totalQty += item.qty;
+        });
+
+        // Скидка 5% при 2+ услугах
+        let finalTotal = total;
+        let discount = 0;
+        let discountApplied = false;
+
+        if (totalQty >= 2 && total > 0) {
+            discount = total * 0.05;
+            finalTotal = total - discount;
+            discountApplied = true;
         }
 
-        // Добавление услуги в корзину
-        function addToCart(serviceName, price, quantity) {
-            const existing = cart.find(item => item.name === serviceName);
-            if (existing) {
-                existing.qty += quantity;
-                showToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`);
+        // Обновление итоговой суммы
+        const totalPriceSpan = document.getElementById('totalPrice');
+        if (totalPriceSpan) {
+            totalPriceSpan.innerHTML = formatPrice(finalTotal);
+        }
+
+        const discountDiv = document.getElementById('discountInfo');
+        if (discountDiv) {
+            if (discountApplied) {
+                discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
+            } else if (totalQty === 1 && total > 0) {
+                discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
             } else {
-                cart.push({ name: serviceName, price: price, qty: quantity });
-                showToast(`✅ "${serviceName}" добавлен(а) в корзину`);
+                discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
             }
-            renderCart();
         }
 
-        // Обновление корзины
-        function renderCart() {
-            let total = 0;
-            let totalQty = 0;
+        // Рендер списка корзины
+        const container = document.getElementById('servicesList');
+        if (!container) return;
 
-            cart.forEach(item => {
-                const itemPrice = getNumericPrice(item.price);
-                total += itemPrice * item.qty;
-                totalQty += item.qty;
-            });
-
-            // Скидка 5% при 2+ услугах
-            let finalTotal = total;
-            let discount = 0;
-            let discountApplied = false;
-
-            if (totalQty >= 2 && total > 0) {
-                discount = total * 0.05;
-                finalTotal = total - discount;
-                discountApplied = true;
-            }
-
-            // Обновление итоговой суммы
-            const totalPriceSpan = document.getElementById('totalPrice');
-            if (totalPriceSpan) {
-                totalPriceSpan.innerHTML = formatPrice(finalTotal);
-            }
-
-            const discountDiv = document.getElementById('discountInfo');
-            if (discountDiv) {
-                if (discountApplied) {
-                    discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
-                } else if (totalQty === 1 && total > 0) {
-                    discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
-                } else {
-                    discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
-                }
-            }
-
-            // Рендер списка корзины
-            const container = document.getElementById('servicesList');
-            if (!container) return;
-
-            if (cart.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-
+        if (cart.length === 0) {
             container.innerHTML = '';
-            cart.forEach((item, idx) => {
-                const div = document.createElement('div');
-                div.className = 'calc-item';
-                const priceDisplay = (item.price === null || item.price === 0) ? 'по запросу' : (item.price * item.qty).toLocaleString() + ' ₽';
-                div.innerHTML = `
+            return;
+        }
+
+        container.innerHTML = '';
+        cart.forEach((item, idx) => {
+            const div = document.createElement('div');
+            div.className = 'calc-item';
+            const priceDisplay = (item.price === null || item.price === 0) ? 'по запросу' : (item.price * item.qty).toLocaleString() + ' ₽';
+            div.innerHTML = `
                     <div class="service-name">${escapeHtml(item.name)}</div>
                     <div class="service-price">${priceDisplay}</div>
                     <div class="service-qty-control">
@@ -1001,215 +1009,215 @@
                         <button class="remove-item" data-idx="${idx}">✖</button>
                     </div>
                 `;
-                container.appendChild(div);
-            });
-
-            // Обработчики для кнопок
-            document.querySelectorAll('.qty-minus').forEach(btn => {
-                btn.onclick = () => {
-                    const idx = parseInt(btn.dataset.idx);
-                    if (cart[idx].qty > 1) {
-                        cart[idx].qty--;
-                    } else {
-                        cart.splice(idx, 1);
-                    }
-                    renderCart();
-                };
-            });
-
-            document.querySelectorAll('.qty-plus').forEach(btn => {
-                btn.onclick = () => {
-                    const idx = parseInt(btn.dataset.idx);
-                    cart[idx].qty++;
-                    renderCart();
-                };
-            });
-
-            document.querySelectorAll('.remove-item').forEach(btn => {
-                btn.onclick = () => {
-                    const idx = parseInt(btn.dataset.idx);
-                    cart.splice(idx, 1);
-                    renderCart();
-                };
-            });
-        }
-
-        // Заполнение select'ов
-        function populateSelect(selectId, services) {
-            const select = document.getElementById(selectId);
-            if (!select) {
-                console.error('Select not found:', selectId);
-                return;
-            }
-
-            select.innerHTML = '';
-            services.forEach((service, index) => {
-                const option = document.createElement('option');
-                option.value = service.price !== null ? service.price : 'null';
-                option.textContent = `${service.name} — ${formatPrice(service.price)}`;
-                // Сохраняем название услуги в dataset опции
-                option.setAttribute('data-name', service.name);
-                option.setAttribute('data-price', service.price !== null ? service.price : 'null');
-                select.appendChild(option);
-            });
-        }
-
-        // Инициализация всех select'ов
-        function initSelects() {
-            populateSelect('recruitment-select', SERVICES_DATA.recruitment);
-            populateSelect('retention-select', SERVICES_DATA.retention);
-            populateSelect('business-training-select', SERVICES_DATA.businessTraining);
-            populateSelect('corporate-select', SERVICES_DATA.corporate);
-            populateSelect('start-select', SERVICES_DATA.start);
-            populateSelect('growth-select', SERVICES_DATA.growth);
-            populateSelect('executive-select', SERVICES_DATA.executive);
-            populateSelect('training-select', SERVICES_DATA.training);
-            populateSelect('courses-select', SERVICES_DATA.courses);
-        }
-
-        // Инициализация обработчиков добавления
-        function initAddButtons() {
-            const handlers = [
-                { btn: 'recruitment-add', select: 'recruitment-select', qty: 'recruitment-qty' },
-                { btn: 'retention-add', select: 'retention-select', qty: 'retention-qty' },
-                { btn: 'business-training-add', select: 'business-training-select', qty: 'business-training-qty' },
-                { btn: 'corporate-add', select: 'corporate-select', qty: 'corporate-qty' },
-                { btn: 'start-add', select: 'start-select', qty: 'start-qty' },
-                { btn: 'growth-add', select: 'growth-select', qty: 'growth-qty' },
-                { btn: 'executive-add', select: 'executive-select', qty: 'executive-qty' },
-                { btn: 'training-add', select: 'training-select', qty: 'training-qty' },
-                { btn: 'courses-add', select: 'courses-select', qty: 'courses-qty' }
-            ];
-
-            handlers.forEach(({ btn, select, qty }) => {
-                const button = document.getElementById(btn);
-                if (button) {
-                    // Удаляем старый обработчик, если есть
-                    button.removeEventListener('click', button._handler);
-                    button._handler = () => {
-                        const selectEl = document.getElementById(select);
-                        const selectedOption = selectEl.options[selectEl.selectedIndex];
-                        // Берём название из data-name атрибута опции
-                        const serviceName = selectedOption.getAttribute('data-name');
-                        let price = selectEl.value;
-                        price = (price === 'null' || price === '') ? null : parseInt(price);
-                        let quantity = parseInt(document.getElementById(qty).value);
-                        if (isNaN(quantity) || quantity < 1) quantity = 1;
-
-                        if (serviceName) {
-                            addToCart(serviceName, price, quantity);
-                        } else {
-                            console.error('Не удалось получить название услуги');
-                            showToast('❌ Ошибка: не удалось определить услугу', true);
-                        }
-                    };
-                    button.addEventListener('click', button._handler);
-                } else {
-                    console.error('Button not found:', btn);
-                }
-            });
-        }
-
-        // Инициализация вкладок
-        function initTabs() {
-            const tabs = document.querySelectorAll('.tab-btn');
-            tabs.forEach(btn => {
-                btn.removeEventListener('click', btn._tabHandler);
-                btn._tabHandler = () => {
-                    const tab = btn.dataset.tab;
-                    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-                    tabs.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    const activePane = document.getElementById(`tab-${tab}`);
-                    if (activePane) activePane.classList.add('active');
-                };
-                btn.addEventListener('click', btn._tabHandler);
-            });
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
-
-        // Инициализация формы
-        function initForm() {
-            const form = document.getElementById('quickOrderForm');
-            if (form) {
-                form.removeEventListener('submit', form._submitHandler);
-                form._submitHandler = (e) => {
-                    e.preventDefault();
-                    const phone = document.getElementById('quickPhone').value;
-                    const consent = document.getElementById('quickConsent').checked;
-
-                    if (!phone) {
-                        showToast('❌ Введите номер телефона', true);
-                        return;
-                    }
-                    if (!consent) {
-                        showToast('❌ Подтвердите согласие на обработку данных', true);
-                        return;
-                    }
-
-                    let cartText = '';
-                    let total = 0;
-                    cart.forEach(item => {
-                        const itemPrice = getNumericPrice(item.price);
-                        const subtotal = itemPrice * item.qty;
-                        total += subtotal;
-                        cartText += `${item.name} x${item.qty} = ${formatPrice(subtotal)}\n`;
-                    });
-
-                    let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-                    let finalTotal = total;
-                    if (totalQty >= 2 && total > 0) finalTotal = total * 0.95;
-
-                    alert(`✅ Заявка принята!\n\n📋 Услуги:\n${cartText || '—'}\n💰 Итого: ${formatPrice(finalTotal)}\n\n📞 Мы свяжемся с вами в ближайшее время.`);
-
-                    form.reset();
-                    cart = [];
-                    renderCart();
-                };
-                form.addEventListener('submit', form._submitHandler);
-            }
-        }
-
-        // Инициализация маски телефона
-        function initPhoneMask() {
-            const phoneInput = document.getElementById('quickPhone');
-            if (phoneInput) {
-                phoneInput.removeEventListener('input', phoneInput._maskHandler);
-                phoneInput._maskHandler = function(e) {
-                    let digits = this.value.replace(/\D/g, '');
-                    if (digits.length > 11) digits = digits.slice(0, 11);
-                    let formatted = '';
-                    if (digits.length === 0) formatted = '';
-                    else if (digits.length <= 1) formatted = '+' + digits;
-                    else if (digits.length <= 4) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1);
-                    else if (digits.length <= 7) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4);
-                    else if (digits.length <= 9) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7);
-                    else formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7, 9) + ' ' + digits.slice(9, 11);
-                    this.value = formatted;
-                };
-                phoneInput.addEventListener('input', phoneInput._maskHandler);
-            }
-        }
-
-        // Инициализация
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('Инициализация калькулятора...');
-            initSelects();
-            initAddButtons();
-            initTabs();
-            initForm();
-            initPhoneMask();
-            console.log('Инициализация завершена');
+            container.appendChild(div);
         });
-    </script>
+
+        // Обработчики для кнопок
+        document.querySelectorAll('.qty-minus').forEach(btn => {
+            btn.onclick = () => {
+                const idx = parseInt(btn.dataset.idx);
+                if (cart[idx].qty > 1) {
+                    cart[idx].qty--;
+                } else {
+                    cart.splice(idx, 1);
+                }
+                renderCart();
+            };
+        });
+
+        document.querySelectorAll('.qty-plus').forEach(btn => {
+            btn.onclick = () => {
+                const idx = parseInt(btn.dataset.idx);
+                cart[idx].qty++;
+                renderCart();
+            };
+        });
+
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.onclick = () => {
+                const idx = parseInt(btn.dataset.idx);
+                cart.splice(idx, 1);
+                renderCart();
+            };
+        });
+    }
+
+    // Заполнение select'ов
+    function populateSelect(selectId, services) {
+        const select = document.getElementById(selectId);
+        if (!select) {
+            console.error('Select not found:', selectId);
+            return;
+        }
+
+        select.innerHTML = '';
+        services.forEach((service, index) => {
+            const option = document.createElement('option');
+            option.value = service.price !== null ? service.price : 'null';
+            option.textContent = `${service.name} — ${formatPrice(service.price)}`;
+            // Сохраняем название услуги в dataset опции
+            option.setAttribute('data-name', service.name);
+            option.setAttribute('data-price', service.price !== null ? service.price : 'null');
+            select.appendChild(option);
+        });
+    }
+
+    // Инициализация всех select'ов
+    function initSelects() {
+        populateSelect('recruitment-select', SERVICES_DATA.recruitment);
+        populateSelect('retention-select', SERVICES_DATA.retention);
+        populateSelect('business-training-select', SERVICES_DATA.businessTraining);
+        populateSelect('corporate-select', SERVICES_DATA.corporate);
+        populateSelect('start-select', SERVICES_DATA.start);
+        populateSelect('growth-select', SERVICES_DATA.growth);
+        populateSelect('executive-select', SERVICES_DATA.executive);
+        populateSelect('training-select', SERVICES_DATA.training);
+        populateSelect('courses-select', SERVICES_DATA.courses);
+    }
+
+    // Инициализация обработчиков добавления
+    function initAddButtons() {
+        const handlers = [
+            {btn: 'recruitment-add', select: 'recruitment-select', qty: 'recruitment-qty'},
+            {btn: 'retention-add', select: 'retention-select', qty: 'retention-qty'},
+            {btn: 'business-training-add', select: 'business-training-select', qty: 'business-training-qty'},
+            {btn: 'corporate-add', select: 'corporate-select', qty: 'corporate-qty'},
+            {btn: 'start-add', select: 'start-select', qty: 'start-qty'},
+            {btn: 'growth-add', select: 'growth-select', qty: 'growth-qty'},
+            {btn: 'executive-add', select: 'executive-select', qty: 'executive-qty'},
+            {btn: 'training-add', select: 'training-select', qty: 'training-qty'},
+            {btn: 'courses-add', select: 'courses-select', qty: 'courses-qty'}
+        ];
+
+        handlers.forEach(({btn, select, qty}) => {
+            const button = document.getElementById(btn);
+            if (button) {
+                // Удаляем старый обработчик, если есть
+                button.removeEventListener('click', button._handler);
+                button._handler = () => {
+                    const selectEl = document.getElementById(select);
+                    const selectedOption = selectEl.options[selectEl.selectedIndex];
+                    // Берём название из data-name атрибута опции
+                    const serviceName = selectedOption.getAttribute('data-name');
+                    let price = selectEl.value;
+                    price = (price === 'null' || price === '') ? null : parseInt(price);
+                    let quantity = parseInt(document.getElementById(qty).value);
+                    if (isNaN(quantity) || quantity < 1) quantity = 1;
+
+                    if (serviceName) {
+                        addToCart(serviceName, price, quantity);
+                    } else {
+                        console.error('Не удалось получить название услуги');
+                        showToast('❌ Ошибка: не удалось определить услугу', true);
+                    }
+                };
+                button.addEventListener('click', button._handler);
+            } else {
+                console.error('Button not found:', btn);
+            }
+        });
+    }
+
+    // Инициализация вкладок
+    function initTabs() {
+        const tabs = document.querySelectorAll('.tab-btn');
+        tabs.forEach(btn => {
+            btn.removeEventListener('click', btn._tabHandler);
+            btn._tabHandler = () => {
+                const tab = btn.dataset.tab;
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+                tabs.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const activePane = document.getElementById(`tab-${tab}`);
+                if (activePane) activePane.classList.add('active');
+            };
+            btn.addEventListener('click', btn._tabHandler);
+        });
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function (m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Инициализация формы
+    function initForm() {
+        const form = document.getElementById('quickOrderForm');
+        if (form) {
+            form.removeEventListener('submit', form._submitHandler);
+            form._submitHandler = (e) => {
+                e.preventDefault();
+                const phone = document.getElementById('quickPhone').value;
+                const consent = document.getElementById('quickConsent').checked;
+
+                if (!phone) {
+                    showToast('❌ Введите номер телефона', true);
+                    return;
+                }
+                if (!consent) {
+                    showToast('❌ Подтвердите согласие на обработку данных', true);
+                    return;
+                }
+
+                let cartText = '';
+                let total = 0;
+                cart.forEach(item => {
+                    const itemPrice = getNumericPrice(item.price);
+                    const subtotal = itemPrice * item.qty;
+                    total += subtotal;
+                    cartText += `${item.name} x${item.qty} = ${formatPrice(subtotal)}\n`;
+                });
+
+                let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+                let finalTotal = total;
+                if (totalQty >= 2 && total > 0) finalTotal = total * 0.95;
+
+                alert(`✅ Заявка принята!\n\n📋 Услуги:\n${cartText || '—'}\n💰 Итого: ${formatPrice(finalTotal)}\n\n📞 Мы свяжемся с вами в ближайшее время.`);
+
+                form.reset();
+                cart = [];
+                renderCart();
+            };
+            form.addEventListener('submit', form._submitHandler);
+        }
+    }
+
+    // Инициализация маски телефона
+    function initPhoneMask() {
+        const phoneInput = document.getElementById('quickPhone');
+        if (phoneInput) {
+            phoneInput.removeEventListener('input', phoneInput._maskHandler);
+            phoneInput._maskHandler = function (e) {
+                let digits = this.value.replace(/\D/g, '');
+                if (digits.length > 11) digits = digits.slice(0, 11);
+                let formatted = '';
+                if (digits.length === 0) formatted = '';
+                else if (digits.length <= 1) formatted = '+' + digits;
+                else if (digits.length <= 4) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1);
+                else if (digits.length <= 7) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4);
+                else if (digits.length <= 9) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7);
+                else formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7, 9) + ' ' + digits.slice(9, 11);
+                this.value = formatted;
+            };
+            phoneInput.addEventListener('input', phoneInput._maskHandler);
+        }
+    }
+
+    // Инициализация
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('Инициализация калькулятора...');
+        initSelects();
+        initAddButtons();
+        initTabs();
+        initForm();
+        initPhoneMask();
+        console.log('Инициализация завершена');
+    });
+</script>
 </body>
 </html>
