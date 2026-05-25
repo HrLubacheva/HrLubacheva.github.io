@@ -11,8 +11,9 @@
     --light-bg: #f8f9fa;
     --surface-soft: #ffffff;
     --border: #e0e0e0;
-    --text-dark: #212529;
+    --text-dark: #1a202c;
     --text-light: #f8f9fa;
+    --text-muted: #4a5568;
     --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
@@ -50,121 +51,6 @@ body {
     text-align: center;
     margin-bottom: 48px;
     color: var(--primary-dark);
-}
-
-/* ==================================================================
-   КАСКАДНОЕ ПОЯВЛЕНИЕ КАРТОЧЕК (ЗАДЕРЖКИ)
-   ================================================================== */
-.roles-grid .fade-up:nth-child(1) {
-    transition-delay: 0.00s;
-}
-
-.roles-grid .fade-up:nth-child(2) {
-    transition-delay: 0.05s;
-}
-
-.roles-grid .fade-up:nth-child(3) {
-    transition-delay: 0.10s;
-}
-
-.roles-grid .fade-up:nth-child(4) {
-    transition-delay: 0.15s;
-}
-
-.roles-grid .fade-up:nth-child(5) {
-    transition-delay: 0.20s;
-}
-
-.roles-grid .fade-up:nth-child(6) {
-    transition-delay: 0.25s;
-}
-
-.services-flex .fade-up:nth-child(1) {
-    transition-delay: 0.00s;
-}
-
-.services-flex .fade-up:nth-child(2) {
-    transition-delay: 0.05s;
-}
-
-.services-flex .fade-up:nth-child(3) {
-    transition-delay: 0.10s;
-}
-
-.services-flex .fade-up:nth-child(4) {
-    transition-delay: 0.15s;
-}
-
-.benefits-grid .fade-up:nth-child(1) {
-    transition-delay: 0.00s;
-}
-
-.benefits-grid .fade-up:nth-child(2) {
-    transition-delay: 0.05s;
-}
-
-.benefits-grid .fade-up:nth-child(3) {
-    transition-delay: 0.10s;
-}
-
-.benefits-grid .fade-up:nth-child(4) {
-    transition-delay: 0.15s;
-}
-
-.process-grid .fade-up:nth-child(1) {
-    transition-delay: 0.00s;
-}
-
-.process-grid .fade-up:nth-child(2) {
-    transition-delay: 0.05s;
-}
-
-.process-grid .fade-up:nth-child(3) {
-    transition-delay: 0.10s;
-}
-
-.process-grid .fade-up:nth-child(4) {
-    transition-delay: 0.15s;
-}
-
-.process-grid .fade-up:nth-child(5) {
-    transition-delay: 0.20s;
-}
-
-.process-grid .fade-up:nth-child(6) {
-    transition-delay: 0.25s;
-}
-
-/* ==================================================================
-   АНИМАЦИЯ ПОЯВЛЕНИЯ КНОПОК КВИЗА
-   ================================================================== */
-.quiz-options .quiz-option {
-    animation: quizOptionFadeIn 0.3s ease forwards;
-    opacity: 0;
-    transform: translateY(10px);
-}
-
-.quiz-options .quiz-option:nth-child(1) {
-    animation-delay: 0.00s;
-}
-
-.quiz-options .quiz-option:nth-child(2) {
-    animation-delay: 0.05s;
-}
-
-.quiz-options .quiz-option:nth-child(3) {
-    animation-delay: 0.10s;
-}
-
-.quiz-options .quiz-option:nth-child(4) {
-    animation-delay: 0.15s;
-}
-
-@keyframes quizOptionFadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 @media (max-width: 768px) {
@@ -332,7 +218,6 @@ body {
     .burger-menu {
         display: block;
     }
-
     .nav-bottom {
         display: none;
         background: white;
@@ -340,17 +225,14 @@ body {
         padding: 20px;
         margin: 0;
     }
-
     .nav-bottom.open {
         display: block;
     }
-
     .nav-links {
         flex-direction: column;
         align-items: center;
         gap: 15px;
     }
-
     body.menu-open {
         overflow: hidden;
     }
@@ -389,11 +271,12 @@ body {
     font-size: 1rem;
     margin-bottom: 30px;
     line-height: 1.6;
+    color: var(--text-dark);
 }
 
 .small-note {
     font-size: 0.85rem;
-    color: var(--secondary);
+    color: var(--text-muted);
     margin-top: 15px;
 }
 
@@ -420,23 +303,21 @@ body {
         width: auto;
     }
 }
+
 @media (max-width: 768px) {
     .hero-grid {
         flex-direction: column;
         text-align: center;
     }
-
     .hero-image {
         display: flex;
         justify-content: center;
         width: 100%;
     }
-
     .hero-image img {
         max-width: 280px;
         margin: 0 auto;
     }
-
     .hero-title {
         font-size: 2rem;
     }
@@ -465,6 +346,7 @@ body {
         gap: 20px;
     }
 }
+
 .role-card, .service-card, .process-card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -477,6 +359,21 @@ body {
 .role-card:hover, .service-card:hover, .process-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
+}
+
+.role-card p, .service-card p, .process-card p {
+    color: var(--text-dark);
+    margin-top: 12px;
+}
+
+.service-card ul {
+    color: var(--text-dark);
+    list-style-position: inside;
+}
+
+.service-card li {
+    margin-bottom: 8px;
+    color: var(--text-dark);
 }
 
 .process-step {
@@ -496,6 +393,7 @@ body {
     text-align: center;
     margin: 40px 0 20px;
     font-size: 1.8rem;
+    color: var(--primary-dark);
 }
 
 .process-row {
@@ -567,7 +465,6 @@ body {
     font-weight: 800;
     color: var(--primary);
     line-height: 1.2;
-    transition: all 0.2s ease;
 }
 
 .stat-plus {
@@ -579,7 +476,7 @@ body {
 
 .stat-label {
     font-size: 1rem;
-    color: var(--secondary);
+    color: var(--text-muted);
     font-weight: 500;
 }
 
@@ -588,15 +485,12 @@ body {
         gap: 20px;
         margin: 30px 0;
     }
-
     .stat-number {
         font-size: 2.2rem;
     }
-
     .stat-plus {
         font-size: 1.6rem;
     }
-
     .stat-label {
         font-size: 0.9rem;
     }
@@ -628,7 +522,7 @@ body {
 }
 
 .benefit-card {
-    background: rgba(255, 255, 255, 0.95);
+    background: white;
     border-radius: var(--radius-lg);
     padding: 32px 28px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
@@ -677,8 +571,9 @@ body {
 .benefit-card p {
     font-size: 1rem;
     line-height: 1.5;
-    color: var(--secondary-dark);
+    color: var(--text-dark);
     margin: 0;
+    font-weight: 500;
 }
 
 @media (max-width: 768px) {
@@ -686,13 +581,14 @@ body {
         gap: 24px;
         margin: 32px 0;
     }
-
     .benefit-card {
         padding: 24px 20px;
     }
-
     .benefit-card h4 {
         font-size: 1.3rem;
+    }
+    .benefit-card p {
+        font-size: 0.95rem;
     }
 }
 
@@ -706,7 +602,7 @@ body {
 .calculator-desc {
     text-align: center;
     margin-bottom: 32px;
-    color: var(--secondary);
+    color: var(--text-muted);
     font-size: 1rem;
 }
 
@@ -725,6 +621,7 @@ body {
     cursor: pointer;
     transition: var(--transition);
     font-weight: 500;
+    color: var(--text-dark);
 }
 
 .tab-btn.active {
@@ -755,7 +652,6 @@ body {
     }
 }
 
-/* Строка добавления услуги */
 .add-service {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -766,11 +662,6 @@ body {
     padding: 8px;
     border-radius: 60px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
-    transition: box-shadow 0.2s;
-}
-
-.add-service:focus-within {
-    box-shadow: 0 4px 12px rgba(45, 106, 159, 0.1), 0 0 0 1px var(--primary);
 }
 
 .service-select {
@@ -785,21 +676,10 @@ body {
     font-weight: 500;
     color: var(--text-dark);
     cursor: pointer;
-    transition: all 0.2s;
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 20px center;
-}
-
-.service-select:hover {
-    background-color: #eef2f5;
-}
-
-.service-select:focus {
-    outline: none;
-    background-color: white;
-    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3);
 }
 
 .calc-qty {
@@ -811,13 +691,7 @@ body {
     border-radius: 50px;
     font-size: 1rem;
     font-weight: 500;
-    transition: all 0.2s;
-}
-
-.calc-qty:focus {
-    outline: none;
-    background: white;
-    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3);
+    color: var(--text-dark);
 }
 
 .add-service-btn {
@@ -842,11 +716,6 @@ body {
     box-shadow: 0 6px 14px rgba(45, 106, 159, 0.25);
 }
 
-.add-service-btn:active {
-    transform: translateY(1px);
-}
-
-/* Общий итог */
 .total-block {
     margin-top: 30px;
     padding-top: 20px;
@@ -854,6 +723,7 @@ body {
     font-size: 1.5rem;
     font-weight: bold;
     text-align: right;
+    color: var(--text-dark);
 }
 
 .discount-info {
@@ -862,7 +732,6 @@ body {
     margin-top: 8px;
 }
 
-/* Корзина */
 .cart-section {
     margin-top: 30px;
     border-top: 1px solid var(--border);
@@ -889,7 +758,7 @@ body {
     display: block;
     text-align: center;
     padding: 20px;
-    color: var(--secondary);
+    color: var(--text-muted);
     font-size: 0.9rem;
 }
 
@@ -922,15 +791,14 @@ body {
 .calc-item .service-name {
     padding-left: 12px;
     font-weight: 500;
+    color: var(--text-dark);
     word-break: break-word;
-    white-space: normal;
-    line-height: 1.4;
 }
 
-.calc-item .service-price,
-.calc-item .service-qty {
+.calc-item .service-price {
     text-align: center;
-    font-weight: 500;
+    font-weight: 600;
+    color: var(--primary);
 }
 
 .service-qty-control {
@@ -953,6 +821,7 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    color: var(--text-dark);
 }
 
 .qty-btn:hover {
@@ -965,10 +834,7 @@ body {
     min-width: 24px;
     text-align: center;
     font-weight: 500;
-}
-
-.calc-item .service-remove {
-    text-align: center;
+    color: var(--text-dark);
 }
 
 .remove-item {
@@ -991,20 +857,7 @@ body {
     transform: scale(1.05);
 }
 
-.calc-pdf-section {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin: 20px 0;
-    justify-content: center;
-}
-
-/* Адаптивность калькулятора */
 @media (max-width: 768px) {
-    .services-header {
-        display: none;
-    }
-
     .calc-item {
         display: flex;
         flex-direction: column;
@@ -1013,31 +866,26 @@ body {
         padding: 16px;
         position: relative;
     }
-
     .calc-item .service-name {
         padding-left: 0;
         font-weight: 600;
         font-size: 1rem;
     }
-
     .calc-item .service-price {
         text-align: left;
         font-size: 0.9rem;
         color: var(--primary);
         font-weight: 600;
     }
-
     .service-qty-control {
         justify-content: flex-start;
         margin-top: 5px;
     }
-
     .calc-item .service-remove {
         position: absolute;
         top: 12px;
         right: 12px;
     }
-
     .add-service {
         grid-template-columns: 1fr;
         gap: 12px;
@@ -1045,25 +893,17 @@ body {
         box-shadow: none;
         padding: 0;
     }
-
-    .service-select {
+    .service-select, .calc-qty {
         background-color: var(--light-bg);
         border-radius: 50px;
         padding: 14px 20px;
-    }
-
-    .calc-qty {
         width: 100%;
-        background-color: var(--light-bg);
-        border-radius: 50px;
     }
-
     .add-service-btn {
         width: 100%;
         justify-content: center;
         padding: 14px;
     }
-
     .total-block {
         text-align: center;
         font-size: 1.3rem;
@@ -1130,7 +970,6 @@ body {
     border-color: var(--primary);
     color: white;
     box-shadow: 0 4px 12px rgba(45, 106, 159, 0.3);
-    background-image: none;
     transform: scale(0.98);
 }
 
@@ -1162,15 +1001,6 @@ body {
     transition: width 0.3s ease;
 }
 
-.quiz-result {
-    margin-top: 30px;
-    padding: 20px;
-    background: var(--light-bg);
-    border-radius: var(--radius-md);
-    display: none;
-    border: 1px solid var(--border);
-}
-
 .quiz-loading {
     text-align: center;
     padding: 40px;
@@ -1187,79 +1017,35 @@ body {
 }
 
 @keyframes quiz-spin {
-    to {
-        transform: rotate(360deg);
-    }
+    to { transform: rotate(360deg); }
 }
 
 .quiz-loading p {
     margin-top: 15px;
     font-size: 1rem;
-    color: var(--secondary);
+    color: var(--text-muted);
 }
 
 @media (max-width: 640px) {
     .quiz-card {
         padding: 24px 16px;
     }
-
     .quiz-options {
         flex-direction: column;
         align-items: stretch;
     }
-
     .quiz-option {
         width: 100%;
         text-align: center;
         padding: 14px 20px;
     }
-
-    .quiz-question p {
-        font-size: 1rem;
-    }
-
     .quiz-nav {
         flex-direction: column;
         gap: 12px;
     }
-
     .quiz-nav button {
         width: 100%;
     }
-}
-
-/* Принудительные стили для квиза (всегда видимы) */
-.quiz-option,
-.quiz-options .quiz-option,
-div[class*="quiz-option"] {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
-    border: 1px solid #dee2e6 !important;
-    color: #1e4663 !important;
-    padding: 12px 24px !important;
-    border-radius: 40px !important;
-    cursor: pointer !important;
-    font-weight: 500 !important;
-    font-size: 0.95rem !important;
-    transition: all 0.2s ease !important;
-    display: inline-block !important;
-    margin: 4px !important;
-    text-align: center !important;
-}
-
-.quiz-option:hover,
-.quiz-options .quiz-option:hover {
-    background: #2D6A9F !important;
-    border-color: #2D6A9F !important;
-    color: white !important;
-    transform: translateY(-2px) !important;
-}
-
-.quiz-option.selected,
-.quiz-options .quiz-option.selected {
-    background: #2D6A9F !important;
-    border-color: #2D6A9F !important;
-    color: white !important;
-    box-shadow: 0 4px 12px rgba(45, 106, 159, 0.2) !important;
 }
 
 /* ==================================================================
@@ -1307,29 +1093,8 @@ div[class*="quiz-option"] {
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
-    color: var(--secondary);
+    color: var(--text-muted);
     margin-bottom: 32px;
-}
-
-.freebies-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-}
-
-.freebies-buttons .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 32px;
-    font-size: 1rem;
-}
-
-.freebies-buttons .btn-primary:hover {
-    background: var(--primary-dark);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 20px -8px rgba(45, 106, 159, 0.4);
 }
 
 /* ==================================================================
@@ -1351,11 +1116,7 @@ div[class*="quiz-option"] {
     font-size: 1rem;
     transition: all 0.2s;
     background-color: #fff;
-}
-
-.callback-form textarea {
-    border-radius: 24px;
-    resize: vertical;
+    color: var(--text-dark);
 }
 
 .callback-form input:focus,
@@ -1365,19 +1126,9 @@ div[class*="quiz-option"] {
     box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
 }
 
-.consent-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 20px 0;
-    font-size: 0.9rem;
-}
-
-.consent-checkbox input {
-    width: 20px;
-    height: 20px;
-    margin: 0;
-    accent-color: var(--primary);
+.callback-form textarea {
+    border-radius: 24px;
+    resize: vertical;
 }
 
 .callback-form .btn-primary {
@@ -1391,97 +1142,8 @@ div[class*="quiz-option"] {
 .callback-note {
     text-align: center;
     font-size: 0.85rem;
-    color: var(--secondary);
+    color: var(--text-muted);
     margin-top: 20px;
-}
-
-.btn-primary.loading {
-    pointer-events: none;
-    opacity: 0.7;
-    position: relative;
-    padding-right: 2.5rem;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.btn-primary.loading::after {
-    content: '';
-    position: absolute;
-    right: 1rem;
-    top: calc(50% - 0.6rem);
-    width: 1.2rem;
-    height: 1.2rem;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-}
-
-/* ==================================================================
-   COOKIE-БАННЕР
-   ================================================================== */
-.cookie-consent {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: white;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-    z-index: 10000;
-    padding: 12px 20px;
-    font-size: 0.9rem;
-    text-align: center;
-}
-
-.cookie-consent__inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 15px;
-}
-
-/* ==================================================================
-   МОДАЛЬНЫЕ ОКНА
-   ================================================================== */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-}
-
-.modal.show {
-    display: flex;
-    opacity: 1;
-}
-
-.modal-content {
-    background: white;
-    padding: 30px;
-    border-radius: var(--radius-lg);
-    max-width: 500px;
-    width: 90%;
-    transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    transform: scale(0.95);
-}
-
-.modal.show .modal-content {
-    transform: scale(1);
 }
 
 /* ==================================================================
@@ -1495,20 +1157,22 @@ div[class*="quiz-option"] {
 .contact-line {
     margin: 15px 0;
     font-size: 1.1rem;
+    color: #cbd5e0;
 }
 
 .contact-line a {
-    color: var(--primary-light);
+    color: #90cdf4;
     text-decoration: none;
 }
 
 .contact-line a:hover {
     text-decoration: underline;
+    color: white;
 }
 
 .copyable-phone, .copyable-text {
     cursor: pointer;
-    border-bottom: 1px dashed var(--primary-light);
+    border-bottom: 1px dashed #90cdf4;
 }
 
 .contact-telegram-btn {
@@ -1520,19 +1184,44 @@ div[class*="quiz-option"] {
    ================================================================== */
 footer {
     background: var(--dark-bg);
-    color: white;
+    color: #cbd5e0;
     padding: 20px 0;
     text-align: center;
     margin-top: 40px;
 }
 
 footer a {
-    color: var(--primary-light);
-    text-decoration: none;
+    color: #90cdf4;
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 footer a:hover {
-    text-decoration: underline;
+    color: white;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer-copyright {
+    font-size: 0.9rem;
+}
+
+.footer-version {
+    font-size: 0.7rem;
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
 }
 
 /* ==================================================================
@@ -1549,18 +1238,12 @@ footer a:hover {
     transform: translateY(0);
 }
 
-.checklist-card.visible,
-.calendar-card.visible,
-.benefit-card.visible {
-    transition-delay: 0.05s;
-}
-
 /* ==================================================================
    СЕКЦИИ С ФОНОМ
    ================================================================== */
 .section-dark {
     background: var(--dark-bg);
-    color: var(--text-light);
+    color: #e2e8f0;
     padding: 60px 0;
 }
 
@@ -1609,53 +1292,6 @@ footer a:hover {
 }
 
 /* ==================================================================
-   УЧЁТ REDUCED MOTION
-   ================================================================== */
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-    }
-
-    .fade-up, .tab-pane, .modal-content, .role-card:hover {
-        transform: none !important;
-    }
-
-    .fade-up,
-    .fade-up.visible {
-        transition: none !important;
-        opacity: 1 !important;
-        transform: none !important;
-    }
-}
-
-/* Футер с версией справа */
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-
-.footer-copyright {
-    font-size: 0.9rem;
-}
-
-.footer-version {
-    font-size: 0.7rem;
-    opacity: 0.6;
-}
-
-@media (max-width: 768px) {
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-
-/* ==================================================================
    КАСТОМНЫЕ ТОСТЫ
    ================================================================== */
 .custom-toast {
@@ -1680,19 +1316,16 @@ footer a:hover {
 .custom-toast-error {
     background: #dc3545;
     color: white;
-    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
 }
 
 .custom-toast-success {
     background: #28a745;
     color: white;
-    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
 }
 
 .custom-toast-warning {
     background: #ffc107;
     color: #212529;
-    box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
 }
 
 @keyframes toastFadeIn {
@@ -1718,20 +1351,15 @@ footer a:hover {
 /* ==================================================================
    УБИРАЕМ МИГАНИЕ ПРИ ФОКУСЕ
    ================================================================== */
-.service-select:focus {
-    outline: none !important;
-    border-color: var(--primary) !important;
-    box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
-    background-color: white !important;
-}
-
+.service-select:focus,
+.calc-qty:focus,
 .add-service-btn:focus {
     outline: none !important;
     box-shadow: 0 0 0 2px rgba(45, 106, 159, 0.3) !important;
 }
 
 /* ==================================================================
-   УЛУЧШЕННЫЙ КАСТОМНЫЙ ДРОПДАУН
+   КАСТОМНЫЙ ДРОПДАУН
    ================================================================== */
 .custom-dropdown {
     position: relative;
@@ -1754,11 +1382,6 @@ footer a:hover {
     align-items: center;
     transition: all 0.2s ease;
     text-align: left;
-}
-
-.dropdown-button:hover {
-    background: #eef2f5;
-    border-color: var(--primary-light);
 }
 
 .dropdown-button.active {
@@ -1806,10 +1429,7 @@ footer a:hover {
     transition: background 0.15s;
     font-size: 0.9rem;
     border-bottom: 1px solid var(--border);
-}
-
-.dropdown-option:last-child {
-    border-bottom: none;
+    color: var(--text-dark);
 }
 
 .dropdown-option:hover {
@@ -1819,52 +1439,6 @@ footer a:hover {
 .dropdown-option.selected {
     background: var(--primary);
     color: white;
-}
-
-.dropdown-menu::-webkit-scrollbar {
-    width: 6px;
-}
-
-.dropdown-menu::-webkit-scrollbar-track {
-    background: var(--light-bg);
-    border-radius: 10px;
-}
-
-.dropdown-menu::-webkit-scrollbar-thumb {
-    background: var(--primary-light);
-    border-radius: 10px;
-}
-
-/* ==================================================================
-   RIPPLE-ЭФФЕКТ НА КНОПКАХ
-   ================================================================== */
-.btn-primary, .btn-secondary {
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.15s ease, background 0.15s ease;
-}
-
-.btn-primary:active, .btn-secondary:active {
-    transform: scale(0.97);
-}
-
-.btn-primary::after, .btn-secondary::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.5);
-    transform: translate(-50%, -50%);
-    transition: width 0.3s ease, height 0.3s ease;
-    pointer-events: none;
-}
-
-.btn-primary:active::after, .btn-secondary:active::after {
-    width: 200%;
-    height: 200%;
 }
 
 /* ==================================================================
@@ -1908,16 +1482,6 @@ footer a:hover {
     font-weight: bold;
 }
 
-.consent-checkbox input[type="checkbox"]:hover {
-    border-color: var(--primary-light);
-    transform: scale(1.02);
-}
-
-.consent-checkbox input[type="checkbox"]:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-}
-
 .consent-checkbox label {
     cursor: pointer;
     font-size: 0.9rem;
@@ -1928,7 +1492,6 @@ footer a:hover {
 .consent-checkbox label a {
     color: var(--primary);
     text-decoration: none;
-    transition: color 0.2s;
 }
 
 .consent-checkbox label a:hover {
@@ -1936,12 +1499,8 @@ footer a:hover {
     text-decoration: underline;
 }
 
-.ya-share2, .ya-share, [class*="ya-share"] {
-    display: none !important;
-}
-
 /* ==================================================================
-   БЛОК ВЫБРАННОЙ УСЛУГИ ИЗ КВИЗА (полная копия механики корзины)
+   БЛОК ВЫБРАННОЙ УСЛУГИ ИЗ КВИЗА
    ================================================================== */
 #quizSelectionBlock {
     background: #f0f7ff;
@@ -1949,7 +1508,6 @@ footer a:hover {
     margin-bottom: 16px;
 }
 
-/* Десктоп: сетка из трёх колонок (название, цена, удаление) */
 @media (min-width: 769px) {
     #quizSelectionBlock {
         display: grid;
@@ -1961,30 +1519,8 @@ footer a:hover {
         transition: background 0.2s;
         animation: slideIn 0.3s ease;
     }
-
-    #quizSelectionBlock:hover {
-        background: var(--light-bg);
-    }
-
-    #quizSelectionBlock .service-name {
-        padding-left: 12px;
-        font-weight: 500;
-        word-break: break-word;
-        white-space: normal;
-        line-height: 1.4;
-    }
-
-    #quizSelectionBlock .service-price {
-        text-align: center;
-        font-weight: 500;
-    }
-
-    #quizSelectionBlock .service-remove {
-        text-align: center;
-    }
 }
 
-/* Мобильные: вертикальная карточка (название, цена, крестик справа сверху) */
 @media (max-width: 768px) {
     #quizSelectionBlock {
         display: flex;
@@ -1997,18 +1533,12 @@ footer a:hover {
         transition: background 0.2s;
         animation: slideIn 0.3s ease;
     }
-
-    #quizSelectionBlock:hover {
-        background: var(--light-bg);
-    }
-
     #quizSelectionBlock .service-name {
         padding-right: 40px;
         font-weight: 600;
         font-size: 1rem;
         line-height: 1.4;
     }
-
     #quizSelectionBlock .service-price {
         text-align: left;
         font-size: 0.9rem;
@@ -2016,7 +1546,6 @@ footer a:hover {
         font-weight: 600;
         margin-top: 4px;
     }
-
     #quizSelectionBlock .service-remove {
         position: absolute;
         top: 12px;
@@ -2024,8 +1553,8 @@ footer a:hover {
     }
 }
 
-/* Общие стили для элементов внутри блока */
 #quizSelectionBlock .service-name {
+    color: var(--text-dark);
     word-break: break-word;
 }
 
@@ -2040,7 +1569,6 @@ footer a:hover {
     font-size: 1.2rem;
     cursor: pointer;
     color: #dc3545;
-    padding: 0 8px;
     transition: transform 0.1s;
     width: 32px;
     height: 32px;
@@ -2055,20 +1583,8 @@ footer a:hover {
     transform: scale(1.05);
 }
 
-/* Анимация появления такая же, как у корзины */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
 /* ==================================================================
-   ВЫРАВНИВАНИЕ КАРТОЧЕК ПРОЦЕССОВ (единый стиль)
+   ВЫРАВНИВАНИЕ КАРТОЧЕК ПРОЦЕССОВ
    ================================================================== */
 .process-row {
     display: flex;
@@ -2112,9 +1628,19 @@ footer a:hover {
     text-align: center;
 }
 
-.process-card:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-lg);
+.process-card h4 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 8px 0 12px;
+    color: var(--primary-dark);
+}
+
+.process-card p {
+    flex-grow: 1;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--text-dark);
+    margin: 0;
 }
 
 .process-step {
@@ -2131,44 +1657,26 @@ footer a:hover {
     margin: 0 auto 16px auto;
 }
 
-.process-card h4 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin: 8px 0 12px;
-    color: var(--primary-dark);
-}
-
-.process-card p {
-    flex-grow: 1;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    color: var(--secondary);
-    margin: 0;
-}
-
 @media (max-width: 768px) {
     .process-row {
         flex-direction: column;
         gap: 30px;
     }
-
     .process-grid {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-
     .process-title {
         font-size: 1.5rem;
         margin: 20px 0 15px;
     }
-
     .process-card {
         padding: 20px 16px;
     }
 }
 
 /* ==================================================================
-   ТОЛЬКО ДЛЯ БЛОКА ТРЕНИНГА: НЕ БОЛЕЕ 3 КОЛОНОК
+   ТОЛЬКО ДЛЯ БЛОКА ТРЕНИНГА
    ================================================================== */
 .training-grid .process-grid {
     display: grid;
@@ -2189,18 +1697,8 @@ footer a:hover {
     }
 }
 
-.training-grid .process-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.training-grid .process-card p {
-    flex-grow: 1;
-}
-
 /* ==================================================================
-   A11Y: ФОКУС ДЛЯ ИНТЕРАКТИВНЫХ ЭЛЕМЕНТОВ
+   A11Y: ФОКУС
    ================================================================== */
 a:focus-visible,
 button:focus-visible,
@@ -2209,339 +1707,52 @@ button:focus-visible,
 .remove-item:focus-visible,
 .tab-btn:focus-visible,
 .btn-primary:focus-visible,
-.btn-secondary:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+.btn-secondary:focus-visible,
+.qty-btn:focus-visible,
+#removeQuizSelection:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
     border-radius: 4px;
 }
 
 /* ==================================================================
-   A11Y: БЛОКИРОВКА СКРОЛЛА ПРИ ОТКРЫТОЙ МОДАЛКЕ
-   ================================================================== */
-body.modal-open {
-    overflow: hidden;
-}
-
-/* ==================================================================
-   ФИКС: 3 КОЛОНКИ ДЛЯ РОЛЕЙ
-   ================================================================== */
-@media (min-width: 992px) {
-    .roles-grid {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 30px !important;
-    }
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-    .roles-grid {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 30px !important;
-    }
-}
-
-/* ==================================================================
-   УЛУЧШЕННЫЙ КОНТРАСТ НА ТЁМНОМ ФОНЕ
-   ================================================================== */
-.section-dark {
-    background: var(--dark-bg);
-    color: #e2e8f0;
-}
-
-.section-dark .section-title {
-    color: white;
-}
-
-.section-dark a {
-    color: #90cdf4;
-}
-
-.section-dark a:hover {
-    color: white;
-}
-
-footer {
-    background: var(--dark-bg);
-    color: #cbd5e0;
-}
-
-footer a {
-    color: #90cdf4;
-}
-
-footer a:hover {
-    color: white;
-}
-
-/* ==================================================================
-   A11Y: УЛУЧШЕННЫЙ ФОКУС ДЛЯ КНОПОК БЕЗ ТЕКСТА
-   ================================================================== */
-.qty-btn:focus-visible,
-.remove-item:focus-visible,
-#removeQuizSelection:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
-    border-radius: 50%;
-}
-
-/* ==================================================================
-   ПРОИЗВОДИТЕЛЬНОСТЬ: ОПТИМИЗАЦИЯ АНИМАЦИЙ
+   УЧЁТ REDUCED MOTION
    ================================================================== */
 @media (prefers-reduced-motion: reduce) {
-    .qty-btn,
-    .remove-item,
-    .quiz-option,
-    .btn-primary,
-    .btn-secondary {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    .fade-up, .fade-up.visible,
+    .quiz-option, .quiz-option.selected,
+    .calc-item, .custom-dropdown-menu {
         transition: none !important;
         animation: none !important;
         transform: none !important;
+        opacity: 1 !important;
     }
 }
 
 /* ==================================================================
-   АДАПТИВНЫЕ ФОРМЫ (быстрый заказ и обратная связь)
+   УЛУЧШЕНИЯ ДОСТУПНОСТИ
    ================================================================== */
-.responsive-form {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.responsive-form .form-row {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-}
-
-.responsive-form input,
-.responsive-form textarea,
-.responsive-form .btn-block {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.btn-block {
-    display: block;
-    width: 100%;
-    text-align: center;
-}
-
-@media (max-width: 640px) {
-    .responsive-form .form-row {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .responsive-form input,
-    .responsive-form textarea,
-    .responsive-form .btn-primary {
-        font-size: 16px;
-    }
-
-    .calendar-card {
-        padding: 24px 16px !important;
-    }
-
-    .callback-form input,
-    .callback-form textarea {
-        margin: 8px 0;
-    }
-}
-
-/* ==================================================================
-   ВАЛИДАЦИЯ ПОЛЕЙ
-   ================================================================== */
-.input-error {
-    border-color: #dc3545 !important;
-    box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2) !important;
-}
-
-.field-error-message {
-    color: #dc3545;
-    font-size: 0.75rem;
-    margin-top: 4px;
-    display: block;
-    animation: fadeInUp 0.2s ease;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(-4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* ==================================================================
-   ДОПОЛНИТЕЛЬНО: СКРЫВАЕМ БЛОК ВЫБРАННОЙ УСЛУГИ, ЕСЛИ ОН ПУСТ
-   ================================================================== */
-#quizSelectionBlock:empty {
-    display: none !important;
-}
-
-#quizSelectionBlock .service-name:empty,
-#quizSelectionBlock .service-price:empty {
-    display: none; /* не влияет на сам блок, но на всякий случай */
-}
-
-/* Если название пустое, то и весь блок не нужен (но лучше скрыть блок) */
-#quizSelectionBlock:has(.service-name:empty) {
-    display: none !important;
-}
-
-/* ========== КАСТОМНЫЙ ДРОПДАУН ДЛЯ МАТЕРИАЛОВ ========== */
-.materials-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.materials-dropdown-btn {
-    display: inline-flex !important;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-}
-
-.dropdown-arrow {
-    font-size: 0.7rem;
-    transition: transform 0.2s ease;
-}
-
-.materials-dropdown-btn.active .dropdown-arrow {
-    transform: rotate(180deg);
-}
-
-.materials-dropdown-menu {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    min-width: 240px;
-    background: var(--surface-soft);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-8px);
-    transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
-    z-index: 100;
-}
-
-.materials-dropdown-menu.open {
+::placeholder {
+    color: #9ca3af;
     opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
 }
 
-.dropdown-item {
-    display: block;
-    width: 100%;
-    padding: 12px 20px;
-    text-align: left;
-    text-decoration: none;
-    font-size: 0.95rem;
-    color: var(--text-dark);
-    background: none;
-    border: none;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
-    transition: background 0.2s ease;
-    font-family: 'Inter', sans-serif;
+::-ms-input-placeholder {
+    color: #9ca3af;
 }
 
-.dropdown-item:last-child {
-    border-bottom: none;
+/* Скрываем пустые блоки */
+#quizSelectionBlock:empty,
+#quizSelectionBlock .service-name:empty {
+    display: none !important;
 }
 
-.dropdown-item:hover {
-    background: var(--light-bg);
-    color: var(--primary);
-}
-
-
-.material-link {
-    color: var(--primary);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: opacity 0.2s;
-}
-
-.material-link:hover {
-    opacity: 0.7;
-    text-decoration: underline;
-}
-
-.material-email-btn {
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: opacity 0.2s;
-}
-
-.material-email-btn:hover {
-    opacity: 0.7;
-    text-decoration: underline;
-}
-
-@media (max-width: 560px) {
-    .checklist-card [style*="justify-content: space-between"] {
-        flex-direction: column;
-        align-items: flex-start !important;
-        gap: 10px;
-    }
-}
-
-/* ==================================================================
-   СТИЛИ ДЛЯ МАТЕРИАЛОВ (material-link, material-email-btn)
-   ================================================================== */
-.material-link {
-    color: var(--primary);
-    text-decoration: none;
-    font-size: 0.9rem;
-    font-weight: 500;
-    transition: opacity 0.2s;
-}
-
-.material-link:hover {
-    opacity: 0.7;
-    text-decoration: underline;
-}
-
-.material-email-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.9rem;
-    color: var(--primary);
-    padding: 0;
-    transition: opacity 0.2s;
-}
-
-.material-email-btn:hover {
-    opacity: 0.7;
-    text-decoration: underline;
-}
-
-.material-email-simple:hover {
-    text-decoration: underline;
-    opacity: 0.7;
-}
-
-.material-download-link:hover {
-    text-decoration: underline;
-    opacity: 0.7;
-}
-
-/* ==================================================================
-   ПЛАВАЮЩАЯ КНОПКА ПОДЕЛИТЬСЯ (опционально)
-   ================================================================== */
+/* Плавающая кнопка поделиться */
 .floating-share-btn {
     position: fixed;
     bottom: 100px;
@@ -2576,74 +1787,37 @@ footer a:hover {
     }
 }
 
-#materialsModal input {
-    box-sizing: border-box;
-
-
-
 /* ==================================================================
-   УЛУЧШЕНИЯ ДОСТУПНОСТИ (PageSpeed Insights)
+   ГАРАНТИЯ КОНТРАСТА (ПЕРЕОПРЕДЕЛЕНИЕ)
    ================================================================== */
 
-/* Увеличение контрастности текста в светлых секциях */
-.section-light p,
-.section-light li,
-.services-flex p,
-.services-flex li,
-.checklist-card p,
-.calendar-card p {
-    color: #4a5568;
+/* Текст на светлом фоне должен быть тёмным */
+.section-light,
+.checklist-card,
+.calendar-card,
+.quiz-card,
+.calc-item,
+.modal-content {
+    color: var(--text-dark);
 }
 
-/* Улучшение контраста для кнопок на тёмном фоне */
-.section-dark .btn-secondary {
-    border: 2px solid var(--primary-light);
-    color: var(--primary-light);
-}
-
-.section-dark .btn-secondary:hover {
-    background: var(--primary-light);
-    color: var(--dark-bg);
-}
-
-/* Ссылки в футере с подчёркиванием для лучшей видимости */
-footer a {
-    color: #90cdf4;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-}
-
-footer a:hover {
-    color: white;
-}
-
-/* Улучшение контраста для подписей в статистике */
-.stat-label {
-    color: #4a5568;
-}
-
-/* Контраст для текста в карточках преимуществ (на тёмном фоне) */
-.benefit-card p {
+/* Текст на тёмном фоне должен быть светлым */
+.section-dark,
+footer,
+.contact-block {
     color: #e2e8f0;
 }
 
-/* Фокус для интерактивных элементов более заметный */
-a:focus-visible,
-button:focus-visible,
-.quiz-option:focus-visible,
-.add-service-btn:focus-visible {
-    outline: 3px solid var(--primary);
-    outline-offset: 3px;
-    border-radius: 4px;
+/* Гарантия для ссылок на тёмном фоне */
+.section-dark a,
+footer a {
+    color: #90cdf4;
 }
 
-/* Улучшение читаемости placeholder */
-::placeholder {
-    color: #9ca3af;
-    opacity: 1;
+/* Гарантия для карточек на тёмном фоне (они белые, текст тёмный) */
+.benefit-card,
+.process-card,
+.role-card,
+.service-card {
+    color: var(--text-dark);
 }
-
-/* Для Firefox */
-::-ms-input-placeholder {
-    color: #9ca3af;
-}ы

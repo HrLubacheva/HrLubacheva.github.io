@@ -93,23 +93,19 @@
             } else if (priceSpan) {
                 priceSpan.innerHTML = '';
             }
-            // Показываем блок
             block.style.display = '';
-            // Устанавливаем правильный тип отображения в зависимости от ширины экрана
             if (window.innerWidth <= 768) {
                 block.style.display = 'flex';
             } else {
                 block.style.display = 'grid';
             }
         } else {
-            // Скрываем блок
             block.style.display = 'none';
             if (nameSpan) nameSpan.innerHTML = '';
             if (priceSpan) priceSpan.innerHTML = '';
         }
     }
 
-// Отправка данных квиза в Google Sheets (без уведомлений) с повторными попытками
     function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, originalText, originalPrice) {
         const scriptUrl = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
         if (!scriptUrl) return;
