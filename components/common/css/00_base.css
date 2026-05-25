@@ -324,9 +324,37 @@ body {
 }
 
 /* ==================================================================
+   РОЛИ (фикс: 3 колонки на десктопе, 2 на планшете, 1 на мобиле)
+   ================================================================== */
+.roles-grid {
+    display: grid;
+    gap: 30px;
+    margin: 40px 0;
+}
+
+@media (min-width: 992px) {
+    .roles-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .roles-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 767px) {
+    .roles-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* ==================================================================
    КАРТОЧКИ И СЕТКИ (ОБЩИЕ)
    ================================================================== */
-.roles-grid, .process-grid {
+.process-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 30px;
@@ -1785,39 +1813,4 @@ button:focus-visible,
         bottom: 90px;
         right: 20px;
     }
-}
-
-/* ==================================================================
-   ГАРАНТИЯ КОНТРАСТА (ПЕРЕОПРЕДЕЛЕНИЕ)
-   ================================================================== */
-
-/* Текст на светлом фоне должен быть тёмным */
-.section-light,
-.checklist-card,
-.calendar-card,
-.quiz-card,
-.calc-item,
-.modal-content {
-    color: var(--text-dark);
-}
-
-/* Текст на тёмном фоне должен быть светлым */
-.section-dark,
-footer,
-.contact-block {
-    color: #e2e8f0;
-}
-
-/* Гарантия для ссылок на тёмном фоне */
-.section-dark a,
-footer a {
-    color: #90cdf4;
-}
-
-/* Гарантия для карточек на тёмном фоне (они белые, текст тёмный) */
-.benefit-card,
-.process-card,
-.role-card,
-.service-card {
-    color: var(--text-dark);
 }
