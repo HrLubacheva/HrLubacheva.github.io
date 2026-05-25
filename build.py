@@ -1,6 +1,10 @@
 import os
 from datetime import datetime
 
+# ВАЖНО: Порядок файлов в директориях CSS и JS определяется числовыми префиксами (00_, 01_, ...)
+# Это обеспечивает правильную последовательность загрузки зависимостей.
+# Не переименовывайте файлы без учёта порядка!
+
 COMMON_DIR = "components/common"
 SECTIONS_DIR = "components/sections"
 

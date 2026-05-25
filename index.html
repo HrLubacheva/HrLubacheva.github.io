@@ -37,6 +37,7 @@
     <link rel="canonical" href="https://hrlubacheva.github.io/">
     <link rel="icon" type="image/png"
           href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%232D6A9F'/%3E%3Ctext x='50' y='72' font-size='70' text-anchor='middle' fill='white' font-family='Arial'%3EHR%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -2735,10 +2736,17 @@ footer a:hover {
             </button>
             <div class="social-icons">
                 <a href="https://t.me/HrLubacheva" target="_blank" aria-label="Telegram">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 12l16.5-7.5L9 13.5l-2 6 6-4 4.5 4.5L21 4.5 3 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" role="img" aria-labelledby="telegramTitle">
+                        <title id="telegramTitle">Telegram</title>
+                        <path d="M3 12l16.5-7.5L9 13.5l-2 6 6-4 4.5 4.5L21 4.5 3 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </a>
                 <a href="https://wa.me/79217916655" target="_blank" aria-label="WhatsApp">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 7.5a5.5 5.5 0 1 0-10.8 2.7L5 17l4.9-1.3a5.5 5.5 0 0 0 7.1-8.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.2 11.2c.5.7 1.5 1.2 2.3 1.4.5.1.8.1 1.2 0 .3-.1.6-.2.8-.3.2-.1.4-.1.5.1.1.2.1.4.1.6v.8c0 .2-.1.4-.3.6-.2.2-.7.7-1.4 1-.7.3-1.4.4-2.5.2-1.1-.2-2.8-1.1-4.2-2.9-1.5-1.8-1.3-3.7-.8-4.2.5-.5 1.1-.6 1.5-.6.3 0 .7 0 1 .1.3.1.8.3 1.1.5.3.2.5.4.7.6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" role="img" aria-labelledby="whatsappTitle">
+                        <title id="whatsappTitle">WhatsApp</title>
+                        <path d="M17 7.5a5.5 5.5 0 1 0-10.8 2.7L5 17l4.9-1.3a5.5 5.5 0 0 0 7.1-8.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M11.2 11.2c.5.7 1.5 1.2 2.3 1.4.5.1.8.1 1.2 0 .3-.1.6-.2.8-.3.2-.1.4-.1.5.1.1.2.1.4.1.6v.8c0 .2-.1.4-.3.6-.2.2-.7.7-1.4 1-.7.3-1.4.4-2.5.2-1.1-.2-2.8-1.1-4.2-2.9-1.5-1.8-1.3-3.7-.8-4.2.5-.5 1.1-.6 1.5-.6.3 0 .7 0 1 .1.3.1.8.3 1.1.5.3.2.5.4.7.6Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                 </a>
             </div>
         </div>
@@ -3098,32 +3106,31 @@ footer a:hover {
                 </div>
             </div>
         </div>
+
         <!-- Фото для атмосферы — два в ряд, одинакового размера -->
         <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; margin-top: 50px;">
             <div style="flex: 1; min-width: 250px; text-align: center;">
-                <img src="assets/images/img_7.jpg" alt="Проведение тренинга"
+                <img src="assets/images/img_7.jpg" alt="Проведение тренинга" loading="lazy"
                      style="width: 100%; height: 850px; object-fit: cover; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                <p style="margin-top: 12px; color: var(--secondary); font-size: 0.85rem;">Живые тренинги и обратная
-                    связь</p>
+                <p style="margin-top: 12px; color: var(--secondary); font-size: 0.85rem;">Живые тренинги и обратная связь</p>
             </div>
             <div style="flex: 1; min-width: 250px; text-align: center;">
-                <img src="assets/images/img_4.jpg" alt="Виктория Любачева на сцене"
+                <img src="assets/images/img_4.jpg" alt="Виктория Любачева на сцене" loading="lazy"
                      style="width: 100%; height: 850px; object-fit: cover; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                <p style="margin-top: 12px; color: var(--secondary); font-size: 0.85rem;">Авторские тренинги для
-                    бизнеса</p>
+                <p style="margin-top: 12px; color: var(--secondary); font-size: 0.85rem;">Авторские тренинги для бизнеса</p>
             </div>
         </div>
     </div>
 </section>
 
-            <style>
-                @media (max-width: 768px) {
-                    .process-photo {
-                        height: 80vh !important;
-                        object-fit: cover;
-                    }
-                }
-            </style>
+<style>
+    @media (max-width: 768px) {
+        .process-photo {
+            height: 80vh !important;
+            object-fit: cover;
+        }
+    }
+</style>
 <section id="calculator">
     <div class="container">
         <div class="quiz-card fade-up">
@@ -3420,7 +3427,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 25.05.2026 09:37:35
+                Версия: 25.05.2026 09:46:38
             </div>
         </div>
     </div>
