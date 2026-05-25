@@ -21,9 +21,9 @@
             <!-- Вкладка Поиск сотрудников (активна по умолчанию) -->
             <div id="tab-business-recruitment" class="tab-pane active">
                 <div class="add-service">
-                    <select id="business-recruitment-select" class="service-select"></select>
-                    <input type="number" id="business-recruitment-qty" min="1" value="1" class="calc-qty">
-                    <button id="business-recruitment-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="business-recruitment-select" class="service-select" aria-label="Выберите услугу по поиску сотрудников"></select>
+                    <input type="number" id="business-recruitment-qty" min="1" value="1" class="calc-qty" aria-label="Количество услуг для категории Поиск сотрудников">
+                    <button id="business-recruitment-add" class="btn-primary add-service-btn" aria-label="Добавить услугу">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section" style="visibility: hidden; height: 0; margin: 0; padding: 0;"></div>
             </div>
@@ -31,9 +31,9 @@
             <!-- Вкладка Удержание и развитие -->
             <div id="tab-business-retention" class="tab-pane">
                 <div class="add-service">
-                    <select id="business-retention-select" class="service-select"></select>
-                    <input type="number" id="business-retention-qty" min="1" value="1" class="calc-qty">
-                    <button id="business-retention-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="business-retention-select" class="service-select" aria-label="Выберите услугу по удержанию и развитию"></select>
+                    <input type="number" id="business-retention-qty" min="1" value="1" class="calc-qty" aria-label="Количество услуг для категории Удержание и развитие">
+                    <button id="business-retention-add" class="btn-primary add-service-btn" aria-label="Добавить услугу">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section" style="visibility: hidden; height: 0; margin: 0; padding: 0;"></div>
             </div>
@@ -41,45 +41,45 @@
             <!-- Вкладка Базовые -->
             <div id="tab-individual-base" class="tab-pane">
                 <div class="add-service">
-                    <select id="individual-base-select" class="service-select"></select>
-                    <input type="number" id="individual-base-qty" min="1" value="1" class="calc-qty">
-                    <button id="individual-base-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="individual-base-select" class="service-select" aria-label="Выберите базовую услугу (до 10 000 ₽)"></select>
+                    <input type="number" id="individual-base-qty" min="1" value="1" class="calc-qty" aria-label="Количество базовых услуг">
+                    <button id="individual-base-add" class="btn-primary add-service-btn" aria-label="Добавить услугу">➕ Добавить</button>
                 </div>
             </div>
 
             <!-- Вкладка Стандартные -->
             <div id="tab-individual-standard" class="tab-pane">
                 <div class="add-service">
-                    <select id="individual-standard-select" class="service-select"></select>
-                    <input type="number" id="individual-standard-qty" min="1" value="1" class="calc-qty">
-                    <button id="individual-standard-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="individual-standard-select" class="service-select" aria-label="Выберите стандартную услугу"></select>
+                    <input type="number" id="individual-standard-qty" min="1" value="1" class="calc-qty" aria-label="Количество стандартных услуг">
+                    <button id="individual-standard-add" class="btn-primary add-service-btn" aria-label="Добавить услугу">➕ Добавить</button>
                 </div>
             </div>
 
             <!-- Вкладка Премиальные -->
             <div id="tab-individual-premium" class="tab-pane">
                 <div class="add-service">
-                    <select id="individual-premium-select" class="service-select"></select>
-                    <input type="number" id="individual-premium-qty" min="1" value="1" class="calc-qty">
-                    <button id="individual-premium-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="individual-premium-select" class="service-select" aria-label="Выберите премиальную услугу"></select>
+                    <input type="number" id="individual-premium-qty" min="1" value="1" class="calc-qty" aria-label="Количество премиальных услуг">
+                    <button id="individual-premium-add" class="btn-primary add-service-btn" aria-label="Добавить услугу">➕ Добавить</button>
                 </div>
             </div>
 
             <!-- Вкладка Тренинг "Продай себя дорого" -->
             <div id="tab-training" class="tab-pane">
                 <div class="add-service">
-                    <select id="training-select" class="service-select"></select>
-                    <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
-                    <button id="training-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="training-select" class="service-select" aria-label="Выберите формат тренинга"></select>
+                    <input type="number" id="training-qty" min="1" value="1" class="calc-qty" aria-label="Количество мест на тренинге">
+                    <button id="training-add" class="btn-primary add-service-btn" aria-label="Добавить тренинг">➕ Добавить</button>
                 </div>
             </div>
 
             <!-- Вкладка Тренинги для бизнеса -->
             <div id="tab-corporate" class="tab-pane">
                 <div class="add-service">
-                    <select id="corporate-select" class="service-select"></select>
-                    <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty">
-                    <button id="corporate-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="corporate-select" class="service-select" aria-label="Выберите корпоративный тренинг"></select>
+                    <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty" aria-label="Количество тренингов">
+                    <button id="corporate-add" class="btn-primary add-service-btn" aria-label="Добавить тренинг">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section" style="visibility: hidden; height: 0; margin: 0; padding: 0;"></div>
             </div>
@@ -104,8 +104,8 @@
                 <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
                 <form id="quickOrderForm" class="callback-form responsive-form">
                     <div class="form-row">
-                        <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)">
-                        <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required>
+                        <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)" aria-label="Ваше имя">
+                        <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required aria-label="Номер телефона">
                     </div>
 
                     <!-- Скрытые поля для данных квиза -->
@@ -117,11 +117,11 @@
                     <input type="hidden" name="quizAnswersRaw" id="quickQuizAnswersRaw">
 
                     <div class="consent-checkbox" style="margin: 20px 0;">
-                        <input type="checkbox" id="quickConsent" name="consent" required>
+                        <input type="checkbox" id="quickConsent" name="consent" required aria-label="Согласие на обработку персональных данных">
                         <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                     </div>
 
-                    <button type="submit" class="btn-primary btn-block">📞 Заказать звонок</button>
+                    <button type="submit" class="btn-primary btn-block" aria-label="Заказать звонок">📞 Заказать звонок</button>
                 </form>
             </div>
         </div>

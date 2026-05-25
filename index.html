@@ -34,6 +34,11 @@
           content="Помогаю компаниям находить и развивать персонал. Кандидатам — найти работу, построить карьеру и повысить доход. Экспресс-диагностика 15 минут без обязательств.">
     <meta name="twitter:image" content="https://hrlubacheva.github.io/assets/images/img_1.jpg">
 
+    <!-- Безопасность -->
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
     <link rel="canonical" href="https://hrlubacheva.github.io/">
     <link rel="icon" type="image/png"
           href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%232D6A9F'/%3E%3Ctext x='50' y='72' font-size='70' text-anchor='middle' fill='white' font-family='Arial'%3EHR%3C/text%3E%3C/svg%3E">
@@ -66,9 +71,6 @@
     </script>
 
     <!-- Schema.org для услуг (будет добавлено в HTML) -->
-
-    <!-- Глобальный конфиг -->
-    <script src="components/common/js/00_config.js"></script>
 
     <!-- Динамическая загрузка счётчиков аналитики -->
     <script>
@@ -2718,7 +2720,75 @@ footer a:hover {
 
 #materialsModal input {
     box-sizing: border-box;
+
+
+
+/* ==================================================================
+   УЛУЧШЕНИЯ ДОСТУПНОСТИ (PageSpeed Insights)
+   ================================================================== */
+
+/* Увеличение контрастности текста в светлых секциях */
+.section-light p,
+.section-light li,
+.services-flex p,
+.services-flex li,
+.checklist-card p,
+.calendar-card p {
+    color: #4a5568;
 }
+
+/* Улучшение контраста для кнопок на тёмном фоне */
+.section-dark .btn-secondary {
+    border: 2px solid var(--primary-light);
+    color: var(--primary-light);
+}
+
+.section-dark .btn-secondary:hover {
+    background: var(--primary-light);
+    color: var(--dark-bg);
+}
+
+/* Ссылки в футере с подчёркиванием для лучшей видимости */
+footer a {
+    color: #90cdf4;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+footer a:hover {
+    color: white;
+}
+
+/* Улучшение контраста для подписей в статистике */
+.stat-label {
+    color: #4a5568;
+}
+
+/* Контраст для текста в карточках преимуществ (на тёмном фоне) */
+.benefit-card p {
+    color: #e2e8f0;
+}
+
+/* Фокус для интерактивных элементов более заметный */
+a:focus-visible,
+button:focus-visible,
+.quiz-option:focus-visible,
+.add-service-btn:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Улучшение читаемости placeholder */
+::placeholder {
+    color: #9ca3af;
+    opacity: 1;
+}
+
+/* Для Firefox */
+::-ms-input-placeholder {
+    color: #9ca3af;
+}ы
 </style>
 </head>
 <body>
@@ -2838,7 +2908,7 @@ footer a:hover {
     <div class="container">
         <div class="section-header cell-text" data-cell-type="text">
             <h2 class="section-title fade-up">Что я предлагаю</h2>
-            <p style="text-align: center; margin-top: -20px; margin-bottom: 30px; color: var(--secondary);">
+            <p style="text-align: center; margin-top: -20px; margin-bottom: 30px; color: #4a5568;">
                 Решения для бизнеса и специалистов. От стратегии до конкретных результатов.
             </p>
         </div>
@@ -3154,9 +3224,9 @@ footer a:hover {
             <!-- Вкладка Поиск сотрудников (активна по умолчанию) -->
             <div id="tab-business-recruitment" class="tab-pane active">
                 <div class="add-service">
-                    <select id="business-recruitment-select" class="service-select"></select>
-                    <input type="number" id="business-recruitment-qty" min="1" value="1" class="calc-qty">
-                    <button id="business-recruitment-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="business-recruitment-select" class="service-select" aria-label="Выберите услугу по поиску сотрудников"></select>
+                    <input type="number" id="business-recruitment-qty" min="1" value="1" class="calc-qty" aria-label="Количество услуг для категории Поиск сотрудников">
+                    <button id="business-recruitment-add" class="btn-primary add-service-btn" aria-label="Добавить услугу">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section" style="visibility: hidden; height: 0; margin: 0; padding: 0;"></div>
             </div>
@@ -3164,9 +3234,9 @@ footer a:hover {
             <!-- Вкладка Удержание и развитие -->
             <div id="tab-business-retention" class="tab-pane">
                 <div class="add-service">
-                    <select id="business-retention-select" class="service-select"></select>
-                    <input type="number" id="business-retention-qty" min="1" value="1" class="calc-qty">
-                    <button id="business-retention-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="business-retention-select" class="service-select" aria-label="Выберите услугу по удержанию и развитию"></select>
+                    <input type="number" id="business-retention-qty" min="1" value="1" class="calc-qty" aria-label="Количество услуг для категории Удержание и развитие">
+                    <button id="business-retention-add" class="btn-primary add-service-btn" aria-label="Добавить услугу">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section" style="visibility: hidden; height: 0; margin: 0; padding: 0;"></div>
             </div>
@@ -3174,45 +3244,45 @@ footer a:hover {
             <!-- Вкладка Базовые -->
             <div id="tab-individual-base" class="tab-pane">
                 <div class="add-service">
-                    <select id="individual-base-select" class="service-select"></select>
-                    <input type="number" id="individual-base-qty" min="1" value="1" class="calc-qty">
-                    <button id="individual-base-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="individual-base-select" class="service-select" aria-label="Выберите базовую услугу (до 10 000 ₽)"></select>
+                    <input type="number" id="individual-base-qty" min="1" value="1" class="calc-qty" aria-label="Количество базовых услуг">
+                    <button id="individual-base-add" class="btn-primary add-service-btn" aria-label="Добавить услугу">➕ Добавить</button>
                 </div>
             </div>
 
             <!-- Вкладка Стандартные -->
             <div id="tab-individual-standard" class="tab-pane">
                 <div class="add-service">
-                    <select id="individual-standard-select" class="service-select"></select>
-                    <input type="number" id="individual-standard-qty" min="1" value="1" class="calc-qty">
-                    <button id="individual-standard-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="individual-standard-select" class="service-select" aria-label="Выберите стандартную услугу"></select>
+                    <input type="number" id="individual-standard-qty" min="1" value="1" class="calc-qty" aria-label="Количество стандартных услуг">
+                    <button id="individual-standard-add" class="btn-primary add-service-btn" aria-label="Добавить услугу">➕ Добавить</button>
                 </div>
             </div>
 
             <!-- Вкладка Премиальные -->
             <div id="tab-individual-premium" class="tab-pane">
                 <div class="add-service">
-                    <select id="individual-premium-select" class="service-select"></select>
-                    <input type="number" id="individual-premium-qty" min="1" value="1" class="calc-qty">
-                    <button id="individual-premium-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="individual-premium-select" class="service-select" aria-label="Выберите премиальную услугу"></select>
+                    <input type="number" id="individual-premium-qty" min="1" value="1" class="calc-qty" aria-label="Количество премиальных услуг">
+                    <button id="individual-premium-add" class="btn-primary add-service-btn" aria-label="Добавить услугу">➕ Добавить</button>
                 </div>
             </div>
 
             <!-- Вкладка Тренинг "Продай себя дорого" -->
             <div id="tab-training" class="tab-pane">
                 <div class="add-service">
-                    <select id="training-select" class="service-select"></select>
-                    <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
-                    <button id="training-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="training-select" class="service-select" aria-label="Выберите формат тренинга"></select>
+                    <input type="number" id="training-qty" min="1" value="1" class="calc-qty" aria-label="Количество мест на тренинге">
+                    <button id="training-add" class="btn-primary add-service-btn" aria-label="Добавить тренинг">➕ Добавить</button>
                 </div>
             </div>
 
             <!-- Вкладка Тренинги для бизнеса -->
             <div id="tab-corporate" class="tab-pane">
                 <div class="add-service">
-                    <select id="corporate-select" class="service-select"></select>
-                    <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty">
-                    <button id="corporate-add" class="btn-primary add-service-btn">➕ Добавить</button>
+                    <select id="corporate-select" class="service-select" aria-label="Выберите корпоративный тренинг"></select>
+                    <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty" aria-label="Количество тренингов">
+                    <button id="corporate-add" class="btn-primary add-service-btn" aria-label="Добавить тренинг">➕ Добавить</button>
                 </div>
                 <div class="calc-pdf-section" style="visibility: hidden; height: 0; margin: 0; padding: 0;"></div>
             </div>
@@ -3237,8 +3307,8 @@ footer a:hover {
                 <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
                 <form id="quickOrderForm" class="callback-form responsive-form">
                     <div class="form-row">
-                        <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)">
-                        <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required>
+                        <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)" aria-label="Ваше имя">
+                        <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required aria-label="Номер телефона">
                     </div>
 
                     <!-- Скрытые поля для данных квиза -->
@@ -3250,11 +3320,11 @@ footer a:hover {
                     <input type="hidden" name="quizAnswersRaw" id="quickQuizAnswersRaw">
 
                     <div class="consent-checkbox" style="margin: 20px 0;">
-                        <input type="checkbox" id="quickConsent" name="consent" required>
+                        <input type="checkbox" id="quickConsent" name="consent" required aria-label="Согласие на обработку персональных данных">
                         <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                     </div>
 
-                    <button type="submit" class="btn-primary btn-block">📞 Заказать звонок</button>
+                    <button type="submit" class="btn-primary btn-block" aria-label="Заказать звонок">📞 Заказать звонок</button>
                 </form>
             </div>
         </div>
@@ -3279,7 +3349,8 @@ footer a:hover {
                 <!-- Чек-лист -->
                 <div style="text-align: center; min-width: 150px;">
                     <div style="width: 64px; height: 64px; background: var(--light-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" role="img" aria-label="Чек-лист иконка">
+                            <title>Чек-лист</title>
                             <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
                             <path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
                             <path d="M9 12l2 2 4-4" />
@@ -3288,15 +3359,16 @@ footer a:hover {
                     <div style="font-weight: 700; margin-bottom: 4px; color: var(--primary-dark);">Чек-лист</div>
                     <div style="font-size: 0.75rem; color: var(--secondary); margin-bottom: 12px;">«Идеальное резюме»</div>
                     <div style="display: flex; justify-content: center; gap: 20px;">
-                        <a href="assets/docs/checklist.pdf" target="_blank" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">скачать</a>
-                        <button class="material-email-simple" data-material="checklist" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-family: inherit;">на email</button>
+                        <a href="assets/docs/checklist.pdf" target="_blank" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;" aria-label="Скачать чек-лист Идеальное резюме (PDF)">скачать</a>
+                        <button class="material-email-simple" data-material="checklist" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-family: inherit;" aria-label="Получить чек-лист на email">на email</button>
                     </div>
                 </div>
 
                 <!-- Программа тренинга -->
                 <div style="text-align: center; min-width: 150px;">
                     <div style="width: 64px; height: 64px; background: var(--light-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" role="img" aria-label="Программа тренинга иконка">
+                            <title>Программа тренинга</title>
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                         </svg>
@@ -3304,23 +3376,24 @@ footer a:hover {
                     <div style="font-weight: 700; margin-bottom: 4px; color: var(--primary-dark);">Программа тренинга</div>
                     <div style="font-size: 0.75rem; color: var(--secondary); margin-bottom: 12px;">«Продай себя дорого»</div>
                     <div style="display: flex; justify-content: center; gap: 20px;">
-                        <a href="assets/docs/training_program.pdf" target="_blank" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">скачать</a>
-                        <button class="material-email-simple" data-material="training" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-family: inherit;">на email</button>
+                        <a href="assets/docs/training_program.pdf" target="_blank" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;" aria-label="Скачать программу тренинга Продай себя дорого (PDF)">скачать</a>
+                        <button class="material-email-simple" data-material="training" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-family: inherit;" aria-label="Получить программу тренинга на email">на email</button>
                     </div>
                 </div>
 
                 <!-- Полный набор -->
                 <div style="text-align: center; min-width: 150px;">
                     <div style="width: 64px; height: 64px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" role="img" aria-label="Полный набор иконка">
+                            <title>Полный набор</title>
                             <path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2H7z" />
                         </svg>
                     </div>
                     <div style="font-weight: 700; margin-bottom: 4px; color: var(--primary-dark);">Полный набор</div>
                     <div style="font-size: 0.75rem; color: var(--secondary); margin-bottom: 12px;">Всё сразу в ZIP</div>
                     <div style="display: flex; justify-content: center; gap: 20px;">
-                        <a href="assets/docs/docs.zip" download style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">скачать ZIP</a>
-                        <button class="material-email-simple" data-material="both" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-family: inherit;">на email</button>
+                        <a href="assets/docs/docs.zip" download style="color: var(--primary); font-size: 0.85rem; text-decoration: none;" aria-label="Скачать полный набор материалов ZIP">скачать ZIP</a>
+                        <button class="material-email-simple" data-material="both" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-family: inherit;" aria-label="Получить полный набор на email">на email</button>
                     </div>
                 </div>
 
@@ -3352,18 +3425,17 @@ footer a:hover {
 
             <form id="callbackForm" class="callback-form responsive-form">
                 <div class="form-row">
-                    <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя">
-                    <input type="tel" id="callbackPhone" name="phone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
+                    <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя" aria-label="Ваше имя">
+                    <input type="tel" id="callbackPhone" name="phone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required aria-label="Номер телефона">
                 </div>
 
-                <!-- Email теперь в той же строке, что и телефон? Нет, лучше сделаем отдельную строку, но компактнее -->
-                <input type="email" id="callbackEmail" name="email" placeholder="📧 Email (необязательно)" style="margin-bottom: 16px;">
+                <input type="email" id="callbackEmail" name="email" placeholder="📧 Email (необязательно)" style="margin-bottom: 16px;" aria-label="Email">
 
                 <div id="quizSelectionBlock" class="calc-item" style="display: none;">
                     <div class="service-name"></div>
                     <div class="service-price"></div>
                     <div class="service-remove">
-                        <button type="button" id="removeQuizSelection" class="remove-item">✖</button>
+                        <button type="button" id="removeQuizSelection" class="remove-item" aria-label="Удалить выбранный вариант">✖</button>
                     </div>
                 </div>
 
@@ -3374,14 +3446,14 @@ footer a:hover {
                 <input type="hidden" name="recommendedVariants" id="recommendedVariants">
                 <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
 
-                <textarea id="callbackComment" name="comment" rows="3" placeholder="💬 Удобное время или дополнительная информация"></textarea>
+                <textarea id="callbackComment" name="comment" rows="3" placeholder="💬 Удобное время или дополнительная информация" aria-label="Комментарий"></textarea>
 
                 <div class="consent-checkbox">
-                    <input type="checkbox" id="callbackConsent" name="consent" required>
+                    <input type="checkbox" id="callbackConsent" name="consent" required aria-label="Согласие на обработку персональных данных">
                     <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                 </div>
 
-                <button type="submit" class="btn-primary btn-block">📋 Записаться →</button>
+                <button type="submit" class="btn-primary btn-block" aria-label="Записаться на диагностику">📋 Записаться →</button>
             </form>
 
             <p class="callback-note" style="margin-top: 16px; font-size: 0.8rem;">
@@ -3427,7 +3499,7 @@ footer a:hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 25.05.2026 09:46:38
+                Версия: 25.05.2026 09:55:04
             </div>
         </div>
     </div>

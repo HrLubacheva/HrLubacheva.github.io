@@ -18,18 +18,17 @@
 
             <form id="callbackForm" class="callback-form responsive-form">
                 <div class="form-row">
-                    <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя">
-                    <input type="tel" id="callbackPhone" name="phone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required>
+                    <input type="text" id="callbackName" name="name" placeholder="👤 Ваше имя" aria-label="Ваше имя">
+                    <input type="tel" id="callbackPhone" name="phone" placeholder="📞 +7 912 345 67 89" inputmode="numeric" required aria-label="Номер телефона">
                 </div>
 
-                <!-- Email теперь в той же строке, что и телефон? Нет, лучше сделаем отдельную строку, но компактнее -->
-                <input type="email" id="callbackEmail" name="email" placeholder="📧 Email (необязательно)" style="margin-bottom: 16px;">
+                <input type="email" id="callbackEmail" name="email" placeholder="📧 Email (необязательно)" style="margin-bottom: 16px;" aria-label="Email">
 
                 <div id="quizSelectionBlock" class="calc-item" style="display: none;">
                     <div class="service-name"></div>
                     <div class="service-price"></div>
                     <div class="service-remove">
-                        <button type="button" id="removeQuizSelection" class="remove-item">✖</button>
+                        <button type="button" id="removeQuizSelection" class="remove-item" aria-label="Удалить выбранный вариант">✖</button>
                     </div>
                 </div>
 
@@ -40,14 +39,14 @@
                 <input type="hidden" name="recommendedVariants" id="recommendedVariants">
                 <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
 
-                <textarea id="callbackComment" name="comment" rows="3" placeholder="💬 Удобное время или дополнительная информация"></textarea>
+                <textarea id="callbackComment" name="comment" rows="3" placeholder="💬 Удобное время или дополнительная информация" aria-label="Комментарий"></textarea>
 
                 <div class="consent-checkbox">
-                    <input type="checkbox" id="callbackConsent" name="consent" required>
+                    <input type="checkbox" id="callbackConsent" name="consent" required aria-label="Согласие на обработку персональных данных">
                     <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                 </div>
 
-                <button type="submit" class="btn-primary btn-block">📋 Записаться →</button>
+                <button type="submit" class="btn-primary btn-block" aria-label="Записаться на диагностику">📋 Записаться →</button>
             </form>
 
             <p class="callback-note" style="margin-top: 16px; font-size: 0.8rem;">

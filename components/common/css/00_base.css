@@ -2578,4 +2578,72 @@ footer a:hover {
 
 #materialsModal input {
     box-sizing: border-box;
+
+
+
+/* ==================================================================
+   УЛУЧШЕНИЯ ДОСТУПНОСТИ (PageSpeed Insights)
+   ================================================================== */
+
+/* Увеличение контрастности текста в светлых секциях */
+.section-light p,
+.section-light li,
+.services-flex p,
+.services-flex li,
+.checklist-card p,
+.calendar-card p {
+    color: #4a5568;
 }
+
+/* Улучшение контраста для кнопок на тёмном фоне */
+.section-dark .btn-secondary {
+    border: 2px solid var(--primary-light);
+    color: var(--primary-light);
+}
+
+.section-dark .btn-secondary:hover {
+    background: var(--primary-light);
+    color: var(--dark-bg);
+}
+
+/* Ссылки в футере с подчёркиванием для лучшей видимости */
+footer a {
+    color: #90cdf4;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+footer a:hover {
+    color: white;
+}
+
+/* Улучшение контраста для подписей в статистике */
+.stat-label {
+    color: #4a5568;
+}
+
+/* Контраст для текста в карточках преимуществ (на тёмном фоне) */
+.benefit-card p {
+    color: #e2e8f0;
+}
+
+/* Фокус для интерактивных элементов более заметный */
+a:focus-visible,
+button:focus-visible,
+.quiz-option:focus-visible,
+.add-service-btn:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Улучшение читаемости placeholder */
+::placeholder {
+    color: #9ca3af;
+    opacity: 1;
+}
+
+/* Для Firefox */
+::-ms-input-placeholder {
+    color: #9ca3af;
+}ы
