@@ -278,9 +278,12 @@
     function renderResult(topTwo) {
         const container = document.getElementById('quizContainer');
         if (!container) return;
-        const priceA = getPrice(topTwo.variantA);
-        const priceB = getPrice(topTwo.variantB);
-        const recommendations = `📌 Рекомендация 1: ${topTwo.variantA} (${priceA})\n🎯 Рекомендация 2: ${topTwo.variantB} (${priceB})`;
+
+        const displayNameA = topTwo.variantAFormatted || topTwo.variantA;
+        const displayNameB = topTwo.variantBFormatted || topTwo.variantB;
+        const priceA = topTwo.priceA || getPrice(topTwo.variantA);
+        const priceB = topTwo.priceB || getPrice(topTwo.variantB);
+        const recommendations = `📌 Рекомендация 1: ${displayNameA} (${priceA})\n🎯 Рекомендация 2: ${displayNameB} (${priceB})`;
 
         let html = `
             <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подобрали оптимальные варианты:</p>
@@ -288,16 +291,18 @@
                 <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                     <div style="font-size:32px; margin-bottom:12px;">📌</div>
                     <h4>Рекомендация 1</h4>
-                    <p><strong>${window.escapeHtml(topTwo.variantA)}</strong></p>
+                    <p style="font-size:0.85rem; color:#666; margin-bottom:8px;">${window.escapeHtml(displayNameA.split(' — ')[0])}</p>
+                    <p><strong>${window.escapeHtml(displayNameA.split(' — ')[1] || displayNameA)}</strong></p>
                     <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceA}</p>
-                    <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(topTwo.variantA)}" data-price="${priceA}">Узнать подробнее →</button>
+                    <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(topTwo.variantA)}" data-price="${priceA}" data-display="${window.escapeHtml(displayNameA)}">Узнать подробнее →</button>
                 </div>
                 <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                     <div style="font-size:32px; margin-bottom:12px;">🎯</div>
                     <h4>Рекомендация 2</h4>
-                    <p><strong>${window.escapeHtml(topTwo.variantB)}</strong></p>
+                    <p style="font-size:0.85rem; color:#666; margin-bottom:8px;">${window.escapeHtml(displayNameB.split(' — ')[0])}</p>
+                    <p><strong>${window.escapeHtml(displayNameB.split(' — ')[1] || displayNameB)}</strong></p>
                     <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceB}</p>
-                    <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(topTwo.variantB)}" data-price="${priceB}">Узнать подробнее →</button>
+                    <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(topTwo.variantB)}" data-price="${priceB}" data-display="${window.escapeHtml(displayNameB)}">Узнать подробнее →</button>
                 </div>
                 <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
                     <div style="font-size:32px; margin-bottom:12px;">🤔</div>
@@ -320,7 +325,9 @@
                 isSubmittingChoice = true;
                 const variantText = btn.dataset.text;
                 const variantPrice = btn.dataset.price;
-                selectedVariantText = variantText;
+                const displayText = btn.dataset.display || variantText;
+
+                selectedVariantText = displayText;
                 selectedVariantPrice = variantPrice;
                 selectedOriginalText = variantText;
                 selectedOriginalPrice = variantPrice;

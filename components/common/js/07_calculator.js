@@ -3,25 +3,56 @@ let calculatorInitialized = false;
 
 function getCartData() {
     if (!cart || cart.length === 0) return 'Корзина пуста';
+
     let total = 0;
     let items = [];
-    let maxNameLength = 0;
+    let hasPriceOnRequest = false;
+
+    cart.forEach(item => {
+        if (item.price !== null && item.price > 0) {
+            total += item.price * item.qty;
+        } else {
+            hasPriceOnRequest = true;
+        }
+    });
+
     cart.forEach(item => {
         const nameWithQty = `${item.name} x${item.qty}`;
-        if (nameWithQty.length > maxNameLength) maxNameLength = nameWithQty.length;
+        let priceText = '';
+
+        if (item.price === null || item.price === 0) {
+            priceText = 'по запросу';
+        } else {
+            priceText = (item.price * item.qty).toLocaleString() + ' ₽';
+        }
+
+        items.push(`${nameWithQty} — ${priceText}`);
     });
-    maxNameLength = Math.min(maxNameLength, 45);
-    cart.forEach(item => {
-        total += item.price * item.qty;
-        const nameWithQty = `${item.name} x${item.qty}`;
-        const priceFormatted = item.price > 0 ? (item.price * item.qty).toLocaleString() + ' ₽' : 'по запросу';
-        const dotsLength = Math.max(1, maxNameLength + 2 - nameWithQty.length);
-        const dots = '.'.repeat(dotsLength);
-        items.push(`${nameWithQty} ${dots} ${priceFormatted}`);
-    });
-    let discount = cart.length >= 2 ? '\n✅ Скидка 5%' : '';
-    let finalTotal = Math.round(total * (cart.length >= 2 ? 0.95 : 1));
-    return items.join('\n') + `\n💰 Итого: ${finalTotal.toLocaleString()} ₽` + discount;
+
+    let discount = 0;
+    let discountApplied = false;
+    const itemsWithPrice = cart.filter(item => item.price !== null && item.price > 0);
+    const totalQuantity = itemsWithPrice.reduce((sum, item) => sum + item.qty, 0);
+
+    if (totalQuantity >= 2 && total > 0) {
+        discount = total * 0.05;
+        discountApplied = true;
+    }
+
+    const finalTotal = total - discount;
+
+    let result = items.join('\n');
+    result += `\n💰 Итого: ${finalTotal.toLocaleString()} ₽`;
+
+    if (discountApplied) {
+        result += `\n✅ Скидка 5% (${totalQuantity} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
+    }
+
+    if (hasPriceOnRequest) {
+        result += `\n📌 Услуги с пометкой «по запросу» — точная цена после консультации`;
+    }
+
+    return result;
 }
 window.getCartData = getCartData;
 
@@ -30,18 +61,25 @@ function updateSelectsFromData() {
     const selects = {
         'business-recruitment-select': window.LOCAL_SERVICES.business_recruitment,
         'business-retention-select': window.LOCAL_SERVICES.business_retention,
+        'business-training-select': window.LOCAL_SERVICES.business_training,
         'individual-base-select': window.LOCAL_SERVICES.individual_base,
         'individual-standard-select': window.LOCAL_SERVICES.individual_standard,
         'individual-premium-select': window.LOCAL_SERVICES.individual_premium,
         'corporate-select': window.LOCAL_SERVICES.corporate,
-        'training-select': window.LOCAL_SERVICES.training
+        'training-select': window.LOCAL_SERVICES.training,
+        'author-courses-select': window.LOCAL_SERVICES.author_courses
     };
     for (const [id, data] of Object.entries(selects)) {
         const select = document.getElementById(id);
         if (select && data && data.length) {
             select.innerHTML = data.map(s => {
-                const priceText = s.price > 0 ? s.price.toLocaleString() + ' ₽' : 'по запросу';
-                return `<option value="${s.price}">${s.service} — ${priceText}</option>`;
+                let priceText = '';
+                if (s.price === null || s.price === 0) {
+                    priceText = 'по запросу';
+                } else {
+                    priceText = s.price.toLocaleString() + ' ₽';
+                }
+                return `<option value="${s.price === null ? 'null' : s.price}">${s.service} — ${priceText}</option>`;
             }).join('');
         }
     }
@@ -96,42 +134,64 @@ function initCustomDropdowns() {
 }
 
 function renderCart() {
-    let total = 0, qty = 0;
-    cart.forEach(i => { total += i.price * i.qty; qty += i.qty; });
-    let final = total;
-    if (qty >= 2) final = total * 0.95;
+    let total = 0;
+    let totalQuantity = 0;
+
+    cart.forEach(item => {
+        if (item.price !== null && item.price > 0) {
+            total += item.price * item.qty;
+            totalQuantity += item.qty;
+        }
+    });
+
+    let finalTotal = total;
+    let discount = 0;
+    let discountApplied = false;
+
+    if (totalQuantity >= 2 && total > 0) {
+        discount = total * 0.05;
+        finalTotal = total - discount;
+        discountApplied = true;
+    }
+
     const totalEl = document.getElementById('totalPrice');
-    if (totalEl) totalEl.innerText = Math.round(final).toLocaleString() + ' ₽';
+    if (totalEl) {
+        totalEl.innerText = finalTotal.toLocaleString() + ' ₽';
+    }
+
     const discountDiv = document.getElementById('discountInfo');
     if (discountDiv) {
-        if (qty >= 2) discountDiv.innerHTML = `✅ Скидка 5% (${qty} услуги) — экономия ${Math.round(total*0.05)} ₽`;
-        else discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
+        if (discountApplied) {
+            discountDiv.innerHTML = `✅ Скидка 5% (${totalQuantity} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
+        } else if (totalQuantity === 1 && total > 0) {
+            discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
+        } else {
+            discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
+        }
     }
-    const containers = {
-        business: 'business-list',
-        individual: 'individual-list',
-        corporate: 'corporate-list',
-        training: 'training-list'
-    };
-    for (const cat of Object.keys(containers)) {
-        const container = document.getElementById(containers[cat]);
-        if (container) container.innerHTML = '';
+
+    // ОДНА ОБЩАЯ КОРЗИНА
+    const cartContainer = document.getElementById('cart-items-list');
+    if (cartContainer) cartContainer.innerHTML = '';
+
+    if (cart.length === 0) {
+        if (cartContainer) cartContainer.innerHTML = '<div class="cart-empty">Корзина пуста. Добавьте услуги выше.</div>';
+        return;
     }
+
     cart.forEach((item, idx) => {
-        let containerId = null;
-        if (item.cat === 'business') containerId = 'business-list';
-        else if (item.cat === 'individual') containerId = 'individual-list';
-        else if (item.cat === 'corporate') containerId = 'corporate-list';
-        else if (item.cat === 'training') containerId = 'training-list';
-        if (!containerId) return;
-        const container = document.getElementById(containerId);
-        if (!container) return;
+        if (!cartContainer) return;
+
+        const priceDisplay = (item.price === null || item.price === 0)
+            ? 'по запросу'
+            : (item.price * item.qty).toLocaleString() + ' ₽';
+
         const div = document.createElement('div');
         div.className = 'calc-item';
         div.dataset.idx = idx;
         div.innerHTML = `
             <div class="service-name">${escapeHtml(item.name)}</div>
-            <div class="service-price">${item.price > 0 ? (item.price * item.qty).toLocaleString() + ' ₽' : 'по запросу'}</div>
+            <div class="service-price">${priceDisplay}</div>
             <div class="service-qty-control">
                 <button class="qty-btn qty-minus" data-idx="${idx}" aria-label="Уменьшить количество">−</button>
                 <span class="qty-value">${item.qty}</span>
@@ -139,8 +199,10 @@ function renderCart() {
             </div>
             <div class="service-remove"><button class="remove-item" data-idx="${idx}" aria-label="Удалить услугу">✖</button></div>
         `;
-        container.appendChild(div);
+        cartContainer.appendChild(div);
     });
+
+    // Привязываем обработчики
     document.querySelectorAll('.qty-minus').forEach(btn => {
         btn.removeEventListener('click', btn._minusHandler);
         btn._minusHandler = () => {
@@ -156,6 +218,7 @@ function renderCart() {
         };
         btn.addEventListener('click', btn._minusHandler);
     });
+
     document.querySelectorAll('.qty-plus').forEach(btn => {
         btn.removeEventListener('click', btn._plusHandler);
         btn._plusHandler = () => {
@@ -167,6 +230,7 @@ function renderCart() {
         };
         btn.addEventListener('click', btn._plusHandler);
     });
+
     document.querySelectorAll('.remove-item').forEach(btn => {
         btn.removeEventListener('click', btn._removeHandler);
         btn._removeHandler = () => {
@@ -183,38 +247,55 @@ function renderCart() {
 function addToCart(cat, selectId, qtyId) {
     const select = document.getElementById(selectId);
     if (!select) return;
-    const price = parseInt(select.value);
+
+    const priceValue = select.value;
+    let price = null;
+    if (priceValue !== 'null' && !isNaN(parseInt(priceValue))) {
+        price = parseInt(priceValue);
+    }
+
     const fullText = select.options[select.selectedIndex].text;
     const name = fullText.replace(/ — .*/, '');
+
     let quantity = parseInt(document.getElementById(qtyId).value);
     if (isNaN(quantity) || quantity < 1) quantity = 1;
-    let displayCat = cat;
-    if (cat === 'business_recruitment' || cat === 'business_retention') {
-        displayCat = 'business';
-    } else if (cat === 'individual_base' || cat === 'individual_standard' || cat === 'individual_premium') {
-        displayCat = 'individual';
+
+    // Все услуги складываются в одну общую корзину
+    const existing = cart.find(i => i.name === name);
+    if (existing) {
+        existing.qty += quantity;
+    } else {
+        cart.push({ name, price, qty: quantity });
     }
-    const existing = cart.find(i => i.name === name && i.cat === displayCat);
-    if (existing) existing.qty += quantity;
-    else cart.push({ name, price, qty: quantity, cat: displayCat });
+
     renderCart();
     if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
+
+    const priceText = (price === null || price === 0) ? 'по запросу' : price.toLocaleString() + ' ₽';
+    if (typeof window.showSuccessToast === 'function') {
+        window.showSuccessToast(`✅ "${name}" добавлен(а) в корзину (${priceText})`);
+    }
 }
 
 function initCalculator() {
     if (calculatorInitialized) return;
     calculatorInitialized = true;
+
     updateSelectsFromData();
     initCustomDropdowns();
+
     const handlers = [
         { btn: 'business-recruitment-add', cat: 'business_recruitment', select: 'business-recruitment-select', qty: 'business-recruitment-qty' },
         { btn: 'business-retention-add', cat: 'business_retention', select: 'business-retention-select', qty: 'business-retention-qty' },
+        { btn: 'business-training-add', cat: 'business_training', select: 'business-training-select', qty: 'business-training-qty' },
         { btn: 'individual-base-add', cat: 'individual_base', select: 'individual-base-select', qty: 'individual-base-qty' },
         { btn: 'individual-standard-add', cat: 'individual_standard', select: 'individual-standard-select', qty: 'individual-standard-qty' },
         { btn: 'individual-premium-add', cat: 'individual_premium', select: 'individual-premium-select', qty: 'individual-premium-qty' },
         { btn: 'corporate-add', cat: 'corporate', select: 'corporate-select', qty: 'corporate-qty' },
-        { btn: 'training-add', cat: 'training', select: 'training-select', qty: 'training-qty' }
+        { btn: 'training-add', cat: 'training', select: 'training-select', qty: 'training-qty' },
+        { btn: 'author-courses-add', cat: 'author_courses', select: 'author-courses-select', qty: 'author-courses-qty' }
     ];
+
     handlers.forEach(({ btn, cat, select, qty }) => {
         const button = document.getElementById(btn);
         if (button) {
@@ -223,6 +304,8 @@ function initCalculator() {
             button.addEventListener('click', button._handler);
         }
     });
+
+    // Инициализация табов
     const tabs = document.querySelectorAll('.calculator-tabs .tab-btn');
     tabs.forEach(btn => {
         btn.removeEventListener('click', btn._tabHandler);
@@ -238,6 +321,7 @@ function initCalculator() {
         btn.addEventListener('click', btn._tabHandler);
     });
 }
+
 window.initCalculator = initCalculator;
 window.addToCart = addToCart;
 window.renderCart = renderCart;
