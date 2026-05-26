@@ -108,57 +108,53 @@
             </ul>
         </div>
 
-        <!-- ================================================================ -->
-        <!-- БЛОК ФОТО — ДВЕ КОЛОНКИ С ПРОПОРЦИЯМИ 0.95 / 1.1 -->
-        <!-- НА МОБИЛКАХ (МЕНЕЕ 640px) — ФОТО ДРУГ ПОД ДРУГОМ -->
-        <!-- ================================================================ -->
+        <!-- БЛОК ФОТО — ВСЕ НАСТРОЙКИ ЗДЕСЬ -->
         <style>
             .process-photos {
                 display: flex;
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
                 gap: 24px;
                 justify-content: center;
                 margin-top: 50px;
             }
-
-            /* Левое фото (img_7.jpg — 561×1280) */
             .process-photo-item:first-child {
                 flex: 0.95;
-                min-width: 200px;
+                min-width: 160px;
             }
-
-            /* Правое фото (img_4.jpg — 720×1280) */
             .process-photo-item:last-child {
                 flex: 1.1;
-                min-width: 300px;
+                min-width: 160px;
             }
-
             .process-photo-item {
                 text-align: center;
             }
-
             .process-photo-item img {
                 width: 100%;
                 height: auto;
                 border-radius: 24px;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             }
-
             .photo-caption {
                 margin-top: 12px;
                 color: var(--text-muted);
                 font-size: 0.85rem;
             }
-
-            /* На узких экранах (телефоны) — фото друг под другом */
             @media (max-width: 640px) {
+                .process-photos {
+                    gap: 12px;
+                }
                 .process-photo-item:first-child,
                 .process-photo-item:last-child {
-                    flex: 1;
-                    min-width: auto;
+                    min-width: 120px;
                 }
+            }
+            @media (max-width: 480px) {
                 .process-photos {
-                    gap: 20px;
+                    gap: 8px;
+                }
+                .process-photo-item:first-child,
+                .process-photo-item:last-child {
+                    min-width: 100px;
                 }
             }
         </style>
