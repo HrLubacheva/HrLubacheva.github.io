@@ -1,0 +1,102 @@
+/* ==================================================================
+   ПЕРЕМЕННЫЕ, СБРОС, БАЗОВАЯ ТИПОГРАФИКА
+   ================================================================== */
+:root {
+    --primary: #2D6A9F;
+    --primary-dark: #1F4A6E;
+    --primary-light: #4A8BC2;
+    --secondary: #6c757d;
+    --secondary-dark: #4a5568;
+    --dark-bg: #1a2a3a;
+    --light-bg: #f8f9fa;
+    --surface-soft: #ffffff;
+    --border: #e0e0e0;
+    --text-dark: #1a202c;
+    --text-light: #f8f9fa;
+    --text-muted: #4a5568;
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+    --radius-md: 16px;
+    --radius-lg: 28px;
+    --transition: all 0.25s ease;
+    /* Брейкпоинты */
+    --breakpoint-mobile: 768px;
+    --breakpoint-tablet: 992px;
+    --breakpoint-desktop: 1200px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text-dark);
+    background: #ffffff;
+    line-height: 1.5;
+    scroll-behavior: smooth;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Улучшенная загрузка шрифтов */
+@font-face {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400 800;
+    font-display: swap;
+    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap') format('woff2');
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ==================================================================
+   ТИПОГРАФИКА
+   ================================================================== */
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 48px;
+    color: var(--primary-dark);
+}
+
+.section-subtitle {
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 30px;
+    color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 32px;
+    }
+}
+
+/* ==================================================================
+   ОБЩИЕ ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ
+   ================================================================== */
+.text-center {
+    text-align: center;
+}
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
