@@ -3,7 +3,6 @@
         <div class="quiz-card">
             <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
 
-            <!-- Вкладки для бизнеса -->
             <div class="calculator-tabs">
                 <button class="tab-btn" data-tab="recruitment">🎯 Подбор персонала</button>
                 <button class="tab-btn" data-tab="retention">💎 Удержание и развитие</button>
@@ -11,7 +10,6 @@
                 <button class="tab-btn" data-tab="corporate">🙋‍♀️ HR «под ключ»</button>
             </div>
 
-            <!-- Вкладки для соискателей -->
             <div class="calculator-tabs">
                 <button class="tab-btn active" data-tab="start">🎯 Ищу работу</button>
                 <button class="tab-btn" data-tab="growth">📈 Карьерный рост</button>
@@ -20,7 +18,6 @@
                 <button class="tab-btn" data-tab="courses">📚 Авторские курсы</button>
             </div>
 
-            <!-- Вкладка: Подбор персонала -->
             <div id="tab-recruitment" class="tab-pane">
                 <div class="service-group">
                     <h3>🎯 Подбор персонала</h3>
@@ -32,7 +29,6 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Удержание и развитие -->
             <div id="tab-retention" class="tab-pane">
                 <div class="service-group">
                     <h3>💎 Удержание и развитие</h3>
@@ -44,7 +40,6 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Бизнес-тренинги -->
             <div id="tab-business-training" class="tab-pane">
                 <div class="service-group">
                     <h3>🎓 Бизнес-тренинги</h3>
@@ -56,7 +51,6 @@
                 </div>
             </div>
 
-            <!-- Вкладка: HR "под ключ" -->
             <div id="tab-corporate" class="tab-pane">
                 <div class="service-group">
                     <h3>🙋‍♀️ HR «под ключ»</h3>
@@ -68,7 +62,6 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Ищу работу -->
             <div id="tab-start" class="tab-pane active">
                 <div class="service-group">
                     <h3>🎯 Ищу работу</h3>
@@ -80,7 +73,6 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Карьерный рост -->
             <div id="tab-growth" class="tab-pane">
                 <div class="service-group">
                     <h3>📈 Карьерный рост</h3>
@@ -92,7 +84,6 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Премиум -->
             <div id="tab-executive" class="tab-pane">
                 <div class="service-group">
                     <h3>👑 Премиум</h3>
@@ -104,7 +95,6 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Тренинги -->
             <div id="tab-training" class="tab-pane">
                 <div class="service-group">
                     <h3>🎓 Тренинги</h3>
@@ -116,7 +106,6 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Авторские курсы -->
             <div id="tab-courses" class="tab-pane">
                 <div class="service-group">
                     <h3>📚 Авторские курсы</h3>
@@ -128,36 +117,29 @@
                 </div>
             </div>
 
-            <!-- Итоговая сумма -->
             <div class="total-block compact">
                 <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
                 <div id="discountInfo" class="discount-info"></div>
             </div>
 
-            <!-- Корзина -->
             <div class="cart-section">
                 <h3>🛒 Выбранные услуги</h3>
                 <div id="servicesList" class="services-list"></div>
                 <div class="share-cart-container">
-                    <button id="copyCartBtn" class="btn-secondary share-btn">
-                        📋 Скопировать корзину
-                    </button>
+                    <button id="copyCartBtn" class="btn-secondary share-btn">📋 Скопировать корзину</button>
                 </div>
             </div>
 
-            <!-- Форма быстрого заказа (упрощённая) -->
             <div class="calendar-card">
-                <h3 class="text-center" style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark);">📞 Быстрый заказ</h3>
-                <p class="text-center text-muted-light" style="margin-bottom: 24px;">Оставьте телефон, и я перезвоню, чтобы обсудить выбранные услуги.</p>
+                <h3 class="text-center">📞 Быстрый заказ</h3>
+                <p class="text-center text-muted-light">Оставьте телефон, и я перезвоню, чтобы обсудить выбранные услуги.</p>
                 <form id="quickOrderForm" class="callback-form" novalidate>
                     <fieldset>
                         <legend class="visually-hidden">Быстрый заказ</legend>
-
                         <div class="form-row-two">
                             <input type="text" id="quickName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
                             <input type="tel" id="quickPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
                         </div>
-
                         <div class="form-row-messages">
                             <div class="consent-checkbox">
                                 <input type="checkbox" id="quickConsent" name="consent" required>
@@ -165,9 +147,7 @@
                             </div>
                             <div id="quickFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                         </div>
-
                         <button type="submit" class="btn-primary btn-block callback-submit" aria-label="Заказать звонок">📞 Заказать звонок</button>
-
                         <div class="callback-telegram-alt">
                             ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
                         </div>

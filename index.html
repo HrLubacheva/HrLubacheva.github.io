@@ -1167,14 +1167,8 @@ body {
     margin-top: 15px;
 }
 
-.share-quiz-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 30px;
-}
-
 /* ==================================================================
-   ФОРМА ОБРАТНОГО ЗВОНКА
+   ФОРМА ОБРАТНОГО ЗВОНКА И БЫСТРОГО ЗАКАЗА
    ================================================================== */
 .calendar-card {
     max-width: 800px;
@@ -1194,6 +1188,18 @@ body {
 }
 
 .form-row-three .form-field {
+    flex: 1;
+    min-width: 140px;
+}
+
+.form-row-two {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.form-row-two .form-field {
     flex: 1;
     min-width: 140px;
 }
@@ -1396,11 +1402,11 @@ body {
         top: 0.75rem;
         right: 0.75rem;
     }
-    .form-row-three {
+    .form-row-three, .form-row-two {
         flex-direction: column;
         gap: 0;
     }
-    .form-row-three .form-field {
+    .form-row-three .form-field, .form-row-two .form-field {
         min-width: auto;
     }
     .form-row-messages {
@@ -1434,17 +1440,6 @@ body {
 
 .callback-telegram-alt a:hover {
     text-decoration: underline;
-}
-
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    padding: 0;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
 }
 
 /* ==================================================================
@@ -1561,6 +1556,12 @@ body {
     margin-top: 15px;
     font-size: 1rem;
     color: var(--text-muted);
+}
+
+.quiz-share-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
 }
 
 @media (max-width: 640px) {
@@ -1831,24 +1832,24 @@ footer a:hover {
 }
 
 /* ==================================================================
-   ФОТО В СЕКЦИИ ПРОЦЕССА (разная ширина колонок)
+   ФОТО В СЕКЦИИ ПРОЦЕССА
    ================================================================== */
 .process-photos {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 24px;
     justify-content: center;
     margin-top: 50px;
 }
 
 .process-photo-item:first-child {
-    flex: 1.3;
-    min-width: 260px;
+    flex: 0.95;
+    min-width: 160px;
 }
 
 .process-photo-item:last-child {
-    flex: 1;
-    min-width: 240px;
+    flex: 1.1;
+    min-width: 160px;
 }
 
 .process-photo-item {
@@ -1868,11 +1869,23 @@ footer a:hover {
     font-size: 0.85rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
+    .process-photos {
+        gap: 12px;
+    }
     .process-photo-item:first-child,
     .process-photo-item:last-child {
-        flex: 1;
-        min-width: auto;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .process-photos {
+        gap: 8px;
+    }
+    .process-photo-item:first-child,
+    .process-photo-item:last-child {
+        min-width: 100px;
     }
 }
 
@@ -2232,8 +2245,15 @@ button:focus-visible,
     opacity: 1;
 }
 
-::-ms-input-placeholder {
-    color: #9ca3af;
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 #quizSelectionBlock:empty,
@@ -2289,19 +2309,6 @@ button:focus-visible,
     background-color: #fff8f8 !important;
 }
 
-.photo-round {
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.photo-shadow {
-    box-shadow: var(--shadow-md);
-}
-
-.photo-border {
-    border: 3px solid var(--primary-light);
-}
-
 .text-center {
     text-align: center;
 }
@@ -2314,20 +2321,9 @@ button:focus-visible,
     color: var(--text-muted);
 }
 
-.text-small {
-    font-size: 0.85rem;
-}
-
-.mt-1 { margin-top: 8px; }
-.mt-2 { margin-top: 16px; }
-.mt-3 { margin-top: 24px; }
-.mt-4 { margin-top: 32px; }
-.mb-1 { margin-bottom: 8px; }
-.mb-2 { margin-bottom: 16px; }
-.mb-3 { margin-bottom: 24px; }
-.mb-4 { margin-bottom: 32px; }
-
-/* Skip-link — виден только при фокусе (для доступности) */
+/* ==================================================================
+   SKIP-LINK (виден только при фокусе)
+   ================================================================== */
 .skip-link {
     position: absolute;
     top: -40px;
@@ -2421,7 +2417,7 @@ button:focus-visible,
                 <div class="small-note hero-note">Работаю с профессионалами от Junior до C-level и с бизнесом любого масштаба.</div>
             </div>
             <div class="hero-image cell-image fade-up" data-cell-type="image">
-                <img src="assets/images/img_1.jpg" alt="Виктория Любачева" loading="eager" class="hero-photo">
+                <img src="assets/images/img_1.jpg" alt="Виктория Любачева" width="480" height="640" loading="eager" class="hero-photo">
             </div>
         </div>
     </div>
@@ -2430,11 +2426,9 @@ button:focus-visible,
     <div class="container">
         <div class="section-header cell-text" data-cell-type="text">
             <h2 class="section-title fade-up" id="roles-title">Экспертиза в деталях</h2>
-            <p class="section-subtitle fade-up" style="text-align: center; margin-top: -20px; margin-bottom: 30px; color: var(--text-muted);">
-                Каждая роль — это грань моей экспертизы. Выберите ту, которая нужна вам.
-            </p>
+            <p class="section-subtitle fade-up">Каждая роль — это грань моей экспертизы. Выберите ту, которая нужна вам.</p>
         </div>
-        <ul class="roles-grid cells-grid" data-grid-type="cards" role="list" style="list-style: none; padding-left: 0;">
+        <ul class="roles-grid cells-grid" data-grid-type="cards" role="list">
             <li class="role-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
                 <h3 itemprop="serviceType">🧑 Карьерный консультант</h3>
                 <div itemprop="description">
@@ -2484,17 +2478,13 @@ button:focus-visible,
     <div class="container">
         <div class="section-header cell-text" data-cell-type="text">
             <h2 class="section-title fade-up" id="services-title">Ценность для бизнеса и специалистов</h2>
-            <p class="services-subtitle fade-up" style="text-align: center; margin-top: -20px; margin-bottom: 30px; color: #4a5568;">
-                Решения для бизнеса и специалистов. От стратегии до конкретных результатов.
-            </p>
+            <p class="services-subtitle fade-up">Решения для бизнеса и специалистов. От стратегии до конкретных результатов.</p>
         </div>
-        <ul class="services-flex cells-grid" data-grid-type="cards" role="list" style="list-style: none; padding-left: 0;">
-
-            <!-- 1. HR для бизнеса -->
+        <ul class="services-flex cells-grid" data-grid-type="cards" role="list">
             <li class="service-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service1-title">
                 <h3 id="service1-title" itemprop="serviceType">🏢 HR для бизнеса</h3>
                 <div itemprop="description">
-                    <ul class="service-list" style="margin-top: 12px; padding-left: 20px; text-align: left;">
+                    <ul class="service-list">
                         <li>Подбор персонала (Junior → C-level)</li>
                         <li>Онбординг и оценка</li>
                         <li>Аутсорсинг подбора</li>
@@ -2505,12 +2495,10 @@ button:focus-visible,
                 </div>
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
-
-            <!-- 2. Карьерный консалтинг -->
             <li class="service-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service2-title">
                 <h3 id="service2-title" itemprop="serviceType">🧑 Карьерный консалтинг</h3>
                 <div itemprop="description">
-                    <ul class="service-list" style="margin-top: 12px; padding-left: 20px; text-align: left;">
+                    <ul class="service-list">
                         <li>Карьерная стратегия</li>
                         <li>Упаковка резюме</li>
                         <li>Подготовка к интервью</li>
@@ -2520,12 +2508,10 @@ button:focus-visible,
                 </div>
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
-
-            <!-- 3. Бизнес‑тренинги и коучинг -->
             <li class="service-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service3-title">
                 <h3 id="service3-title" itemprop="serviceType">🎓 Бизнес‑тренинги и коучинг</h3>
                 <div itemprop="description">
-                    <ul class="service-list" style="margin-top: 12px; padding-left: 20px; text-align: left;">
+                    <ul class="service-list">
                         <li>Корпоративные тренинги (офлайн | онлайн)</li>
                         <li>Развитие управленческих навыков</li>
                         <li>Мастер-классы</li>
@@ -2535,12 +2521,10 @@ button:focus-visible,
                 </div>
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
-
-            <!-- 4. Профориентация -->
             <li class="service-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service4-title">
                 <h3 id="service4-title" itemprop="serviceType">🎯 Профориентация</h3>
                 <div itemprop="description">
-                    <ul class="service-list" style="margin-top: 12px; padding-left: 20px; text-align: left;">
+                    <ul class="service-list">
                         <li>Для взрослых и подростков</li>
                         <li>Определение профессии</li>
                         <li>Направление развития</li>
@@ -2549,12 +2533,10 @@ button:focus-visible,
                 </div>
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
-
-            <!-- 5. Сопровождение руководителей -->
             <li class="service-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service5-title">
                 <h3 id="service5-title" itemprop="serviceType">👔 Сопровождение руководителей</h3>
                 <div itemprop="description">
-                    <ul class="service-list" style="margin-top: 12px; padding-left: 20px; text-align: left;">
+                    <ul class="service-list">
                         <li>Executive-коучинг</li>
                         <li>Поддержка первых лиц</li>
                         <li>Стратегия роста</li>
@@ -2563,12 +2545,10 @@ button:focus-visible,
                 </div>
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
-
-            <!-- 6. Оценка персонала -->
             <li class="service-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service6-title">
                 <h3 id="service6-title" itemprop="serviceType">📊 Оценка персонала</h3>
                 <div itemprop="description">
-                    <ul class="service-list" style="margin-top: 12px; padding-left: 20px; text-align: left;">
+                    <ul class="service-list">
                         <li>Ассессмент</li>
                         <li>Оценка 360 градусов</li>
                         <li>Оценка потенциала сотрудников</li>
@@ -2577,7 +2557,6 @@ button:focus-visible,
                 </div>
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
-
         </ul>
     </div>
 </section>
@@ -2585,7 +2564,6 @@ button:focus-visible,
     <div class="container">
         <h2 class="section-title fade-up" id="stats-title">Результаты в цифрах</h2>
         <dl class="stats-grid" role="list">
-            <!-- 1. Года в HR -->
             <div class="stat-item fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
                     <span class="stat-number" data-target="24" aria-hidden="true">0</span>
@@ -2594,8 +2572,6 @@ button:focus-visible,
                 <dd class="stat-label" itemprop="name">года в HR</dd>
                 <meta itemprop="value" content="24">
             </div>
-
-            <!-- 2. Вакансий закрыто -->
             <div class="stat-item fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
                     <span class="stat-number" data-target="1000" aria-hidden="true">0</span><span class="stat-plus" aria-hidden="true">+</span>
@@ -2604,8 +2580,6 @@ button:focus-visible,
                 <dd class="stat-label" itemprop="name">вакансий закрыто</dd>
                 <meta itemprop="value" content="1000">
             </div>
-
-            <!-- 3. Кандидатов трудоустроено -->
             <div class="stat-item fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
                     <span class="stat-number" data-target="1500" aria-hidden="true">0</span><span class="stat-plus" aria-hidden="true">+</span>
@@ -2614,8 +2588,6 @@ button:focus-visible,
                 <dd class="stat-label" itemprop="name">кандидатов трудоустроено</dd>
                 <meta itemprop="value" content="1500">
             </div>
-
-            <!-- 4. Интервью -->
             <div class="stat-item fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
                     <span class="stat-number" data-target="10000" aria-hidden="true">0</span><span class="stat-plus" aria-hidden="true">+</span>
@@ -2624,8 +2596,6 @@ button:focus-visible,
                 <dd class="stat-label" itemprop="name">интервью</dd>
                 <meta itemprop="value" content="10000">
             </div>
-
-            <!-- 5. Карьерных консультаций -->
             <div class="stat-item fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
                     <span class="stat-number" data-target="500" aria-hidden="true">0</span><span class="stat-plus" aria-hidden="true">+</span>
@@ -2634,8 +2604,6 @@ button:focus-visible,
                 <dd class="stat-label" itemprop="name">карьерных консультаций</dd>
                 <meta itemprop="value" content="500">
             </div>
-
-            <!-- 6. Тренингов проведено -->
             <div class="stat-item fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
                     <span class="stat-number" data-target="35" aria-hidden="true">0</span><span class="stat-plus" aria-hidden="true">+</span>
@@ -2650,7 +2618,7 @@ button:focus-visible,
 <section class="section-dark" id="about" aria-labelledby="benefits-title">
     <div class="container">
         <h2 class="section-title fade-up" id="benefits-title">Почему выбирают меня</h2>
-        <ul class="benefits-grid" role="list" style="list-style: none; padding-left: 0;">
+        <ul class="benefits-grid" role="list">
             <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
                 <h4 itemprop="name">🌱 Начинающий → Опытный специалист</h4>
                 <p itemprop="description">Помогаю начинающим найти первую работу и вырасти.</p>
@@ -2681,20 +2649,15 @@ button:focus-visible,
 <section id="process" aria-labelledby="process-title">
     <div class="container">
         <h2 class="section-title fade-up" id="process-title">Как мы будем работать вместе</h2>
-        <p class="process-description fade-up" style="text-align: center; margin-bottom: 40px; font-size: 1rem; color: var(--text-muted);">
-            Прозрачный процесс без лишних этапов. Вы всегда знаете, что будет дальше.
-        </p>
+        <p class="process-description fade-up">Прозрачный процесс без лишних этапов. Вы всегда знаете, что будет дальше.</p>
 
         <div class="process-row">
-            <!-- Карьерная консультация -->
             <div class="process-col">
                 <h3 class="process-title fade-up">
                     📌 Карьерная консультация
-                    <span class="process-subtitle" style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; font-weight: normal;">
-                        Средний рост дохода +35%
-                    </span>
+                    <span class="process-subtitle">Средний рост дохода +35%</span>
                 </h3>
-                <ul class="process-grid" role="list" style="list-style: none; padding-left: 0;">
+                <ul class="process-grid" role="list">
                     <li class="process-card fade-up" role="listitem">
                         <div class="process-step" aria-hidden="true">1</div>
                         <h4>Диагностика</h4>
@@ -2717,16 +2680,12 @@ button:focus-visible,
                     </li>
                 </ul>
             </div>
-
-            <!-- Подбор персонала -->
             <div class="process-col">
                 <h3 class="process-title fade-up">
                     🏢 Подбор персонала
-                    <span class="process-subtitle" style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-top: 5px; font-weight: normal;">
-                        Гарантия 3 месяца — бесплатная замена
-                    </span>
+                    <span class="process-subtitle">Гарантия 3 месяца — бесплатная замена</span>
                 </h3>
-                <ul class="process-grid" role="list" style="list-style: none; padding-left: 0;">
+                <ul class="process-grid" role="list">
                     <li class="process-card fade-up" role="listitem">
                         <div class="process-step" aria-hidden="true">1</div>
                         <h4>Аудит вакансии</h4>
@@ -2751,10 +2710,9 @@ button:focus-visible,
             </div>
         </div>
 
-        <!-- Тренинг «Продай себя дорого» -->
         <div class="training-grid">
             <h3 class="process-title fade-up">🎓 Тренинг «Продай себя дорого»</h3>
-            <ul class="process-grid" role="list" style="list-style: none; padding-left: 0;">
+            <ul class="process-grid" role="list">
                 <li class="process-card fade-up" role="listitem">
                     <div class="process-step" aria-hidden="true">1</div>
                     <h4>Самодиагностика</h4>
@@ -2788,57 +2746,6 @@ button:focus-visible,
             </ul>
         </div>
 
-        <!-- БЛОК ФОТО — ВСЕ НАСТРОЙКИ ЗДЕСЬ -->
-        <style>
-            .process-photos {
-                display: flex;
-                flex-wrap: nowrap;
-                gap: 24px;
-                justify-content: center;
-                margin-top: 50px;
-            }
-            .process-photo-item:first-child {
-                flex: 0.95;
-                min-width: 160px;
-            }
-            .process-photo-item:last-child {
-                flex: 1.1;
-                min-width: 160px;
-            }
-            .process-photo-item {
-                text-align: center;
-            }
-            .process-photo-item img {
-                width: 100%;
-                height: auto;
-                border-radius: 24px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            }
-            .photo-caption {
-                margin-top: 12px;
-                color: var(--text-muted);
-                font-size: 0.85rem;
-            }
-            @media (max-width: 640px) {
-                .process-photos {
-                    gap: 12px;
-                }
-                .process-photo-item:first-child,
-                .process-photo-item:last-child {
-                    min-width: 120px;
-                }
-            }
-            @media (max-width: 480px) {
-                .process-photos {
-                    gap: 8px;
-                }
-                .process-photo-item:first-child,
-                .process-photo-item:last-child {
-                    min-width: 100px;
-                }
-            }
-        </style>
-
         <div class="process-photos">
             <div class="process-photo-item">
                 <img src="assets/images/img_7.jpg" alt="Бизнес-тренинг под запрос" loading="lazy">
@@ -2856,7 +2763,6 @@ button:focus-visible,
         <div class="quiz-card">
             <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
 
-            <!-- Вкладки для бизнеса -->
             <div class="calculator-tabs">
                 <button class="tab-btn" data-tab="recruitment">🎯 Подбор персонала</button>
                 <button class="tab-btn" data-tab="retention">💎 Удержание и развитие</button>
@@ -2864,7 +2770,6 @@ button:focus-visible,
                 <button class="tab-btn" data-tab="corporate">🙋‍♀️ HR «под ключ»</button>
             </div>
 
-            <!-- Вкладки для соискателей -->
             <div class="calculator-tabs">
                 <button class="tab-btn active" data-tab="start">🎯 Ищу работу</button>
                 <button class="tab-btn" data-tab="growth">📈 Карьерный рост</button>
@@ -2873,7 +2778,6 @@ button:focus-visible,
                 <button class="tab-btn" data-tab="courses">📚 Авторские курсы</button>
             </div>
 
-            <!-- Вкладка: Подбор персонала -->
             <div id="tab-recruitment" class="tab-pane">
                 <div class="service-group">
                     <h3>🎯 Подбор персонала</h3>
@@ -2885,7 +2789,6 @@ button:focus-visible,
                 </div>
             </div>
 
-            <!-- Вкладка: Удержание и развитие -->
             <div id="tab-retention" class="tab-pane">
                 <div class="service-group">
                     <h3>💎 Удержание и развитие</h3>
@@ -2897,7 +2800,6 @@ button:focus-visible,
                 </div>
             </div>
 
-            <!-- Вкладка: Бизнес-тренинги -->
             <div id="tab-business-training" class="tab-pane">
                 <div class="service-group">
                     <h3>🎓 Бизнес-тренинги</h3>
@@ -2909,7 +2811,6 @@ button:focus-visible,
                 </div>
             </div>
 
-            <!-- Вкладка: HR "под ключ" -->
             <div id="tab-corporate" class="tab-pane">
                 <div class="service-group">
                     <h3>🙋‍♀️ HR «под ключ»</h3>
@@ -2921,7 +2822,6 @@ button:focus-visible,
                 </div>
             </div>
 
-            <!-- Вкладка: Ищу работу -->
             <div id="tab-start" class="tab-pane active">
                 <div class="service-group">
                     <h3>🎯 Ищу работу</h3>
@@ -2933,7 +2833,6 @@ button:focus-visible,
                 </div>
             </div>
 
-            <!-- Вкладка: Карьерный рост -->
             <div id="tab-growth" class="tab-pane">
                 <div class="service-group">
                     <h3>📈 Карьерный рост</h3>
@@ -2945,7 +2844,6 @@ button:focus-visible,
                 </div>
             </div>
 
-            <!-- Вкладка: Премиум -->
             <div id="tab-executive" class="tab-pane">
                 <div class="service-group">
                     <h3>👑 Премиум</h3>
@@ -2957,7 +2855,6 @@ button:focus-visible,
                 </div>
             </div>
 
-            <!-- Вкладка: Тренинги -->
             <div id="tab-training" class="tab-pane">
                 <div class="service-group">
                     <h3>🎓 Тренинги</h3>
@@ -2969,7 +2866,6 @@ button:focus-visible,
                 </div>
             </div>
 
-            <!-- Вкладка: Авторские курсы -->
             <div id="tab-courses" class="tab-pane">
                 <div class="service-group">
                     <h3>📚 Авторские курсы</h3>
@@ -2981,36 +2877,29 @@ button:focus-visible,
                 </div>
             </div>
 
-            <!-- Итоговая сумма -->
             <div class="total-block compact">
                 <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
                 <div id="discountInfo" class="discount-info"></div>
             </div>
 
-            <!-- Корзина -->
             <div class="cart-section">
                 <h3>🛒 Выбранные услуги</h3>
                 <div id="servicesList" class="services-list"></div>
                 <div class="share-cart-container">
-                    <button id="copyCartBtn" class="btn-secondary share-btn">
-                        📋 Скопировать корзину
-                    </button>
+                    <button id="copyCartBtn" class="btn-secondary share-btn">📋 Скопировать корзину</button>
                 </div>
             </div>
 
-            <!-- Форма быстрого заказа (упрощённая) -->
             <div class="calendar-card">
-                <h3 class="text-center" style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark);">📞 Быстрый заказ</h3>
-                <p class="text-center text-muted-light" style="margin-bottom: 24px;">Оставьте телефон, и я перезвоню, чтобы обсудить выбранные услуги.</p>
+                <h3 class="text-center">📞 Быстрый заказ</h3>
+                <p class="text-center text-muted-light">Оставьте телефон, и я перезвоню, чтобы обсудить выбранные услуги.</p>
                 <form id="quickOrderForm" class="callback-form" novalidate>
                     <fieldset>
                         <legend class="visually-hidden">Быстрый заказ</legend>
-
                         <div class="form-row-two">
                             <input type="text" id="quickName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
                             <input type="tel" id="quickPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
                         </div>
-
                         <div class="form-row-messages">
                             <div class="consent-checkbox">
                                 <input type="checkbox" id="quickConsent" name="consent" required>
@@ -3018,9 +2907,7 @@ button:focus-visible,
                             </div>
                             <div id="quickFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                         </div>
-
                         <button type="submit" class="btn-primary btn-block callback-submit" aria-label="Заказать звонок">📞 Заказать звонок</button>
-
                         <div class="callback-telegram-alt">
                             ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
                         </div>
@@ -3049,10 +2936,7 @@ button:focus-visible,
     <div class="container">
         <div class="checklist-card fade-up">
             <h2 class="section-title" id="freebies-title">📥 Бесплатный набор для уверенного старта</h2>
-
-            <ul class="freebies-grid" role="list" style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 24px; list-style: none; padding-left: 0;">
-
-                <!-- Чек-лист -->
+            <ul class="freebies-grid" role="list">
                 <li class="freebie-item" role="listitem" itemscope itemtype="https://schema.org/CreativeWork">
                     <div class="freebie-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" role="img" aria-label="Чек-лист иконка">
@@ -3070,8 +2954,6 @@ button:focus-visible,
                     </div>
                     <meta itemprop="encodingFormat" content="application/pdf">
                 </li>
-
-                <!-- Программа тренинга -->
                 <li class="freebie-item" role="listitem" itemscope itemtype="https://schema.org/CreativeWork">
                     <div class="freebie-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" role="img" aria-label="Программа тренинга иконка">
@@ -3088,8 +2970,6 @@ button:focus-visible,
                     </div>
                     <meta itemprop="encodingFormat" content="application/pdf">
                 </li>
-
-                <!-- Полный набор -->
                 <li class="freebie-item" role="listitem">
                     <div class="freebie-icon freebie-icon-accent">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" role="img" aria-label="Полный набор иконка">
@@ -3105,7 +2985,6 @@ button:focus-visible,
                     </div>
                 </li>
             </ul>
-
             <p class="freebie-footer">🔐 Без спама. Отправляю на почту за 1 минуту.</p>
         </div>
     </div>
@@ -3133,16 +3012,9 @@ button:focus-visible,
                     <legend class="visually-hidden">Запись на диагностику</legend>
 
                     <div class="form-row-three">
-                        <input type="text" id="callbackName" name="name"
-                               placeholder="👤 Имя"
-                               autocomplete="name" class="form-field" aria-label="Ваше имя">
-                        <input type="tel" id="callbackPhone" name="phone"
-                               placeholder="📞 Телефон"
-                               inputmode="numeric" required autocomplete="tel"
-                               class="form-field" aria-label="Номер телефона">
-                        <input type="email" id="callbackEmail" name="email"
-                               placeholder="📧 Email"
-                               autocomplete="email" class="form-field" aria-label="Адрес электронной почты">
+                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field" aria-label="Ваше имя">
+                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field" aria-label="Номер телефона">
+                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email" class="form-field" aria-label="Адрес электронной почты">
                     </div>
 
                     <div id="quizSelectionBlock" class="callback-quiz-selection" style="display: none;">
@@ -3160,9 +3032,7 @@ button:focus-visible,
                     <input type="hidden" name="recommendedVariants" id="recommendedVariants">
                     <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
 
-                    <textarea id="callbackComment" name="comment" rows="2"
-                              placeholder="💬 Удобное время или дополнительная информация"
-                              class="form-field form-textarea" aria-label="Комментарий"></textarea>
+                    <textarea id="callbackComment" name="comment" rows="2" placeholder="💬 Удобное время или дополнительная информация" class="form-field form-textarea" aria-label="Комментарий"></textarea>
 
                     <div class="form-row-messages">
                         <div class="consent-checkbox">
@@ -3172,9 +3042,7 @@ button:focus-visible,
                         <div id="callbackFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                     </div>
 
-                    <button type="submit" class="btn-primary btn-block callback-submit" aria-label="Записаться на диагностику">
-                        📞 Записаться →
-                    </button>
+                    <button type="submit" class="btn-primary btn-block callback-submit" aria-label="Записаться на диагностику">📞 Записаться →</button>
 
                     <div class="callback-telegram-alt">
                         ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
@@ -3190,41 +3058,22 @@ button:focus-visible,
     <div class="container contact-block" itemscope itemtype="https://schema.org/ContactPage">
         <h2 class="section-title fade-up" id="contacts-title">Остались вопросы? Напишите или позвоните</h2>
 
-        <ul class="contacts-list" role="list" style="list-style: none; padding-left: 0;">
-            <li class="contact-line" role="listitem">
-                📧 <a href="mailto:hrlubacheva@yandex.ru" itemprop="email">hrlubacheva@yandex.ru</a>
-            </li>
-            <li class="contact-line" role="listitem">
-                📱 <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer" itemprop="sameAs">Telegram: @HrLubacheva</a>
-            </li>
-            <li class="contact-line" role="listitem">
-                💬 <a href="https://wa.me/79217916655" target="_blank" rel="noopener noreferrer" itemprop="sameAs">WhatsApp: +7 921 791-66-55</a>
-            </li>
-            <li class="contact-line" role="listitem">
-                📞 <span class="copyable-phone" data-copy="+79217916655" role="button" tabindex="0" aria-label="Скопировать номер телефона +7 921 791-66-55">+7 921 791-66-55</span>
-            </li>
-            <li class="contact-line contact-search" role="listitem">
-                <span class="copyable-text" data-copy="@HrLubacheva" role="button" tabindex="0" aria-label="Скопировать никнейм @HrLubacheva">🔍 Ищите @HrLubacheva</span>
-            </li>
+        <ul class="contacts-list" role="list">
+            <li class="contact-line" role="listitem">📧 <a href="mailto:hrlubacheva@yandex.ru" itemprop="email">hrlubacheva@yandex.ru</a></li>
+            <li class="contact-line" role="listitem">📱 <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer" itemprop="sameAs">Telegram: @HrLubacheva</a></li>
+            <li class="contact-line" role="listitem">💬 <a href="https://wa.me/79217916655" target="_blank" rel="noopener noreferrer" itemprop="sameAs">WhatsApp: +7 921 791-66-55</a></li>
+            <li class="contact-line" role="listitem">📞 <span class="copyable-phone" data-copy="+79217916655" role="button" tabindex="0" aria-label="Скопировать номер телефона +7 921 791-66-55">+7 921 791-66-55</span></li>
+            <li class="contact-line contact-search" role="listitem"><span class="copyable-text" data-copy="@HrLubacheva" role="button" tabindex="0" aria-label="Скопировать никнейм @HrLubacheva">🔍 Ищите @HrLubacheva</span></li>
         </ul>
 
-        <!-- Кнопка поделиться -->
         <div class="share-button-container">
-            <button id="shareButtonContacts" class="btn-secondary share-site-btn" aria-label="Поделиться сайтом в соцсетях">
-                📤 Поделиться сайтом
-            </button>
+            <button id="shareButtonContacts" class="btn-secondary share-site-btn" aria-label="Поделиться сайтом в соцсетях">📤 Поделиться сайтом</button>
         </div>
 
-        <!-- Индивидуальное предложение -->
-        <div class="custom-offer">
-            💡 Не нашли подходящую услугу? Напишите — подберём индивидуально
-        </div>
+        <div class="custom-offer">💡 Не нашли подходящую услугу? Напишите — подберём индивидуально</div>
 
-        <!-- Кнопка Telegram (дублирующая) -->
         <div class="telegram-button-container">
-            <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram">
-                Написать в Telegram
-            </a>
+            <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram">Написать в Telegram</a>
         </div>
     </div>
 </section></main>
@@ -3236,7 +3085,7 @@ button:focus-visible,
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 26.05.2026 14:06:28
+                Версия: 26.05.2026 14:39:22
             </div>
         </div>
     </div>
