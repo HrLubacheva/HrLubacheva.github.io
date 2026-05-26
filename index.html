@@ -2286,6 +2286,7 @@ section[id] {
                 <a href="#quiz">Квиз</a>
                 <a href="#media">Медиа</a>
                 <a href="#contacts">Контакты</a>
+                <a href="#callback-form">Связаться</a>
             </div>
         </div>
     </div>
@@ -2313,7 +2314,7 @@ section[id] {
 
                 <div class="hero-buttons">
                     <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank" aria-label="Написать в Telegram">Написать в Telegram</a>
-                    <a href="#calendar" class="btn-secondary" aria-label="Записаться на экспресс-консультацию">Экспресс-консультация</a>
+                    <a href="#callback-form" class="btn-secondary" aria-label="Записаться на экспресс-консультацию">Экспресс-консультация</a>
                 </div>
 
                 <div class="hero-quiz-link">
@@ -2915,7 +2916,7 @@ section[id] {
         </div>
     </div>
 </section>
-<section id="calendar" aria-labelledby="callback-title">
+<section id="callback-form" aria-labelledby="callback-title">
     <div class="container">
         <div class="calendar-card fade-up">
             <h2 class="section-title" id="callback-title">
@@ -3122,7 +3123,7 @@ section[id] {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 26.05.2026 18:45:15
+                Версия: 26.05.2026 19:04:18
             </div>
         </div>
     </div>
@@ -3468,7 +3469,6 @@ window.APP_CONFIG = {
 
     // ========== КОНСТАНТЫ ДЛЯ ВСЕГО САЙТА ==========
     CONSTANTS: {
-        // Таймауты и задержки (в миллисекундах)
         TOAST_DURATION: 3000,
         TOAST_FADE_DURATION: 300,
         LOADING_TIMEOUT: 2000,
@@ -3486,35 +3486,42 @@ window.APP_CONFIG = {
         ANIMATION_FADE_DURATION: 700,
         STATS_ANIMATION_DURATION: 1500,
 
-        // Брейкпоинты (px)
         BREAKPOINT_MOBILE: 768,
         BREAKPOINT_TABLET: 992,
         BREAKPOINT_DESKTOP: 1200,
         SCROLL_TOP_VISIBLE_THRESHOLD: 500,
 
-        // Размеры изображений
         OG_IMAGE_WIDTH: 1200,
         OG_IMAGE_HEIGHT: 630,
         HERO_IMAGE_WIDTH: 480,
         HERO_IMAGE_HEIGHT: 640,
 
-        // Финансовые константы
         DISCOUNT_PERCENT: 0.05,
         DISCOUNT_MIN_ITEMS: 2,
 
-        // Валидация
         MAX_PHONE_DIGITS: 11,
 
-        // Геолокация
         GEO_API_URL: 'https://ipapi.co/json/',
 
-        // Ключи localStorage
         LOCALSTORAGE_VISITS_KEY: 'hr_visits',
         LOCALSTORAGE_GEO_KEY: 'hr_geo',
         LOCALSTORAGE_USER_ID_KEY: 'hr_user_id',
 
-        // Прочие (необязательные)
         DEFAULT_QUANTITY: 1,
+    },
+
+    // ========== ИДЕНТИФИКАТОРЫ СЕКЦИЙ (для якорных ссылок) ==========
+    SECTION_IDS: {
+        home: 'home',
+        roles: 'roles',
+        services: 'services',
+        stats: 'stats',
+        process: 'process',
+        calculator: 'calculator',
+        quiz: 'quiz',
+        media: 'media',
+        contacts: 'contacts',
+        callbackForm: 'callback-form',
     }
 };
 // ========== ОБЩИЕ УТИЛИТЫ ==========
