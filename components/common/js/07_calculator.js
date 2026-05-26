@@ -211,7 +211,7 @@ function initSelects() {
     }
     populateSelect('recruitment-select', SERVICES_DATA.recruitment);
     populateSelect('retention-select', SERVICES_DATA.retention);
-    populateSelect('business-training-select', SERVICES_DATA.businessTraining);
+    populateSelect('business-training-select', SERVICES_DATA["business-training"]);
     populateSelect('corporate-select', SERVICES_DATA.corporate);
     populateSelect('start-select', SERVICES_DATA.start);
     populateSelect('growth-select', SERVICES_DATA.growth);

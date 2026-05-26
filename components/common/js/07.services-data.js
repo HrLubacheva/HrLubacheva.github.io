@@ -32,7 +32,7 @@ const SERVICES_DATA = {
         {name: "Стратегическая сессия в компании", price: 13000}
     ],
     // Бизнес-тренинги
-    businessTraining: [
+    "business-training": [
         {name: "Тренинг под запрос (1ч, до 25 чел.)", price: 12000},
         {name: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000},
         {name: "Тренинг 'Профилактика выгорания'", price: 12000},
@@ -138,7 +138,7 @@ window.LOCAL_SERVICES = {
         ...(SERVICES_DATA.training || [])
             .filter(item => item.price !== null)
             .map(item => ({ service: item.name, price: item.price })),
-        ...(SERVICES_DATA.businessTraining || [])
+        ...(SERVICES_DATA["business-training"] || [])
             .filter(item => item.price !== null)
             .map(item => ({ service: item.name, price: item.price }))
     ],
