@@ -17,8 +17,8 @@ function getNumericPrice(price) {
     return price;
 }
 
-// Показать уведомление
-function showCalculatorToast(message, isError = false) {
+// Показать уведомление (используем локальное имя)
+function showCalcToast(message, isError = false) {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
 
@@ -43,17 +43,6 @@ function showCalculatorToast(message, isError = false) {
     setTimeout(() => toast.remove(), 2000);
 }
 
-// Экранирование HTML
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function (m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
-
 // ========== ФУНКЦИИ КОРЗИНЫ ==========
 
 // Добавление услуги в корзину
@@ -61,10 +50,10 @@ function addToCart(serviceName, price, quantity) {
     const existing = cart.find(item => item.name === serviceName);
     if (existing) {
         existing.qty += quantity;
-        showCalculatorToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`);
+        showCalcToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`);
     } else {
         cart.push({name: serviceName, price: price, qty: quantity});
-        showCalculatorToast(`✅ "${serviceName}" добавлен(а) в корзину`);
+        showCalcToast(`✅ "${serviceName}" добавлен(а) в корзину`);
     }
     renderCart();
 }
@@ -130,8 +119,19 @@ function renderCart() {
             priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
         }
 
+        // Используем глобальную escapeHtml
+        const escapeHtmlFn = window.escapeHtml || function(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        };
+
         div.innerHTML = `
-            <div class="service-name">${escapeHtml(item.name)}</div>
+            <div class="service-name">${escapeHtmlFn(item.name)}</div>
             <div class="service-price">${priceDisplay}</div>
             <div class="service-qty-control">
                 <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
@@ -252,7 +252,7 @@ function initAddButtons() {
                     addToCart(serviceName, price, quantity);
                 } else {
                     console.error('Не удалось получить название услуги');
-                    showCalculatorToast('❌ Ошибка: не удалось определить услугу', true);
+                    showCalcToast('❌ Ошибка: не удалось определить услугу', true);
                 }
             };
             button.addEventListener('click', button._handler);
@@ -265,12 +265,12 @@ function initAddButtons() {
 // ========== ИНИЦИАЛИЗАЦИЯ ВКЛАДОК ==========
 
 function initTabs() {
-    const tabs = document.querySelectorAll('.tab-btn');
+    const tabs = document.querySelectorAll('#calculator .tab-btn');
     tabs.forEach(btn => {
         btn.removeEventListener('click', btn._tabHandler);
         btn._tabHandler = () => {
             const tab = btn.dataset.tab;
-            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.querySelectorAll('#calculator .tab-pane').forEach(pane => pane.classList.remove('active'));
             tabs.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             const activePane = document.getElementById(`tab-${tab}`);
@@ -280,75 +280,33 @@ function initTabs() {
     });
 }
 
-// ========== ИНИЦИАЛИЗАЦИЯ ФОРМЫ ==========
-
-function initQuickOrderForm() {
-    const form = document.getElementById('quickOrderForm');
-    if (form) {
-        form.removeEventListener('submit', form._submitHandler);
-        form._submitHandler = (e) => {
-            e.preventDefault();
-            const phone = document.getElementById('quickPhone').value;
-            const consent = document.getElementById('quickConsent').checked;
-
-            if (!phone) {
-                showCalculatorToast('❌ Введите номер телефона', true);
-                return;
-            }
-            if (!consent) {
-                showCalculatorToast('❌ Подтвердите согласие на обработку данных', true);
-                return;
-            }
-
-            let cartText = '';
-            let total = 0;
-            cart.forEach(item => {
-                const itemPrice = getNumericPrice(item.price);
-                const subtotal = itemPrice * item.qty;
-                total += subtotal;
-                cartText += `${item.name} x${item.qty} = ${formatPrice(subtotal)}\n`;
-            });
-
-            let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-            let finalTotal = total;
-            if (totalQty >= 2 && total > 0) finalTotal = total * 0.95;
-
-            alert(`✅ Заявка принята!\n\n📋 Услуги:\n${cartText || '—'}\n💰 Итого: ${formatPrice(finalTotal)}\n\n📞 Мы свяжемся с вами в ближайшее время.`);
-
-            form.reset();
-            cart = [];
-            renderCart();
-        };
-        form.addEventListener('submit', form._submitHandler);
-    }
-}
-
-// ========== МАСКА ТЕЛЕФОНА ==========
-
-function initQuickPhoneMask() {
-    const phoneInput = document.getElementById('quickPhone');
-    if (phoneInput) {
-        phoneInput.removeEventListener('input', phoneInput._maskHandler);
-        phoneInput._maskHandler = function (e) {
-            let digits = this.value.replace(/\D/g, '');
-            if (digits.length > 11) digits = digits.slice(0, 11);
-            let formatted = '';
-            if (digits.length === 0) formatted = '';
-            else if (digits.length <= 1) formatted = '+' + digits;
-            else if (digits.length <= 4) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1);
-            else if (digits.length <= 7) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4);
-            else if (digits.length <= 9) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7);
-            else formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7, 9) + ' ' + digits.slice(9, 11);
-            this.value = formatted;
-        };
-        phoneInput.addEventListener('input', phoneInput._maskHandler);
-    }
-}
+// ========== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ФОРМ ==========
+// getCartData используется в 02_forms.js для отправки корзины в Google Sheets
+window.getCartData = function() {
+    if (cart.length === 0) return 'Корзина пуста';
+    return cart.map(item => {
+        const price = getNumericPrice(item.price);
+        const totalPrice = price * item.qty;
+        let priceDisplay;
+        if (price === 0) priceDisplay = '0 ₽';
+        else if (price === null) priceDisplay = 'по запросу';
+        else priceDisplay = totalPrice.toLocaleString() + ' ₽';
+        return `${item.name} x${item.qty} = ${priceDisplay}`;
+    }).join('\n');
+};
 
 // ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ==========
 
 function initCalculator() {
     console.log('Инициализация калькулятора...');
+
+    // Предотвращаем двойную инициализацию
+    if (window._calculatorInitialized) {
+        console.log('Калькулятор уже инициализирован');
+        return;
+    }
+    window._calculatorInitialized = true;
+
     if (typeof SERVICES_DATA !== 'undefined') {
         initSelects();
     } else {
@@ -356,8 +314,7 @@ function initCalculator() {
     }
     initAddButtons();
     initTabs();
-    initQuickOrderForm();
-    initQuickPhoneMask();
+
     console.log('Инициализация калькулятора завершена');
 }
 
@@ -370,7 +327,3 @@ if (document.readyState === 'loading') {
 
 // Экспорт для использования в других модулях
 window.initCalculator = initCalculator;
-window.getCartData = function() {
-    if (cart.length === 0) return 'Корзина пуста';
-    return cart.map(item => `${item.name} x${item.qty} = ${formatPrice(getNumericPrice(item.price) * item.qty)}`).join('\n');
-};

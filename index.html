@@ -3049,177 +3049,165 @@ body {
         </div>
     </div>
 </section>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Калькулятор услуг | Виктория Любачева</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-<div class="container">
-    <div class="quiz-card">
-        <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
+<section id="calculator" class="calculator-section">
+    <div class="container">
+        <div class="quiz-card">
+            <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
 
-        <!-- Вкладки для бизнеса -->
-        <div class="calculator-tabs">
-            <button class="tab-btn active" data-tab="recruitment">🎯 Подбор персонала</button>
-            <button class="tab-btn" data-tab="retention">💎 Удержание и развитие</button>
-            <button class="tab-btn" data-tab="business-training">🎓 Бизнес-тренинги</button>
-            <button class="tab-btn" data-tab="corporate">🙋‍♀️ HR «под ключ»</button>
-        </div>
+            <!-- Вкладки для бизнеса -->
+            <div class="calculator-tabs">
+                <button class="tab-btn" data-tab="recruitment">🎯 Подбор персонала</button>
+                <button class="tab-btn" data-tab="retention">💎 Удержание и развитие</button>
+                <button class="tab-btn" data-tab="business-training">🎓 Бизнес-тренинги</button>
+                <button class="tab-btn" data-tab="corporate">🙋‍♀️ HR «под ключ»</button>
+            </div>
 
-        <!-- Вкладки для соискателей -->
-        <div class="calculator-tabs">
-            <button class="tab-btn" data-tab="start">🎯 Ищу работу</button>
-            <button class="tab-btn" data-tab="growth">📈 Карьерный рост</button>
-            <button class="tab-btn" data-tab="executive">👑 Премиум</button>
-            <button class="tab-btn" data-tab="training">🎓 Тренинги</button>
-            <button class="tab-btn" data-tab="courses">📚 Авторские курсы</button>
-        </div>
+            <!-- Вкладки для соискателей (активная по умолчанию - "Ищу работу") -->
+            <div class="calculator-tabs">
+                <button class="tab-btn active" data-tab="start">🎯 Ищу работу</button>
+                <button class="tab-btn" data-tab="growth">📈 Карьерный рост</button>
+                <button class="tab-btn" data-tab="executive">👑 Премиум</button>
+                <button class="tab-btn" data-tab="training">🎓 Тренинги</button>
+                <button class="tab-btn" data-tab="courses">📚 Авторские курсы</button>
+            </div>
 
-        <!-- Вкладка: Подбор персонала -->
-        <div id="tab-recruitment" class="tab-pane active">
-            <div class="service-group">
-                <h3>🎯 Подбор персонала</h3>
-                <div class="add-service">
-                    <select id="recruitment-select" class="service-select"></select>
-                    <input type="number" id="recruitment-qty" min="1" value="1" class="calc-qty">
-                    <button id="recruitment-add" class="add-service-btn" data-category="recruitment">➕ Добавить</button>
+            <!-- Вкладка: Подбор персонала -->
+            <div id="tab-recruitment" class="tab-pane">
+                <div class="service-group">
+                    <h3>🎯 Подбор персонала</h3>
+                    <div class="add-service">
+                        <select id="recruitment-select" class="service-select"></select>
+                        <input type="number" id="recruitment-qty" min="1" value="1" class="calc-qty">
+                        <button id="recruitment-add" class="add-service-btn" data-category="recruitment">➕ Добавить</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Вкладка: Удержание и развитие -->
-        <div id="tab-retention" class="tab-pane">
-            <div class="service-group">
-                <h3>💎 Удержание и развитие</h3>
-                <div class="add-service">
-                    <select id="retention-select" class="service-select"></select>
-                    <input type="number" id="retention-qty" min="1" value="1" class="calc-qty">
-                    <button id="retention-add" class="add-service-btn" data-category="retention">➕ Добавить</button>
+            <!-- Вкладка: Удержание и развитие -->
+            <div id="tab-retention" class="tab-pane">
+                <div class="service-group">
+                    <h3>💎 Удержание и развитие</h3>
+                    <div class="add-service">
+                        <select id="retention-select" class="service-select"></select>
+                        <input type="number" id="retention-qty" min="1" value="1" class="calc-qty">
+                        <button id="retention-add" class="add-service-btn" data-category="retention">➕ Добавить</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Вкладка: Бизнес-тренинги -->
-        <div id="tab-business-training" class="tab-pane">
-            <div class="service-group">
-                <h3>🎓 Бизнес-тренинги</h3>
-                <div class="add-service">
-                    <select id="business-training-select" class="service-select"></select>
-                    <input type="number" id="business-training-qty" min="1" value="1" class="calc-qty">
-                    <button id="business-training-add" class="add-service-btn" data-category="businessTraining">➕ Добавить</button>
+            <!-- Вкладка: Бизнес-тренинги -->
+            <div id="tab-business-training" class="tab-pane">
+                <div class="service-group">
+                    <h3>🎓 Бизнес-тренинги</h3>
+                    <div class="add-service">
+                        <select id="business-training-select" class="service-select"></select>
+                        <input type="number" id="business-training-qty" min="1" value="1" class="calc-qty">
+                        <button id="business-training-add" class="add-service-btn" data-category="businessTraining">➕ Добавить</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Вкладка: HR "под ключ" -->
-        <div id="tab-corporate" class="tab-pane">
-            <div class="service-group">
-                <h3>🙋‍♀️ HR «под ключ»</h3>
-                <div class="add-service">
-                    <select id="corporate-select" class="service-select"></select>
-                    <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty">
-                    <button id="corporate-add" class="add-service-btn" data-category="corporate">➕ Добавить</button>
+            <!-- Вкладка: HR "под ключ" -->
+            <div id="tab-corporate" class="tab-pane">
+                <div class="service-group">
+                    <h3>🙋‍♀️ HR «под ключ»</h3>
+                    <div class="add-service">
+                        <select id="corporate-select" class="service-select"></select>
+                        <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty">
+                        <button id="corporate-add" class="add-service-btn" data-category="corporate">➕ Добавить</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Вкладка: Ищу работу -->
-        <div id="tab-start" class="tab-pane">
-            <div class="service-group">
-                <h3>🎯 Ищу работу</h3>
-                <div class="add-service">
-                    <select id="start-select" class="service-select"></select>
-                    <input type="number" id="start-qty" min="1" value="1" class="calc-qty">
-                    <button id="start-add" class="add-service-btn" data-category="start">➕ Добавить</button>
+            <!-- Вкладка: Ищу работу (активная по умолчанию) -->
+            <div id="tab-start" class="tab-pane active">
+                <div class="service-group">
+                    <h3>🎯 Ищу работу</h3>
+                    <div class="add-service">
+                        <select id="start-select" class="service-select"></select>
+                        <input type="number" id="start-qty" min="1" value="1" class="calc-qty">
+                        <button id="start-add" class="add-service-btn" data-category="start">➕ Добавить</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Вкладка: Карьерный рост -->
-        <div id="tab-growth" class="tab-pane">
-            <div class="service-group">
-                <h3>📈 Карьерный рост</h3>
-                <div class="add-service">
-                    <select id="growth-select" class="service-select"></select>
-                    <input type="number" id="growth-qty" min="1" value="1" class="calc-qty">
-                    <button id="growth-add" class="add-service-btn" data-category="growth">➕ Добавить</button>
+            <!-- Вкладка: Карьерный рост -->
+            <div id="tab-growth" class="tab-pane">
+                <div class="service-group">
+                    <h3>📈 Карьерный рост</h3>
+                    <div class="add-service">
+                        <select id="growth-select" class="service-select"></select>
+                        <input type="number" id="growth-qty" min="1" value="1" class="calc-qty">
+                        <button id="growth-add" class="add-service-btn" data-category="growth">➕ Добавить</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Вкладка: Премиум -->
-        <div id="tab-executive" class="tab-pane">
-            <div class="service-group">
-                <h3>👑 Премиум</h3>
-                <div class="add-service">
-                    <select id="executive-select" class="service-select"></select>
-                    <input type="number" id="executive-qty" min="1" value="1" class="calc-qty">
-                    <button id="executive-add" class="add-service-btn" data-category="executive">➕ Добавить</button>
+            <!-- Вкладка: Премиум -->
+            <div id="tab-executive" class="tab-pane">
+                <div class="service-group">
+                    <h3>👑 Премиум</h3>
+                    <div class="add-service">
+                        <select id="executive-select" class="service-select"></select>
+                        <input type="number" id="executive-qty" min="1" value="1" class="calc-qty">
+                        <button id="executive-add" class="add-service-btn" data-category="executive">➕ Добавить</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Вкладка: Тренинги -->
-        <div id="tab-training" class="tab-pane">
-            <div class="service-group">
-                <h3>🎓 Тренинги</h3>
-                <div class="add-service">
-                    <select id="training-select" class="service-select"></select>
-                    <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
-                    <button id="training-add" class="add-service-btn" data-category="training">➕ Добавить</button>
+            <!-- Вкладка: Тренинги -->
+            <div id="tab-training" class="tab-pane">
+                <div class="service-group">
+                    <h3>🎓 Тренинги</h3>
+                    <div class="add-service">
+                        <select id="training-select" class="service-select"></select>
+                        <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
+                        <button id="training-add" class="add-service-btn" data-category="training">➕ Добавить</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Вкладка: Авторские курсы -->
-        <div id="tab-courses" class="tab-pane">
-            <div class="service-group">
-                <h3>📚 Авторские курсы</h3>
-                <div class="add-service">
-                    <select id="courses-select" class="service-select"></select>
-                    <input type="number" id="courses-qty" min="1" value="1" class="calc-qty">
-                    <button id="courses-add" class="add-service-btn" data-category="courses">➕ Добавить</button>
+            <!-- Вкладка: Авторские курсы -->
+            <div id="tab-courses" class="tab-pane">
+                <div class="service-group">
+                    <h3>📚 Авторские курсы</h3>
+                    <div class="add-service">
+                        <select id="courses-select" class="service-select"></select>
+                        <input type="number" id="courses-qty" min="1" value="1" class="calc-qty">
+                        <button id="courses-add" class="add-service-btn" data-category="courses">➕ Добавить</button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Итоговая сумма -->
-        <div class="total-block">
-            <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
-            <div id="discountInfo" class="discount-info"></div>
-        </div>
+            <!-- Итоговая сумма -->
+            <div class="total-block">
+                <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
+                <div id="discountInfo" class="discount-info"></div>
+            </div>
 
-        <!-- Корзина -->
-        <div class="cart-section">
-            <h3>🛒 Выбранные услуги</h3>
-            <div id="servicesList" class="services-list"></div>
-        </div>
+            <!-- Корзина -->
+            <div class="cart-section">
+                <h3>🛒 Выбранные услуги</h3>
+                <div id="servicesList" class="services-list"></div>
+            </div>
 
-        <!-- Форма быстрого заказа -->
-        <div class="calendar-card">
-            <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark); text-align: center;">📞 Быстрый заказ</h3>
-            <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
-            <form id="quickOrderForm" class="callback-form">
-                <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)">
-                <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required>
-                <div class="consent-checkbox">
-                    <input type="checkbox" id="quickConsent" name="consent" required>
-                    <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
-                </div>
-                <button type="submit" class="btn-primary btn-block">📞 Заказать звонок</button>
-            </form>
+            <!-- Форма быстрого заказа -->
+            <div class="calendar-card">
+                <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark); text-align: center;">📞 Быстрый заказ</h3>
+                <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
+                <form id="quickOrderForm" class="callback-form">
+                    <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)">
+                    <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required>
+                    <div class="consent-checkbox">
+                        <input type="checkbox" id="quickConsent" name="consent" required>
+                        <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
+                    </div>
+                    <button type="submit" class="btn-primary btn-block">📞 Заказать звонок</button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-
-<script src="js/services-data.js"></script>
-<script src="js/calculator.js"></script>
-</body>
-</html>
+</section>
 <section id="quiz">
     <div class="container">
         <div class="quiz-card fade-up">
@@ -3389,7 +3377,7 @@ body {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 26.05.2026 09:40:40
+                Версия: 26.05.2026 09:48:16
             </div>
         </div>
     </div>
@@ -4507,8 +4495,8 @@ function getNumericPrice(price) {
     return price;
 }
 
-// Показать уведомление
-function showCalculatorToast(message, isError = false) {
+// Показать уведомление (используем локальное имя)
+function showCalcToast(message, isError = false) {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
 
@@ -4533,17 +4521,6 @@ function showCalculatorToast(message, isError = false) {
     setTimeout(() => toast.remove(), 2000);
 }
 
-// Экранирование HTML
-function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function (m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
-}
-
 // ========== ФУНКЦИИ КОРЗИНЫ ==========
 
 // Добавление услуги в корзину
@@ -4551,10 +4528,10 @@ function addToCart(serviceName, price, quantity) {
     const existing = cart.find(item => item.name === serviceName);
     if (existing) {
         existing.qty += quantity;
-        showCalculatorToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`);
+        showCalcToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`);
     } else {
         cart.push({name: serviceName, price: price, qty: quantity});
-        showCalculatorToast(`✅ "${serviceName}" добавлен(а) в корзину`);
+        showCalcToast(`✅ "${serviceName}" добавлен(а) в корзину`);
     }
     renderCart();
 }
@@ -4620,8 +4597,19 @@ function renderCart() {
             priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
         }
 
+        // Используем глобальную escapeHtml
+        const escapeHtmlFn = window.escapeHtml || function(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        };
+
         div.innerHTML = `
-            <div class="service-name">${escapeHtml(item.name)}</div>
+            <div class="service-name">${escapeHtmlFn(item.name)}</div>
             <div class="service-price">${priceDisplay}</div>
             <div class="service-qty-control">
                 <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
@@ -4742,7 +4730,7 @@ function initAddButtons() {
                     addToCart(serviceName, price, quantity);
                 } else {
                     console.error('Не удалось получить название услуги');
-                    showCalculatorToast('❌ Ошибка: не удалось определить услугу', true);
+                    showCalcToast('❌ Ошибка: не удалось определить услугу', true);
                 }
             };
             button.addEventListener('click', button._handler);
@@ -4755,12 +4743,12 @@ function initAddButtons() {
 // ========== ИНИЦИАЛИЗАЦИЯ ВКЛАДОК ==========
 
 function initTabs() {
-    const tabs = document.querySelectorAll('.tab-btn');
+    const tabs = document.querySelectorAll('#calculator .tab-btn');
     tabs.forEach(btn => {
         btn.removeEventListener('click', btn._tabHandler);
         btn._tabHandler = () => {
             const tab = btn.dataset.tab;
-            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            document.querySelectorAll('#calculator .tab-pane').forEach(pane => pane.classList.remove('active'));
             tabs.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             const activePane = document.getElementById(`tab-${tab}`);
@@ -4770,75 +4758,33 @@ function initTabs() {
     });
 }
 
-// ========== ИНИЦИАЛИЗАЦИЯ ФОРМЫ ==========
-
-function initQuickOrderForm() {
-    const form = document.getElementById('quickOrderForm');
-    if (form) {
-        form.removeEventListener('submit', form._submitHandler);
-        form._submitHandler = (e) => {
-            e.preventDefault();
-            const phone = document.getElementById('quickPhone').value;
-            const consent = document.getElementById('quickConsent').checked;
-
-            if (!phone) {
-                showCalculatorToast('❌ Введите номер телефона', true);
-                return;
-            }
-            if (!consent) {
-                showCalculatorToast('❌ Подтвердите согласие на обработку данных', true);
-                return;
-            }
-
-            let cartText = '';
-            let total = 0;
-            cart.forEach(item => {
-                const itemPrice = getNumericPrice(item.price);
-                const subtotal = itemPrice * item.qty;
-                total += subtotal;
-                cartText += `${item.name} x${item.qty} = ${formatPrice(subtotal)}\n`;
-            });
-
-            let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-            let finalTotal = total;
-            if (totalQty >= 2 && total > 0) finalTotal = total * 0.95;
-
-            alert(`✅ Заявка принята!\n\n📋 Услуги:\n${cartText || '—'}\n💰 Итого: ${formatPrice(finalTotal)}\n\n📞 Мы свяжемся с вами в ближайшее время.`);
-
-            form.reset();
-            cart = [];
-            renderCart();
-        };
-        form.addEventListener('submit', form._submitHandler);
-    }
-}
-
-// ========== МАСКА ТЕЛЕФОНА ==========
-
-function initQuickPhoneMask() {
-    const phoneInput = document.getElementById('quickPhone');
-    if (phoneInput) {
-        phoneInput.removeEventListener('input', phoneInput._maskHandler);
-        phoneInput._maskHandler = function (e) {
-            let digits = this.value.replace(/\D/g, '');
-            if (digits.length > 11) digits = digits.slice(0, 11);
-            let formatted = '';
-            if (digits.length === 0) formatted = '';
-            else if (digits.length <= 1) formatted = '+' + digits;
-            else if (digits.length <= 4) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1);
-            else if (digits.length <= 7) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4);
-            else if (digits.length <= 9) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7);
-            else formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7, 9) + ' ' + digits.slice(9, 11);
-            this.value = formatted;
-        };
-        phoneInput.addEventListener('input', phoneInput._maskHandler);
-    }
-}
+// ========== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ФОРМ ==========
+// getCartData используется в 02_forms.js для отправки корзины в Google Sheets
+window.getCartData = function() {
+    if (cart.length === 0) return 'Корзина пуста';
+    return cart.map(item => {
+        const price = getNumericPrice(item.price);
+        const totalPrice = price * item.qty;
+        let priceDisplay;
+        if (price === 0) priceDisplay = '0 ₽';
+        else if (price === null) priceDisplay = 'по запросу';
+        else priceDisplay = totalPrice.toLocaleString() + ' ₽';
+        return `${item.name} x${item.qty} = ${priceDisplay}`;
+    }).join('\n');
+};
 
 // ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ==========
 
 function initCalculator() {
     console.log('Инициализация калькулятора...');
+
+    // Предотвращаем двойную инициализацию
+    if (window._calculatorInitialized) {
+        console.log('Калькулятор уже инициализирован');
+        return;
+    }
+    window._calculatorInitialized = true;
+
     if (typeof SERVICES_DATA !== 'undefined') {
         initSelects();
     } else {
@@ -4846,8 +4792,7 @@ function initCalculator() {
     }
     initAddButtons();
     initTabs();
-    initQuickOrderForm();
-    initQuickPhoneMask();
+
     console.log('Инициализация калькулятора завершена');
 }
 
@@ -4860,10 +4805,6 @@ if (document.readyState === 'loading') {
 
 // Экспорт для использования в других модулях
 window.initCalculator = initCalculator;
-window.getCartData = function() {
-    if (cart.length === 0) return 'Корзина пуста';
-    return cart.map(item => `${item.name} x${item.qty} = ${formatPrice(getNumericPrice(item.price) * item.qty)}`).join('\n');
-};
 // ========== ВЕСА УСЛУГ (ТОЛЬКО ПРИОРИТЕТНЫЕ ДЛЯ КВИЗА, БЕЗ БЕСПЛАТНЫХ) ==========
 // Табличный формат: каждая услуга описывается массивом [название, веса...]
 // Формат: [название, role_*, level_*, urgency_*, importance_*, budget_*]
