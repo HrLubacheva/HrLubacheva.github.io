@@ -55,9 +55,9 @@ body {
 
 .section-subtitle {
     text-align: center;
-    font-size: 1rem;
+    margin-top: -20px;
+    margin-bottom: 30px;
     color: var(--text-muted);
-    margin-bottom: 32px;
 }
 
 @media (max-width: 768px) {
@@ -113,6 +113,11 @@ body {
 .btn-small {
     padding: 8px 16px;
     font-size: 0.85rem;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
 }
 
 /* ==================================================================
@@ -277,7 +282,7 @@ body {
 .hero-text {
     font-size: 1rem;
     margin-bottom: 30px;
-    line-height: 1.6;
+    line-height: 1.7;
     color: var(--text-dark);
 }
 
@@ -300,6 +305,34 @@ body {
     border-radius: 20px;
     background: transparent;
     object-fit: contain;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+}
+
+.hero-quiz-link {
+    margin-top: 20px;
+}
+
+.quiz-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.quiz-link:hover {
+    text-decoration: underline;
+}
+
+.hero-note {
+    margin-top: 32px;
 }
 
 @media (min-width: 1024px) {
@@ -326,6 +359,18 @@ body {
     .hero-title {
         font-size: 2rem;
     }
+    .hero-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+    .hero-note {
+        margin-top: 20px;
+    }
 }
 
 /* ==================================================================
@@ -335,6 +380,8 @@ body {
     display: grid;
     gap: 30px;
     margin: 40px 0;
+    list-style: none;
+    padding-left: 0;
 }
 
 @media (min-width: 992px) {
@@ -364,6 +411,8 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 30px;
     margin: 40px 0;
+    list-style: none;
+    padding-left: 0;
 }
 
 .services-flex {
@@ -371,6 +420,8 @@ body {
     grid-template-columns: repeat(2, 1fr);
     gap: 30px;
     margin: 40px 0;
+    list-style: none;
+    padding-left: 0;
 }
 
 @media (max-width: 768px) {
@@ -400,13 +451,23 @@ body {
 }
 
 .service-card ul {
-    color: var(--text-dark);
-    list-style-position: inside;
+    list-style: none;
+    padding-left: 0;
 }
 
 .service-card li {
+    padding-left: 1.5em;
+    position: relative;
     margin-bottom: 8px;
     color: var(--text-dark);
+}
+
+.service-card li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-weight: bold;
 }
 
 .process-step {
@@ -545,6 +606,8 @@ body {
     grid-template-columns: 1fr;
     gap: 32px;
     margin: 48px 0;
+    list-style: none;
+    padding-left: 0;
 }
 
 @media (min-width: 768px) {
@@ -633,41 +696,43 @@ body {
     background: var(--light-bg, #f8f9fa);
 }
 
-.calculator-wrapper {
-    background: white;
-    border-radius: 32px;
-    padding: 30px;
+.quiz-card {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    margin: 0 auto;
     box-shadow: var(--shadow-md);
 }
 
 .calculator-tabs {
     display: flex;
+    gap: 12px;
     flex-wrap: wrap;
-    gap: 8px;
     margin-bottom: 30px;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 15px;
+    justify-content: center;
 }
 
 .tab-btn {
-    background: none;
+    background: var(--light-bg);
     border: none;
-    padding: 10px 20px;
-    font-size: 14px;
-    font-weight: 500;
+    padding: 12px 24px;
     border-radius: 40px;
     cursor: pointer;
     transition: var(--transition);
-    color: #666;
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.9rem;
 }
 
 .tab-btn:hover {
-    background: #f0f0f0;
+    background: #e9ecef;
+    transform: translateY(-2px);
 }
 
 .tab-btn.active {
     background: var(--primary);
     color: white;
+    box-shadow: var(--shadow-sm);
 }
 
 .tab-pane {
@@ -694,195 +759,530 @@ body {
 }
 
 .service-group {
-    margin-bottom: 25px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 32px;
+    padding: 24px;
+    background: var(--light-bg);
+    border-radius: 24px;
 }
 
 .service-group h3 {
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #333;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
 }
 
-.service-row {
+.add-service {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
     align-items: center;
+    justify-content: space-between;
 }
 
 .service-select {
     flex: 3;
     min-width: 250px;
-    padding: 12px 16px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    font-size: 14px;
+    padding: 14px 20px;
+    border: 1px solid var(--border);
     background: white;
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-dark);
     cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    transition: var(--transition);
 }
 
-.service-qty {
-    width: 80px;
-    padding: 12px 8px;
+.service-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+}
+
+.calc-qty {
+    width: 100px;
+    padding: 14px 12px;
     text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    font-size: 14px;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    transition: var(--transition);
 }
 
-.btn-add-to-cart {
+.calc-qty:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+}
+
+.add-service-btn {
     background: var(--primary);
-    color: white;
     border: none;
-    padding: 12px 24px;
-    border-radius: 40px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background 0.2s;
-}
-
-.btn-add-to-cart:hover {
-    background: var(--primary-dark);
-}
-
-.cart-summary {
-    margin-top: 40px;
-    padding-top: 25px;
-    border-top: 2px dashed #ddd;
-    background: #fafafa;
-    border-radius: 24px;
-    padding: 25px;
-}
-
-.cart-summary h3 {
-    margin-bottom: 20px;
-}
-
-.cart-items {
-    margin-bottom: 15px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.cart-empty {
-    text-align: center;
-    color: #999;
-    padding: 20px;
-}
-
-.calc-item {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-bottom: 1px solid #eee;
-    gap: 10px;
-}
-
-.calc-item .service-name {
-    flex: 2;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.calc-item .service-price {
-    flex: 1;
-    min-width: 100px;
-    color: var(--primary);
+    padding: 14px 28px;
+    border-radius: 50px;
     font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
 }
 
-.service-qty-control {
+.add-service-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.25);
+}
+
+.total-block {
+    margin-top: 24px;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 18px;
+    text-align: right;
+}
+
+.total-block > div:first-child {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+
+.discount-info {
+    font-size: 0.75rem;
+    color: #28a745;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .total-block {
+        text-align: center;
+    }
+}
+
+.cart-section {
+    margin-top: 30px;
+    border-top: 2px solid var(--border);
+    padding-top: 25px;
+}
+
+.cart-section h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--primary-dark);
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
+.services-list {
+    margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.services-list:empty::after {
+    content: "📭 Корзина пуста. Добавьте услугу выше →";
+    display: block;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.calc-item {
+    display: grid;
+    grid-template-columns: 1fr 120px 120px 50px;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.calc-item:hover {
+    background: var(--light-bg);
+    border-radius: 16px;
+}
+
+.calc-item .service-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    word-break: break-word;
+    font-size: 0.95rem;
+}
+
+.calc-item .service-price {
+    text-align: center;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.service-qty-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
 .qty-btn {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
+    border-radius: 50%;
     background: white;
-    cursor: pointer;
-    font-size: 18px;
+    border: 1px solid var(--border);
+    font-size: 1.2rem;
     font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dark);
+}
+
+.qty-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: scale(1.05);
 }
 
 .qty-value {
-    min-width: 30px;
+    min-width: 28px;
     text-align: center;
+    font-weight: 600;
+    color: var(--text-dark);
 }
 
-.service-remove button {
+.remove-item {
     background: none;
     border: none;
-    font-size: 18px;
-    cursor: pointer;
-    color: #999;
-    transition: color 0.2s;
-}
-
-.service-remove button:hover {
     color: #dc3545;
-}
-
-.cart-total {
-    display: flex;
-    justify-content: space-between;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
     align-items: center;
-    padding: 15px 0;
-    font-size: 20px;
-    font-weight: bold;
-    border-top: 2px solid #ddd;
-    margin-top: 10px;
+    justify-content: center;
 }
 
-.discount-info {
-    font-size: 13px;
-    color: #28a745;
-    margin: 10px 0;
-    padding: 8px;
-    background: #e8f5e9;
-    border-radius: 12px;
-    text-align: center;
+.remove-item:hover {
+    background: #fee2e2;
+    transform: scale(1.05);
 }
 
-.order-btn {
-    width: 100%;
-    padding: 14px;
-    font-size: 16px;
+.share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.share-cart-container {
+    display: flex;
+    justify-content: flex-end;
     margin-top: 15px;
 }
 
-@media (max-width: 768px) {
-    .calculator-wrapper {
-        padding: 20px;
+.share-quiz-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+/* ==================================================================
+   ФОРМА ОБРАТНОГО ЗВОНКА (компактная, три поля в строку)
+   ================================================================== */
+.calendar-card {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.callback-form {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.form-row-three {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+
+.form-row-three .form-field {
+    flex: 1;
+    min-width: 140px;
+}
+
+/* Стили полей ввода (светлая рамка, в стиле сайта) */
+.form-field {
+    width: 100%;
+    padding: 12px 16px;
+    margin: 0.5rem 0;
+    border: 1px solid #e9ecef;
+    border-radius: 60px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    background-color: #fff;
+    color: var(--text-dark);
+}
+
+.form-field:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+}
+
+.form-textarea {
+    border-radius: 24px;
+    resize: vertical;
+}
+
+/* Блок чекбокс + сообщения в строку */
+.form-row-messages {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0.75rem 0 0.5rem;
+}
+
+.consent-checkbox {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Увеличенный кастомный чекбокс */
+.consent-checkbox input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    margin: 0;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.consent-checkbox input[type="checkbox"]:checked {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.consent-checkbox input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.consent-checkbox label {
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    line-height: 1.4;
+}
+
+.consent-checkbox label a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.consent-checkbox label a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Блок сообщений */
+.form-messages {
+    flex: 1;
+    font-size: 0.85rem;
+    padding: 8px 12px;
+    border-radius: 40px;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    text-align: left;
+    transition: all 0.2s;
+}
+
+.form-messages.error {
+    background-color: #fff0f0;
+    color: #dc3545;
+    border: 1px solid #ffc9c9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.form-messages.success {
+    background-color: #e6ffed;
+    color: #28a745;
+    border: 1px solid #b3e6cc;
+}
+
+.callback-submit {
+    background: var(--primary);
+    font-size: 1rem;
+    padding: 12px 20px;
+    font-weight: 700;
+    width: 100%;
+    margin-top: 0.75rem;
+    border: none;
+    cursor: pointer;
+}
+
+.callback-submit:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+.callback-subtitle {
+    font-size: 0.8rem;
+    display: block;
+    color: var(--primary);
+    font-weight: normal;
+    margin-top: 0.25rem;
+}
+
+.callback-features {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.callback-features-text {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.callback-features-note {
+    font-size: 0.9rem;
+    color: var(--secondary);
+    margin-top: 0.25rem;
+}
+
+.feature-badges {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    list-style: none;
+    padding-left: 0;
+}
+
+.feature-badges li {
+    font-size: 0.9rem;
+}
+
+.callback-quiz-selection {
+    background: #f0f7ff;
+    border-left: 4px solid var(--primary);
+    margin-bottom: 1rem;
+    border-radius: 16px;
+}
+
+@media (min-width: 769px) {
+    .callback-quiz-selection {
+        display: grid;
+        grid-template-columns: 1fr auto 40px;
+        gap: 12px;
+        align-items: center;
+        padding: 0.75rem 1rem;
     }
-    .service-row {
+}
+
+@media (max-width: 768px) {
+    .callback-quiz-selection {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        position: relative;
+        padding: 1rem;
+    }
+    .callback-quiz-selection .service-remove {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+    .form-row-three {
+        flex-direction: column;
+        gap: 0;
+    }
+    .form-row-three .form-field {
+        min-width: auto;
+    }
+    .form-row-messages {
         flex-direction: column;
         align-items: stretch;
     }
-    .service-select, .service-qty, .btn-add-to-cart {
-        width: 100%;
+    .form-messages {
+        text-align: center;
     }
-    .calc-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .calc-item .service-price {
-        align-self: flex-start;
-    }
-    .service-qty-control {
-        align-self: flex-start;
-    }
-    .service-remove {
-        align-self: flex-end;
-        margin-top: -40px;
-    }
+}
+
+.callback-note {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 1rem;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
 }
 
 /* ==================================================================
@@ -1024,10 +1424,9 @@ body {
 }
 
 /* ==================================================================
-   БЕСПЛАТНЫЕ МАТЕРИАЛЫ И ДИАГНОСТИКА
+   БЕСПЛАТНЫЕ МАТЕРИАЛЫ (09_freebies)
    ================================================================== */
-.checklist-card,
-.calendar-card {
+.checklist-card {
     background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
     border-radius: var(--radius-lg);
     padding: 48px 32px;
@@ -1038,14 +1437,12 @@ body {
     overflow: hidden;
 }
 
-.checklist-card:hover,
-.calendar-card:hover {
+.checklist-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
 }
 
-.checklist-card::before,
-.calendar-card::before {
+.checklist-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1055,14 +1452,12 @@ body {
     background: linear-gradient(90deg, var(--primary), var(--primary-light));
 }
 
-.checklist-card .section-title,
-.calendar-card .section-title {
+.checklist-card .section-title {
     margin-bottom: 16px;
     color: var(--primary-dark);
 }
 
-.checklist-card p,
-.calendar-card p {
+.checklist-card p {
     font-size: 1.1rem;
     text-align: center;
     max-width: 700px;
@@ -1072,61 +1467,97 @@ body {
     margin-bottom: 32px;
 }
 
-/* ==================================================================
-   ФОРМА ОБРАТНОГО ЗВОНКА
-   ================================================================== */
-.callback-form {
-    max-width: 600px;
-    margin: 0 auto;
+.freebies-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    list-style: none;
+    padding-left: 0;
 }
 
-.callback-form input,
-.callback-form textarea {
-    width: 100%;
-    padding: 14px 20px;
-    margin: 12px 0;
-    border: 1px solid var(--border);
-    border-radius: 60px;
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    transition: all 0.2s;
-    background-color: #fff;
-    color: var(--text-dark);
-}
-
-.callback-form input:focus,
-.callback-form textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
-}
-
-.callback-form textarea {
-    border-radius: 24px;
-    resize: vertical;
-}
-
-.callback-form .btn-primary {
-    width: 100%;
-    padding: 14px;
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin-top: 10px;
-}
-
-.callback-note {
+.freebie-item {
     text-align: center;
+    min-width: 150px;
+}
+
+.freebie-icon {
+    width: 64px;
+    height: 64px;
+    background: var(--light-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px auto;
+}
+
+.freebie-icon-accent {
+    background: var(--primary);
+}
+
+.freebie-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--primary-dark);
+}
+
+.freebie-desc {
+    font-size: 0.75rem;
+    color: var(--secondary);
+    margin-bottom: 12px;
+}
+
+.freebie-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.freebie-link {
+    color: var(--primary);
     font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 20px;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.freebie-link:hover {
+    text-decoration: underline;
+}
+
+.freebie-footer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--secondary);
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+    .freebies-grid {
+        gap: 24px;
+    }
+    .freebie-item {
+        min-width: 140px;
+    }
 }
 
 /* ==================================================================
-   КОНТАКТЫ
+   КОНТАКТЫ (11_contacts)
    ================================================================== */
 .contact-block {
     text-align: center;
     padding: 40px 0;
+}
+
+.contacts-list {
+    list-style: none;
+    padding-left: 0;
 }
 
 .contact-line {
@@ -1148,10 +1579,39 @@ body {
 .copyable-phone, .copyable-text {
     cursor: pointer;
     border-bottom: 1px dashed #90cdf4;
+    display: inline-block;
 }
 
-.contact-telegram-btn {
+.copyable-phone:hover, .copyable-text:hover {
+    color: white;
+    border-bottom-color: white;
+}
+
+.share-button-container {
     margin-top: 30px;
+}
+
+.share-site-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-offer {
+    margin-top: 25px;
+    font-style: italic;
+    color: #cbd5e0;
+}
+
+.telegram-button-container {
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    .contact-line {
+        font-size: 1rem;
+        word-break: break-word;
+    }
 }
 
 /* ==================================================================
@@ -1196,6 +1656,15 @@ footer a:hover {
     .footer-content {
         flex-direction: column;
         text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-version {
+        font-size: 0.75rem;
+    }
+    .footer-copyright {
+        font-size: 0.8rem;
     }
 }
 
@@ -1407,143 +1876,6 @@ footer a:hover {
 }
 
 /* ==================================================================
-   КАСТОМНЫЕ ЧЕКБОКСЫ
-   ================================================================== */
-.consent-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    user-select: none;
-}
-
-.consent-checkbox input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
-    margin: 0;
-    border: 2px solid var(--border);
-    border-radius: 6px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-}
-
-.consent-checkbox input[type="checkbox"]:checked {
-    background: var(--primary);
-    border-color: var(--primary);
-}
-
-.consent-checkbox input[type="checkbox"]:checked::after {
-    content: '✓';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.consent-checkbox label {
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: var(--text-dark);
-    line-height: 1.4;
-}
-
-.consent-checkbox label a {
-    color: var(--primary);
-    text-decoration: none;
-}
-
-.consent-checkbox label a:hover {
-    color: var(--primary-dark);
-    text-decoration: underline;
-}
-
-/* ==================================================================
-   БЛОК ВЫБРАННОЙ УСЛУГИ ИЗ КВИЗА
-   ================================================================== */
-#quizSelectionBlock {
-    background: #f0f7ff;
-    border-left: 4px solid #2D6A9F;
-    margin-bottom: 16px;
-}
-
-@media (min-width: 769px) {
-    #quizSelectionBlock {
-        display: grid;
-        grid-template-columns: 1fr auto 40px;
-        gap: 12px;
-        align-items: center;
-        padding: 12px 8px;
-        border-bottom: 1px solid var(--border);
-    }
-}
-
-@media (max-width: 768px) {
-    #quizSelectionBlock {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        position: relative;
-        padding: 16px;
-        gap: 8px;
-    }
-    #quizSelectionBlock .service-name {
-        padding-right: 40px;
-        font-weight: 600;
-        font-size: 1rem;
-        line-height: 1.4;
-    }
-    #quizSelectionBlock .service-price {
-        text-align: left;
-        font-size: 0.9rem;
-        color: var(--primary);
-        font-weight: 600;
-        margin-top: 4px;
-    }
-    #quizSelectionBlock .service-remove {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-    }
-}
-
-#quizSelectionBlock .service-name {
-    color: var(--text-dark);
-    word-break: break-word;
-}
-
-#quizSelectionBlock .service-price {
-    font-weight: 600;
-    color: var(--primary);
-}
-
-#removeQuizSelection {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    cursor: pointer;
-    color: #dc3545;
-    transition: transform 0.1s;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#removeQuizSelection:hover {
-    background: #fee2e2;
-    transform: scale(1.05);
-}
-
-/* ==================================================================
    ВЫРАВНИВАНИЕ КАРТОЧЕК ПРОЦЕССОВ
    ================================================================== */
 .process-row {
@@ -1558,13 +1890,6 @@ footer a:hover {
     min-width: 280px;
     display: flex;
     flex-direction: column;
-}
-
-.process-title {
-    text-align: center;
-    margin: 40px 0 20px;
-    font-size: 1.8rem;
-    color: var(--primary-dark);
 }
 
 .process-grid {
@@ -1598,7 +1923,7 @@ footer a:hover {
 .process-card p {
     flex-grow: 1;
     font-size: 0.95rem;
-    line-height: 1.4;
+    line-height: 1.65;
     color: var(--text-dark);
     margin: 0;
 }
@@ -1635,9 +1960,6 @@ footer a:hover {
     }
 }
 
-/* ==================================================================
-   ТОЛЬКО ДЛЯ БЛОКА ТРЕНИНГА
-   ================================================================== */
 .training-grid .process-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1706,13 +2028,11 @@ button:focus-visible,
     color: #9ca3af;
 }
 
-/* Скрываем пустые блоки */
 #quizSelectionBlock:empty,
 #quizSelectionBlock .service-name:empty {
     display: none !important;
 }
 
-/* Плавающая кнопка поделиться */
 .floating-share-btn {
     position: fixed;
     bottom: 100px;
@@ -1747,9 +2067,6 @@ button:focus-visible,
     }
 }
 
-/* ==================================================================
-   ОШИБКИ ПОЛЕЙ ФОРМ
-   ================================================================== */
 .field-error-message {
     display: block;
     font-size: 0.75rem;
@@ -1764,9 +2081,6 @@ button:focus-visible,
     background-color: #fff8f8 !important;
 }
 
-/* ==================================================================
-   СТИЛИ ДЛЯ ФОТО
-   ================================================================== */
 .photo-round {
     border-radius: 50%;
     object-fit: cover;
@@ -1780,15 +2094,20 @@ button:focus-visible,
     border: 3px solid var(--primary-light);
 }
 
-/* ==================================================================
-   ДОПОЛНИТЕЛЬНЫЕ УТИЛИТЫ
-   ================================================================== */
 .text-center {
     text-align: center;
 }
 
 .text-primary {
     color: var(--primary);
+}
+
+.text-muted-light {
+    color: var(--text-muted);
+}
+
+.text-small {
+    font-size: 0.85rem;
 }
 
 .mt-1 { margin-top: 8px; }
@@ -1800,647 +2119,28 @@ button:focus-visible,
 .mb-3 { margin-bottom: 24px; }
 .mb-4 { margin-bottom: 32px; }
 
-
-
-/* ==================================================================
-   БАЗОВЫЕ ПЕРЕМЕННЫЕ
-================================================================== */
-:root {
-    --primary: #2D6A9F;
-    --primary-dark: #1F4A6E;
-    --primary-light: #4A8BC2;
-    --secondary: #6c757d;
-    --secondary-dark: #4a5568;
-    --dark-bg: #1a2a3a;
-    --light-bg: #f8f9fa;
-    --surface-soft: #ffffff;
-    --border: #e0e0e0;
-    --text-dark: #1a202c;
-    --text-light: #f8f9fa;
-    --text-muted: #4a5568;
-    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
-    --radius-md: 16px;
-    --radius-lg: 28px;
-    --transition: all 0.25s ease;
-}
-
-* {
-    margin: 0;
+fieldset {
+    border: none;
     padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Inter', sans-serif;
-    background: #ffffff;
-    line-height: 1.5;
-    padding: 40px 20px;
-}
-
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-/* ==================================================================
-   КНОПКИ
-================================================================== */
-.btn-primary, .btn-secondary {
-    display: inline-block;
-    padding: 12px 28px;
-    border-radius: 40px;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: var(--transition);
-    border: none;
-    font-size: 1rem;
-}
-
-.btn-primary {
-    background: var(--primary);
-    color: white;
-    box-shadow: var(--shadow-sm);
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.btn-secondary {
-    background: transparent;
-    color: var(--primary);
-    border: 1px solid var(--primary);
-}
-
-.btn-secondary:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-2px);
-}
-
-.btn-block {
-    display: block;
-    width: 100%;
-}
-
-/* ==================================================================
-   ЗАГОЛОВКИ
-================================================================== */
-.section-title {
-    font-size: 2rem;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 16px;
-    color: var(--primary-dark);
-}
-
-.calculator-desc {
-    text-align: center;
-    margin-bottom: 32px;
-    color: var(--text-muted);
-    font-size: 1rem;
-}
-
-/* ==================================================================
-   КАЛЬКУЛЯТОР
-================================================================== */
-.quiz-card {
-    background: var(--surface-soft);
-    border-radius: var(--radius-lg);
-    padding: 40px;
-    margin: 0 auto;
-    box-shadow: var(--shadow-md);
-}
-
-.calculator-tabs {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin-bottom: 30px;
-    justify-content: center;
-}
-
-.tab-btn {
-    background: var(--light-bg);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 40px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-weight: 600;
-    color: var(--text-dark);
-    font-size: 0.9rem;
-}
-
-.tab-btn:hover {
-    background: #e9ecef;
-    transform: translateY(-2px);
-}
-
-.tab-btn.active {
-    background: var(--primary);
-    color: white;
-    box-shadow: var(--shadow-sm);
-}
-
-.tab-pane {
-    display: none;
-    opacity: 0;
-    transition: opacity 0.2s ease;
-}
-
-.tab-pane.active {
-    display: block;
-    opacity: 1;
-    animation: fadeIn 0.25s;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Группы услуг внутри вкладки */
-.service-group {
-    margin-bottom: 32px;
-    padding: 24px;
-    background: var(--light-bg);
-    border-radius: 24px;
-}
-
-.service-group h3 {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    color: var(--primary-dark);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--border);
-}
-
-.add-service {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.service-select {
-    flex: 3;
-    min-width: 250px;
-    padding: 14px 20px;
-    border: 1px solid var(--border);
-    background: white;
-    border-radius: 50px;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-dark);
-    cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 20px center;
-    transition: var(--transition);
-}
-
-.service-select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
-}
-
-.calc-qty {
-    width: 100px;
-    padding: 14px 12px;
-    text-align: center;
-    border: 1px solid var(--border);
-    background: white;
-    border-radius: 50px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--text-dark);
-    transition: var(--transition);
-}
-
-.calc-qty:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
-}
-
-.add-service-btn {
-    background: var(--primary);
-    border: none;
-    padding: 14px 28px;
-    border-radius: 50px;
-    font-weight: 600;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: white;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    white-space: nowrap;
-}
-
-.add-service-btn:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.25);
-}
-
-/* Итоговая сумма */
-.total-block {
-    margin-top: 30px;
-    padding: 20px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 24px;
-    text-align: right;
-}
-
-.total-block > div:first-child {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: var(--primary-dark);
-}
-
-.discount-info {
-    font-size: 0.9rem;
-    color: #28a745;
-    margin-top: 8px;
-    font-weight: 500;
-}
-
-/* Корзина */
-.cart-section {
-    margin-top: 30px;
-    border-top: 2px solid var(--border);
-    padding-top: 25px;
-}
-
-.cart-section h3 {
-    font-size: 1.3rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    color: var(--primary-dark);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.services-list {
-    margin-bottom: 20px;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.services-list:empty::after {
-    content: "📭 Корзина пуста. Добавьте услугу выше →";
-    display: block;
-    text-align: center;
-    padding: 40px;
-    color: var(--text-muted);
-    font-size: 0.95rem;
-}
-
-.calc-item {
-    display: grid;
-    grid-template-columns: 1fr 120px 120px 50px;
-    gap: 12px;
-    align-items: center;
-    padding: 14px 12px;
-    border-bottom: 1px solid var(--border);
-    transition: background 0.2s;
-    animation: slideIn 0.3s ease;
-}
-
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.calc-item:hover {
-    background: var(--light-bg);
-    border-radius: 16px;
-}
-
-.calc-item .service-name {
-    font-weight: 600;
-    color: var(--text-dark);
-    word-break: break-word;
-    font-size: 0.95rem;
-}
-
-.calc-item .service-price {
-    text-align: center;
-    font-weight: 700;
-    color: var(--primary);
-}
-
-.service-qty-control {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-}
-
-.qty-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: white;
-    border: 1px solid var(--border);
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-dark);
-}
-
-.qty-btn:hover {
-    background: var(--primary);
-    color: white;
-    border-color: var(--primary);
-    transform: scale(1.05);
-}
-
-.qty-value {
-    min-width: 28px;
-    text-align: center;
-    font-weight: 600;
-    color: var(--text-dark);
-}
-
-.remove-item {
-    background: none;
-    border: none;
-    color: #dc3545;
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: all 0.2s;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.remove-item:hover {
-    background: #fee2e2;
-    transform: scale(1.05);
-}
-
-/* Форма заказа */
-.calendar-card {
-    background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
-    border-radius: var(--radius-lg);
-    padding: 40px 32px;
-    margin-top: 40px;
-    box-shadow: var(--shadow-md);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.calendar-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary), var(--primary-light));
-}
-
-.callback-form {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.callback-form input,
-.callback-form textarea {
-    width: 100%;
-    padding: 14px 20px;
-    margin: 12px 0;
-    border: 1px solid var(--border);
-    border-radius: 60px;
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    transition: all 0.2s;
-    background-color: #fff;
-    color: var(--text-dark);
-}
-
-.callback-form input:focus,
-.callback-form textarea:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
-}
-
-.callback-form textarea {
-    border-radius: 24px;
-    resize: vertical;
-}
-
-.callback-form .btn-primary {
-    width: 100%;
-    padding: 14px;
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin-top: 10px;
-}
-
-.consent-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    user-select: none;
-    margin: 20px 0;
-}
-
-.consent-checkbox input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
     margin: 0;
-    border: 2px solid var(--border);
-    border-radius: 6px;
-    background: white;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
+    min-width: 0;
 }
 
-.consent-checkbox input[type="checkbox"]:checked {
-    background: var(--primary);
-    border-color: var(--primary);
-}
-
-.consent-checkbox input[type="checkbox"]:checked::after {
-    content: '✓';
+/* ==================================================================
+   SKIP LINK для доступности
+   ================================================================== */
+.skip-link {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: -40px;
+    left: 0;
+    background: var(--primary);
     color: white;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-.consent-checkbox label {
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: var(--text-dark);
-    line-height: 1.4;
-}
-
-.consent-checkbox label a {
-    color: var(--primary);
+    padding: 8px 16px;
+    z-index: 1000;
     text-decoration: none;
-}
-
-.consent-checkbox label a:hover {
-    text-decoration: underline;
-}
-
-/* МОБИЛЬНАЯ АДАПТАЦИЯ */
-@media (max-width: 768px) {
-    body {
-        padding: 20px 12px;
-    }
-
-    .quiz-card {
-        padding: 20px 16px;
-    }
-
-    .section-title {
-        font-size: 1.6rem;
-    }
-
-    .calculator-tabs {
-        gap: 8px;
-    }
-
-    .tab-btn {
-        padding: 8px 16px;
-        font-size: 0.75rem;
-    }
-
-    .service-group {
-        padding: 16px;
-    }
-
-    .service-group h3 {
-        font-size: 1rem;
-    }
-
-    .add-service {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .service-select,
-    .calc-qty,
-    .add-service-btn {
-        width: 100%;
-    }
-
-    .calc-item {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;
-        padding: 16px;
-        position: relative;
-        background: var(--light-bg);
-        border-radius: 20px;
-        margin-bottom: 10px;
-    }
-
-    .calc-item .service-name {
-        font-weight: 700;
-        font-size: 1rem;
-        padding-right: 40px;
-    }
-
-    .calc-item .service-price {
-        text-align: left;
-        font-size: 0.9rem;
-    }
-
-    .service-qty-control {
-        justify-content: flex-start;
-    }
-
-    .calc-item .service-remove {
-        position: absolute;
-        top: 12px;
-        right: 12px;
-    }
-
-    .total-block {
-        text-align: center;
-    }
-
-    .total-block > div:first-child {
-        font-size: 1.3rem;
-    }
-
-    .calendar-card {
-        padding: 24px 20px;
-    }
-}
-
-/* Toast уведомления */
-.custom-toast {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #28a745;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 50px;
-    font-size: 14px;
-    z-index: 10000;
+    border-radius: 0 0 8px 0;
     font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    white-space: nowrap;
 }
-
-@media (max-width: 768px) {
-    .custom-toast {
-        white-space: normal;
-        text-align: center;
-        max-width: 90%;
-    }
+.skip-link:focus {
+    top: 0;
 }

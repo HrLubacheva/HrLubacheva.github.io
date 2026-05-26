@@ -1,7 +1,6 @@
 (function () {
     'use strict';
 
-    // Функция для повторной инициализации анимации на ещё не видимых элементах
     function reinitAnimations() {
         const elements = document.querySelectorAll('.fade-up:not(.visible)');
         if (!elements.length) return;
@@ -19,11 +18,9 @@
         elements.forEach(el => observer.observe(el));
     }
 
-    // Анимация цифр в блоке статистики с пробелами-разделителями тысяч
     function animateStats() {
         const statNumbers = document.querySelectorAll('.stat-number');
         if (!statNumbers.length) return;
-
         if (window._statsAnimated) return;
 
         function formatNumber(num) {
@@ -35,21 +32,24 @@
                 if (entry.isIntersecting) {
                     const target = entry.target;
                     const final = parseInt(target.getAttribute('data-target'), 10);
-                    let current = 0;
                     const duration = 1500;
-                    const stepTime = 20;
-                    const steps = duration / stepTime;
-                    const increment = final / steps;
+                    const startTime = performance.now();
 
-                    const timer = setInterval(() => {
-                        current += increment;
-                        if (current >= final) {
-                            current = final;
-                            clearInterval(timer);
+                    function update(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        let progress = Math.min(elapsed / duration, 1);
+                        // плавное замедление в конце
+                        const easeProgress = 1 - Math.pow(1 - progress, 1.5);
+                        const current = Math.floor(easeProgress * final);
+                        target.innerText = formatNumber(current);
+                        if (progress < 1) {
+                            requestAnimationFrame(update);
+                        } else {
+                            target.innerText = formatNumber(final);
                         }
-                        target.innerText = formatNumber(Math.floor(current));
-                    }, stepTime);
+                    }
 
+                    requestAnimationFrame(update);
                     observer.unobserve(target);
                     window._statsAnimated = true;
                 }
@@ -59,7 +59,6 @@
         statNumbers.forEach(el => observer.observe(el));
     }
 
-    // Валидация формы в реальном времени
     function initFormValidation() {
         const phoneInput = document.getElementById('callbackPhone');
         if (phoneInput) {
@@ -77,7 +76,6 @@
                 }
             });
         }
-
         const nameInput = document.getElementById('callbackName');
         if (nameInput) {
             nameInput.addEventListener('input', function () {
@@ -95,18 +93,15 @@
         }
     }
 
-    // Кнопка "Наверх"
     function initScrollTopButton() {
         const btn = document.createElement('button');
         btn.className = 'scroll-top';
         btn.innerHTML = '↑';
         btn.setAttribute('aria-label', 'Наверх');
         document.body.appendChild(btn);
-
         btn.addEventListener('click', () => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-
         window.addEventListener('scroll', () => {
             if (window.scrollY > 500) {
                 btn.classList.add('visible');
@@ -116,7 +111,6 @@
         });
     }
 
-    // Инициализация кнопок "на email" в блоке бесплатных материалов
     function initMaterialsEmailButtons() {
         const buttons = document.querySelectorAll('.material-email-simple');
         const modal = document.getElementById('materialsModal');
@@ -163,14 +157,11 @@
                     window.showWarningToast('⏳ Отправка уже выполняется, подождите...');
                     return;
                 }
-
                 const email = document.getElementById('materialsEmail').value;
                 const originalText = sendBtn.innerText;
-
                 isModalSending = true;
                 sendBtn.disabled = true;
                 sendBtn.innerText = 'Отправка...';
-
                 try {
                     const success = await window.sendMaterialsToEmail(email, currentMaterial);
                     if (success) {
@@ -205,7 +196,6 @@
         });
     }
 
-    // Основная инициализация
     document.addEventListener('DOMContentLoaded', function () {
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.querySelectorAll('.fade-up').forEach(el => {
@@ -230,10 +220,7 @@
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
         if (typeof initCookieConsent === 'function') initCookieConsent();
 
-        // Кнопки поделиться
         if (typeof initShareButtons === 'function') initShareButtons();
-        if (typeof initShareCartButton === 'function') initShareCartButton();
-        if (typeof initShareQuizButton === 'function') initShareQuizButton();
 
         initFormValidation();
         initScrollTopButton();

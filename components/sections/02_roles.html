@@ -1,36 +1,54 @@
-<section class="section" data-section-type="roles" id="roles">
+<section class="section" data-section-type="roles" id="roles" aria-labelledby="roles-title">
     <div class="container">
         <div class="section-header cell-text" data-cell-type="text">
-            <h2 class="section-title fade-up">Экспертиза в деталях</h2>
-            <p style="text-align: center; margin-top: -20px; margin-bottom: 30px; color: var(--text-muted);">
+            <h2 class="section-title fade-up" id="roles-title">Экспертиза в деталях</h2>
+            <p class="section-subtitle fade-up" style="text-align: center; margin-top: -20px; margin-bottom: 30px; color: var(--text-muted);">
                 Каждая роль — это грань моей экспертизы. Выберите ту, которая нужна вам.
             </p>
         </div>
-        <div class="roles-grid cells-grid" data-grid-type="cards">
-            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="name">🧑 Карьерный консультант</h3>
-                <p itemprop="description"><strong>Стратегия · Резюме · Интервью</strong><br>Продайте себя дорого.</p>
-            </div>
-            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="name">🏢 HR‑эксперт для бизнеса</h3>
-                <p itemprop="description"><strong>Подбор · Онбординг · Аудит</strong><br>Закрываю вакансии с гарантией.</p>
-            </div>
-            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="name">💬 HR‑эксперт для людей</h3>
-                <p itemprop="description"><strong>Трудовые споры · Карьерные планы · Переговоры</strong><br>Защищаю ваши интересы.</p>
-            </div>
-            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="name">🎓 Бизнес‑тренер</h3>
-                <p itemprop="description"><strong>Тренинги для команд · Коучинг руководителей</strong><br>Навыки, которые приносят прибыль.</p>
-            </div>
-            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="name">🧠 Психолог</h3>
-                <p itemprop="description"><strong>Самоопределение · Цели · Ценности</strong><br>Помогаю найти себя.</p>
-            </div>
-            <div class="role-card cell-card fade-up" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="name">🗣️ Коуч (бизнес и личный)</h3>
-                <p itemprop="description"><strong>Амбициозные цели · Эффективность · Баланс</strong><br>Помогаю достигать большего.</p>
-            </div>
-        </div>
+        <ul class="roles-grid cells-grid" data-grid-type="cards" role="list" style="list-style: none; padding-left: 0;">
+            <li class="role-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="serviceType">🧑 Карьерный консультант</h3>
+                <div itemprop="description">
+                    <strong>Стратегия · Резюме · Интервью</strong>
+                    <p>Продайте себя дорого.</p>
+                </div>
+            </li>
+            <li class="role-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="serviceType">🏢 HR‑эксперт для бизнеса</h3>
+                <div itemprop="description">
+                    <strong>Подбор · Онбординг · Аудит</strong>
+                    <p>Закрываю вакансии с гарантией.</p>
+                </div>
+            </li>
+            <li class="role-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="serviceType">💬 HR‑эксперт для людей</h3>
+                <div itemprop="description">
+                    <strong>Трудовые споры · Карьерные планы · Переговоры</strong>
+                    <p>Защищаю ваши интересы.</p>
+                </div>
+            </li>
+            <li class="role-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="serviceType">🎓 Бизнес‑тренер</h3>
+                <div itemprop="description">
+                    <strong>Тренинги для команд · Коучинг руководителей</strong>
+                    <p>Навыки, которые приносят прибыль.</p>
+                </div>
+            </li>
+            <li class="role-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="serviceType">🧠 Психолог</h3>
+                <div itemprop="description">
+                    <strong>Самоопределение · Цели · Ценности</strong>
+                    <p>Помогаю найти себя.</p>
+                </div>
+            </li>
+            <li class="role-card cell-card fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
+                <h3 itemprop="serviceType">🗣️ Коуч (бизнес и личный)</h3>
+                <div itemprop="description">
+                    <strong>Амбициозные цели · Эффективность · Баланс</strong>
+                    <p>Помогаю достигать большего.</p>
+                </div>
+            </li>
+        </ul>
     </div>
 </section>

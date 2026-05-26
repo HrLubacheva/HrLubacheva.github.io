@@ -23,12 +23,16 @@ function initSmoothScroll() {
 function initBurgerMenu() {
     const burger = document.getElementById('burgerMenu');
     const navBottom = document.getElementById('navBottom');
+    const mainElement = document.querySelector('main') || document.querySelector('.container')?.parentElement;
 
     if (!burger || !navBottom) return;
 
     function updateAria() {
         const isOpen = navBottom.classList.contains('open');
         burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        if (mainElement) {
+            mainElement.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
+        }
     }
 
     burger.addEventListener('click', function() {

@@ -1,13 +1,13 @@
-<section>
+<section aria-labelledby="freebies-title">
     <div class="container">
         <div class="checklist-card fade-up">
-            <h2 class="section-title">📥 Бесплатный набор для уверенного старта</h2>
+            <h2 class="section-title" id="freebies-title">📥 Бесплатный набор для уверенного старта</h2>
 
-            <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 24px;">
+            <ul class="freebies-grid" role="list" style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 24px; list-style: none; padding-left: 0;">
 
                 <!-- Чек-лист -->
-                <div style="text-align: center; min-width: 150px;">
-                    <div style="width: 64px; height: 64px; background: var(--light-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">
+                <li class="freebie-item" role="listitem" itemscope itemtype="https://schema.org/CreativeWork">
+                    <div class="freebie-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" role="img" aria-label="Чек-лист иконка">
                             <title>Чек-лист</title>
                             <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
@@ -15,52 +15,51 @@
                             <path d="M9 12l2 2 4-4" />
                         </svg>
                     </div>
-                    <div style="font-weight: 700; margin-bottom: 4px; color: var(--primary-dark);">Чек-лист</div>
-                    <div style="font-size: 0.75rem; color: var(--secondary); margin-bottom: 12px;">«Идеальное резюме»</div>
-                    <div style="display: flex; justify-content: center; gap: 20px;">
-                        <a href="assets/docs/checklist.pdf" target="_blank" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;" aria-label="Скачать чек-лист Идеальное резюме (PDF)">скачать</a>
-                        <button class="material-email-simple" data-material="checklist" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-family: inherit;" aria-label="Получить чек-лист на email">на email</button>
+                    <div class="freebie-title" itemprop="name">Чек-лист</div>
+                    <div class="freebie-desc" itemprop="description">«Идеальное резюме»</div>
+                    <div class="freebie-actions">
+                        <a href="assets/docs/checklist.pdf" target="_blank" class="freebie-link" aria-label="Скачать чек-лист Идеальное резюме (PDF)">скачать</a>
+                        <button class="material-email-simple freebie-link" data-material="checklist" aria-label="Получить чек-лист на email">на email</button>
                     </div>
-                </div>
+                    <meta itemprop="encodingFormat" content="application/pdf">
+                </li>
 
                 <!-- Программа тренинга -->
-                <div style="text-align: center; min-width: 150px;">
-                    <div style="width: 64px; height: 64px; background: var(--light-bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">
+                <li class="freebie-item" role="listitem" itemscope itemtype="https://schema.org/CreativeWork">
+                    <div class="freebie-icon">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" role="img" aria-label="Программа тренинга иконка">
                             <title>Программа тренинга</title>
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                         </svg>
                     </div>
-                    <div style="font-weight: 700; margin-bottom: 4px; color: var(--primary-dark);">Программа тренинга</div>
-                    <div style="font-size: 0.75rem; color: var(--secondary); margin-bottom: 12px;">«Продай себя дорого»</div>
-                    <div style="display: flex; justify-content: center; gap: 20px;">
-                        <a href="assets/docs/training_program.pdf" target="_blank" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;" aria-label="Скачать программу тренинга Продай себя дорого (PDF)">скачать</a>
-                        <button class="material-email-simple" data-material="training" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-family: inherit;" aria-label="Получить программу тренинга на email">на email</button>
+                    <div class="freebie-title" itemprop="name">Программа тренинга</div>
+                    <div class="freebie-desc" itemprop="description">«Продай себя дорого»</div>
+                    <div class="freebie-actions">
+                        <a href="assets/docs/training_program.pdf" target="_blank" class="freebie-link" aria-label="Скачать программу тренинга Продай себя дорого (PDF)">скачать</a>
+                        <button class="material-email-simple freebie-link" data-material="training" aria-label="Получить программу тренинга на email">на email</button>
                     </div>
-                </div>
+                    <meta itemprop="encodingFormat" content="application/pdf">
+                </li>
 
                 <!-- Полный набор -->
-                <div style="text-align: center; min-width: 150px;">
-                    <div style="width: 64px; height: 64px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto;">
+                <li class="freebie-item" role="listitem">
+                    <div class="freebie-icon freebie-icon-accent">
                         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" role="img" aria-label="Полный набор иконка">
                             <title>Полный набор</title>
                             <path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2H7z" />
                         </svg>
                     </div>
-                    <div style="font-weight: 700; margin-bottom: 4px; color: var(--primary-dark);">Полный набор</div>
-                    <div style="font-size: 0.75rem; color: var(--secondary); margin-bottom: 12px;">Всё сразу в ZIP</div>
-                    <div style="display: flex; justify-content: center; gap: 20px;">
-                        <a href="assets/docs/docs.zip" download style="color: var(--primary); font-size: 0.85rem; text-decoration: none;" aria-label="Скачать полный набор материалов ZIP">скачать ZIP</a>
-                        <button class="material-email-simple" data-material="both" style="background: none; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-family: inherit;" aria-label="Получить полный набор на email">на email</button>
+                    <div class="freebie-title">Полный набор</div>
+                    <div class="freebie-desc">Всё сразу в ZIP</div>
+                    <div class="freebie-actions">
+                        <a href="assets/docs/docs.zip" download class="freebie-link" aria-label="Скачать полный набор материалов ZIP">скачать ZIP</a>
+                        <button class="material-email-simple freebie-link" data-material="both" aria-label="Получить полный набор на email">на email</button>
                     </div>
-                </div>
+                </li>
+            </ul>
 
-            </div>
-
-            <p style="text-align: center; font-size: 0.75rem; color: var(--secondary); border-top: 1px solid var(--border); padding-top: 20px; margin-top: 8px;">
-                🔐 Без спама. Отправляю на почту за 1 минуту.
-            </p>
+            <p class="freebie-footer">🔐 Без спама. Отправляю на почту за 1 минуту.</p>
         </div>
     </div>
 </section>

@@ -1,61 +1,88 @@
 function initCallbackForm() {
-    function formatPhoneField(inputElement) {
-        let rawValue = inputElement.value.replace(/\D/g, '');
-        if (typeof window.formatPhoneNumber === 'function') {
-            let masked = window.formatPhoneNumber(rawValue);
-            inputElement.value = masked || '';
-        } else {
-            if (rawValue.length > 11) rawValue = rawValue.slice(0, 11);
-            let formatted = '+7';
-            if (rawValue.length > 1) formatted += ' ' + rawValue.slice(1, 4);
-            if (rawValue.length >= 5) formatted += ' ' + rawValue.slice(4, 7);
-            if (rawValue.length >= 8) formatted += ' ' + rawValue.slice(7, 9);
-            if (rawValue.length >= 10) formatted += ' ' + rawValue.slice(9, 11);
-            inputElement.value = formatted;
-        }
+    // ========== Общие функции ==========
+    function normalizePhone(phone) {
+        let digits = phone.replace(/\D/g, '');
+        if (digits.length === 0) return '';
+        if (digits[0] === '8') digits = '7' + digits.slice(1);
+        if (digits[0] === '9') digits = '7' + digits;
+        if (digits[0] !== '7') digits = '7' + digits;
+        if (digits.length > 11) digits = digits.slice(0, 11);
+        return digits;
     }
 
-    const callbackPhone = document.getElementById('callbackPhone');
-    if (callbackPhone) callbackPhone.addEventListener('input', function() { formatPhoneField(this); });
-    const quickPhone = document.getElementById('quickPhone');
-    if (quickPhone) quickPhone.addEventListener('input', function() { formatPhoneField(this); });
-
-    // Живая валидация
-    if (callbackPhone && typeof window.bindLiveValidation === 'function') {
-        window.bindLiveValidation(callbackPhone, 'phone');
-    }
-    const callbackEmail = document.getElementById('callbackEmail');
-    if (callbackEmail && typeof window.bindLiveValidation === 'function') {
-        window.bindLiveValidation(callbackEmail, 'email');
-    }
-    if (quickPhone && typeof window.bindLiveValidation === 'function') {
-        window.bindLiveValidation(quickPhone, 'phone');
+    function isValidPhone(phone) {
+        const normalized = normalizePhone(phone);
+        return normalized.length === 11 && /^7\d{10}$/.test(normalized);
     }
 
-    // Форма обратного звонка
+    // ========== Форма обратного звонка ==========
     const callbackForm = document.getElementById('callbackForm');
-    if (callbackForm) {
+    const callbackMessages = document.getElementById('callbackFormMessages');
+
+    if (callbackForm && callbackMessages) {
+        function showCallbackMessage(message, isError = true) {
+            callbackMessages.textContent = message;
+            callbackMessages.className = 'form-messages ' + (isError ? 'error' : 'success');
+            if (!isError) {
+                setTimeout(() => {
+                    callbackMessages.textContent = '';
+                    callbackMessages.className = 'form-messages';
+                }, 5000);
+            }
+        }
+        function clearCallbackMessage() {
+            callbackMessages.textContent = '';
+            callbackMessages.className = 'form-messages';
+        }
+
+        const callbackPhone = document.getElementById('callbackPhone');
+        const callbackEmail = document.getElementById('callbackEmail');
+        const callbackConsent = document.getElementById('callbackConsent');
+
+        if (callbackPhone) {
+            callbackPhone.addEventListener('blur', () => {
+                if (!isValidPhone(callbackPhone.value) && callbackPhone.value.trim() !== '') {
+                    showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                } else {
+                    clearCallbackMessage();
+                }
+            });
+            callbackPhone.addEventListener('input', () => clearCallbackMessage());
+        }
+        if (callbackEmail) {
+            callbackEmail.addEventListener('blur', () => {
+                const email = callbackEmail.value.trim();
+                if (email && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email)) {
+                    showCallbackMessage('❌ Введите корректный email');
+                } else {
+                    clearCallbackMessage();
+                }
+            });
+            callbackEmail.addEventListener('input', () => {
+                if (callbackMessages.textContent === '❌ Введите корректный email') clearCallbackMessage();
+            });
+        }
+
         callbackForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            clearCallbackMessage();
 
-            const phoneInput = document.getElementById('callbackPhone');
-            const isPhoneValid = window.validatePhoneField(phoneInput, true);
-            if (!isPhoneValid) {
-                window.showErrorToast('📞 Исправьте номер телефона');
-                phoneInput.focus();
-                return;
+            let isValid = true;
+            if (!isValidPhone(callbackPhone.value)) {
+                showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                isValid = false;
             }
-
-            const emailInput = document.getElementById('callbackEmail');
-            if (emailInput && emailInput.value.trim() !== '') {
-                const isEmailValid = window.validateEmailField(emailInput, true);
-                if (!isEmailValid) {
-                    window.showErrorToast('✉️ Исправьте email');
-                    emailInput.focus();
-                    return;
-                }
+            if (callbackEmail && callbackEmail.value.trim() && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(callbackEmail.value.trim())) {
+                showCallbackMessage('❌ Введите корректный email');
+                isValid = false;
             }
+            if (!callbackConsent.checked) {
+                showCallbackMessage('❌ Необходимо согласие на обработку данных');
+                isValid = false;
+            }
+            if (!isValid) return;
 
+            callbackPhone.value = normalizePhone(callbackPhone.value);
             await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
                 const quizBlock = document.getElementById('quizSelectionBlock');
                 if (quizBlock) quizBlock.style.display = 'none';
@@ -64,29 +91,83 @@ function initCallbackForm() {
         });
     }
 
-    // Форма быстрого заказа
+    // ========== Форма быстрого заказа (упрощённая) ==========
     const quickForm = document.getElementById('quickOrderForm');
-    if (quickForm) {
+    const quickMessages = document.getElementById('quickFormMessages');
+
+    if (quickForm && quickMessages) {
+        function showQuickMessage(message, isError = true) {
+            quickMessages.textContent = message;
+            quickMessages.className = 'form-messages ' + (isError ? 'error' : 'success');
+            if (!isError) {
+                setTimeout(() => {
+                    quickMessages.textContent = '';
+                    quickMessages.className = 'form-messages';
+                }, 5000);
+            }
+        }
+        function clearQuickMessage() {
+            quickMessages.textContent = '';
+            quickMessages.className = 'form-messages';
+        }
+
+        const quickPhone = document.getElementById('quickPhone');
+        const quickConsent = document.getElementById('quickConsent');
+
+        if (quickPhone) {
+            quickPhone.addEventListener('blur', () => {
+                if (!isValidPhone(quickPhone.value) && quickPhone.value.trim() !== '') {
+                    showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                } else {
+                    clearQuickMessage();
+                }
+            });
+            quickPhone.addEventListener('input', () => clearQuickMessage());
+        }
+
         quickForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            clearQuickMessage();
 
-            const phoneInput = document.getElementById('quickPhone');
-            const isPhoneValid = window.validatePhoneField(phoneInput, true);
-            if (!isPhoneValid) {
-                window.showErrorToast('📞 Исправьте номер телефона');
-                phoneInput.focus();
-                return;
+            let isValid = true;
+            if (!isValidPhone(quickPhone.value)) {
+                showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                isValid = false;
             }
-
+            if (!quickConsent.checked) {
+                showQuickMessage('❌ Необходимо согласие на обработку данных');
+                isValid = false;
+            }
             const cartData = window.getCartData ? window.getCartData() : '';
             if (!cartData || cartData === 'Корзина пуста') {
-                window.showErrorToast('🛒 Добавьте хотя бы одну услугу в корзину');
-                return;
+                showQuickMessage('🛒 Добавьте хотя бы одну услугу в корзину');
+                isValid = false;
             }
+            if (!isValid) return;
 
+            quickPhone.value = normalizePhone(quickPhone.value);
             await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
                 const quizData = window.getQuizDataFromForm(form);
                 return { ...quizData, cart: cartData };
+            });
+        });
+    }
+
+    // ========== Копирование корзины в буфер обмена ==========
+    const copyCartBtn = document.getElementById('copyCartBtn');
+    if (copyCartBtn) {
+        copyCartBtn.addEventListener('click', () => {
+            const cartText = window.getCartData ? window.getCartData() : '';
+            if (!cartText || cartText === 'Корзина пуста') {
+                window.showWarningToast('🛒 Корзина пуста. Добавьте услуги.');
+                return;
+            }
+            const totalPrice = document.getElementById('totalPrice')?.innerText || '0 ₽';
+            const fullText = `Корзина:\n${cartText}\n\n💰 Итого: ${totalPrice}`;
+            navigator.clipboard.writeText(fullText).then(() => {
+                window.showSuccessToast('✅ Корзина скопирована в буфер обмена');
+            }).catch(() => {
+                window.showErrorToast('❌ Не удалось скопировать');
             });
         });
     }
@@ -94,16 +175,29 @@ function initCallbackForm() {
 
 function initFormEnterSubmit() {
     const form = document.getElementById('callbackForm');
-    if (!form) return;
-    form.querySelectorAll('input, textarea').forEach(input => {
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                const btn = form.querySelector('button[type="submit"]');
-                if (btn) btn.click();
-            }
+    if (form) {
+        form.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const btn = form.querySelector('button[type="submit"]');
+                    if (btn) btn.click();
+                }
+            });
         });
-    });
+    }
+    const quickForm = document.getElementById('quickOrderForm');
+    if (quickForm) {
+        quickForm.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    const btn = quickForm.querySelector('button[type="submit"]');
+                    if (btn) btn.click();
+                }
+            });
+        });
+    }
 }
 
 window.initCallbackForm = initCallbackForm;

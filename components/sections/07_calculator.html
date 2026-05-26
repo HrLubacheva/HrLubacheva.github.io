@@ -11,7 +11,7 @@
                 <button class="tab-btn" data-tab="corporate">🙋‍♀️ HR «под ключ»</button>
             </div>
 
-            <!-- Вкладки для соискателей (активная по умолчанию - "Ищу работу") -->
+            <!-- Вкладки для соискателей -->
             <div class="calculator-tabs">
                 <button class="tab-btn active" data-tab="start">🎯 Ищу работу</button>
                 <button class="tab-btn" data-tab="growth">📈 Карьерный рост</button>
@@ -68,7 +68,7 @@
                 </div>
             </div>
 
-            <!-- Вкладка: Ищу работу (активная по умолчанию) -->
+            <!-- Вкладка: Ищу работу -->
             <div id="tab-start" class="tab-pane active">
                 <div class="service-group">
                     <h3>🎯 Ищу работу</h3>
@@ -129,7 +129,7 @@
             </div>
 
             <!-- Итоговая сумма -->
-            <div class="total-block">
+            <div class="total-block compact">
                 <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
                 <div id="discountInfo" class="discount-info"></div>
             </div>
@@ -138,26 +138,42 @@
             <div class="cart-section">
                 <h3>🛒 Выбранные услуги</h3>
                 <div id="servicesList" class="services-list"></div>
-                <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
-                    <button id="shareCartBtn" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
-                        📤 Поделиться корзиной
+                <div class="share-cart-container">
+                    <button id="copyCartBtn" class="btn-secondary share-btn">
+                        📋 Скопировать корзину
                     </button>
                 </div>
             </div>
 
-            <!-- Форма быстрого заказа -->
+            <!-- Форма быстрого заказа (упрощённая) -->
             <div class="calendar-card">
-                <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark); text-align: center;">📞 Быстрый заказ</h3>
-                <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
-                <form id="quickOrderForm" class="callback-form">
-                    <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)">
-                    <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required>
-                    <div class="consent-checkbox">
-                        <input type="checkbox" id="quickConsent" name="consent" required>
-                        <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
-                    </div>
-                    <button type="submit" class="btn-primary btn-block">📞 Заказать звонок</button>
+                <h3 class="text-center" style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark);">📞 Быстрый заказ</h3>
+                <p class="text-center text-muted-light" style="margin-bottom: 24px;">Оставьте телефон, и я перезвоню, чтобы обсудить выбранные услуги.</p>
+                <form id="quickOrderForm" class="callback-form" novalidate>
+                    <fieldset>
+                        <legend class="visually-hidden">Быстрый заказ</legend>
+
+                        <div class="form-row-two">
+                            <input type="text" id="quickName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
+                            <input type="tel" id="quickPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
+                        </div>
+
+                        <div class="form-row-messages">
+                            <div class="consent-checkbox">
+                                <input type="checkbox" id="quickConsent" name="consent" required>
+                                <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
+                            </div>
+                            <div id="quickFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
+                        </div>
+
+                        <button type="submit" class="btn-primary btn-block callback-submit" aria-label="Заказать звонок">📞 Заказать звонок</button>
+
+                        <div class="callback-telegram-alt">
+                            ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
+                        </div>
+                    </fieldset>
                 </form>
+                <p class="callback-note">После отправки мы свяжемся с вами.</p>
             </div>
         </div>
     </div>

@@ -1,11 +1,11 @@
-<section class="section" data-section-type="hero">
+<section class="section" data-section-type="hero" itemscope itemtype="https://schema.org/Person">
     <div class="container">
         <div class="hero-grid">
             <div class="hero-content cell-text fade-up" data-cell-type="text">
-                <h1 class="hero-title">Виктория Любачева</h1>
-                <div class="hero-subtitle">Карьерный консультант · HR‑эксперт · Бизнес‑тренер · Психолог · Коуч</div>
+                <h1 class="hero-title" itemprop="name">Виктория Любачева</h1>
+                <div class="hero-subtitle" itemprop="jobTitle">Карьерный консультант · HR‑эксперт · Бизнес‑тренер · Психолог · Коуч</div>
 
-                <div class="hero-text">
+                <div class="hero-text" itemprop="description">
                     <p><strong>Помогаю компаниям находить и развивать персонал.</strong><br>
                     Кандидатам — найти работу, построить карьеру и повысить свой доход.<br>
                     24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.</p>
@@ -14,22 +14,20 @@
                     <strong>Для специалистов и руководителей</strong> — резюме, подготовка к интервью, стратегия поиска работы, управление персоналом.</p>
                 </div>
 
-                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-top: 28px;">
-                    <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a>
-                    <a href="#calendar" class="btn-secondary">Экспресс-консультация</a>
+                <div class="hero-buttons">
+                    <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank" aria-label="Написать в Telegram">Написать в Telegram</a>
+                    <a href="#calendar" class="btn-secondary" aria-label="Записаться на экспресс-консультацию">Экспресс-консультация</a>
                 </div>
 
-                <div style="margin-top: 20px;">
-                    <a href="#quiz" style="color: var(--primary); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">
-                        🤔 Не знаете, с чего начать? → Квиз за 1 минуту
-                    </a>
+                <div class="hero-quiz-link">
+                    <a href="#quiz" class="quiz-link">🤔 Не знаете, с чего начать? → Квиз за 1 минуту</a>
                 </div>
 
-                <div class="small-note" style="margin-top: 32px;">Мои клиенты — люди различных профессий и разных сфер бизнеса: специалисты, руководители и собственники бизнеса.</div>
-                <div class="small-note" style="margin-top: 8px;">Работаю с профессионалами от Junior до C-level и с бизнесом любого масштаба.</div>
+                <div class="small-note hero-note">Мои клиенты — люди различных профессий и разных сфер бизнеса: специалисты, руководители и собственники бизнеса.</div>
+                <div class="small-note hero-note">Работаю с профессионалами от Junior до C-level и с бизнесом любого масштаба.</div>
             </div>
             <div class="hero-image cell-image fade-up" data-cell-type="image">
-                <img src="assets/images/img_1.jpg" alt="Виктория Любачева" style="width: 100%; height: auto; max-width: 100%; object-fit: contain; display: block; margin: 0 auto;">
+                <img src="assets/images/img_1.jpg" alt="Виктория Любачева" loading="eager" class="hero-photo">
             </div>
         </div>
     </div>

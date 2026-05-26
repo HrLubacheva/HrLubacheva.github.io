@@ -47,8 +47,11 @@
     }
 
     function getPrice(serviceName) {
-        if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName]) {
-            return window.PRICE_BOOK[serviceName].toLocaleString() + ' ₽';
+        if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) {
+            const price = window.PRICE_BOOK[serviceName];
+            if (price === 0) return '0 ₽';
+            if (price === null) return 'цена по запросу';
+            return price.toLocaleString() + ' ₽';
         }
         return 'цена по запросу';
     }
@@ -417,6 +420,44 @@
                 showSuccessToast('Выбранный вариант удалён');
             };
             removeBtn.addEventListener('click', removeBtn._removeHandler);
+        }
+
+        // Новая кнопка копирования результатов
+        const copyResultBtn = document.getElementById('copyQuizResultBtn');
+        if (copyResultBtn) {
+            copyResultBtn.removeEventListener('click', copyResultBtn._copyHandler);
+            copyResultBtn._copyHandler = function () {
+                const chosenVariant = document.getElementById('chosenVariant')?.value || '';
+                const chosenVariantPrice = document.getElementById('chosenVariantPrice')?.value || '';
+                const originalChosenVariant = document.getElementById('originalChosenVariant')?.value || '';
+                const recommendedVariants = document.getElementById('recommendedVariants')?.value || '';
+
+                if (!chosenVariant && !originalChosenVariant) {
+                    window.showWarningToast('📋 Пройдите квиз и выберите вариант, чтобы скопировать рекомендации.');
+                    return;
+                }
+
+                let copyText = '🎯 Мои результаты квиза у Виктории Любачевой:\n\n';
+                if (chosenVariant) {
+                    copyText += `✅ Выбранный вариант: ${chosenVariant}`;
+                    if (chosenVariantPrice) copyText += ` (${chosenVariantPrice})`;
+                    copyText += '\n';
+                }
+                if (originalChosenVariant && originalChosenVariant !== chosenVariant) {
+                    copyText += `📌 Исходный выбор: ${originalChosenVariant}\n`;
+                }
+                if (recommendedVariants) {
+                    copyText += `\n📌 Рекомендации эксперта:\n${recommendedVariants}\n`;
+                }
+                copyText += `\n🔗 ${window.location.href.split('?')[0]}`;
+
+                navigator.clipboard.writeText(copyText).then(() => {
+                    window.showSuccessToast('✅ Рекомендации скопированы в буфер');
+                }).catch(() => {
+                    window.showErrorToast('❌ Не удалось скопировать');
+                });
+            };
+            copyResultBtn.addEventListener('click', copyResultBtn._copyHandler);
         }
     };
 })();

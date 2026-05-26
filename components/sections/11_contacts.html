@@ -1,30 +1,42 @@
-<section class="section-dark" id="contacts">
-    <div class="container contact-block">
-        <h2 class="section-title fade-up">Остались вопросы? Напишите или позвоните</h2>
-        <div class="contact-line">📧 <a href="mailto:hrlubacheva@yandex.ru">hrlubacheva@yandex.ru</a></div>
-        <div class="contact-line">📱 <a href="https://t.me/HrLubacheva" target="_blank">Telegram: @HrLubacheva</a></div>
-        <div class="contact-line">💬 <a href="https://wa.me/79217916655" target="_blank">WhatsApp: +7 921 791-66-55</a></div>
-        <div class="contact-line">
-            📞 <span class="copyable-phone" data-copy="+79217916655">+7 921 791-66-55</span>
-        </div>
-        <div class="contact-line contact-search">
-            <span class="copyable-text" data-copy="@HrLubacheva">🔍 Ищите @HrLubacheva</span>
-        </div>
+<section class="section-dark" id="contacts" aria-labelledby="contacts-title">
+    <div class="container contact-block" itemscope itemtype="https://schema.org/ContactPage">
+        <h2 class="section-title fade-up" id="contacts-title">Остались вопросы? Напишите или позвоните</h2>
+
+        <ul class="contacts-list" role="list" style="list-style: none; padding-left: 0;">
+            <li class="contact-line" role="listitem">
+                📧 <a href="mailto:hrlubacheva@yandex.ru" itemprop="email">hrlubacheva@yandex.ru</a>
+            </li>
+            <li class="contact-line" role="listitem">
+                📱 <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer" itemprop="sameAs">Telegram: @HrLubacheva</a>
+            </li>
+            <li class="contact-line" role="listitem">
+                💬 <a href="https://wa.me/79217916655" target="_blank" rel="noopener noreferrer" itemprop="sameAs">WhatsApp: +7 921 791-66-55</a>
+            </li>
+            <li class="contact-line" role="listitem">
+                📞 <span class="copyable-phone" data-copy="+79217916655" role="button" tabindex="0" aria-label="Скопировать номер телефона +7 921 791-66-55">+7 921 791-66-55</span>
+            </li>
+            <li class="contact-line contact-search" role="listitem">
+                <span class="copyable-text" data-copy="@HrLubacheva" role="button" tabindex="0" aria-label="Скопировать никнейм @HrLubacheva">🔍 Ищите @HrLubacheva</span>
+            </li>
+        </ul>
 
         <!-- Кнопка поделиться -->
-        <div style="margin-top: 30px;">
-            <button id="shareButtonContacts" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
+        <div class="share-button-container">
+            <button id="shareButtonContacts" class="btn-secondary share-site-btn" aria-label="Поделиться сайтом в соцсетях">
                 📤 Поделиться сайтом
             </button>
         </div>
 
-        <!-- Новая фраза -->
-        <div class="contact-line" style="margin-top: 25px; font-style: italic; color: #cbd5e0;">
+        <!-- Индивидуальное предложение -->
+        <div class="custom-offer">
             💡 Не нашли подходящую услугу? Напишите — подберём индивидуально
         </div>
 
-        <div class="contact-telegram-btn">
-            <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank">Написать в Telegram</a>
+        <!-- Кнопка Telegram (дублирующая) -->
+        <div class="telegram-button-container">
+            <a href="https://t.me/HrLubacheva" class="btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram">
+                Написать в Telegram
+            </a>
         </div>
     </div>
 </section>
