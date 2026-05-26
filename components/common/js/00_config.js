@@ -15,7 +15,6 @@ window.APP_CONFIG = {
 
     // ========== КОНСТАНТЫ ДЛЯ ВСЕГО САЙТА ==========
     CONSTANTS: {
-        // Таймауты и задержки (в миллисекундах)
         TOAST_DURATION: 3000,
         TOAST_FADE_DURATION: 300,
         LOADING_TIMEOUT: 2000,
@@ -33,34 +32,41 @@ window.APP_CONFIG = {
         ANIMATION_FADE_DURATION: 700,
         STATS_ANIMATION_DURATION: 1500,
 
-        // Брейкпоинты (px)
         BREAKPOINT_MOBILE: 768,
         BREAKPOINT_TABLET: 992,
         BREAKPOINT_DESKTOP: 1200,
         SCROLL_TOP_VISIBLE_THRESHOLD: 500,
 
-        // Размеры изображений
         OG_IMAGE_WIDTH: 1200,
         OG_IMAGE_HEIGHT: 630,
         HERO_IMAGE_WIDTH: 480,
         HERO_IMAGE_HEIGHT: 640,
 
-        // Финансовые константы
         DISCOUNT_PERCENT: 0.05,
         DISCOUNT_MIN_ITEMS: 2,
 
-        // Валидация
         MAX_PHONE_DIGITS: 11,
 
-        // Геолокация
         GEO_API_URL: 'https://ipapi.co/json/',
 
-        // Ключи localStorage
         LOCALSTORAGE_VISITS_KEY: 'hr_visits',
         LOCALSTORAGE_GEO_KEY: 'hr_geo',
         LOCALSTORAGE_USER_ID_KEY: 'hr_user_id',
 
-        // Прочие (необязательные)
         DEFAULT_QUANTITY: 1,
+    },
+
+    // ========== ИДЕНТИФИКАТОРЫ СЕКЦИЙ (для якорных ссылок) ==========
+    SECTION_IDS: {
+        home: 'home',
+        roles: 'roles',
+        services: 'services',
+        stats: 'stats',
+        process: 'process',
+        calculator: 'calculator',
+        quiz: 'quiz',
+        media: 'media',
+        contacts: 'contacts',
+        callbackForm: 'callback-form',
     }
 };
