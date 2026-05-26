@@ -581,34 +581,37 @@ async function sendMaterialsToEmail(email, materialType) {
 }
 window.sendMaterialsToEmail = sendMaterialsToEmail;
 
-// ========== КНОПКА «ПОДЕЛИТЬСЯ» ==========
+// ========== КНОПКИ «ПОДЕЛИТЬСЯ» ==========
+
+// 1. Поделиться сайтом (только информация о сайте) — для плавающей кнопки и кнопки в контактах
 function initShareButtons() {
     const shareButtons = document.querySelectorAll('#shareButtonHero, #shareButtonContacts, .floating-share-btn button');
 
-    function handleShare() {
-        const shareData = {
+    const getSiteShareData = () => {
+        return {
             title: 'Виктория Любачева | Карьерный консультант',
-            text: 'Помогаю с трудоустройством, подбором персонала и карьерным ростом. Бесплатная диагностика.',
-            url: window.location.href
+            text: '✅ 24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.\n✅ Диагностика запроса: 15 минут.\n\n🔗 ',
+            url: window.location.href.split('?')[0] + '?v=2&utm_source=share&utm_medium=social'
         };
+    };
 
+    function handleShare() {
+        const shareData = getSiteShareData();
         if (navigator.share) {
             navigator.share(shareData).catch(err => {
-                if (err.name !== 'AbortError') {
-                    console.log('Ошибка шеринга:', err);
-                    fallbackCopy();
-                }
+                if (err.name !== 'AbortError') fallbackCopy(shareData);
             });
         } else {
-            fallbackCopy();
+            fallbackCopy(shareData);
         }
     }
 
-    function fallbackCopy() {
-        navigator.clipboard.writeText(window.location.href).then(() => {
+    function fallbackCopy(shareData) {
+        const fullText = `${shareData.title}\n\n${shareData.text}${shareData.url}`;
+        navigator.clipboard.writeText(fullText).then(() => {
             showToast('✅ Ссылка скопирована! Поделитесь с друзьями.', 'success');
         }).catch(() => {
-            showErrorToast('Не удалось скопировать. Попробуйте вручную.');
+            showErrorToast('Не удалось скопировать.');
         });
     }
 
@@ -618,6 +621,112 @@ function initShareButtons() {
             btn.addEventListener('click', handleShare);
         }
     });
+}
+
+// 2. Поделиться корзиной (только для кнопки в калькуляторе)
+function initShareCartButton() {
+    const shareCartBtn = document.getElementById('shareCartBtn');
+    if (!shareCartBtn) return;
+
+    shareCartBtn.removeEventListener('click', shareCartBtn._shareCartHandler);
+    shareCartBtn._shareCartHandler = () => {
+        let cartText = '';
+        let totalPrice = '0 ₽';
+
+        if (typeof window.getCartData === 'function') {
+            cartText = window.getCartData();
+        }
+
+        const totalSpan = document.getElementById('totalPrice');
+        if (totalSpan) {
+            totalPrice = totalSpan.innerText;
+        }
+
+        if (!cartText || cartText === 'Корзина пуста') {
+            showWarningToast('🛒 Корзина пуста. Добавьте услуги перед публикацией.');
+            return;
+        }
+
+        const shareData = {
+            title: 'Мои выбранные услуги у Виктории Любачевой',
+            text: `${cartText}\n\n💰 Итого: ${totalPrice}\n\n🔗 `,
+            url: window.location.href.split('?')[0] + '?utm_source=share_cart&utm_medium=social'
+        };
+
+        if (navigator.share) {
+            navigator.share(shareData).catch(err => {
+                if (err.name !== 'AbortError') {
+                    const fullText = `${shareData.title}\n\n${shareData.text}${shareData.url}`;
+                    navigator.clipboard.writeText(fullText);
+                    showSuccessToast('✅ Информация о корзине скопирована!');
+                }
+            });
+        } else {
+            const fullText = `${shareData.title}\n\n${shareData.text}${shareData.url}`;
+            navigator.clipboard.writeText(fullText);
+            showSuccessToast('✅ Информация о корзине скопирована!');
+        }
+    };
+    shareCartBtn.addEventListener('click', shareCartBtn._shareCartHandler);
+}
+
+// 3. Поделиться результатами квиза (только для кнопки в квизе)
+function initShareQuizButton() {
+    const shareQuizBtn = document.getElementById('shareQuizBtn');
+    if (!shareQuizBtn) return;
+
+    shareQuizBtn.removeEventListener('click', shareQuizBtn._shareQuizHandler);
+    shareQuizBtn._shareQuizHandler = () => {
+        // Получаем данные из скрытых полей формы
+        const chosenVariant = document.getElementById('chosenVariant')?.value || '';
+        const chosenVariantPrice = document.getElementById('chosenVariantPrice')?.value || '';
+        const originalChosenVariant = document.getElementById('originalChosenVariant')?.value || '';
+        const recommendedVariants = document.getElementById('recommendedVariants')?.value || '';
+
+        if (!chosenVariant && !originalChosenVariant) {
+            showWarningToast('📋 Пройдите квиз и выберите вариант, чтобы поделиться результатами.');
+            return;
+        }
+
+        let shareText = '🎯 Мои результаты квиза у Виктории Любачевой:\n\n';
+
+        if (chosenVariant) {
+            shareText += `✅ Выбранный вариант: ${chosenVariant}`;
+            if (chosenVariantPrice) shareText += ` (${chosenVariantPrice})`;
+            shareText += '\n';
+        }
+
+        if (originalChosenVariant && originalChosenVariant !== chosenVariant) {
+            shareText += `📌 Исходный выбор: ${originalChosenVariant}\n`;
+        }
+
+        if (recommendedVariants) {
+            shareText += `\n📌 Рекомендации эксперта:\n${recommendedVariants}\n`;
+        }
+
+        shareText += '\n🔗 ';
+
+        const shareData = {
+            title: 'Мои рекомендации по карьере',
+            text: shareText,
+            url: window.location.href.split('?')[0] + '?utm_source=share_quiz&utm_medium=social'
+        };
+
+        if (navigator.share) {
+            navigator.share(shareData).catch(err => {
+                if (err.name !== 'AbortError') {
+                    const fullText = `${shareData.title}\n\n${shareData.text}${shareData.url}`;
+                    navigator.clipboard.writeText(fullText);
+                    showSuccessToast('✅ Результаты квиза скопированы!');
+                }
+            });
+        } else {
+            const fullText = `${shareData.title}\n\n${shareData.text}${shareData.url}`;
+            navigator.clipboard.writeText(fullText);
+            showSuccessToast('✅ Результаты квиза скопированы!');
+        }
+    };
+    shareQuizBtn.addEventListener('click', shareQuizBtn._shareQuizHandler);
 }
 
 // ========== ЭКСПОРТ ВСЕХ ФУНКЦИЙ В ГЛОБАЛЬНЫЙ ОБЪЕКТ ==========
@@ -648,5 +757,7 @@ window.validatePhoneField = validatePhoneField;
 window.validateEmailField = validateEmailField;
 window.bindLiveValidation = bindLiveValidation;
 
-// Экспорт функции шеринга
+// Экспорт функций шеринга
 window.initShareButtons = initShareButtons;
+window.initShareCartButton = initShareCartButton;
+window.initShareQuizButton = initShareQuizButton;

@@ -229,7 +229,11 @@
         if (typeof initBurgerMenu === 'function') initBurgerMenu();
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
         if (typeof initCookieConsent === 'function') initCookieConsent();
+
+        // Кнопки поделиться
         if (typeof initShareButtons === 'function') initShareButtons();
+        if (typeof initShareCartButton === 'function') initShareCartButton();
+        if (typeof initShareQuizButton === 'function') initShareQuizButton();
 
         initFormValidation();
         initScrollTopButton();
