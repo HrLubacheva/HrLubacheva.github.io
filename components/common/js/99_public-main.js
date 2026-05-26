@@ -233,6 +233,11 @@
 
         if (typeof initShareButtons === 'function') initShareButtons();
 
+        // ДОБАВЛЕНО: инициализация масок телефонов
+        if (typeof window.initPhoneMasks === 'function') {
+            window.initPhoneMasks();
+        }
+
         initFormValidation();
         initScrollTopButton();
         initMaterialsEmailButtons();
