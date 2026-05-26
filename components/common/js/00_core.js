@@ -154,7 +154,8 @@ function showToast(message, type = 'error') {
     if (type === 'success') icon = '✅';
     if (type === 'warning') icon = '🔔';
     if (type === 'error') icon = '❌';
-    toast.innerHTML = `${icon} ${message}`;
+    // Исправлено: экранируем сообщение
+    toast.innerHTML = `${icon} ${escapeHtml(message)}`;
     toast.setAttribute('role', 'status');
     if (type === 'error') {
         toast.setAttribute('aria-live', 'assertive');

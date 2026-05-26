@@ -2209,3 +2209,196 @@ button:focus-visible,
     outline: none;
     box-shadow: 0 0 0 3px rgba(255,255,255,0.5);
 }
+
+/* ==================================================================
+   HERO TV БАДЖ
+   ================================================================== */
+.hero-tv-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #2D6A9F 0%, #1F4A6E 100%);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 60px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+@media (max-width: 768px) {
+    .hero-tv-badge {
+        margin: 0 auto 20px auto;
+        width: fit-content;
+    }
+}
+
+/* ==================================================================
+   МЕДИА СЕКЦИЯ (ТВ, ПУБЛИКАЦИИ)
+   ================================================================== */
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    align-items: stretch;
+    margin: 40px 0;
+}
+
+.media-item {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.media-item:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.media-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.media-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+.media-item:hover .media-image img {
+    transform: scale(1.03);
+}
+
+.media-caption {
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    background: white;
+}
+
+.media-description {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.media-description-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+}
+
+.media-description h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: white;
+}
+
+.media-description p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.media-stats {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.media-stats span {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+@media (max-width: 900px) {
+    .media-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .media-description {
+        order: -1;
+    }
+    .media-stats {
+        gap: 16px;
+    }
+    .media-stats span {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .media-description {
+        padding: 24px 20px;
+    }
+    .media-description h3 {
+        font-size: 1.2rem;
+    }
+    .media-description p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Отступ для якорных ссылок, чтобы шапка не перекрывала секции */
+section[id] {
+    scroll-margin-top: 80px;
+}
+
+@media (max-width: 768px) {
+    section[id] {
+        scroll-margin-top: 70px;
+    }
+}
+
+/* Переопределение рамки фокуса на фирменный цвет */
+:focus {
+    outline: 2px solid var(--primary, #2D6A9F) !important;
+    outline-offset: 2px !important;
+}
+
+/* Для полей ввода можно добавить небольшой отступ, чтобы рамка не сливалась с тенью */
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+    outline-offset: 1px !important;
+}
+
+/* Убираем рамку у fieldset (группы полей формы) и легенды, если они мешают */
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+legend {
+    display: none;
+}
+
+/* Только переопределение цвета outline, без отключения */
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+    outline-color: var(--primary, #2D6A9F);
+    outline-width: 2px;
+    outline-style: solid;
+}
