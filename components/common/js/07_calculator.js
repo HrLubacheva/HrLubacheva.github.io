@@ -3,20 +3,17 @@ let cart = [];
 
 // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
 
-// Форматирование цены
 function formatPrice(price) {
     if (price === null) return 'по запросу';
     if (price === 0) return '0 ₽';
     return price.toLocaleString() + ' ₽';
 }
 
-// Получение числовой цены для расчётов
 function getNumericPrice(price) {
     if (price === null) return 0;
     return price;
 }
 
-// Показать уведомление
 function showCalcToast(message, isError = false) {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -39,12 +36,12 @@ function showCalcToast(message, isError = false) {
     `;
     toast.textContent = message;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
+    const duration = window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 2000;
+    setTimeout(() => toast.remove(), duration);
 }
 
 // ========== ФУНКЦИИ КОРЗИНЫ ==========
 
-// Добавление услуги в корзину
 function addToCart(serviceName, price, quantity) {
     const existing = cart.find(item => item.name === serviceName);
     if (existing) {
@@ -57,7 +54,6 @@ function addToCart(serviceName, price, quantity) {
     renderCart();
 }
 
-// Обновление корзины (ИСПРАВЛЕНО - добавлен escapeHtml)
 function renderCart() {
     let total = 0;
     let totalQty = 0;
@@ -72,8 +68,11 @@ function renderCart() {
     let discount = 0;
     let discountApplied = false;
 
-    if (totalQty >= 2 && total > 0) {
-        discount = total * 0.05;
+    const minItems = window.APP_CONFIG?.CONSTANTS?.DISCOUNT_MIN_ITEMS || 2;
+    const discountPercent = window.APP_CONFIG?.CONSTANTS?.DISCOUNT_PERCENT || 0.05;
+
+    if (totalQty >= minItems && total > 0) {
+        discount = total * discountPercent;
         finalTotal = total - discount;
         discountApplied = true;
     }
@@ -118,7 +117,6 @@ function renderCart() {
             priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
         }
 
-        // ИСПРАВЛЕНО: используем escapeHtml для названия услуги
         const escapedName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
 
         div.innerHTML = `
@@ -138,7 +136,7 @@ function renderCart() {
 
     document.querySelectorAll('.qty-minus').forEach(btn => {
         btn.onclick = () => {
-            const idx = parseInt(btn.dataset.idx);
+            const idx = parseInt(btn.dataset.idx, 10);
             if (cart[idx].qty > 1) {
                 cart[idx].qty--;
             } else {
@@ -150,7 +148,7 @@ function renderCart() {
 
     document.querySelectorAll('.qty-plus').forEach(btn => {
         btn.onclick = () => {
-            const idx = parseInt(btn.dataset.idx);
+            const idx = parseInt(btn.dataset.idx, 10);
             cart[idx].qty++;
             renderCart();
         };
@@ -158,7 +156,7 @@ function renderCart() {
 
     document.querySelectorAll('.remove-item').forEach(btn => {
         btn.onclick = () => {
-            const idx = parseInt(btn.dataset.idx);
+            const idx = parseInt(btn.dataset.idx, 10);
             cart.splice(idx, 1);
             renderCart();
         };
@@ -235,9 +233,10 @@ function initAddButtons() {
                 const selectedOption = selectEl.options[selectEl.selectedIndex];
                 const serviceName = selectedOption.getAttribute('data-name');
                 let price = selectEl.value;
-                price = (price === 'null' || price === '') ? null : parseInt(price);
-                let quantity = parseInt(document.getElementById(qty).value);
-                if (isNaN(quantity) || quantity < 1) quantity = 1;
+                price = (price === 'null' || price === '') ? null : parseInt(price, 10);
+                let quantity = parseInt(document.getElementById(qty).value, 10);
+                const defaultQty = window.APP_CONFIG?.CONSTANTS?.DEFAULT_QUANTITY || 1;
+                if (isNaN(quantity) || quantity < defaultQty) quantity = defaultQty;
 
                 if (serviceName) {
                     addToCart(serviceName, price, quantity);
@@ -307,7 +306,6 @@ function initCalculator() {
     if (window.IS_DEV) console.log('Инициализация калькулятора завершена');
 }
 
-// Запуск при загрузке DOM
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initCalculator);
 } else {

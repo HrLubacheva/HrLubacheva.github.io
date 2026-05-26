@@ -93,4 +93,7 @@ window.ANSWER_MAPPING = {
     "Выше 500 000 ₽": "budget_higher"
 };
 
-console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены");
+// Логируем только в development-режиме
+if (window.IS_DEV) {
+    console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены");
+}

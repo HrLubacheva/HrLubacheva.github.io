@@ -12,6 +12,13 @@
     let selectedOriginalText = '';
     let selectedOriginalPrice = '';
 
+    // Получаем константы
+    const C = window.APP_CONFIG?.CONSTANTS || {};
+    const QUIZ_ANALYZE_DELAY = C.QUIZ_ANALYZE_DELAY || 700;
+    const QUIZ_SELECTION_DELAY = C.QUIZ_SELECTION_DELAY || 300;
+    const TOAST_DURATION = C.TOAST_DURATION || 3000;
+    const BREAKPOINT_MOBILE = C.BREAKPOINT_MOBILE || 768;
+
     if (typeof window.escapeHtml !== 'function') {
         window.escapeHtml = function (str) {
             if (!str) return '';
@@ -32,7 +39,7 @@
         setTimeout(() => {
             toast.style.opacity = '0';
             setTimeout(() => toast.remove(), 300);
-        }, 3000);
+        }, TOAST_DURATION);
     }
 
     function showWarningToast(msg) {
@@ -43,7 +50,7 @@
         setTimeout(() => {
             toast.style.opacity = '0';
             setTimeout(() => toast.remove(), 300);
-        }, 2500);
+        }, TOAST_DURATION);
     }
 
     function getPrice(serviceName) {
@@ -97,7 +104,7 @@
                 priceSpan.innerHTML = '';
             }
             block.style.display = '';
-            if (window.innerWidth <= 768) {
+            if (window.innerWidth <= BREAKPOINT_MOBILE) {
                 block.style.display = 'flex';
             } else {
                 block.style.display = 'grid';
@@ -129,13 +136,17 @@
         if (typeof window.getPageText === 'function') formData.page = window.getPageText();
 
         if (typeof window.postWithRetry === 'function') {
-            window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => {});
+            window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => {
+                if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза', err);
+            });
         } else {
             fetch(scriptUrl, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: new URLSearchParams(formData)
-            }).catch(e => {});
+            }).catch(e => {
+                if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e);
+            });
         }
     }
 
@@ -228,7 +239,7 @@
                             quizState = 'choice';
                             renderResult(topTwo);
                             isAnalyzing = false;
-                        }, 700);
+                        }, QUIZ_ANALYZE_DELAY);
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
@@ -254,7 +265,7 @@
                             quizState = 'choice';
                             renderResult(topTwo);
                             isAnalyzing = false;
-                        }, 700);
+                        }, QUIZ_ANALYZE_DELAY);
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();

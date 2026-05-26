@@ -100,5 +100,3 @@ async function sendMaterialsToEmail(email, materialType) {
 window.sendMaterialsEmail = sendMaterialsEmail;
 window.sendMaterialsToEmail = sendMaterialsToEmail;
 window.isValidEmail = isValidEmail;
-
-console.log("✅ Email модуль загружен");

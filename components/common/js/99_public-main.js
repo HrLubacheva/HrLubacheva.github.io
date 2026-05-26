@@ -1,10 +1,15 @@
 (function () {
     'use strict';
 
+    const C = window.APP_CONFIG?.CONSTANTS || {};
+    const MOBILE_BREAKPOINT = C.BREAKPOINT_MOBILE || 768;
+    const STATS_ANIMATION_DURATION = C.STATS_ANIMATION_DURATION || 1500;
+    const SCROLL_TOP_THRESHOLD = C.SCROLL_TOP_VISIBLE_THRESHOLD || 500;
+
     function reinitAnimations() {
         const elements = document.querySelectorAll('.fade-up:not(.visible)');
         if (!elements.length) return;
-        const isMobile = window.innerWidth <= 768;
+        const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
         const threshold = isMobile ? 0.1 : 0.05;
         const rootMargin = isMobile ? '0px 0px -30px 0px' : '0px 0px -50px 0px';
         const observer = new IntersectionObserver((entries) => {
@@ -32,7 +37,7 @@
                 if (entry.isIntersecting) {
                     const target = entry.target;
                     const final = parseInt(target.getAttribute('data-target'), 10);
-                    const duration = 1500;
+                    const duration = STATS_ANIMATION_DURATION;
                     const startTime = performance.now();
 
                     function update(currentTime) {
@@ -102,7 +107,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 500) {
+            if (window.scrollY > SCROLL_TOP_THRESHOLD) {
                 btn.classList.add('visible');
             } else {
                 btn.classList.remove('visible');
@@ -110,7 +115,6 @@
         });
     }
 
-    // ИСПРАВЛЕНО: улучшена индикация отправки материалов
     function initMaterialsEmailButtons() {
         const buttons = document.querySelectorAll('.material-email-simple');
         const modal = document.getElementById('materialsModal');
@@ -161,7 +165,6 @@
                 const email = document.getElementById('materialsEmail').value;
                 const originalText = sendBtn.innerText;
 
-                // ИСПРАВЛЕНО: показываем индикацию на кнопке
                 isModalSending = true;
                 sendBtn.disabled = true;
                 sendBtn.innerText = '⏳ Отправка...';

@@ -41,11 +41,12 @@ window.disableLogs = function() {
 };
 
 function getOrCreateLocalUserId() {
+    const key = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_USER_ID_KEY || 'hr_user_id';
     try {
-        let userId = localStorage.getItem('hr_user_id');
+        let userId = localStorage.getItem(key);
         if (!userId) {
             userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
-            localStorage.setItem('hr_user_id', userId);
+            localStorage.setItem(key, userId);
         }
         return userId;
     } catch(e) {
@@ -62,18 +63,26 @@ function initUserId() {
     return Promise.resolve(currentUserId);
 }
 
-async function fetchWithRetry(url, options = {}, retries = 3, timeout = 10000) {
+async function fetchWithRetry(url, options = {}, retries = null, timeout = null) {
+    const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
+    const timeoutMs = timeout !== null ? timeout : (window.APP_CONFIG?.CONSTANTS?.FETCH_TIMEOUT || 10000);
+    const baseDelay = window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000;
+    const maxDelay = window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_MAX || 5000;
+
     let lastError = null;
-    for (let attempt = 1; attempt <= retries; attempt++) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeout);
+            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
             const response = await fetch(url, { ...options, signal: controller.signal });
             clearTimeout(timeoutId);
             if (response.ok) return response;
             lastError = new Error(`HTTP ${response.status}`);
         } catch (err) { lastError = err; }
-        if (attempt < retries) await new Promise(resolve => setTimeout(resolve, Math.min(1000 * Math.pow(2, attempt-1), 5000)));
+        if (attempt < maxRetries) {
+            const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), maxDelay);
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
     }
     throw lastError;
 }
@@ -82,17 +91,23 @@ async function fetchTextWithRetry(url, retries = 3, timeout = 10000) {
     return response.text();
 }
 
-const CACHE_TTL = 10 * 60 * 1000;
-async function loadWithCache(cacheKey, fetchFn, ttl = CACHE_TTL) {
+async function loadWithCache(cacheKey, fetchFn, ttl = null) {
+    const cacheTtl = ttl !== null ? ttl : (window.APP_CONFIG?.CONSTANTS?.CACHE_TTL || 10 * 60 * 1000);
     try {
         const cached = localStorage.getItem(cacheKey);
         if (cached) {
-            const { data, timestamp } = JSON.parse(cached);
-            if (Date.now() - timestamp < ttl) return data;
+            try {
+                const { data, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp < cacheTtl) return data;
+            } catch(e) {
+                if (IS_DEV) console.warn('Ошибка парсинга кэша', e);
+            }
         }
     } catch(e) {}
     const data = await fetchFn();
-    try { localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() })); } catch(e) {}
+    try {
+        localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
+    } catch(e) {}
     return data;
 }
 
@@ -154,7 +169,6 @@ function showToast(message, type = 'error') {
     if (type === 'success') icon = '✅';
     if (type === 'warning') icon = '🔔';
     if (type === 'error') icon = '❌';
-    // Исправлено: экранируем сообщение
     toast.innerHTML = `${icon} ${escapeHtml(message)}`;
     toast.setAttribute('role', 'status');
     if (type === 'error') {
@@ -166,7 +180,7 @@ function showToast(message, type = 'error') {
     setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
-    }, 3000);
+    }, window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000);
 }
 function showErrorToast(message) { showToast(message, 'error'); }
 function showSuccessToast(message) { showToast(message, 'success'); }
@@ -178,9 +192,11 @@ if (typeof window !== 'undefined') {
 }
 
 // ========== УНИВЕРСАЛЬНАЯ ОТПРАВКА POST С ПОВТОРНЫМИ ПОПЫТКАМИ ==========
-async function postWithRetry(url, data, retries = 3, baseDelay = 2000) {
+async function postWithRetry(url, data, retries = null, baseDelay = null) {
+    const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
+    const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
     let lastError = null;
-    for (let attempt = 1; attempt <= retries; attempt++) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             const body = new URLSearchParams(data);
             const response = await fetch(url, {
@@ -189,7 +205,12 @@ async function postWithRetry(url, data, retries = 3, baseDelay = 2000) {
                 body: body
             });
             if (response.ok) {
-                const result = await response.json();
+                let result;
+                try {
+                    result = await response.json();
+                } catch(e) {
+                    throw new Error('Не удалось разобрать ответ сервера');
+                }
                 if (result && result.result === 'ok') {
                     return true;
                 } else {
@@ -200,8 +221,8 @@ async function postWithRetry(url, data, retries = 3, baseDelay = 2000) {
             }
         } catch (err) {
             lastError = err;
-            if (attempt < retries) {
-                await new Promise(resolve => setTimeout(resolve, baseDelay * Math.pow(2, attempt - 1)));
+            if (attempt < maxRetries) {
+                await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt - 1)));
             }
         }
     }
@@ -215,13 +236,15 @@ function normalizePhoneDigits(phone) {
     if (digits.length === 0) return '';
     if (digits.startsWith('8')) digits = '7' + digits.slice(1);
     if (!digits.startsWith('7')) digits = '7' + digits;
-    if (digits.length > 11) digits = digits.slice(0, 11);
+    const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
+    if (digits.length > maxDigits) digits = digits.slice(0, maxDigits);
     return digits;
 }
 
 function validatePhoneDigits(phone) {
     const digits = normalizePhoneDigits(phone);
-    return digits.length === 11 && /^7\d{10}$/.test(digits);
+    const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
+    return digits.length === maxDigits && /^7\d{10}$/.test(digits);
 }
 
 function validateEmailFormat(email) {
@@ -310,7 +333,8 @@ function formatPhoneNumber(input) {
     let digits = input.replace(/\D/g, '');
     if (digits.startsWith('8')) digits = '7' + digits.slice(1);
     if (!digits.startsWith('7')) digits = '7' + digits;
-    if (digits.length > 11) digits = digits.slice(0, 11);
+    const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
+    if (digits.length > maxDigits) digits = digits.slice(0, maxDigits);
     let formatted = '';
     if (digits.length === 0) return '';
     formatted = '+7';
@@ -338,12 +362,18 @@ function getVisitStats() {
     const oneWeek = 7 * oneDay;
     const oneMonth = 30 * oneDay;
     let visits = [];
+    const visitsKey = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_VISITS_KEY || 'hr_visits';
     try {
-        const stored = localStorage.getItem('hr_visits');
+        const stored = localStorage.getItem(visitsKey);
         if (stored) {
-            visits = JSON.parse(stored);
-            const monthAgo = now.getTime() - oneMonth;
-            visits = visits.filter(v => v > monthAgo);
+            try {
+                visits = JSON.parse(stored);
+                const monthAgo = now.getTime() - oneMonth;
+                visits = visits.filter(v => v > monthAgo);
+            } catch(e) {
+                if (IS_DEV) console.warn('Ошибка парсинга visits', e);
+                visits = [];
+            }
         }
     } catch(e) {}
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
@@ -351,7 +381,7 @@ function getVisitStats() {
         visits.push(now.getTime());
     }
     try {
-        localStorage.setItem('hr_visits', JSON.stringify(visits));
+        localStorage.setItem(visitsKey, JSON.stringify(visits));
     } catch(e) {}
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
@@ -428,14 +458,20 @@ function getPageText() {
 window.getPageText = getPageText;
 
 async function getGeoData() {
-    const cached = localStorage.getItem('hr_geo');
-    if (cached) {
-        try {
-            return JSON.parse(cached);
-        } catch(e) {}
-    }
+    const geoKey = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_GEO_KEY || 'hr_geo';
+    const apiUrl = window.APP_CONFIG?.CONSTANTS?.GEO_API_URL || 'https://ipapi.co/json/';
+    let cached = null;
     try {
-        const response = await fetch('https://ipapi.co/json/');
+        cached = localStorage.getItem(geoKey);
+        if (cached) {
+            try {
+                cached = JSON.parse(cached);
+                if (cached && typeof cached === 'object') return cached;
+            } catch(e) {}
+        }
+    } catch(e) {}
+    try {
+        const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Ошибка геолокации');
         const data = await response.json();
         const result = {
@@ -445,7 +481,9 @@ async function getGeoData() {
             country: data.country_name || '-',
             geoText: `${data.city || ''} ${data.region || ''} ${data.country_name || ''} (${data.ip || ''})`.trim().replace(/  +/g, ' ') || '-'
         };
-        localStorage.setItem('hr_geo', JSON.stringify(result));
+        try {
+            localStorage.setItem(geoKey, JSON.stringify(result));
+        } catch(e) {}
         return result;
     } catch(e) {
         if (IS_DEV) console.warn('Ошибка получения геоданных:', e);
@@ -488,7 +526,8 @@ window.submitForm = async function(formId, formType, getAdditionalData = null) {
             showErrorToast('Введите номер телефона');
             throw new Error('Телефон обязателен');
         }
-        if (phone && phone.length !== 11) {
+        const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
+        if (phone && phone.length !== maxDigits) {
             showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
             throw new Error('Неверный номер');
         }

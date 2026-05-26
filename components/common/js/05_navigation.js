@@ -3,6 +3,7 @@ function initBurgerMenu() {
     const burger = document.getElementById('burgerMenu');
     const navBottom = document.getElementById('navBottom');
     const mainElement = document.querySelector('main') || document.querySelector('.container')?.parentElement;
+    const MOBILE_BREAKPOINT = window.APP_CONFIG?.CONSTANTS?.BREAKPOINT_MOBILE || 768;
 
     if (!burger || !navBottom) return;
 
@@ -31,7 +32,7 @@ function initBurgerMenu() {
     });
 
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
+        if (window.innerWidth > MOBILE_BREAKPOINT) {
             burger.classList.remove('active');
             navBottom.classList.remove('open');
             document.body.classList.remove('menu-open');
@@ -65,12 +66,10 @@ function initSmoothScroll() {
     });
 }
 
-// Инициализация
 document.addEventListener('DOMContentLoaded', () => {
     initBurgerMenu();
     initSmoothScroll();
 });
 
-// Экспорт
 window.initBurgerMenu = initBurgerMenu;
 window.initSmoothScroll = initSmoothScroll;

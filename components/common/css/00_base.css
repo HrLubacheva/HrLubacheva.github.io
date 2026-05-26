@@ -2402,3 +2402,22 @@ button:focus {
     outline-width: 2px;
     outline-style: solid;
 }
+
+.text-center {
+    text-align: center;
+}
+/* Стили для подзаголовков в секции "Процесс" */
+.process-description.text-center {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+.process-subtitle {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: var(--text-muted);
+    margin-top: 5px;
+}

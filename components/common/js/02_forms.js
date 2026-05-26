@@ -1,6 +1,8 @@
 function initCallbackForm() {
     // ========== ИСПРАВЛЕНО: используем глобальные функции валидации ==========
-    // normalizePhoneDigits и validatePhoneDigits уже есть в window
+    const C = window.APP_CONFIG?.CONSTANTS || {};
+    const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
+    const FORM_MESSAGE_HIDE_DELAY = C.FORM_MESSAGE_HIDE_DELAY || 5000;
 
     // ========== Форма обратного звонка ==========
     const callbackForm = document.getElementById('callbackForm');
@@ -14,7 +16,7 @@ function initCallbackForm() {
                 setTimeout(() => {
                     callbackMessages.textContent = '';
                     callbackMessages.className = 'form-messages';
-                }, 5000);
+                }, FORM_MESSAGE_HIDE_DELAY);
             }
         }
         function clearCallbackMessage() {
@@ -28,9 +30,10 @@ function initCallbackForm() {
 
         if (callbackPhone) {
             callbackPhone.addEventListener('blur', () => {
-                const isValid = window.validatePhoneDigits ?
-                    window.validatePhoneDigits(callbackPhone.value) :
-                    /^7\d{10}$/.test(callbackPhone.value.replace(/\D/g, ''));
+                let digits = callbackPhone.value.replace(/\D/g, '');
+                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+                if (!digits.startsWith('7')) digits = '7' + digits;
+                const isValid = digits.length === MAX_PHONE_DIGITS;
                 if (!isValid && callbackPhone.value.trim() !== '') {
                     showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
                 } else {
@@ -62,7 +65,7 @@ function initCallbackForm() {
             if (phoneDigits.startsWith('8')) phoneDigits = '7' + phoneDigits.slice(1);
             if (!phoneDigits.startsWith('7')) phoneDigits = '7' + phoneDigits;
 
-            if (phoneDigits.length !== 11) {
+            if (phoneDigits.length !== MAX_PHONE_DIGITS) {
                 showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
                 isValid = false;
             }
@@ -76,7 +79,6 @@ function initCallbackForm() {
             }
             if (!isValid) return;
 
-            // ИСПРАВЛЕНО: нормализуем телефон через глобальную функцию
             if (window.normalizePhoneDigits) {
                 callbackPhone.value = window.normalizePhoneDigits(callbackPhone.value);
             } else {
@@ -106,7 +108,7 @@ function initCallbackForm() {
                 setTimeout(() => {
                     quickMessages.textContent = '';
                     quickMessages.className = 'form-messages';
-                }, 5000);
+                }, FORM_MESSAGE_HIDE_DELAY);
             }
         }
         function clearQuickMessage() {
@@ -122,7 +124,7 @@ function initCallbackForm() {
                 let digits = quickPhone.value.replace(/\D/g, '');
                 if (digits.startsWith('8')) digits = '7' + digits.slice(1);
                 if (!digits.startsWith('7')) digits = '7' + digits;
-                const isValid = digits.length === 11;
+                const isValid = digits.length === MAX_PHONE_DIGITS;
                 if (!isValid && quickPhone.value.trim() !== '') {
                     showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
                 } else {
@@ -141,7 +143,7 @@ function initCallbackForm() {
             if (digits.startsWith('8')) digits = '7' + digits.slice(1);
             if (!digits.startsWith('7')) digits = '7' + digits;
 
-            if (digits.length !== 11) {
+            if (digits.length !== MAX_PHONE_DIGITS) {
                 showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
                 isValid = false;
             }
@@ -156,7 +158,6 @@ function initCallbackForm() {
             }
             if (!isValid) return;
 
-            // ИСПРАВЛЕНО: нормализуем телефон
             if (window.normalizePhoneDigits) {
                 quickPhone.value = window.normalizePhoneDigits(quickPhone.value);
             } else {

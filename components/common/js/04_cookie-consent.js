@@ -1,5 +1,10 @@
 function initCookieConsent() {
-    const consent = localStorage.getItem('cookie_consent');
+    let consent = null;
+    try {
+        consent = localStorage.getItem('cookie_consent');
+    } catch(e) {
+        if (window.IS_DEV) console.warn('localStorage недоступен', e);
+    }
     const banner = document.getElementById('cookieConsent');
     if (!banner) return;
 
@@ -14,7 +19,9 @@ function initCookieConsent() {
 
     if (acceptBtn) {
         acceptBtn.addEventListener('click', () => {
-            localStorage.setItem('cookie_consent', 'accepted');
+            try {
+                localStorage.setItem('cookie_consent', 'accepted');
+            } catch(e) {}
             banner.style.display = 'none';
             if (typeof gtag !== 'undefined') {
                 gtag('consent', 'update', { analytics_storage: 'granted' });
@@ -24,7 +31,9 @@ function initCookieConsent() {
 
     if (declineBtn) {
         declineBtn.addEventListener('click', () => {
-            localStorage.setItem('cookie_consent', 'declined');
+            try {
+                localStorage.setItem('cookie_consent', 'declined');
+            } catch(e) {}
             banner.style.display = 'none';
             if (typeof gtag !== 'undefined') {
                 gtag('consent', 'update', { analytics_storage: 'denied' });

@@ -13,7 +13,7 @@
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
 
-    <!-- Preconnect и preload шрифтов (улучшено) -->
+    <!-- Preconnect и preload шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
@@ -38,13 +38,12 @@
         });
     </script>
 
-    <!-- Динамическая загрузка счётчиков с улучшенным consent -->
+    <!-- Динамическая загрузка счётчиков с улучшенным consent (исправлен try/catch) -->
     <script>
         (function () {
             var ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
             var gaId = window.APP_CONFIG.GOOGLE_ANALYTICS_ID;
 
-            // Функция для загрузки метрики после согласия
             function loadMetrics() {
                 if (window._metricsLoaded) return;
                 window._metricsLoaded = true;
@@ -89,15 +88,17 @@
                 }
             }
 
-            // Проверяем сохранённое согласие
+            // Проверяем сохранённое согласие с try/catch
             try {
                 var consent = localStorage.getItem('cookie_consent');
                 if (consent === 'accepted') {
                     loadMetrics();
                 }
-            } catch(e) {}
+            } catch(e) {
+                // Если localStorage недоступен, не загружаем счётчики
+                if (window.IS_DEV) console.warn('localStorage недоступен', e);
+            }
 
-            // Сохраняем функцию для вызова после согласия
             window.loadMetricsOnConsent = loadMetrics;
         })();
     </script>

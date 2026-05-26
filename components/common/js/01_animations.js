@@ -1,7 +1,7 @@
 function initAnimations() {
     const elements = document.querySelectorAll('.fade-up');
     if (!elements.length) return;
-    const isMobile = window.innerWidth <= 768;
+    const isMobile = window.innerWidth <= (window.APP_CONFIG?.CONSTANTS?.BREAKPOINT_MOBILE || 768);
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
