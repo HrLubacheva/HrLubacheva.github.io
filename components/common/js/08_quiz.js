@@ -406,7 +406,7 @@
                 </div>
             `;
             document.getElementById('goToCallbackBtn')?.addEventListener('click', () => {
-                const target = document.getElementById('calendar');
+                const target = document.getElementById('callback-form');
                 if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
             });
             document.getElementById('goToCalculatorBtn')?.addEventListener('click', () => {

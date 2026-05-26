@@ -533,3 +533,24 @@ section[id] {
     background: var(--light-bg);
     padding: 60px 0;
 }
+.hero-tv-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #2D6A9F 0%, #1F4A6E 100%);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 60px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;   /* убираем подчёркивание */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.hero-tv-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
