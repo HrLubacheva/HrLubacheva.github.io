@@ -2806,7 +2806,7 @@ button:focus-visible,
                     <div class="add-service">
                         <select id="business-training-select" class="service-select"></select>
                         <input type="number" id="business-training-qty" min="1" value="1" class="calc-qty">
-                        <button id="business-training-add" class="add-service-btn" data-category="businessTraining">➕ Добавить</button>
+                        <button id="business-training-add" class="add-service-btn" data-category="business-training">➕ Добавить</button>
                     </div>
                 </div>
             </div>
@@ -3085,7 +3085,7 @@ button:focus-visible,
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 26.05.2026 13:03:59
+                Версия: 26.05.2026 13:52:24
             </div>
         </div>
     </div>
@@ -4147,7 +4147,7 @@ const SERVICES_DATA = {
         {name: "Стратегическая сессия в компании", price: 13000}
     ],
     // Бизнес-тренинги
-    businessTraining: [
+    "business-training": [
         {name: "Тренинг под запрос (1ч, до 25 чел.)", price: 12000},
         {name: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000},
         {name: "Тренинг 'Профилактика выгорания'", price: 12000},
@@ -4253,7 +4253,7 @@ window.LOCAL_SERVICES = {
         ...(SERVICES_DATA.training || [])
             .filter(item => item.price !== null)
             .map(item => ({ service: item.name, price: item.price })),
-        ...(SERVICES_DATA.businessTraining || [])
+        ...(SERVICES_DATA["business-training"] || [])
             .filter(item => item.price !== null)
             .map(item => ({ service: item.name, price: item.price }))
     ],
@@ -4491,7 +4491,7 @@ function initSelects() {
     }
     populateSelect('recruitment-select', SERVICES_DATA.recruitment);
     populateSelect('retention-select', SERVICES_DATA.retention);
-    populateSelect('business-training-select', SERVICES_DATA.businessTraining);
+    populateSelect('business-training-select', SERVICES_DATA["business-training"]);
     populateSelect('corporate-select', SERVICES_DATA.corporate);
     populateSelect('start-select', SERVICES_DATA.start);
     populateSelect('growth-select', SERVICES_DATA.growth);
