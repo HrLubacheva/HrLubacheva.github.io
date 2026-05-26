@@ -1,327 +1,376 @@
+// ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
 let cart = [];
-let calculatorInitialized = false;
 
-function getCartData() {
-    if (!cart || cart.length === 0) return 'Корзина пуста';
+// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
 
-    let total = 0;
-    let items = [];
-    let hasPriceOnRequest = false;
-
-    cart.forEach(item => {
-        if (item.price !== null && item.price > 0) {
-            total += item.price * item.qty;
-        } else {
-            hasPriceOnRequest = true;
-        }
-    });
-
-    cart.forEach(item => {
-        const nameWithQty = `${item.name} x${item.qty}`;
-        let priceText = '';
-
-        if (item.price === null || item.price === 0) {
-            priceText = 'по запросу';
-        } else {
-            priceText = (item.price * item.qty).toLocaleString() + ' ₽';
-        }
-
-        items.push(`${nameWithQty} — ${priceText}`);
-    });
-
-    let discount = 0;
-    let discountApplied = false;
-    const itemsWithPrice = cart.filter(item => item.price !== null && item.price > 0);
-    const totalQuantity = itemsWithPrice.reduce((sum, item) => sum + item.qty, 0);
-
-    if (totalQuantity >= 2 && total > 0) {
-        discount = total * 0.05;
-        discountApplied = true;
-    }
-
-    const finalTotal = total - discount;
-
-    let result = items.join('\n');
-    result += `\n💰 Итого: ${finalTotal.toLocaleString()} ₽`;
-
-    if (discountApplied) {
-        result += `\n✅ Скидка 5% (${totalQuantity} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
-    }
-
-    if (hasPriceOnRequest) {
-        result += `\n📌 Услуги с пометкой «по запросу» — точная цена после консультации`;
-    }
-
-    return result;
-}
-window.getCartData = getCartData;
-
-function updateSelectsFromData() {
-    if (!window.LOCAL_SERVICES) return;
-    const selects = {
-        'business-recruitment-select': window.LOCAL_SERVICES.business_recruitment,
-        'business-retention-select': window.LOCAL_SERVICES.business_retention,
-        'business-training-select': window.LOCAL_SERVICES.business_training,
-        'individual-base-select': window.LOCAL_SERVICES.individual_base,
-        'individual-standard-select': window.LOCAL_SERVICES.individual_standard,
-        'individual-premium-select': window.LOCAL_SERVICES.individual_premium,
-        'corporate-select': window.LOCAL_SERVICES.corporate,
-        'training-select': window.LOCAL_SERVICES.training,
-        'author-courses-select': window.LOCAL_SERVICES.author_courses
-    };
-    for (const [id, data] of Object.entries(selects)) {
-        const select = document.getElementById(id);
-        if (select && data && data.length) {
-            select.innerHTML = data.map(s => {
-                let priceText = '';
-                if (s.price === null || s.price === 0) {
-                    priceText = 'по запросу';
-                } else {
-                    priceText = s.price.toLocaleString() + ' ₽';
-                }
-                return `<option value="${s.price === null ? 'null' : s.price}">${s.service} — ${priceText}</option>`;
-            }).join('');
-        }
-    }
+// Форматирование цены
+// null → "по запросу", 0 → "0 ₽", остальное → "N ₽"
+function formatPrice(price) {
+    if (price === null) return 'по запросу';
+    if (price === 0) return '0 ₽';
+    return price.toLocaleString() + ' ₽';
 }
 
-function initCustomDropdowns() {
-    const selects = document.querySelectorAll('.service-select');
-    selects.forEach(select => {
-        if (select.nextElementSibling && select.nextElementSibling.classList.contains('custom-dropdown')) return;
-        const container = document.createElement('div');
-        container.className = 'custom-dropdown';
-        const button = document.createElement('button');
-        button.className = 'dropdown-button';
-        const defaultText = select.options[select.selectedIndex]?.text || 'Выберите услугу';
-        button.innerHTML = `${defaultText} <span class="dropdown-arrow">▼</span>`;
-        const menu = document.createElement('div');
-        menu.className = 'dropdown-menu';
-        Array.from(select.options).forEach(opt => {
-            const optionDiv = document.createElement('div');
-            optionDiv.className = 'dropdown-option';
-            optionDiv.textContent = opt.text;
-            optionDiv.dataset.value = opt.value;
-            optionDiv.addEventListener('click', () => {
-                select.value = opt.value;
-                button.innerHTML = `${opt.text} <span class="dropdown-arrow">▼</span>`;
-                menu.querySelectorAll('.dropdown-option').forEach(div => div.classList.remove('selected'));
-                optionDiv.classList.add('selected');
-                menu.classList.remove('open');
-                const event = new Event('change', { bubbles: true });
-                select.dispatchEvent(event);
-            });
-            menu.appendChild(optionDiv);
-        });
-        const selectedOpt = Array.from(select.options).find(opt => opt.selected);
-        if (selectedOpt) {
-            const selectedDiv = Array.from(menu.children).find(div => div.textContent === selectedOpt.text);
-            if (selectedDiv) selectedDiv.classList.add('selected');
-        }
-        button.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
-            menu.classList.toggle('open');
-        });
-        container.appendChild(button);
-        container.appendChild(menu);
-        select.style.display = 'none';
-        select.parentNode.insertBefore(container, select.nextSibling);
-    });
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+// Получение числовой цены для расчётов
+function getNumericPrice(price) {
+    if (price === null) return 0;
+    return price;
+}
+
+// Показать уведомление
+function showCalculatorToast(message, isError = false) {
+    const existingToast = document.querySelector('.custom-toast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast';
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${isError ? '#dc3545' : '#28a745'};
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-size: 14px;
+        z-index: 10000;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+}
+
+// Экранирование HTML
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function (m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
     });
 }
 
+// ========== ФУНКЦИИ КОРЗИНЫ ==========
+
+// Добавление услуги в корзину
+function addToCart(serviceName, price, quantity) {
+    const existing = cart.find(item => item.name === serviceName);
+    if (existing) {
+        existing.qty += quantity;
+        showCalculatorToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`);
+    } else {
+        cart.push({name: serviceName, price: price, qty: quantity});
+        showCalculatorToast(`✅ "${serviceName}" добавлен(а) в корзину`);
+    }
+    renderCart();
+}
+
+// Обновление корзины
 function renderCart() {
     let total = 0;
-    let totalQuantity = 0;
+    let totalQty = 0;
 
     cart.forEach(item => {
-        if (item.price !== null && item.price > 0) {
-            total += item.price * item.qty;
-            totalQuantity += item.qty;
-        }
+        const itemPrice = getNumericPrice(item.price);
+        total += itemPrice * item.qty;
+        totalQty += item.qty;
     });
 
     let finalTotal = total;
     let discount = 0;
     let discountApplied = false;
 
-    if (totalQuantity >= 2 && total > 0) {
+    if (totalQty >= 2 && total > 0) {
         discount = total * 0.05;
         finalTotal = total - discount;
         discountApplied = true;
     }
 
-    const totalEl = document.getElementById('totalPrice');
-    if (totalEl) {
-        totalEl.innerText = finalTotal.toLocaleString() + ' ₽';
+    const totalPriceSpan = document.getElementById('totalPrice');
+    if (totalPriceSpan) {
+        totalPriceSpan.innerHTML = formatPrice(finalTotal);
     }
 
     const discountDiv = document.getElementById('discountInfo');
     if (discountDiv) {
         if (discountApplied) {
-            discountDiv.innerHTML = `✅ Скидка 5% (${totalQuantity} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
-        } else if (totalQuantity === 1 && total > 0) {
+            discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
+        } else if (totalQty === 1 && total > 0) {
             discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
+        } else if (totalQty >= 1 && total === 0) {
+            discountDiv.innerHTML = '🔹 Бесплатные услуги не участвуют в скидке. Добавьте платные услуги.';
         } else {
             discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
         }
     }
 
-    // ОДНА ОБЩАЯ КОРЗИНА
-    const cartContainer = document.getElementById('cart-items-list');
-    if (cartContainer) cartContainer.innerHTML = '';
+    const container = document.getElementById('servicesList');
+    if (!container) return;
 
     if (cart.length === 0) {
-        if (cartContainer) cartContainer.innerHTML = '<div class="cart-empty">Корзина пуста. Добавьте услуги выше.</div>';
+        container.innerHTML = '';
         return;
     }
 
+    container.innerHTML = '';
     cart.forEach((item, idx) => {
-        if (!cartContainer) return;
-
-        const priceDisplay = (item.price === null || item.price === 0)
-            ? 'по запросу'
-            : (item.price * item.qty).toLocaleString() + ' ₽';
-
         const div = document.createElement('div');
         div.className = 'calc-item';
-        div.dataset.idx = idx;
+
+        let priceDisplay;
+        if (item.price === null) {
+            priceDisplay = 'по запросу';
+        } else if (item.price === 0) {
+            priceDisplay = '0 ₽';
+        } else {
+            priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
+        }
+
         div.innerHTML = `
             <div class="service-name">${escapeHtml(item.name)}</div>
             <div class="service-price">${priceDisplay}</div>
             <div class="service-qty-control">
-                <button class="qty-btn qty-minus" data-idx="${idx}" aria-label="Уменьшить количество">−</button>
+                <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
                 <span class="qty-value">${item.qty}</span>
-                <button class="qty-btn qty-plus" data-idx="${idx}" aria-label="Увеличить количество">+</button>
+                <button class="qty-btn qty-plus" data-idx="${idx}">+</button>
             </div>
-            <div class="service-remove"><button class="remove-item" data-idx="${idx}" aria-label="Удалить услугу">✖</button></div>
+            <div class="service-remove">
+                <button class="remove-item" data-idx="${idx}">✖</button>
+            </div>
         `;
-        cartContainer.appendChild(div);
+        container.appendChild(div);
     });
 
-    // Привязываем обработчики
     document.querySelectorAll('.qty-minus').forEach(btn => {
-        btn.removeEventListener('click', btn._minusHandler);
-        btn._minusHandler = () => {
+        btn.onclick = () => {
             const idx = parseInt(btn.dataset.idx);
-            if (isNaN(idx)) return;
             if (cart[idx].qty > 1) {
                 cart[idx].qty--;
             } else {
                 cart.splice(idx, 1);
             }
             renderCart();
-            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
         };
-        btn.addEventListener('click', btn._minusHandler);
     });
 
     document.querySelectorAll('.qty-plus').forEach(btn => {
-        btn.removeEventListener('click', btn._plusHandler);
-        btn._plusHandler = () => {
+        btn.onclick = () => {
             const idx = parseInt(btn.dataset.idx);
-            if (isNaN(idx)) return;
             cart[idx].qty++;
             renderCart();
-            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
         };
-        btn.addEventListener('click', btn._plusHandler);
     });
 
     document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.removeEventListener('click', btn._removeHandler);
-        btn._removeHandler = () => {
+        btn.onclick = () => {
             const idx = parseInt(btn.dataset.idx);
-            if (isNaN(idx)) return;
             cart.splice(idx, 1);
             renderCart();
-            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
         };
-        btn.addEventListener('click', btn._removeHandler);
     });
 }
 
-function addToCart(cat, selectId, qtyId) {
+// ========== ЗАПОЛНЕНИЕ SELECT'ОВ ==========
+
+function populateSelect(selectId, services) {
     const select = document.getElementById(selectId);
-    if (!select) return;
-
-    const priceValue = select.value;
-    let price = null;
-    if (priceValue !== 'null' && !isNaN(parseInt(priceValue))) {
-        price = parseInt(priceValue);
+    if (!select) {
+        console.error('Select not found:', selectId);
+        return;
     }
 
-    const fullText = select.options[select.selectedIndex].text;
-    const name = fullText.replace(/ — .*/, '');
+    select.innerHTML = '';
+    services.forEach((service) => {
+        const option = document.createElement('option');
+        option.value = service.price !== null ? service.price : 'null';
 
-    let quantity = parseInt(document.getElementById(qtyId).value);
-    if (isNaN(quantity) || quantity < 1) quantity = 1;
+        let priceDisplay;
+        if (service.price === null) {
+            priceDisplay = 'по запросу';
+        } else if (service.price === 0) {
+            priceDisplay = '0 ₽';
+        } else {
+            priceDisplay = service.price.toLocaleString() + ' ₽';
+        }
 
-    // Все услуги складываются в одну общую корзину
-    const existing = cart.find(i => i.name === name);
-    if (existing) {
-        existing.qty += quantity;
-    } else {
-        cart.push({ name, price, qty: quantity });
-    }
-
-    renderCart();
-    if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
-
-    const priceText = (price === null || price === 0) ? 'по запросу' : price.toLocaleString() + ' ₽';
-    if (typeof window.showSuccessToast === 'function') {
-        window.showSuccessToast(`✅ "${name}" добавлен(а) в корзину (${priceText})`);
-    }
+        option.textContent = `${service.name} — ${priceDisplay}`;
+        option.setAttribute('data-name', service.name);
+        option.setAttribute('data-price', service.price !== null ? service.price : 'null');
+        select.appendChild(option);
+    });
 }
 
-function initCalculator() {
-    if (calculatorInitialized) return;
-    calculatorInitialized = true;
+function initSelects() {
+    if (typeof SERVICES_DATA === 'undefined') {
+        console.error('SERVICES_DATA не загружен!');
+        return;
+    }
+    populateSelect('recruitment-select', SERVICES_DATA.recruitment);
+    populateSelect('retention-select', SERVICES_DATA.retention);
+    populateSelect('business-training-select', SERVICES_DATA.businessTraining);
+    populateSelect('corporate-select', SERVICES_DATA.corporate);
+    populateSelect('start-select', SERVICES_DATA.start);
+    populateSelect('growth-select', SERVICES_DATA.growth);
+    populateSelect('executive-select', SERVICES_DATA.executive);
+    populateSelect('training-select', SERVICES_DATA.training);
+    populateSelect('courses-select', SERVICES_DATA.courses);
+}
 
-    updateSelectsFromData();
-    initCustomDropdowns();
+// ========== ИНИЦИАЛИЗАЦИЯ КНОПОК ДОБАВЛЕНИЯ ==========
 
+function initAddButtons() {
     const handlers = [
-        { btn: 'business-recruitment-add', cat: 'business_recruitment', select: 'business-recruitment-select', qty: 'business-recruitment-qty' },
-        { btn: 'business-retention-add', cat: 'business_retention', select: 'business-retention-select', qty: 'business-retention-qty' },
-        { btn: 'business-training-add', cat: 'business_training', select: 'business-training-select', qty: 'business-training-qty' },
-        { btn: 'individual-base-add', cat: 'individual_base', select: 'individual-base-select', qty: 'individual-base-qty' },
-        { btn: 'individual-standard-add', cat: 'individual_standard', select: 'individual-standard-select', qty: 'individual-standard-qty' },
-        { btn: 'individual-premium-add', cat: 'individual_premium', select: 'individual-premium-select', qty: 'individual-premium-qty' },
-        { btn: 'corporate-add', cat: 'corporate', select: 'corporate-select', qty: 'corporate-qty' },
-        { btn: 'training-add', cat: 'training', select: 'training-select', qty: 'training-qty' },
-        { btn: 'author-courses-add', cat: 'author_courses', select: 'author-courses-select', qty: 'author-courses-qty' }
+        {btn: 'recruitment-add', select: 'recruitment-select', qty: 'recruitment-qty'},
+        {btn: 'retention-add', select: 'retention-select', qty: 'retention-qty'},
+        {btn: 'business-training-add', select: 'business-training-select', qty: 'business-training-qty'},
+        {btn: 'corporate-add', select: 'corporate-select', qty: 'corporate-qty'},
+        {btn: 'start-add', select: 'start-select', qty: 'start-qty'},
+        {btn: 'growth-add', select: 'growth-select', qty: 'growth-qty'},
+        {btn: 'executive-add', select: 'executive-select', qty: 'executive-qty'},
+        {btn: 'training-add', select: 'training-select', qty: 'training-qty'},
+        {btn: 'courses-add', select: 'courses-select', qty: 'courses-qty'}
     ];
 
-    handlers.forEach(({ btn, cat, select, qty }) => {
+    handlers.forEach(({btn, select, qty}) => {
         const button = document.getElementById(btn);
         if (button) {
             button.removeEventListener('click', button._handler);
-            button._handler = () => addToCart(cat, select, qty);
+            button._handler = () => {
+                const selectEl = document.getElementById(select);
+                const selectedOption = selectEl.options[selectEl.selectedIndex];
+                const serviceName = selectedOption.getAttribute('data-name');
+                let price = selectEl.value;
+                price = (price === 'null' || price === '') ? null : parseInt(price);
+                let quantity = parseInt(document.getElementById(qty).value);
+                if (isNaN(quantity) || quantity < 1) quantity = 1;
+
+                if (serviceName) {
+                    addToCart(serviceName, price, quantity);
+                } else {
+                    console.error('Не удалось получить название услуги');
+                    showCalculatorToast('❌ Ошибка: не удалось определить услугу', true);
+                }
+            };
             button.addEventListener('click', button._handler);
+        } else {
+            console.error('Button not found:', btn);
         }
     });
+}
 
-    // Инициализация табов
-    const tabs = document.querySelectorAll('.calculator-tabs .tab-btn');
+// ========== ИНИЦИАЛИЗАЦИЯ ВКЛАДОК ==========
+
+function initTabs() {
+    const tabs = document.querySelectorAll('.tab-btn');
     tabs.forEach(btn => {
         btn.removeEventListener('click', btn._tabHandler);
         btn._tabHandler = () => {
             const tab = btn.dataset.tab;
-            const activePane = document.querySelector('.tab-pane.active');
-            if (activePane) activePane.classList.remove('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
             tabs.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const newPane = document.getElementById(`tab-${tab}`);
-            if (newPane) newPane.classList.add('active');
+            const activePane = document.getElementById(`tab-${tab}`);
+            if (activePane) activePane.classList.add('active');
         };
         btn.addEventListener('click', btn._tabHandler);
     });
 }
 
+// ========== ИНИЦИАЛИЗАЦИЯ ФОРМЫ ==========
+
+function initQuickOrderForm() {
+    const form = document.getElementById('quickOrderForm');
+    if (form) {
+        form.removeEventListener('submit', form._submitHandler);
+        form._submitHandler = (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('quickPhone').value;
+            const consent = document.getElementById('quickConsent').checked;
+
+            if (!phone) {
+                showCalculatorToast('❌ Введите номер телефона', true);
+                return;
+            }
+            if (!consent) {
+                showCalculatorToast('❌ Подтвердите согласие на обработку данных', true);
+                return;
+            }
+
+            let cartText = '';
+            let total = 0;
+            cart.forEach(item => {
+                const itemPrice = getNumericPrice(item.price);
+                const subtotal = itemPrice * item.qty;
+                total += subtotal;
+                cartText += `${item.name} x${item.qty} = ${formatPrice(subtotal)}\n`;
+            });
+
+            let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            let finalTotal = total;
+            if (totalQty >= 2 && total > 0) finalTotal = total * 0.95;
+
+            alert(`✅ Заявка принята!\n\n📋 Услуги:\n${cartText || '—'}\n💰 Итого: ${formatPrice(finalTotal)}\n\n📞 Мы свяжемся с вами в ближайшее время.`);
+
+            form.reset();
+            cart = [];
+            renderCart();
+        };
+        form.addEventListener('submit', form._submitHandler);
+    }
+}
+
+// ========== МАСКА ТЕЛЕФОНА ==========
+
+function initQuickPhoneMask() {
+    const phoneInput = document.getElementById('quickPhone');
+    if (phoneInput) {
+        phoneInput.removeEventListener('input', phoneInput._maskHandler);
+        phoneInput._maskHandler = function (e) {
+            let digits = this.value.replace(/\D/g, '');
+            if (digits.length > 11) digits = digits.slice(0, 11);
+            let formatted = '';
+            if (digits.length === 0) formatted = '';
+            else if (digits.length <= 1) formatted = '+' + digits;
+            else if (digits.length <= 4) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1);
+            else if (digits.length <= 7) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4);
+            else if (digits.length <= 9) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7);
+            else formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7, 9) + ' ' + digits.slice(9, 11);
+            this.value = formatted;
+        };
+        phoneInput.addEventListener('input', phoneInput._maskHandler);
+    }
+}
+
+// ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ==========
+
+function initCalculator() {
+    console.log('Инициализация калькулятора...');
+    if (typeof SERVICES_DATA !== 'undefined') {
+        initSelects();
+    } else {
+        console.error('SERVICES_DATA не загружен! Проверьте подключение services-data.js');
+    }
+    initAddButtons();
+    initTabs();
+    initQuickOrderForm();
+    initQuickPhoneMask();
+    console.log('Инициализация калькулятора завершена');
+}
+
+// Запуск при загрузке DOM
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCalculator);
+} else {
+    initCalculator();
+}
+
+// Экспорт для использования в других модулях
 window.initCalculator = initCalculator;
-window.addToCart = addToCart;
-window.renderCart = renderCart;
+window.getCartData = function() {
+    if (cart.length === 0) return 'Корзина пуста';
+    return cart.map(item => `${item.name} x${item.qty} = ${formatPrice(getNumericPrice(item.price) * item.qty)}`).join('\n');
+};

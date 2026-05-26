@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор услуг | Виктория Любачева</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="quiz-card">
+        <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
+
+        <!-- Вкладки для бизнеса -->
+        <div class="calculator-tabs">
+            <button class="tab-btn active" data-tab="recruitment">🎯 Подбор персонала</button>
+            <button class="tab-btn" data-tab="retention">💎 Удержание и развитие</button>
+            <button class="tab-btn" data-tab="business-training">🎓 Бизнес-тренинги</button>
+            <button class="tab-btn" data-tab="corporate">🙋‍♀️ HR «под ключ»</button>
+        </div>
+
+        <!-- Вкладки для соискателей -->
+        <div class="calculator-tabs">
+            <button class="tab-btn" data-tab="start">🎯 Ищу работу</button>
+            <button class="tab-btn" data-tab="growth">📈 Карьерный рост</button>
+            <button class="tab-btn" data-tab="executive">👑 Премиум</button>
+            <button class="tab-btn" data-tab="training">🎓 Тренинги</button>
+            <button class="tab-btn" data-tab="courses">📚 Авторские курсы</button>
+        </div>
+
+        <!-- Вкладка: Подбор персонала -->
+        <div id="tab-recruitment" class="tab-pane active">
+            <div class="service-group">
+                <h3>🎯 Подбор персонала</h3>
+                <div class="add-service">
+                    <select id="recruitment-select" class="service-select"></select>
+                    <input type="number" id="recruitment-qty" min="1" value="1" class="calc-qty">
+                    <button id="recruitment-add" class="add-service-btn" data-category="recruitment">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Удержание и развитие -->
+        <div id="tab-retention" class="tab-pane">
+            <div class="service-group">
+                <h3>💎 Удержание и развитие</h3>
+                <div class="add-service">
+                    <select id="retention-select" class="service-select"></select>
+                    <input type="number" id="retention-qty" min="1" value="1" class="calc-qty">
+                    <button id="retention-add" class="add-service-btn" data-category="retention">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Бизнес-тренинги -->
+        <div id="tab-business-training" class="tab-pane">
+            <div class="service-group">
+                <h3>🎓 Бизнес-тренинги</h3>
+                <div class="add-service">
+                    <select id="business-training-select" class="service-select"></select>
+                    <input type="number" id="business-training-qty" min="1" value="1" class="calc-qty">
+                    <button id="business-training-add" class="add-service-btn" data-category="businessTraining">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: HR "под ключ" -->
+        <div id="tab-corporate" class="tab-pane">
+            <div class="service-group">
+                <h3>🙋‍♀️ HR «под ключ»</h3>
+                <div class="add-service">
+                    <select id="corporate-select" class="service-select"></select>
+                    <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty">
+                    <button id="corporate-add" class="add-service-btn" data-category="corporate">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Ищу работу -->
+        <div id="tab-start" class="tab-pane">
+            <div class="service-group">
+                <h3>🎯 Ищу работу</h3>
+                <div class="add-service">
+                    <select id="start-select" class="service-select"></select>
+                    <input type="number" id="start-qty" min="1" value="1" class="calc-qty">
+                    <button id="start-add" class="add-service-btn" data-category="start">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Карьерный рост -->
+        <div id="tab-growth" class="tab-pane">
+            <div class="service-group">
+                <h3>📈 Карьерный рост</h3>
+                <div class="add-service">
+                    <select id="growth-select" class="service-select"></select>
+                    <input type="number" id="growth-qty" min="1" value="1" class="calc-qty">
+                    <button id="growth-add" class="add-service-btn" data-category="growth">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Премиум -->
+        <div id="tab-executive" class="tab-pane">
+            <div class="service-group">
+                <h3>👑 Премиум</h3>
+                <div class="add-service">
+                    <select id="executive-select" class="service-select"></select>
+                    <input type="number" id="executive-qty" min="1" value="1" class="calc-qty">
+                    <button id="executive-add" class="add-service-btn" data-category="executive">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Тренинги -->
+        <div id="tab-training" class="tab-pane">
+            <div class="service-group">
+                <h3>🎓 Тренинги</h3>
+                <div class="add-service">
+                    <select id="training-select" class="service-select"></select>
+                    <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
+                    <button id="training-add" class="add-service-btn" data-category="training">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Вкладка: Авторские курсы -->
+        <div id="tab-courses" class="tab-pane">
+            <div class="service-group">
+                <h3>📚 Авторские курсы</h3>
+                <div class="add-service">
+                    <select id="courses-select" class="service-select"></select>
+                    <input type="number" id="courses-qty" min="1" value="1" class="calc-qty">
+                    <button id="courses-add" class="add-service-btn" data-category="courses">➕ Добавить</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Итоговая сумма -->
+        <div class="total-block">
+            <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
+            <div id="discountInfo" class="discount-info"></div>
+        </div>
+
+        <!-- Корзина -->
+        <div class="cart-section">
+            <h3>🛒 Выбранные услуги</h3>
+            <div id="servicesList" class="services-list"></div>
+        </div>
+
+        <!-- Форма быстрого заказа -->
+        <div class="calendar-card">
+            <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark); text-align: center;">📞 Быстрый заказ</h3>
+            <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
+            <form id="quickOrderForm" class="callback-form">
+                <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)">
+                <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required>
+                <div class="consent-checkbox">
+                    <input type="checkbox" id="quickConsent" name="consent" required>
+                    <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
+                </div>
+                <button type="submit" class="btn-primary btn-block">📞 Заказать звонок</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="js/services-data.js"></script>
+<script src="js/calculator.js"></script>
+</body>
+</html>

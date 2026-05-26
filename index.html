@@ -2001,6 +2001,651 @@ button:focus-visible,
 .mb-2 { margin-bottom: 16px; }
 .mb-3 { margin-bottom: 24px; }
 .mb-4 { margin-bottom: 32px; }
+
+
+
+/* ==================================================================
+   БАЗОВЫЕ ПЕРЕМЕННЫЕ
+================================================================== */
+:root {
+    --primary: #2D6A9F;
+    --primary-dark: #1F4A6E;
+    --primary-light: #4A8BC2;
+    --secondary: #6c757d;
+    --secondary-dark: #4a5568;
+    --dark-bg: #1a2a3a;
+    --light-bg: #f8f9fa;
+    --surface-soft: #ffffff;
+    --border: #e0e0e0;
+    --text-dark: #1a202c;
+    --text-light: #f8f9fa;
+    --text-muted: #4a5568;
+    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+    --radius-md: 16px;
+    --radius-lg: 28px;
+    --transition: all 0.25s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #ffffff;
+    line-height: 1.5;
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* ==================================================================
+   КНОПКИ
+================================================================== */
+.btn-primary, .btn-secondary {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    font-size: 1rem;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+.btn-secondary:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+/* ==================================================================
+   ЗАГОЛОВКИ
+================================================================== */
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+    color: var(--primary-dark);
+}
+
+.calculator-desc {
+    text-align: center;
+    margin-bottom: 32px;
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+/* ==================================================================
+   КАЛЬКУЛЯТОР
+================================================================== */
+.quiz-card {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    margin: 0 auto;
+    box-shadow: var(--shadow-md);
+}
+
+.calculator-tabs {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    justify-content: center;
+}
+
+.tab-btn {
+    background: var(--light-bg);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.tab-btn:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+}
+
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+.tab-pane {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.tab-pane.active {
+    display: block;
+    opacity: 1;
+    animation: fadeIn 0.25s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Группы услуг внутри вкладки */
+.service-group {
+    margin-bottom: 32px;
+    padding: 24px;
+    background: var(--light-bg);
+    border-radius: 24px;
+}
+
+.service-group h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+}
+
+.add-service {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.service-select {
+    flex: 3;
+    min-width: 250px;
+    padding: 14px 20px;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    transition: var(--transition);
+}
+
+.service-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+}
+
+.calc-qty {
+    width: 100px;
+    padding: 14px 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+    background: white;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    transition: var(--transition);
+}
+
+.calc-qty:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+}
+
+.add-service-btn {
+    background: var(--primary);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.add-service-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.25);
+}
+
+/* Итоговая сумма */
+.total-block {
+    margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 24px;
+    text-align: right;
+}
+
+.total-block > div:first-child {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+}
+
+.discount-info {
+    font-size: 0.9rem;
+    color: #28a745;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+/* Корзина */
+.cart-section {
+    margin-top: 30px;
+    border-top: 2px solid var(--border);
+    padding-top: 25px;
+}
+
+.cart-section h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.services-list {
+    margin-bottom: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.services-list:empty::after {
+    content: "📭 Корзина пуста. Добавьте услугу выше →";
+    display: block;
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.calc-item {
+    display: grid;
+    grid-template-columns: 1fr 120px 120px 50px;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.calc-item:hover {
+    background: var(--light-bg);
+    border-radius: 16px;
+}
+
+.calc-item .service-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    word-break: break-word;
+    font-size: 0.95rem;
+}
+
+.calc-item .service-price {
+    text-align: center;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.service-qty-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: white;
+    border: 1px solid var(--border);
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-dark);
+}
+
+.qty-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+    transform: scale(1.05);
+}
+
+.qty-value {
+    min-width: 28px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.remove-item {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-item:hover {
+    background: #fee2e2;
+    transform: scale(1.05);
+}
+
+/* Форма заказа */
+.calendar-card {
+    background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
+    border-radius: var(--radius-lg);
+    padding: 40px 32px;
+    margin-top: 40px;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.calendar-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+}
+
+.callback-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.callback-form input,
+.callback-form textarea {
+    width: 100%;
+    padding: 14px 20px;
+    margin: 12px 0;
+    border: 1px solid var(--border);
+    border-radius: 60px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    transition: all 0.2s;
+    background-color: #fff;
+    color: var(--text-dark);
+}
+
+.callback-form input:focus,
+.callback-form textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+}
+
+.callback-form textarea {
+    border-radius: 24px;
+    resize: vertical;
+}
+
+.callback-form .btn-primary {
+    width: 100%;
+    padding: 14px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.consent-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+    margin: 20px 0;
+}
+
+.consent-checkbox input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.consent-checkbox input[type="checkbox"]:checked {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.consent-checkbox input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.consent-checkbox label {
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    line-height: 1.4;
+}
+
+.consent-checkbox label a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+.consent-checkbox label a:hover {
+    text-decoration: underline;
+}
+
+/* МОБИЛЬНАЯ АДАПТАЦИЯ */
+@media (max-width: 768px) {
+    body {
+        padding: 20px 12px;
+    }
+
+    .quiz-card {
+        padding: 20px 16px;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+    }
+
+    .calculator-tabs {
+        gap: 8px;
+    }
+
+    .tab-btn {
+        padding: 8px 16px;
+        font-size: 0.75rem;
+    }
+
+    .service-group {
+        padding: 16px;
+    }
+
+    .service-group h3 {
+        font-size: 1rem;
+    }
+
+    .add-service {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .service-select,
+    .calc-qty,
+    .add-service-btn {
+        width: 100%;
+    }
+
+    .calc-item {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 16px;
+        position: relative;
+        background: var(--light-bg);
+        border-radius: 20px;
+        margin-bottom: 10px;
+    }
+
+    .calc-item .service-name {
+        font-weight: 700;
+        font-size: 1rem;
+        padding-right: 40px;
+    }
+
+    .calc-item .service-price {
+        text-align: left;
+        font-size: 0.9rem;
+    }
+
+    .service-qty-control {
+        justify-content: flex-start;
+    }
+
+    .calc-item .service-remove {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+    }
+
+    .total-block {
+        text-align: center;
+    }
+
+    .total-block > div:first-child {
+        font-size: 1.3rem;
+    }
+
+    .calendar-card {
+        padding: 24px 20px;
+    }
+}
+
+/* Toast уведомления */
+.custom-toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #28a745;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 14px;
+    z-index: 10000;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .custom-toast {
+        white-space: normal;
+        text-align: center;
+        max-width: 90%;
+    }
+}
 </style>
 </head>
 <body>
@@ -2410,639 +3055,22 @@ button:focus-visible,
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Калькулятор услуг | Виктория Любачева</title>
-    <style>
-        /* ==================================================================
-           БАЗОВЫЕ ПЕРЕМЕННЫЕ
-        ================================================================== */
-        :root {
-            --primary: #2D6A9F;
-            --primary-dark: #1F4A6E;
-            --primary-light: #4A8BC2;
-            --secondary: #6c757d;
-            --secondary-dark: #4a5568;
-            --dark-bg: #1a2a3a;
-            --light-bg: #f8f9fa;
-            --surface-soft: #ffffff;
-            --border: #e0e0e0;
-            --text-dark: #1a202c;
-            --text-light: #f8f9fa;
-            --text-muted: #4a5568;
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
-            --radius-md: 16px;
-            --radius-lg: 28px;
-            --transition: all 0.25s ease;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #ffffff;
-            line-height: 1.5;
-            padding: 40px 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* ==================================================================
-           КНОПКИ
-        ================================================================== */
-        .btn-primary, .btn-secondary {
-            display: inline-block;
-            padding: 12px 28px;
-            border-radius: 40px;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--primary);
-            border: 1px solid var(--primary);
-        }
-
-        .btn-secondary:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* ==================================================================
-           ЗАГОЛОВКИ
-        ================================================================== */
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 16px;
-            color: var(--primary-dark);
-        }
-
-        .calculator-desc {
-            text-align: center;
-            margin-bottom: 32px;
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
-
-        /* ==================================================================
-           КАЛЬКУЛЯТОР
-        ================================================================== */
-        .quiz-card {
-            background: var(--surface-soft);
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            margin: 0 auto;
-            box-shadow: var(--shadow-md);
-        }
-
-        .calculator-tabs {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-            justify-content: center;
-        }
-
-        .tab-btn {
-            background: var(--light-bg);
-            border: none;
-            padding: 12px 24px;
-            border-radius: 40px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 600;
-            color: var(--text-dark);
-            font-size: 0.9rem;
-        }
-
-        .tab-btn:hover {
-            background: #e9ecef;
-            transform: translateY(-2px);
-        }
-
-        .tab-btn.active {
-            background: var(--primary);
-            color: white;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .tab-pane {
-            display: none;
-            opacity: 0;
-            transition: opacity 0.2s ease;
-        }
-
-        .tab-pane.active {
-            display: block;
-            opacity: 1;
-            animation: fadeIn 0.25s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Группы услуг внутри вкладки */
-        .service-group {
-            margin-bottom: 32px;
-            padding: 24px;
-            background: var(--light-bg);
-            border-radius: 24px;
-        }
-
-        .service-group h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .add-service {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .service-select {
-            flex: 3;
-            min-width: 250px;
-            padding: 14px 20px;
-            border: 1px solid var(--border);
-            background: white;
-            border-radius: 50px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-dark);
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 20px center;
-            transition: var(--transition);
-        }
-
-        .service-select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
-        }
-
-        .calc-qty {
-            width: 100px;
-            padding: 14px 12px;
-            text-align: center;
-            border: 1px solid var(--border);
-            background: white;
-            border-radius: 50px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text-dark);
-            transition: var(--transition);
-        }
-
-        .calc-qty:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
-        }
-
-        .add-service-btn {
-            background: var(--primary);
-            border: none;
-            padding: 14px 28px;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: white;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-
-        .add-service-btn:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 14px rgba(45, 106, 159, 0.25);
-        }
-
-        /* Итоговая сумма */
-        .total-block {
-            margin-top: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 24px;
-            text-align: right;
-        }
-
-        .total-block > div:first-child {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: var(--primary-dark);
-        }
-
-        .discount-info {
-            font-size: 0.9rem;
-            color: #28a745;
-            margin-top: 8px;
-            font-weight: 500;
-        }
-
-        /* Корзина */
-        .cart-section {
-            margin-top: 30px;
-            border-top: 2px solid var(--border);
-            padding-top: 25px;
-        }
-
-        .cart-section h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .services-list {
-            margin-bottom: 20px;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .services-list:empty::after {
-            content: "📭 Корзина пуста. Добавьте услугу выше →";
-            display: block;
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        .calc-item {
-            display: grid;
-            grid-template-columns: 1fr 120px 120px 50px;
-            gap: 12px;
-            align-items: center;
-            padding: 14px 12px;
-            border-bottom: 1px solid var(--border);
-            transition: background 0.2s;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .calc-item:hover {
-            background: var(--light-bg);
-            border-radius: 16px;
-        }
-
-        .calc-item .service-name {
-            font-weight: 600;
-            color: var(--text-dark);
-            word-break: break-word;
-            font-size: 0.95rem;
-        }
-
-        .calc-item .service-price {
-            text-align: center;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .service-qty-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .qty-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: white;
-            border: 1px solid var(--border);
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-dark);
-        }
-
-        .qty-btn:hover {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            transform: scale(1.05);
-        }
-
-        .qty-value {
-            min-width: 28px;
-            text-align: center;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .remove-item {
-            background: none;
-            border: none;
-            color: #dc3545;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.2s;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .remove-item:hover {
-            background: #fee2e2;
-            transform: scale(1.05);
-        }
-
-        /* Форма заказа */
-        .calendar-card {
-            background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
-            border-radius: var(--radius-lg);
-            padding: 40px 32px;
-            margin-top: 40px;
-            box-shadow: var(--shadow-md);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .calendar-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
-        }
-
-        .callback-form {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .callback-form input,
-        .callback-form textarea {
-            width: 100%;
-            padding: 14px 20px;
-            margin: 12px 0;
-            border: 1px solid var(--border);
-            border-radius: 60px;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            transition: all 0.2s;
-            background-color: #fff;
-            color: var(--text-dark);
-        }
-
-        .callback-form input:focus,
-        .callback-form textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
-        }
-
-        .callback-form textarea {
-            border-radius: 24px;
-            resize: vertical;
-        }
-
-        .callback-form .btn-primary {
-            width: 100%;
-            padding: 14px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-top: 10px;
-        }
-
-        .consent-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            user-select: none;
-            margin: 20px 0;
-        }
-
-        .consent-checkbox input[type="checkbox"] {
-            appearance: none;
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            margin: 0;
-            border: 2px solid var(--border);
-            border-radius: 6px;
-            background: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .consent-checkbox input[type="checkbox"]:checked {
-            background: var(--primary);
-            border-color: var(--primary);
-        }
-
-        .consent-checkbox input[type="checkbox"]:checked::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        .consent-checkbox label {
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: var(--text-dark);
-            line-height: 1.4;
-        }
-
-        .consent-checkbox label a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        .consent-checkbox label a:hover {
-            text-decoration: underline;
-        }
-
-        .btn-block {
-            display: block;
-            width: 100%;
-        }
-
-        /* МОБИЛЬНАЯ АДАПТАЦИЯ */
-        @media (max-width: 768px) {
-            body {
-                padding: 20px 12px;
-            }
-
-            .quiz-card {
-                padding: 20px 16px;
-            }
-
-            .section-title {
-                font-size: 1.6rem;
-            }
-
-            .calculator-tabs {
-                gap: 8px;
-            }
-
-            .tab-btn {
-                padding: 8px 16px;
-                font-size: 0.75rem;
-            }
-
-            .service-group {
-                padding: 16px;
-            }
-
-            .service-group h3 {
-                font-size: 1rem;
-            }
-
-            .add-service {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .service-select,
-            .calc-qty,
-            .add-service-btn {
-                width: 100%;
-            }
-
-            .calc-item {
-                display: flex;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-                padding: 16px;
-                position: relative;
-                background: var(--light-bg);
-                border-radius: 20px;
-                margin-bottom: 10px;
-            }
-
-            .calc-item .service-name {
-                font-weight: 700;
-                font-size: 1rem;
-                padding-right: 40px;
-            }
-
-            .calc-item .service-price {
-                text-align: left;
-                font-size: 0.9rem;
-            }
-
-            .service-qty-control {
-                justify-content: flex-start;
-            }
-
-            .calc-item .service-remove {
-                position: absolute;
-                top: 12px;
-                right: 12px;
-            }
-
-            .total-block {
-                text-align: center;
-            }
-
-            .total-block > div:first-child {
-                font-size: 1.3rem;
-            }
-
-            .calendar-card {
-                padding: 24px 20px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="container">
     <div class="quiz-card">
         <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
 
-        <!-- Вкладки -->
+        <!-- Вкладки для бизнеса -->
         <div class="calculator-tabs">
             <button class="tab-btn active" data-tab="recruitment">🎯 Подбор персонала</button>
             <button class="tab-btn" data-tab="retention">💎 Удержание и развитие</button>
             <button class="tab-btn" data-tab="business-training">🎓 Бизнес-тренинги</button>
             <button class="tab-btn" data-tab="corporate">🙋‍♀️ HR «под ключ»</button>
         </div>
-        <!-- Вкладки -->
+
+        <!-- Вкладки для соискателей -->
         <div class="calculator-tabs">
             <button class="tab-btn" data-tab="start">🎯 Ищу работу</button>
             <button class="tab-btn" data-tab="growth">📈 Карьерный рост</button>
@@ -3082,14 +3110,12 @@ button:focus-visible,
                 <div class="add-service">
                     <select id="business-training-select" class="service-select"></select>
                     <input type="number" id="business-training-qty" min="1" value="1" class="calc-qty">
-                    <button id="business-training-add" class="add-service-btn" data-category="businessTraining">➕
-                        Добавить
-                    </button>
+                    <button id="business-training-add" class="add-service-btn" data-category="businessTraining">➕ Добавить</button>
                 </div>
             </div>
         </div>
 
-        <!-- Вкладка: Корпоративным клиентам -->
+        <!-- Вкладка: HR "под ключ" -->
         <div id="tab-corporate" class="tab-pane">
             <div class="service-group">
                 <h3>🙋‍♀️ HR «под ключ»</h3>
@@ -3101,7 +3127,7 @@ button:focus-visible,
             </div>
         </div>
 
-        <!-- Вкладка: Старт и развитие -->
+        <!-- Вкладка: Ищу работу -->
         <div id="tab-start" class="tab-pane">
             <div class="service-group">
                 <h3>🎯 Ищу работу</h3>
@@ -3125,7 +3151,7 @@ button:focus-visible,
             </div>
         </div>
 
-        <!-- Вкладка: Executive -->
+        <!-- Вкладка: Премиум -->
         <div id="tab-executive" class="tab-pane">
             <div class="service-group">
                 <h3>👑 Премиум</h3>
@@ -3175,17 +3201,14 @@ button:focus-visible,
 
         <!-- Форма быстрого заказа -->
         <div class="calendar-card">
-            <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark); text-align: center;">📞
-                Быстрый заказ</h3>
-            <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я
-                перезвоню, чтобы обсудить выбранные услуги.</p>
+            <h3 style="font-size: 1.4rem; margin-bottom: 16px; color: var(--primary-dark); text-align: center;">📞 Быстрый заказ</h3>
+            <p style="margin-bottom: 24px; color: var(--secondary); text-align: center;">Оставьте контакты, и я перезвоню, чтобы обсудить выбранные услуги.</p>
             <form id="quickOrderForm" class="callback-form">
                 <input type="text" id="quickName" name="name" placeholder="👤 Ваше имя (необязательно)">
                 <input type="tel" id="quickPhone" name="phone" placeholder="📞 +7 912 345 67 89" required>
                 <div class="consent-checkbox">
                     <input type="checkbox" id="quickConsent" name="consent" required>
-                    <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку
-                        персональных данных</a></label>
+                    <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                 </div>
                 <button type="submit" class="btn-primary btn-block">📞 Заказать звонок</button>
             </form>
@@ -3193,443 +3216,8 @@ button:focus-visible,
     </div>
 </div>
 
-<script>
-    // ========== ПОЛНЫЙ ПЕРЕЧЕНЬ УСЛУГ С ГРУППИРОВКОЙ ==========
-    const SERVICES_DATA = {
-        // Подбор персонала
-        recruitment: [
-            {name: "Составление вакансии (с УТП)", price: 10000},
-            {name: "Подбор резюме под вакансию", price: 15000},
-            {name: "База кандидатов + тестирование", price: 20000},
-            {name: "Подбор специалиста", price: 40000},
-            {name: "Подбор специалиста + гарантия", price: 60000},
-            {name: "Составить 'Программу стажировки'", price: 70000},
-            {name: "Классический рекрутинг", price: 70000},
-            {name: "Подбор руководителя", price: 90000},
-            {name: "Аутсорсинг подбора (абонемент)", price: 100000},
-            {name: "Хэдхантинг", price: 120000},
-            {name: "IT Поиск Senior+ с гарантией", price: 150000},
-            {name: "IT Хэдхантинг Senior-специалиста", price: 150000},
-            {name: "IT Executive search Senior", price: 200000},
-            {name: "Эксклюзивный хэдхантинг", price: 250000}
-        ],
-        // Удержание и развитие
-        retention: [
-            {"name": "Разработка УТП компании", "price": 25000},
-            {"name": "Оценка компетенций", "price": 25000},
-            {"name": "Оценка управленческого потенциала", "price": 50000},
-            {"name": "Консультация по внедрению гибких форматов", "price": 10000},
-            {"name": "Оценка удовлетворённости персонала", "price": "по запросу"},
-            {"name": "Разработка программы удержания", "price": 120000},
-            {"name": "Разработка проекта адаптации персонала", "price": 250000},
-            {"name": "HR-стратегия + подбор ключевых людей", "price": 300000},
-            {"name": "Разработка HR-бренда", "price": 150000},
-            {"name": "Стратегическая сессия с собственниками", "price": 200000},
-            {"name": "Стратегическая сессия в компании", "price": 13000}
-        ],
-        // Бизнес-тренинги
-        businessTraining: [
-            {"name": "Тренинг под запрос (1ч, до 25 чел.)", "price": 12000},
-            {"name": "Стратегическая сессия (1ч, до 12 чел.)", "price": 13000},
-            {"name": "Тренинг 'Профилактика выгорания'", "price": 12000},
-            {"name": "Тренинг 'Я хочу здесь работать' мотивация", "price": 15000},
-            {"name": "Тренинг 'Удержание персонала'", "price": 12000}
-        ],
-        // Корпоративным клиентам
-        corporate: [
-            {"name": "Абонемент на HR-консультации", "price": 100000},
-            {"name": "Корпоративная подписка на рекрутинг", "price": 200000},
-            {"name": "HR найди людей - цена от", "price": 90000},
-            {"name": "HR на час", "price": 8500},
-            {"name": "HR реши вопрос - цена от", "price": 120000},
-        ],
-        // Ищу работу (B2C базовые)
-        start: [
-            {"name": "Экспресс-диагностика (15мин) - Подбор услуги", "price": 0},
-            {"name": "Сопроводительное письмо", "price": 3000},
-            {"name": "Экспресс-консультация (30мин)", "price": 3500},
-            {"name": "Аудит резюме", "price": 4000},
-            {"name": "Профориентация для подростков", "price": 6000},
-            {"name": "Резюме специалиста", "price": 6500},
-            {"name": "Подготовка к собеседованию (1ч)", "price": 7000},
-            {"name": "Тренинг по переговорам", "price": 7000},
-            {"name": "Переговоры о зарплате (1ч)", "price": 7000},
-            {"name": "Индивидуальная консультация (1ч)", "price": 7000},
-            {"name": "Психологическое консультирование (1ч)", "price": 7000},
-            {"name": "Профориентация для взрослых", "price": 8000},
-            {"name": "Стратегия поиска работы", "price": 8000},
-            {"name": "Резюме руководителя", "price": 9000},
-
-            {"name": "Индивидуальный тренинг «Продай себя дорого»", price: 14000},
-            {"name": "LinkedIn-профиль под ключ", price: 15000},
-            {"name": "Резюме(CV) на английском", price: 15000},
-            {"name": "Стратегия трудоустройства", price: 15000},
-        ],
-        // Карьерный рост (B2C стандартные)
-        growth: [
-            {"name": "Подготовка к повышению", price: 10000},
-            {"name": "Коучинг для руководителей", price: 10000},
-            {"name": "План развития (рост в должности)", price: 12000},
-            {"name": "Индивидуальный тренинг «Продай себя дорого»", price: 14000},
-            {"name": "LinkedIn-профиль под ключ", price: 15000},
-            {"name": "Резюме(CV) на английском", price: 15000},
-            {"name": "Развитие управленческих навыков", price: 15000},
-            {"name": "Стратегия трудоустройства", price: 15000},
-            {"name": "Карьерная стратегия (пакет 3 консультации)", price: 18000},
-            {"name": "Коучинг для руководителей (пакет 4 сессии)", price: 30000},
-
-            {"name": "Стратегия роста", price: 45000}
-        ],
-        // Executive (B2C премиальные)
-        executive: [
-            {"name": "Работа «под ключ»", "price": 250000},
-            {"name": "Executive-коучинг/мес", "price": 100000},
-            {"name": "Executive-сопровождение/мес", "price": 60000},
-            {"name": "Поиск позиции C-level", "price": 80000},
-            {"name": "Коучинг топ-менеджеров", "price": 150000},
-            {"name": "VIP-коучинг", price: 30000},
-        ],
-        // Тренинги для соискателей
-        training: [
-            {"name": "Индивидуальный тренинг «Продай себя дорого»", "price": 14000},
-            {"name": "Групповой тренинг «Продай себя дорого»", "price": 5500},
-            {"name": "Наставничество для HR", "price": 7000}
-        ],
-        // Авторские курсы
-        courses: [
-            {name: "Авторский курс 'Рекрутер для недвижимости'", price: 25000},
-            {name: "Обучение с '0' менеджер по продажам", price: 50000}
-        ]
-    };
-
-    let cart = [];
-
-    // Форматирование цены
-    function formatPrice(price) {
-        if (price === null || price === 0) return 'по запросу';
-        return price.toLocaleString() + ' ₽';
-    }
-
-    // Получение числовой цены для расчётов
-    function getNumericPrice(price) {
-        return (price !== null && price !== 0) ? price : 0;
-    }
-
-    // Показать уведомление
-    function showToast(message, isError = false) {
-        const existingToast = document.querySelector('.custom-toast');
-        if (existingToast) existingToast.remove();
-
-        const toast = document.createElement('div');
-        toast.className = 'custom-toast';
-        toast.style.cssText = `
-                position: fixed;
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                background: ${isError ? '#dc3545' : '#28a745'};
-                color: white;
-                padding: 12px 24px;
-                border-radius: 50px;
-                font-size: 14px;
-                z-index: 10000;
-                font-weight: 500;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                white-space: nowrap;
-            `;
-        toast.textContent = message;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
-    }
-
-    // Добавление услуги в корзину
-    function addToCart(serviceName, price, quantity) {
-        const existing = cart.find(item => item.name === serviceName);
-        if (existing) {
-            existing.qty += quantity;
-            showToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`);
-        } else {
-            cart.push({name: serviceName, price: price, qty: quantity});
-            showToast(`✅ "${serviceName}" добавлен(а) в корзину`);
-        }
-        renderCart();
-    }
-
-    // Обновление корзины
-    function renderCart() {
-        let total = 0;
-        let totalQty = 0;
-
-        cart.forEach(item => {
-            const itemPrice = getNumericPrice(item.price);
-            total += itemPrice * item.qty;
-            totalQty += item.qty;
-        });
-
-        // Скидка 5% при 2+ услугах
-        let finalTotal = total;
-        let discount = 0;
-        let discountApplied = false;
-
-        if (totalQty >= 2 && total > 0) {
-            discount = total * 0.05;
-            finalTotal = total - discount;
-            discountApplied = true;
-        }
-
-        // Обновление итоговой суммы
-        const totalPriceSpan = document.getElementById('totalPrice');
-        if (totalPriceSpan) {
-            totalPriceSpan.innerHTML = formatPrice(finalTotal);
-        }
-
-        const discountDiv = document.getElementById('discountInfo');
-        if (discountDiv) {
-            if (discountApplied) {
-                discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
-            } else if (totalQty === 1 && total > 0) {
-                discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
-            } else {
-                discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
-            }
-        }
-
-        // Рендер списка корзины
-        const container = document.getElementById('servicesList');
-        if (!container) return;
-
-        if (cart.length === 0) {
-            container.innerHTML = '';
-            return;
-        }
-
-        container.innerHTML = '';
-        cart.forEach((item, idx) => {
-            const div = document.createElement('div');
-            div.className = 'calc-item';
-            const priceDisplay = (item.price === null || item.price === 0) ? 'по запросу' : (item.price * item.qty).toLocaleString() + ' ₽';
-            div.innerHTML = `
-                    <div class="service-name">${escapeHtml(item.name)}</div>
-                    <div class="service-price">${priceDisplay}</div>
-                    <div class="service-qty-control">
-                        <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
-                        <span class="qty-value">${item.qty}</span>
-                        <button class="qty-btn qty-plus" data-idx="${idx}">+</button>
-                    </div>
-                    <div class="service-remove">
-                        <button class="remove-item" data-idx="${idx}">✖</button>
-                    </div>
-                `;
-            container.appendChild(div);
-        });
-
-        // Обработчики для кнопок
-        document.querySelectorAll('.qty-minus').forEach(btn => {
-            btn.onclick = () => {
-                const idx = parseInt(btn.dataset.idx);
-                if (cart[idx].qty > 1) {
-                    cart[idx].qty--;
-                } else {
-                    cart.splice(idx, 1);
-                }
-                renderCart();
-            };
-        });
-
-        document.querySelectorAll('.qty-plus').forEach(btn => {
-            btn.onclick = () => {
-                const idx = parseInt(btn.dataset.idx);
-                cart[idx].qty++;
-                renderCart();
-            };
-        });
-
-        document.querySelectorAll('.remove-item').forEach(btn => {
-            btn.onclick = () => {
-                const idx = parseInt(btn.dataset.idx);
-                cart.splice(idx, 1);
-                renderCart();
-            };
-        });
-    }
-
-    // Заполнение select'ов
-    function populateSelect(selectId, services) {
-        const select = document.getElementById(selectId);
-        if (!select) {
-            console.error('Select not found:', selectId);
-            return;
-        }
-
-        select.innerHTML = '';
-        services.forEach((service, index) => {
-            const option = document.createElement('option');
-            option.value = service.price !== null ? service.price : 'null';
-            option.textContent = `${service.name} — ${formatPrice(service.price)}`;
-            // Сохраняем название услуги в dataset опции
-            option.setAttribute('data-name', service.name);
-            option.setAttribute('data-price', service.price !== null ? service.price : 'null');
-            select.appendChild(option);
-        });
-    }
-
-    // Инициализация всех select'ов
-    function initSelects() {
-        populateSelect('recruitment-select', SERVICES_DATA.recruitment);
-        populateSelect('retention-select', SERVICES_DATA.retention);
-        populateSelect('business-training-select', SERVICES_DATA.businessTraining);
-        populateSelect('corporate-select', SERVICES_DATA.corporate);
-        populateSelect('start-select', SERVICES_DATA.start);
-        populateSelect('growth-select', SERVICES_DATA.growth);
-        populateSelect('executive-select', SERVICES_DATA.executive);
-        populateSelect('training-select', SERVICES_DATA.training);
-        populateSelect('courses-select', SERVICES_DATA.courses);
-    }
-
-    // Инициализация обработчиков добавления
-    function initAddButtons() {
-        const handlers = [
-            {btn: 'recruitment-add', select: 'recruitment-select', qty: 'recruitment-qty'},
-            {btn: 'retention-add', select: 'retention-select', qty: 'retention-qty'},
-            {btn: 'business-training-add', select: 'business-training-select', qty: 'business-training-qty'},
-            {btn: 'corporate-add', select: 'corporate-select', qty: 'corporate-qty'},
-            {btn: 'start-add', select: 'start-select', qty: 'start-qty'},
-            {btn: 'growth-add', select: 'growth-select', qty: 'growth-qty'},
-            {btn: 'executive-add', select: 'executive-select', qty: 'executive-qty'},
-            {btn: 'training-add', select: 'training-select', qty: 'training-qty'},
-            {btn: 'courses-add', select: 'courses-select', qty: 'courses-qty'}
-        ];
-
-        handlers.forEach(({btn, select, qty}) => {
-            const button = document.getElementById(btn);
-            if (button) {
-                // Удаляем старый обработчик, если есть
-                button.removeEventListener('click', button._handler);
-                button._handler = () => {
-                    const selectEl = document.getElementById(select);
-                    const selectedOption = selectEl.options[selectEl.selectedIndex];
-                    // Берём название из data-name атрибута опции
-                    const serviceName = selectedOption.getAttribute('data-name');
-                    let price = selectEl.value;
-                    price = (price === 'null' || price === '') ? null : parseInt(price);
-                    let quantity = parseInt(document.getElementById(qty).value);
-                    if (isNaN(quantity) || quantity < 1) quantity = 1;
-
-                    if (serviceName) {
-                        addToCart(serviceName, price, quantity);
-                    } else {
-                        console.error('Не удалось получить название услуги');
-                        showToast('❌ Ошибка: не удалось определить услугу', true);
-                    }
-                };
-                button.addEventListener('click', button._handler);
-            } else {
-                console.error('Button not found:', btn);
-            }
-        });
-    }
-
-    // Инициализация вкладок
-    function initTabs() {
-        const tabs = document.querySelectorAll('.tab-btn');
-        tabs.forEach(btn => {
-            btn.removeEventListener('click', btn._tabHandler);
-            btn._tabHandler = () => {
-                const tab = btn.dataset.tab;
-                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-                tabs.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const activePane = document.getElementById(`tab-${tab}`);
-                if (activePane) activePane.classList.add('active');
-            };
-            btn.addEventListener('click', btn._tabHandler);
-        });
-    }
-
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function (m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    // Инициализация формы
-    function initForm() {
-        const form = document.getElementById('quickOrderForm');
-        if (form) {
-            form.removeEventListener('submit', form._submitHandler);
-            form._submitHandler = (e) => {
-                e.preventDefault();
-                const phone = document.getElementById('quickPhone').value;
-                const consent = document.getElementById('quickConsent').checked;
-
-                if (!phone) {
-                    showToast('❌ Введите номер телефона', true);
-                    return;
-                }
-                if (!consent) {
-                    showToast('❌ Подтвердите согласие на обработку данных', true);
-                    return;
-                }
-
-                let cartText = '';
-                let total = 0;
-                cart.forEach(item => {
-                    const itemPrice = getNumericPrice(item.price);
-                    const subtotal = itemPrice * item.qty;
-                    total += subtotal;
-                    cartText += `${item.name} x${item.qty} = ${formatPrice(subtotal)}\n`;
-                });
-
-                let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-                let finalTotal = total;
-                if (totalQty >= 2 && total > 0) finalTotal = total * 0.95;
-
-                alert(`✅ Заявка принята!\n\n📋 Услуги:\n${cartText || '—'}\n💰 Итого: ${formatPrice(finalTotal)}\n\n📞 Мы свяжемся с вами в ближайшее время.`);
-
-                form.reset();
-                cart = [];
-                renderCart();
-            };
-            form.addEventListener('submit', form._submitHandler);
-        }
-    }
-
-    // Инициализация маски телефона
-    function initPhoneMask() {
-        const phoneInput = document.getElementById('quickPhone');
-        if (phoneInput) {
-            phoneInput.removeEventListener('input', phoneInput._maskHandler);
-            phoneInput._maskHandler = function (e) {
-                let digits = this.value.replace(/\D/g, '');
-                if (digits.length > 11) digits = digits.slice(0, 11);
-                let formatted = '';
-                if (digits.length === 0) formatted = '';
-                else if (digits.length <= 1) formatted = '+' + digits;
-                else if (digits.length <= 4) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1);
-                else if (digits.length <= 7) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4);
-                else if (digits.length <= 9) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7);
-                else formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7, 9) + ' ' + digits.slice(9, 11);
-                this.value = formatted;
-            };
-            phoneInput.addEventListener('input', phoneInput._maskHandler);
-        }
-    }
-
-    // Инициализация
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('Инициализация калькулятора...');
-        initSelects();
-        initAddButtons();
-        initTabs();
-        initForm();
-        initPhoneMask();
-        console.log('Инициализация завершена');
-    });
-</script>
+<script src="js/services-data.js"></script>
+<script src="js/calculator.js"></script>
 </body>
 </html>
 <section id="quiz">
@@ -3801,7 +3389,7 @@ button:focus-visible,
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 25.05.2026 23:10:52
+                Версия: 26.05.2026 09:40:40
             </div>
         </div>
     </div>
@@ -4792,440 +4380,490 @@ function initCopyButtons() {
     });
 }
 window.initCopyButtons = initCopyButtons;
-window.LOCAL_SERVICES = {
-    // ----- РАЗДЕЛ 1: HR ДЛЯ БИЗНЕСА (Рекрутинг и подбор) -----
-    business_recruitment: [
-        { service: "Составление вакансии (с УТП)", price: 10000 },
-        { service: "Подбор резюме под вакансию", price: 15000 },
-        { service: "База кандидатов + тестирование", price: 20000 },
-        { service: "Составить 'Программу стажировки'", price: 70000 },
-        { service: "Подбор специалиста + гарантия", price: 60000 },
-        { service: "Классический рекрутинг", price: 70000 },
-        { service: "Подбор руководителя", price: 90000 },
-        { service: "Аутсорсинг подбора (абонемент)", price: 100000 },
-        { service: "Хэдхантинг", price: 120000 },
-        { service: "IT Поиск Senior+ с гарантией", price: 150000 },
-        { service: "IT Хэдхантинг Senior-специалиста", price: 150000 },
-        { service: "IT Executive search Senior", price: 200000 },
-        { service: "Эксклюзивный хэдхантинг", price: 250000 },
-        { service: "Подбор специалиста", price: 40000 }
+// ========== ПОЛНЫЙ ПЕРЕЧЕНЬ УСЛУГ С ГРУППИРОВКОЙ ==========
+const SERVICES_DATA = {
+    // Подбор персонала
+    recruitment: [
+        {name: "Составление вакансии (с УТП)", price: 10000},
+        {name: "Подбор резюме под вакансию", price: 15000},
+        {name: "База кандидатов + тестирование", price: 20000},
+        {name: "Подбор специалиста", price: 40000},
+        {name: "Подбор специалиста + гарантия", price: 60000},
+        {name: "Составить 'Программу стажировки'", price: 70000},
+        {name: "Классический рекрутинг", price: 70000},
+        {name: "Подбор руководителя", price: 90000},
+        {name: "Аутсорсинг подбора (абонемент)", price: 100000},
+        {name: "Хэдхантинг", price: 120000},
+        {name: "IT Поиск Senior+ с гарантией", price: 150000},
+        {name: "IT Хэдхантинг Senior-специалиста", price: 150000},
+        {name: "IT Executive search Senior", price: 200000},
+        {name: "Эксклюзивный хэдхантинг", price: 250000}
     ],
-
-    // ----- РАЗДЕЛ 2: HR ДЛЯ БИЗНЕСА (Удержание и развитие) -----
-    business_retention: [
-        { service: "Разработка УТП компании", price: 25000 },
-        { service: "Оценка компетенций", price: 25000 },
-        { service: "Оценка управленческого потенциала", price: 50000 },
-        { service: "Консультация по внедрению гибких форматов", price: 10000 },
-        { service: "Оценка удовлетворённости персонала", price: null },
-        { service: "Разработка программы удержания", price: 120000 },
-        { service: "Разработка проекта адаптации персонала", price: 250000 },
-        { service: "HR-стратегия + подбор ключевых людей", price: 300000 },
-        { service: "Разработка HR-бренда", price: 150000 },
-        { service: "Стратегическая сессия с собственниками", price: 200000 },
-        { service: "Стратегическая сессия в компании", price: null }
+    // Удержание и развитие
+    retention: [
+        {name: "Разработка УТП компании", price: 25000},
+        {name: "Оценка компетенций", price: 25000},
+        {name: "Оценка управленческого потенциала", price: 50000},
+        {name: "Консультация по внедрению гибких форматов", price: 10000},
+        {name: "Оценка удовлетворённости персонала", price: null},
+        {name: "Разработка программы удержания", price: 120000},
+        {name: "Разработка проекта адаптации персонала", price: 250000},
+        {name: "HR-стратегия + подбор ключевых людей", price: 300000},
+        {name: "Разработка HR-бренда", price: 150000},
+        {name: "Стратегическая сессия с собственниками", price: 200000},
+        {name: "Стратегическая сессия в компании", price: 13000}
     ],
-
-    // ----- РАЗДЕЛ 3: B2C (Базовые услуги до 10 000 ₽) -----
-    individual_base: [
-        { service: "Экспресс-диагностика (15мин)", price: 0 },
-        { service: "Сопроводительное письмо", price: 3000 },
-        { service: "Экспресс-консультация (30мин)", price: 3500 },
-        { service: "Аудит резюме", price: 4000 },
-        { service: "Подготовка к собеседованию (1ч)", price: 7000 },
-        { service: "Тренинг по переговорам", price: 7000 },
-        { service: "Переговоры о зарплате (1ч)", price: 7000 },
-        { service: "Резюме специалиста", price: 6500 },
-        { service: "Индивидуальная консультация (1ч)", price: 7000 },
-        { service: "Психологическое консультирование (1ч)", price: 7000 },
-        { service: "Профориентация для взрослых", price: 8000 },
-        { service: "Стратегия поиска работы", price: 8000 },
-        { service: "Резюме руководителя", price: 9000 },
-        { service: "Профориентация для подростков", price: 6000 }
+    // Бизнес-тренинги
+    businessTraining: [
+        {name: "Тренинг под запрос (1ч, до 25 чел.)", price: 12000},
+        {name: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000},
+        {name: "Тренинг 'Профилактика выгорания'", price: 12000},
+        {name: "Тренинг 'Я хочу здесь работать' мотивация", price: 15000},
+        {name: "Тренинг 'Удержание персонала'", price: 12000}
     ],
-
-    // ----- РАЗДЕЛ 4: B2C (Стандартные услуги 10 000 – 50 000 ₽) -----
-    individual_standard: [
-        { service: "Подготовка к повышению", price: 10000 },
-        { service: "Поиск работы с гибким графиком", price: 10000 },
-        { service: "LinkedIn-профиль под ключ", price: 15000 },
-        { service: "План развития (рост в должности)", price: 12000 },
-        { service: "Повышение грейда", price: 12000 },
-        { service: "Индивидуальный тренинг «Продай себя дорого»", price: 14000 },
-        { service: "CV на английском", price: 15000 },
-        { service: "Развитие управленческих навыков", price: 15000 },
-        { service: "Стратегия трудоустройства", price: 15000 },
-        { service: "Карьерная стратегия (пакет 3 консультации)", price: 18000 },
-        { service: "Коучинг для руководителей", price: 10000 },
-        { service: "Коучинг для руководителей (пакет 4 сессии)", price: 30000 },
-        { service: "VIP-коучинг", price: 30000 },
-        { service: "Стратегия роста", price: 45000 }
-    ],
-
-    // ----- РАЗДЕЛ 5: B2C (Премиальные услуги от 50 000 ₽) -----
-    individual_premium: [
-        { service: "Executive-коучинг/мес", price: 100000 },
-        { service: "Executive-сопровождение/мес", price: 60000 },
-        { service: "Поиск позиции C-level", price: 80000 },
-        { service: "Коучинг топ-менеджеров", price: 150000 }
-    ],
-
-    // ----- РАЗДЕЛ 6: БИЗНЕС-ТРЕНИНГИ (для компаний) -----
-    business_training: [
-        { service: "Бизнес-тренинг под запрос (1ч, до 25 чел.)", price: 12000 },
-        { service: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000 },
-        { service: "Мастер-класс (3ч, до 25 чел.)", price: 30000 }
-    ],
-
-    // ----- РАЗДЕЛ 7: ТРЕНИНГИ ДЛЯ СОИСКАТЕЛЕЙ -----
-    training: [
-        { service: "Индивидуальный тренинг «Продай себя дорого»", price: 14000 },
-        { service: "Групповой тренинг «Продай себя дорого»", price: 5500 },
-        { service: "Тренинг 'Профилактика выгорания'", price: 12000 },
-        { service: "Тренинг 'Я хочу здесь работать' мотивация", price: 15000 },
-        { service: "Тренинг 'Удержание персонала'", price: 12000 },
-        { service: "Наставничество для HR", price: 7000 }
-    ],
-
-    // ----- РАЗДЕЛ 8: КОРПОРАТИВНЫМ КЛИЕНТАМ -----
+    // Корпоративным клиентам
     corporate: [
-        { service: "Корпоративная подписка на рекрутинг", price: 500000 },
-        { service: "Абонемент на HR-консультации", price: 100000 }
+        {name: "Абонемент на HR-консультации", price: 100000},
+        {name: "Корпоративная подписка на рекрутинг", price: 200000},
+        {name: "HR найди людей - цена от", price: 90000},
+        {name: "HR на час", price: 8500},
+        {name: "HR реши вопрос - цена от", price: 120000}
     ],
-
-    // ----- РАЗДЕЛ 9: АВТОРСКИЕ КУРСЫ -----
-    author_courses: [
-        { service: "Авторский курс 'Рекрутер для недвижимости'", price: 25000 },
-        { service: "Обучение с '0' менеджер по продажам", price: 50000 }
+    // Ищу работу (B2C базовые)
+    start: [
+        {name: "Экспресс-диагностика (15мин) - Подбор услуги", price: 0},
+        {name: "Сопроводительное письмо", price: 3000},
+        {name: "Экспресс-консультация (30мин)", price: 3500},
+        {name: "Аудит резюме", price: 4000},
+        {name: "Профориентация для подростков", price: 6000},
+        {name: "Резюме специалиста", price: 6500},
+        {name: "Подготовка к собеседованию (1ч)", price: 7000},
+        {name: "Тренинг по переговорам", price: 7000},
+        {name: "Переговоры о зарплате (1ч)", price: 7000},
+        {name: "Индивидуальная консультация (1ч)", price: 7000},
+        {name: "Психологическое консультирование (1ч)", price: 7000},
+        {name: "Профориентация для взрослых", price: 8000},
+        {name: "Стратегия поиска работы", price: 8000},
+        {name: "Резюме руководителя", price: 9000},
+        {name: "Индивидуальный тренинг «Продай себя дорого»", price: 14000},
+        {name: "LinkedIn-профиль под ключ", price: 15000},
+        {name: "Резюме(CV) на английском", price: 15000},
+        {name: "Стратегия трудоустройства", price: 15000}
+    ],
+    // Карьерный рост (B2C стандартные)
+    growth: [
+        {name: "Подготовка к повышению", price: 10000},
+        {name: "Коучинг для руководителей", price: 10000},
+        {name: "План развития (рост в должности)", price: 12000},
+        {name: "Индивидуальный тренинг «Продай себя дорого»", price: 14000},
+        {name: "LinkedIn-профиль под ключ", price: 15000},
+        {name: "Резюме(CV) на английском", price: 15000},
+        {name: "Развитие управленческих навыков", price: 15000},
+        {name: "Стратегия трудоустройства", price: 15000},
+        {name: "Карьерная стратегия (пакет 3 консультации)", price: 18000},
+        {name: "Коучинг для руководителей (пакет 4 сессии)", price: 30000},
+        {name: "Стратегия роста", price: 45000}
+    ],
+    // Executive (B2C премиальные)
+    executive: [
+        {name: "Работа «под ключ»", price: 250000},
+        {name: "Executive-коучинг/мес", price: 100000},
+        {name: "Executive-сопровождение/мес", price: 60000},
+        {name: "Поиск позиции C-level", price: 80000},
+        {name: "Коучинг топ-менеджеров", price: 150000},
+        {name: "VIP-коучинг", price: 30000}
+    ],
+    // Тренинги для соискателей
+    training: [
+        {name: "Индивидуальный тренинг «Продай себя дорого»", price: 14000},
+        {name: "Групповой тренинг «Продай себя дорого»", price: 5500},
+        {name: "Наставничество для HR", price: 7000}
+    ],
+    // Авторские курсы
+    courses: [
+        {name: "Авторский курс 'Рекрутер для недвижимости'", price: 25000},
+        {name: "Обучение с '0' менеджер по продажам", price: 50000}
     ]
 };
+
+// Для обратной совместимости с другими модулями
+window.SERVICES_DATA = SERVICES_DATA;
+// ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
 let cart = [];
-let calculatorInitialized = false;
 
-function getCartData() {
-    if (!cart || cart.length === 0) return 'Корзина пуста';
+// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
 
-    let total = 0;
-    let items = [];
-    let hasPriceOnRequest = false;
-
-    cart.forEach(item => {
-        if (item.price !== null && item.price > 0) {
-            total += item.price * item.qty;
-        } else {
-            hasPriceOnRequest = true;
-        }
-    });
-
-    cart.forEach(item => {
-        const nameWithQty = `${item.name} x${item.qty}`;
-        let priceText = '';
-
-        if (item.price === null || item.price === 0) {
-            priceText = 'по запросу';
-        } else {
-            priceText = (item.price * item.qty).toLocaleString() + ' ₽';
-        }
-
-        items.push(`${nameWithQty} — ${priceText}`);
-    });
-
-    let discount = 0;
-    let discountApplied = false;
-    const itemsWithPrice = cart.filter(item => item.price !== null && item.price > 0);
-    const totalQuantity = itemsWithPrice.reduce((sum, item) => sum + item.qty, 0);
-
-    if (totalQuantity >= 2 && total > 0) {
-        discount = total * 0.05;
-        discountApplied = true;
-    }
-
-    const finalTotal = total - discount;
-
-    let result = items.join('\n');
-    result += `\n💰 Итого: ${finalTotal.toLocaleString()} ₽`;
-
-    if (discountApplied) {
-        result += `\n✅ Скидка 5% (${totalQuantity} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
-    }
-
-    if (hasPriceOnRequest) {
-        result += `\n📌 Услуги с пометкой «по запросу» — точная цена после консультации`;
-    }
-
-    return result;
-}
-window.getCartData = getCartData;
-
-function updateSelectsFromData() {
-    if (!window.LOCAL_SERVICES) return;
-    const selects = {
-        'business-recruitment-select': window.LOCAL_SERVICES.business_recruitment,
-        'business-retention-select': window.LOCAL_SERVICES.business_retention,
-        'business-training-select': window.LOCAL_SERVICES.business_training,
-        'individual-base-select': window.LOCAL_SERVICES.individual_base,
-        'individual-standard-select': window.LOCAL_SERVICES.individual_standard,
-        'individual-premium-select': window.LOCAL_SERVICES.individual_premium,
-        'corporate-select': window.LOCAL_SERVICES.corporate,
-        'training-select': window.LOCAL_SERVICES.training,
-        'author-courses-select': window.LOCAL_SERVICES.author_courses
-    };
-    for (const [id, data] of Object.entries(selects)) {
-        const select = document.getElementById(id);
-        if (select && data && data.length) {
-            select.innerHTML = data.map(s => {
-                let priceText = '';
-                if (s.price === null || s.price === 0) {
-                    priceText = 'по запросу';
-                } else {
-                    priceText = s.price.toLocaleString() + ' ₽';
-                }
-                return `<option value="${s.price === null ? 'null' : s.price}">${s.service} — ${priceText}</option>`;
-            }).join('');
-        }
-    }
+// Форматирование цены
+// null → "по запросу", 0 → "0 ₽", остальное → "N ₽"
+function formatPrice(price) {
+    if (price === null) return 'по запросу';
+    if (price === 0) return '0 ₽';
+    return price.toLocaleString() + ' ₽';
 }
 
-function initCustomDropdowns() {
-    const selects = document.querySelectorAll('.service-select');
-    selects.forEach(select => {
-        if (select.nextElementSibling && select.nextElementSibling.classList.contains('custom-dropdown')) return;
-        const container = document.createElement('div');
-        container.className = 'custom-dropdown';
-        const button = document.createElement('button');
-        button.className = 'dropdown-button';
-        const defaultText = select.options[select.selectedIndex]?.text || 'Выберите услугу';
-        button.innerHTML = `${defaultText} <span class="dropdown-arrow">▼</span>`;
-        const menu = document.createElement('div');
-        menu.className = 'dropdown-menu';
-        Array.from(select.options).forEach(opt => {
-            const optionDiv = document.createElement('div');
-            optionDiv.className = 'dropdown-option';
-            optionDiv.textContent = opt.text;
-            optionDiv.dataset.value = opt.value;
-            optionDiv.addEventListener('click', () => {
-                select.value = opt.value;
-                button.innerHTML = `${opt.text} <span class="dropdown-arrow">▼</span>`;
-                menu.querySelectorAll('.dropdown-option').forEach(div => div.classList.remove('selected'));
-                optionDiv.classList.add('selected');
-                menu.classList.remove('open');
-                const event = new Event('change', { bubbles: true });
-                select.dispatchEvent(event);
-            });
-            menu.appendChild(optionDiv);
-        });
-        const selectedOpt = Array.from(select.options).find(opt => opt.selected);
-        if (selectedOpt) {
-            const selectedDiv = Array.from(menu.children).find(div => div.textContent === selectedOpt.text);
-            if (selectedDiv) selectedDiv.classList.add('selected');
-        }
-        button.addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
-            menu.classList.toggle('open');
-        });
-        container.appendChild(button);
-        container.appendChild(menu);
-        select.style.display = 'none';
-        select.parentNode.insertBefore(container, select.nextSibling);
-    });
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
+// Получение числовой цены для расчётов
+function getNumericPrice(price) {
+    if (price === null) return 0;
+    return price;
+}
+
+// Показать уведомление
+function showCalculatorToast(message, isError = false) {
+    const existingToast = document.querySelector('.custom-toast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'custom-toast';
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${isError ? '#dc3545' : '#28a745'};
+        color: white;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-size: 14px;
+        z-index: 10000;
+        font-weight: 500;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+}
+
+// Экранирование HTML
+function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function (m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
     });
 }
 
+// ========== ФУНКЦИИ КОРЗИНЫ ==========
+
+// Добавление услуги в корзину
+function addToCart(serviceName, price, quantity) {
+    const existing = cart.find(item => item.name === serviceName);
+    if (existing) {
+        existing.qty += quantity;
+        showCalculatorToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`);
+    } else {
+        cart.push({name: serviceName, price: price, qty: quantity});
+        showCalculatorToast(`✅ "${serviceName}" добавлен(а) в корзину`);
+    }
+    renderCart();
+}
+
+// Обновление корзины
 function renderCart() {
     let total = 0;
-    let totalQuantity = 0;
+    let totalQty = 0;
 
     cart.forEach(item => {
-        if (item.price !== null && item.price > 0) {
-            total += item.price * item.qty;
-            totalQuantity += item.qty;
-        }
+        const itemPrice = getNumericPrice(item.price);
+        total += itemPrice * item.qty;
+        totalQty += item.qty;
     });
 
     let finalTotal = total;
     let discount = 0;
     let discountApplied = false;
 
-    if (totalQuantity >= 2 && total > 0) {
+    if (totalQty >= 2 && total > 0) {
         discount = total * 0.05;
         finalTotal = total - discount;
         discountApplied = true;
     }
 
-    const totalEl = document.getElementById('totalPrice');
-    if (totalEl) {
-        totalEl.innerText = finalTotal.toLocaleString() + ' ₽';
+    const totalPriceSpan = document.getElementById('totalPrice');
+    if (totalPriceSpan) {
+        totalPriceSpan.innerHTML = formatPrice(finalTotal);
     }
 
     const discountDiv = document.getElementById('discountInfo');
     if (discountDiv) {
         if (discountApplied) {
-            discountDiv.innerHTML = `✅ Скидка 5% (${totalQuantity} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
-        } else if (totalQuantity === 1 && total > 0) {
+            discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
+        } else if (totalQty === 1 && total > 0) {
             discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
+        } else if (totalQty >= 1 && total === 0) {
+            discountDiv.innerHTML = '🔹 Бесплатные услуги не участвуют в скидке. Добавьте платные услуги.';
         } else {
             discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
         }
     }
 
-    // ОДНА ОБЩАЯ КОРЗИНА
-    const cartContainer = document.getElementById('cart-items-list');
-    if (cartContainer) cartContainer.innerHTML = '';
+    const container = document.getElementById('servicesList');
+    if (!container) return;
 
     if (cart.length === 0) {
-        if (cartContainer) cartContainer.innerHTML = '<div class="cart-empty">Корзина пуста. Добавьте услуги выше.</div>';
+        container.innerHTML = '';
         return;
     }
 
+    container.innerHTML = '';
     cart.forEach((item, idx) => {
-        if (!cartContainer) return;
-
-        const priceDisplay = (item.price === null || item.price === 0)
-            ? 'по запросу'
-            : (item.price * item.qty).toLocaleString() + ' ₽';
-
         const div = document.createElement('div');
         div.className = 'calc-item';
-        div.dataset.idx = idx;
+
+        let priceDisplay;
+        if (item.price === null) {
+            priceDisplay = 'по запросу';
+        } else if (item.price === 0) {
+            priceDisplay = '0 ₽';
+        } else {
+            priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
+        }
+
         div.innerHTML = `
             <div class="service-name">${escapeHtml(item.name)}</div>
             <div class="service-price">${priceDisplay}</div>
             <div class="service-qty-control">
-                <button class="qty-btn qty-minus" data-idx="${idx}" aria-label="Уменьшить количество">−</button>
+                <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
                 <span class="qty-value">${item.qty}</span>
-                <button class="qty-btn qty-plus" data-idx="${idx}" aria-label="Увеличить количество">+</button>
+                <button class="qty-btn qty-plus" data-idx="${idx}">+</button>
             </div>
-            <div class="service-remove"><button class="remove-item" data-idx="${idx}" aria-label="Удалить услугу">✖</button></div>
+            <div class="service-remove">
+                <button class="remove-item" data-idx="${idx}">✖</button>
+            </div>
         `;
-        cartContainer.appendChild(div);
+        container.appendChild(div);
     });
 
-    // Привязываем обработчики
     document.querySelectorAll('.qty-minus').forEach(btn => {
-        btn.removeEventListener('click', btn._minusHandler);
-        btn._minusHandler = () => {
+        btn.onclick = () => {
             const idx = parseInt(btn.dataset.idx);
-            if (isNaN(idx)) return;
             if (cart[idx].qty > 1) {
                 cart[idx].qty--;
             } else {
                 cart.splice(idx, 1);
             }
             renderCart();
-            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
         };
-        btn.addEventListener('click', btn._minusHandler);
     });
 
     document.querySelectorAll('.qty-plus').forEach(btn => {
-        btn.removeEventListener('click', btn._plusHandler);
-        btn._plusHandler = () => {
+        btn.onclick = () => {
             const idx = parseInt(btn.dataset.idx);
-            if (isNaN(idx)) return;
             cart[idx].qty++;
             renderCart();
-            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
         };
-        btn.addEventListener('click', btn._plusHandler);
     });
 
     document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.removeEventListener('click', btn._removeHandler);
-        btn._removeHandler = () => {
+        btn.onclick = () => {
             const idx = parseInt(btn.dataset.idx);
-            if (isNaN(idx)) return;
             cart.splice(idx, 1);
             renderCart();
-            if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
         };
-        btn.addEventListener('click', btn._removeHandler);
     });
 }
 
-function addToCart(cat, selectId, qtyId) {
+// ========== ЗАПОЛНЕНИЕ SELECT'ОВ ==========
+
+function populateSelect(selectId, services) {
     const select = document.getElementById(selectId);
-    if (!select) return;
-
-    const priceValue = select.value;
-    let price = null;
-    if (priceValue !== 'null' && !isNaN(parseInt(priceValue))) {
-        price = parseInt(priceValue);
+    if (!select) {
+        console.error('Select not found:', selectId);
+        return;
     }
 
-    const fullText = select.options[select.selectedIndex].text;
-    const name = fullText.replace(/ — .*/, '');
+    select.innerHTML = '';
+    services.forEach((service) => {
+        const option = document.createElement('option');
+        option.value = service.price !== null ? service.price : 'null';
 
-    let quantity = parseInt(document.getElementById(qtyId).value);
-    if (isNaN(quantity) || quantity < 1) quantity = 1;
+        let priceDisplay;
+        if (service.price === null) {
+            priceDisplay = 'по запросу';
+        } else if (service.price === 0) {
+            priceDisplay = '0 ₽';
+        } else {
+            priceDisplay = service.price.toLocaleString() + ' ₽';
+        }
 
-    // Все услуги складываются в одну общую корзину
-    const existing = cart.find(i => i.name === name);
-    if (existing) {
-        existing.qty += quantity;
-    } else {
-        cart.push({ name, price, qty: quantity });
-    }
-
-    renderCart();
-    if (typeof window.updateCartSummary === 'function') window.updateCartSummary();
-
-    const priceText = (price === null || price === 0) ? 'по запросу' : price.toLocaleString() + ' ₽';
-    if (typeof window.showSuccessToast === 'function') {
-        window.showSuccessToast(`✅ "${name}" добавлен(а) в корзину (${priceText})`);
-    }
+        option.textContent = `${service.name} — ${priceDisplay}`;
+        option.setAttribute('data-name', service.name);
+        option.setAttribute('data-price', service.price !== null ? service.price : 'null');
+        select.appendChild(option);
+    });
 }
 
-function initCalculator() {
-    if (calculatorInitialized) return;
-    calculatorInitialized = true;
+function initSelects() {
+    if (typeof SERVICES_DATA === 'undefined') {
+        console.error('SERVICES_DATA не загружен!');
+        return;
+    }
+    populateSelect('recruitment-select', SERVICES_DATA.recruitment);
+    populateSelect('retention-select', SERVICES_DATA.retention);
+    populateSelect('business-training-select', SERVICES_DATA.businessTraining);
+    populateSelect('corporate-select', SERVICES_DATA.corporate);
+    populateSelect('start-select', SERVICES_DATA.start);
+    populateSelect('growth-select', SERVICES_DATA.growth);
+    populateSelect('executive-select', SERVICES_DATA.executive);
+    populateSelect('training-select', SERVICES_DATA.training);
+    populateSelect('courses-select', SERVICES_DATA.courses);
+}
 
-    updateSelectsFromData();
-    initCustomDropdowns();
+// ========== ИНИЦИАЛИЗАЦИЯ КНОПОК ДОБАВЛЕНИЯ ==========
 
+function initAddButtons() {
     const handlers = [
-        { btn: 'business-recruitment-add', cat: 'business_recruitment', select: 'business-recruitment-select', qty: 'business-recruitment-qty' },
-        { btn: 'business-retention-add', cat: 'business_retention', select: 'business-retention-select', qty: 'business-retention-qty' },
-        { btn: 'business-training-add', cat: 'business_training', select: 'business-training-select', qty: 'business-training-qty' },
-        { btn: 'individual-base-add', cat: 'individual_base', select: 'individual-base-select', qty: 'individual-base-qty' },
-        { btn: 'individual-standard-add', cat: 'individual_standard', select: 'individual-standard-select', qty: 'individual-standard-qty' },
-        { btn: 'individual-premium-add', cat: 'individual_premium', select: 'individual-premium-select', qty: 'individual-premium-qty' },
-        { btn: 'corporate-add', cat: 'corporate', select: 'corporate-select', qty: 'corporate-qty' },
-        { btn: 'training-add', cat: 'training', select: 'training-select', qty: 'training-qty' },
-        { btn: 'author-courses-add', cat: 'author_courses', select: 'author-courses-select', qty: 'author-courses-qty' }
+        {btn: 'recruitment-add', select: 'recruitment-select', qty: 'recruitment-qty'},
+        {btn: 'retention-add', select: 'retention-select', qty: 'retention-qty'},
+        {btn: 'business-training-add', select: 'business-training-select', qty: 'business-training-qty'},
+        {btn: 'corporate-add', select: 'corporate-select', qty: 'corporate-qty'},
+        {btn: 'start-add', select: 'start-select', qty: 'start-qty'},
+        {btn: 'growth-add', select: 'growth-select', qty: 'growth-qty'},
+        {btn: 'executive-add', select: 'executive-select', qty: 'executive-qty'},
+        {btn: 'training-add', select: 'training-select', qty: 'training-qty'},
+        {btn: 'courses-add', select: 'courses-select', qty: 'courses-qty'}
     ];
 
-    handlers.forEach(({ btn, cat, select, qty }) => {
+    handlers.forEach(({btn, select, qty}) => {
         const button = document.getElementById(btn);
         if (button) {
             button.removeEventListener('click', button._handler);
-            button._handler = () => addToCart(cat, select, qty);
+            button._handler = () => {
+                const selectEl = document.getElementById(select);
+                const selectedOption = selectEl.options[selectEl.selectedIndex];
+                const serviceName = selectedOption.getAttribute('data-name');
+                let price = selectEl.value;
+                price = (price === 'null' || price === '') ? null : parseInt(price);
+                let quantity = parseInt(document.getElementById(qty).value);
+                if (isNaN(quantity) || quantity < 1) quantity = 1;
+
+                if (serviceName) {
+                    addToCart(serviceName, price, quantity);
+                } else {
+                    console.error('Не удалось получить название услуги');
+                    showCalculatorToast('❌ Ошибка: не удалось определить услугу', true);
+                }
+            };
             button.addEventListener('click', button._handler);
+        } else {
+            console.error('Button not found:', btn);
         }
     });
+}
 
-    // Инициализация табов
-    const tabs = document.querySelectorAll('.calculator-tabs .tab-btn');
+// ========== ИНИЦИАЛИЗАЦИЯ ВКЛАДОК ==========
+
+function initTabs() {
+    const tabs = document.querySelectorAll('.tab-btn');
     tabs.forEach(btn => {
         btn.removeEventListener('click', btn._tabHandler);
         btn._tabHandler = () => {
             const tab = btn.dataset.tab;
-            const activePane = document.querySelector('.tab-pane.active');
-            if (activePane) activePane.classList.remove('active');
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
             tabs.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const newPane = document.getElementById(`tab-${tab}`);
-            if (newPane) newPane.classList.add('active');
+            const activePane = document.getElementById(`tab-${tab}`);
+            if (activePane) activePane.classList.add('active');
         };
         btn.addEventListener('click', btn._tabHandler);
     });
 }
 
+// ========== ИНИЦИАЛИЗАЦИЯ ФОРМЫ ==========
+
+function initQuickOrderForm() {
+    const form = document.getElementById('quickOrderForm');
+    if (form) {
+        form.removeEventListener('submit', form._submitHandler);
+        form._submitHandler = (e) => {
+            e.preventDefault();
+            const phone = document.getElementById('quickPhone').value;
+            const consent = document.getElementById('quickConsent').checked;
+
+            if (!phone) {
+                showCalculatorToast('❌ Введите номер телефона', true);
+                return;
+            }
+            if (!consent) {
+                showCalculatorToast('❌ Подтвердите согласие на обработку данных', true);
+                return;
+            }
+
+            let cartText = '';
+            let total = 0;
+            cart.forEach(item => {
+                const itemPrice = getNumericPrice(item.price);
+                const subtotal = itemPrice * item.qty;
+                total += subtotal;
+                cartText += `${item.name} x${item.qty} = ${formatPrice(subtotal)}\n`;
+            });
+
+            let totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            let finalTotal = total;
+            if (totalQty >= 2 && total > 0) finalTotal = total * 0.95;
+
+            alert(`✅ Заявка принята!\n\n📋 Услуги:\n${cartText || '—'}\n💰 Итого: ${formatPrice(finalTotal)}\n\n📞 Мы свяжемся с вами в ближайшее время.`);
+
+            form.reset();
+            cart = [];
+            renderCart();
+        };
+        form.addEventListener('submit', form._submitHandler);
+    }
+}
+
+// ========== МАСКА ТЕЛЕФОНА ==========
+
+function initQuickPhoneMask() {
+    const phoneInput = document.getElementById('quickPhone');
+    if (phoneInput) {
+        phoneInput.removeEventListener('input', phoneInput._maskHandler);
+        phoneInput._maskHandler = function (e) {
+            let digits = this.value.replace(/\D/g, '');
+            if (digits.length > 11) digits = digits.slice(0, 11);
+            let formatted = '';
+            if (digits.length === 0) formatted = '';
+            else if (digits.length <= 1) formatted = '+' + digits;
+            else if (digits.length <= 4) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1);
+            else if (digits.length <= 7) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4);
+            else if (digits.length <= 9) formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7);
+            else formatted = '+' + digits.slice(0, 1) + ' ' + digits.slice(1, 4) + ' ' + digits.slice(4, 7) + ' ' + digits.slice(7, 9) + ' ' + digits.slice(9, 11);
+            this.value = formatted;
+        };
+        phoneInput.addEventListener('input', phoneInput._maskHandler);
+    }
+}
+
+// ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ==========
+
+function initCalculator() {
+    console.log('Инициализация калькулятора...');
+    if (typeof SERVICES_DATA !== 'undefined') {
+        initSelects();
+    } else {
+        console.error('SERVICES_DATA не загружен! Проверьте подключение services-data.js');
+    }
+    initAddButtons();
+    initTabs();
+    initQuickOrderForm();
+    initQuickPhoneMask();
+    console.log('Инициализация калькулятора завершена');
+}
+
+// Запуск при загрузке DOM
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCalculator);
+} else {
+    initCalculator();
+}
+
+// Экспорт для использования в других модулях
 window.initCalculator = initCalculator;
-window.addToCart = addToCart;
-window.renderCart = renderCart;
+window.getCartData = function() {
+    if (cart.length === 0) return 'Корзина пуста';
+    return cart.map(item => `${item.name} x${item.qty} = ${formatPrice(getNumericPrice(item.price) * item.qty)}`).join('\n');
+};
 // ========== ВЕСА УСЛУГ (ТОЛЬКО ПРИОРИТЕТНЫЕ ДЛЯ КВИЗА, БЕЗ БЕСПЛАТНЫХ) ==========
 // Табличный формат: каждая услуга описывается массивом [название, веса...]
 // Формат: [название, role_*, level_*, urgency_*, importance_*, budget_*]
