@@ -152,7 +152,7 @@
         return {
             variantA: top.service,
             variantB: second.service,
-            variantAFormatted: formatServiceWiфthCategory(top.service),
+            variantAFormatted: formatServiceWithCategory(top.service),
             variantBFormatted: formatServiceWithCategory(second.service),
             scoreA: top.score,
             scoreB: second.score,
