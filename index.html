@@ -152,7 +152,7 @@
         });
     </script>
 
-    <!-- Динамическая загрузка счётчиков с улучшенным consent (исправлен try/catch) -->
+    <!-- Динамическая загрузка счётчиков с улучшенным consent -->
     <script>
         (function () {
             var ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
@@ -202,20 +202,32 @@
                 }
             }
 
-            // Проверяем сохранённое согласие с try/catch
             try {
                 var consent = localStorage.getItem('cookie_consent');
                 if (consent === 'accepted') {
                     loadMetrics();
                 }
             } catch(e) {
-                // Если localStorage недоступен, не загружаем счётчики
                 if (window.IS_DEV) console.warn('localStorage недоступен', e);
             }
 
             window.loadMetricsOnConsent = loadMetrics;
         })();
     </script>
+
+    <!-- ПОЛИФИЛ ДЛЯ IntersectionObserver (для старых браузеров) -->
+    <script>
+        (function() {
+            if (typeof window.IntersectionObserver === 'undefined') {
+                var script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/intersection-observer@0.12.0/intersection-observer.js';
+                script.async = true;
+                document.head.appendChild(script);
+            }
+        })();
+    </script>
+
+    <!-- Остальные метатеги, schema.org и т.д. подключаются через отдельные файлы -->
 <style>
 /* ==================================================================
    ПЕРЕМЕННЫЕ, СБРОС, БАЗОВАЯ ТИПОГРАФИКА
@@ -265,15 +277,7 @@ body {
     padding: 0 20px;
 }
 
-/* Улучшенная загрузка шрифтов */
-@font-face {
-    font-family: 'Inter';
-    font-style: normal;
-    font-weight: 400 800;
-    font-display: swap;
-    src: url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap') format('woff2');
-}
-
+/* Улучшенная загрузка шрифтов — удалён дублирующий @font-face, оставлен только Google Fonts из head */
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
@@ -3146,7 +3150,7 @@ section[id] {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 26.05.2026 23:38:27
+                Версия: 27.05.2026 00:07:56
             </div>
         </div>
     </div>
@@ -3157,6 +3161,7 @@ section[id] {
     <meta itemprop="name" content="Прайс-лист услуг карьерного консультанта Виктории Любачевой">
     <meta itemprop="description" content="Актуальные цены на все услуги по подбору персонала, карьерному коучингу, тренингам и консультациям">
     <meta itemprop="numberOfItems" content="66">
+    <meta itemprop="priceCurrency" content="RUB">
 
     <ul>
         <!-- ===== ИЩУ РАБОТУ (B2C базовые) ===== -->
@@ -3468,7 +3473,13 @@ section[id] {
     <div class="modal-content">
         <h3>📧 Получить материалы на email</h3>
         <p>Введите ваш email, и мы отправим ссылки на скачивание.</p>
-        <input type="email" id="materialsEmail" placeholder="Ваш email" style="width:100%; margin:15px 0; padding:12px; border-radius:40px; border:1px solid #ccc;">
+
+        <!-- ДОБАВЛЕНА МЕТКА ДЛЯ ДОСТУПНОСТИ -->
+        <label for="materialsEmail" class="visually-hidden">Ваш email</label>
+        <input type="email" id="materialsEmail" placeholder="Ваш email"
+               style="width:100%; margin:15px 0; padding:12px; border-radius:40px; border:1px solid #ccc;"
+               aria-label="Введите ваш email адрес">
+
         <div style="display: flex; gap: 10px; justify-content: flex-end;">
             <button id="sendMaterialsBtn" class="btn-primary">Отправить</button>
             <button id="closeMaterialsModal" class="btn-secondary">Закрыть</button>
@@ -4589,7 +4600,12 @@ window.initBurgerMenu = initBurgerMenu;
 window.initSmoothScroll = initSmoothScroll;
 function initCopyButtons() {
     document.querySelectorAll('.copyable-phone, .copyable-text').forEach(el => {
-        el.addEventListener('click', function(e) {
+        // Удаляем старые обработчики, чтобы не дублировать
+        el.removeEventListener('click', el._clickHandler);
+        el.removeEventListener('keydown', el._keydownHandler);
+
+        // Создаём и сохраняем обработчики
+        el._clickHandler = function(e) {
             e.stopPropagation();
             const textToCopy = this.getAttribute('data-copy');
             if (!textToCopy) return;
@@ -4599,10 +4615,18 @@ function initCopyButtons() {
                 logError('Ошибка копирования:', err);
                 showErrorToast('Не удалось скопировать. Попробуйте вручную.');
             });
-        });
+        };
+        el._keydownHandler = function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        };
+
+        el.addEventListener('click', el._clickHandler);
+        el.addEventListener('keydown', el._keydownHandler);
     });
 }
-window.initCopyButtons = initCopyButtons;
 // ========== ПОЛНЫЙ ПЕРЕЧЕНЬ УСЛУГ С ГРУППИРОВКОЙ ==========
 const SERVICES_DATA = {
     // Подбор персонала
@@ -4891,12 +4915,12 @@ function renderCart() {
             <div class="service-name">${escapedName}</div>
             <div class="service-price">${priceDisplay}</div>
             <div class="service-qty-control">
-                <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
-                <span class="qty-value">${item.qty}</span>
-                <button class="qty-btn qty-plus" data-idx="${idx}">+</button>
+                <button class="qty-btn qty-minus" data-idx="${idx}" aria-label="Уменьшить количество">−</button>
+                <span class="qty-value" aria-label="Количество">${item.qty}</span>
+                <button class="qty-btn qty-plus" data-idx="${idx}" aria-label="Увеличить количество">+</button>
             </div>
             <div class="service-remove">
-                <button class="remove-item" data-idx="${idx}">✖</button>
+                <button class="remove-item" data-idx="${idx}" aria-label="Удалить услугу">✖</button>
             </div>
         `;
         container.appendChild(div);
@@ -5102,7 +5126,7 @@ window.SERVICE_WEIGHTS = {
     // B2C: Стандартные (10 000 – 50 000 ₽)
     "Индивидуальный тренинг «Продай себя дорого»": { role_job_seeker:9, role_growth:8, level_middle:8, level_senior:8, urgency_fast:7, urgency_1_2_months:6, importance_salary:9, importance_career:8, budget_15000_50000:8, budget_5000_15000:6 },
     "План развития (рост в должности)": { role_growth:10, level_middle:9, level_senior:7, urgency_1_2_months:7, urgency_3_6_months:6, importance_career:10, importance_salary:7, budget_15000_50000:8, budget_5000_15000:6 },
-    "Повышение грейда": { role_growth:10, level_middle:9, level_senior:7, urgency_1_2_months:8, importance_salary:9, importance_career:8, budget_15000_50000:8 },
+    // "Повышение грейда" удалено, так как этой услуги нет в калькуляторе
     "Развитие управленческих навыков": { role_growth:10, level_lead:9, level_director:8, urgency_1_2_months:7, urgency_3_6_months:6, importance_career:9, importance_team:8, budget_50000_100000:8, budget_15000_50000:6 },
     "Карьерная стратегия (пакет 3 консультации)": { role_job_seeker:9, role_career_change:9, role_growth:8, level_middle:8, level_senior:8, urgency_1_2_months:7, urgency_3_6_months:6, importance_career:9, importance_salary:7, budget_15000_50000:9, budget_50000_100000:7 },
     "Коучинг для руководителей": { role_growth:9, role_job_seeker:7, level_lead:9, level_director:8, level_top:7, urgency_1_2_months:7, importance_career:9, importance_team:8, budget_50000_100000:8, budget_15000_50000:6 },

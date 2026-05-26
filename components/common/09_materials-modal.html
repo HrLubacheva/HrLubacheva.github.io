@@ -3,7 +3,13 @@
     <div class="modal-content">
         <h3>📧 Получить материалы на email</h3>
         <p>Введите ваш email, и мы отправим ссылки на скачивание.</p>
-        <input type="email" id="materialsEmail" placeholder="Ваш email" style="width:100%; margin:15px 0; padding:12px; border-radius:40px; border:1px solid #ccc;">
+
+        <!-- ДОБАВЛЕНА МЕТКА ДЛЯ ДОСТУПНОСТИ -->
+        <label for="materialsEmail" class="visually-hidden">Ваш email</label>
+        <input type="email" id="materialsEmail" placeholder="Ваш email"
+               style="width:100%; margin:15px 0; padding:12px; border-radius:40px; border:1px solid #ccc;"
+               aria-label="Введите ваш email адрес">
+
         <div style="display: flex; gap: 10px; justify-content: flex-end;">
             <button id="sendMaterialsBtn" class="btn-primary">Отправить</button>
             <button id="closeMaterialsModal" class="btn-secondary">Закрыть</button>

@@ -19,7 +19,7 @@ window.SERVICE_WEIGHTS = {
     // B2C: Стандартные (10 000 – 50 000 ₽)
     "Индивидуальный тренинг «Продай себя дорого»": { role_job_seeker:9, role_growth:8, level_middle:8, level_senior:8, urgency_fast:7, urgency_1_2_months:6, importance_salary:9, importance_career:8, budget_15000_50000:8, budget_5000_15000:6 },
     "План развития (рост в должности)": { role_growth:10, level_middle:9, level_senior:7, urgency_1_2_months:7, urgency_3_6_months:6, importance_career:10, importance_salary:7, budget_15000_50000:8, budget_5000_15000:6 },
-    "Повышение грейда": { role_growth:10, level_middle:9, level_senior:7, urgency_1_2_months:8, importance_salary:9, importance_career:8, budget_15000_50000:8 },
+    // "Повышение грейда" удалено, так как этой услуги нет в калькуляторе
     "Развитие управленческих навыков": { role_growth:10, level_lead:9, level_director:8, urgency_1_2_months:7, urgency_3_6_months:6, importance_career:9, importance_team:8, budget_50000_100000:8, budget_15000_50000:6 },
     "Карьерная стратегия (пакет 3 консультации)": { role_job_seeker:9, role_career_change:9, role_growth:8, level_middle:8, level_senior:8, urgency_1_2_months:7, urgency_3_6_months:6, importance_career:9, importance_salary:7, budget_15000_50000:9, budget_50000_100000:7 },
     "Коучинг для руководителей": { role_growth:9, role_job_seeker:7, level_lead:9, level_director:8, level_top:7, urgency_1_2_months:7, importance_career:9, importance_team:8, budget_50000_100000:8, budget_15000_50000:6 },
