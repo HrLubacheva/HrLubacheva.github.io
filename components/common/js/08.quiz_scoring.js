@@ -93,7 +93,6 @@
         let mapping = window.ANSWER_MAPPING;
 
         if (!weights || Object.keys(weights).length === 0 || !mapping) {
-            console.error("SERVICE_WEIGHTS или ANSWER_MAPPING не загружены");
             return {
                 variantA: "Индивидуальная консультация (1ч)",
                 variantB: "Экспресс-консультация (30мин)",
@@ -153,7 +152,7 @@
         return {
             variantA: top.service,
             variantB: second.service,
-            variantAFormatted: formatServiceWithCategory(top.service),
+            variantAFormatted: formatServiceWiфthCategory(top.service),
             variantBFormatted: formatServiceWithCategory(second.service),
             scoreA: top.score,
             scoreB: second.score,

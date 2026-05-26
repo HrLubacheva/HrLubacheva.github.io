@@ -1,19 +1,6 @@
 function initCallbackForm() {
-    // ========== Общие функции ==========
-    function normalizePhone(phone) {
-        let digits = phone.replace(/\D/g, '');
-        if (digits.length === 0) return '';
-        if (digits[0] === '8') digits = '7' + digits.slice(1);
-        if (digits[0] === '9') digits = '7' + digits;
-        if (digits[0] !== '7') digits = '7' + digits;
-        if (digits.length > 11) digits = digits.slice(0, 11);
-        return digits;
-    }
-
-    function isValidPhone(phone) {
-        const normalized = normalizePhone(phone);
-        return normalized.length === 11 && /^7\d{10}$/.test(normalized);
-    }
+    // ========== ИСПРАВЛЕНО: используем глобальные функции валидации ==========
+    // normalizePhoneDigits и validatePhoneDigits уже есть в window
 
     // ========== Форма обратного звонка ==========
     const callbackForm = document.getElementById('callbackForm');
@@ -41,7 +28,10 @@ function initCallbackForm() {
 
         if (callbackPhone) {
             callbackPhone.addEventListener('blur', () => {
-                if (!isValidPhone(callbackPhone.value) && callbackPhone.value.trim() !== '') {
+                const isValid = window.validatePhoneDigits ?
+                    window.validatePhoneDigits(callbackPhone.value) :
+                    /^7\d{10}$/.test(callbackPhone.value.replace(/\D/g, ''));
+                if (!isValid && callbackPhone.value.trim() !== '') {
                     showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
                 } else {
                     clearCallbackMessage();
@@ -68,7 +58,11 @@ function initCallbackForm() {
             clearCallbackMessage();
 
             let isValid = true;
-            if (!isValidPhone(callbackPhone.value)) {
+            let phoneDigits = callbackPhone.value.replace(/\D/g, '');
+            if (phoneDigits.startsWith('8')) phoneDigits = '7' + phoneDigits.slice(1);
+            if (!phoneDigits.startsWith('7')) phoneDigits = '7' + phoneDigits;
+
+            if (phoneDigits.length !== 11) {
                 showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
                 isValid = false;
             }
@@ -82,7 +76,16 @@ function initCallbackForm() {
             }
             if (!isValid) return;
 
-            callbackPhone.value = normalizePhone(callbackPhone.value);
+            // ИСПРАВЛЕНО: нормализуем телефон через глобальную функцию
+            if (window.normalizePhoneDigits) {
+                callbackPhone.value = window.normalizePhoneDigits(callbackPhone.value);
+            } else {
+                let digits = callbackPhone.value.replace(/\D/g, '');
+                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+                if (!digits.startsWith('7')) digits = '7' + digits;
+                callbackPhone.value = digits;
+            }
+
             await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
                 const quizBlock = document.getElementById('quizSelectionBlock');
                 if (quizBlock) quizBlock.style.display = 'none';
@@ -91,7 +94,7 @@ function initCallbackForm() {
         });
     }
 
-    // ========== Форма быстрого заказа (упрощённая) ==========
+    // ========== Форма быстрого заказа ==========
     const quickForm = document.getElementById('quickOrderForm');
     const quickMessages = document.getElementById('quickFormMessages');
 
@@ -116,7 +119,11 @@ function initCallbackForm() {
 
         if (quickPhone) {
             quickPhone.addEventListener('blur', () => {
-                if (!isValidPhone(quickPhone.value) && quickPhone.value.trim() !== '') {
+                let digits = quickPhone.value.replace(/\D/g, '');
+                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+                if (!digits.startsWith('7')) digits = '7' + digits;
+                const isValid = digits.length === 11;
+                if (!isValid && quickPhone.value.trim() !== '') {
                     showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
                 } else {
                     clearQuickMessage();
@@ -130,7 +137,11 @@ function initCallbackForm() {
             clearQuickMessage();
 
             let isValid = true;
-            if (!isValidPhone(quickPhone.value)) {
+            let digits = quickPhone.value.replace(/\D/g, '');
+            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+            if (!digits.startsWith('7')) digits = '7' + digits;
+
+            if (digits.length !== 11) {
                 showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
                 isValid = false;
             }
@@ -145,7 +156,16 @@ function initCallbackForm() {
             }
             if (!isValid) return;
 
-            quickPhone.value = normalizePhone(quickPhone.value);
+            // ИСПРАВЛЕНО: нормализуем телефон
+            if (window.normalizePhoneDigits) {
+                quickPhone.value = window.normalizePhoneDigits(quickPhone.value);
+            } else {
+                let normDigits = quickPhone.value.replace(/\D/g, '');
+                if (normDigits.startsWith('8')) normDigits = '7' + normDigits.slice(1);
+                if (!normDigits.startsWith('7')) normDigits = '7' + normDigits;
+                quickPhone.value = normDigits;
+            }
+
             await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
                 const quizData = window.getQuizDataFromForm(form);
                 return { ...quizData, cart: cartData };
@@ -153,7 +173,7 @@ function initCallbackForm() {
         });
     }
 
-    // ========== Копирование корзины в буфер обмена ==========
+    // ========== Копирование корзины ==========
     const copyCartBtn = document.getElementById('copyCartBtn');
     if (copyCartBtn) {
         copyCartBtn.addEventListener('click', () => {

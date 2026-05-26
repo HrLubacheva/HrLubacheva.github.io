@@ -129,14 +129,13 @@
         if (typeof window.getPageText === 'function') formData.page = window.getPageText();
 
         if (typeof window.postWithRetry === 'function') {
-            window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => console.warn('Ошибка отправки статистики квиза:', err));
+            window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => {});
         } else {
-            console.warn('postWithRetry не определён, отправка через fallback fetch');
             fetch(scriptUrl, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: new URLSearchParams(formData)
-            }).catch(e => console.warn('Fallback ошибка:', e));
+            }).catch(e => {});
         }
     }
 
@@ -422,7 +421,6 @@
             removeBtn.addEventListener('click', removeBtn._removeHandler);
         }
 
-        // Новая кнопка копирования результатов
         const copyResultBtn = document.getElementById('copyQuizResultBtn');
         if (copyResultBtn) {
             copyResultBtn.removeEventListener('click', copyResultBtn._copyHandler);

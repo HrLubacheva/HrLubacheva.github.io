@@ -38,7 +38,6 @@
                     function update(currentTime) {
                         const elapsed = currentTime - startTime;
                         let progress = Math.min(elapsed / duration, 1);
-                        // плавное замедление в конце
                         const easeProgress = 1 - Math.pow(1 - progress, 1.5);
                         const current = Math.floor(easeProgress * final);
                         target.innerText = formatNumber(current);
@@ -111,6 +110,7 @@
         });
     }
 
+    // ИСПРАВЛЕНО: улучшена индикация отправки материалов
     function initMaterialsEmailButtons() {
         const buttons = document.querySelectorAll('.material-email-simple');
         const modal = document.getElementById('materialsModal');
@@ -143,7 +143,8 @@
                 setTimeout(() => {
                     modal.style.display = 'none';
                     document.body.classList.remove('modal-open');
-                    document.getElementById('materialsEmail').value = '';
+                    const emailInput = document.getElementById('materialsEmail');
+                    if (emailInput) emailInput.value = '';
                     isModalSending = false;
                 }, 200);
             };
@@ -159,9 +160,12 @@
                 }
                 const email = document.getElementById('materialsEmail').value;
                 const originalText = sendBtn.innerText;
+
+                // ИСПРАВЛЕНО: показываем индикацию на кнопке
                 isModalSending = true;
                 sendBtn.disabled = true;
-                sendBtn.innerText = 'Отправка...';
+                sendBtn.innerText = '⏳ Отправка...';
+
                 try {
                     const success = await window.sendMaterialsToEmail(email, currentMaterial);
                     if (success) {
@@ -169,9 +173,12 @@
                         setTimeout(() => {
                             modal.style.display = 'none';
                             document.body.classList.remove('modal-open');
-                            document.getElementById('materialsEmail').value = '';
+                            const emailInput = document.getElementById('materialsEmail');
+                            if (emailInput) emailInput.value = '';
                         }, 200);
                     }
+                } catch (err) {
+                    if (window.IS_DEV) console.error('Ошибка отправки:', err);
                 } finally {
                     sendBtn.disabled = false;
                     sendBtn.innerText = originalText;
@@ -189,7 +196,8 @@
                 setTimeout(() => {
                     modal.style.display = 'none';
                     document.body.classList.remove('modal-open');
-                    document.getElementById('materialsEmail').value = '';
+                    const emailInput = document.getElementById('materialsEmail');
+                    if (emailInput) emailInput.value = '';
                     isModalSending = false;
                 }, 200);
             }

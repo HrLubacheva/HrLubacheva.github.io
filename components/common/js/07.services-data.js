@@ -161,5 +161,3 @@ for (const category of Object.values(window.LOCAL_SERVICES)) {
         }
     }
 }
-
-console.log("✅ SERVICES_DATA и LOCAL_SERVICES загружены");

@@ -4,7 +4,6 @@ let cart = [];
 // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
 
 // Форматирование цены
-// null → "по запросу", 0 → "0 ₽", остальное → "N ₽"
 function formatPrice(price) {
     if (price === null) return 'по запросу';
     if (price === 0) return '0 ₽';
@@ -17,7 +16,7 @@ function getNumericPrice(price) {
     return price;
 }
 
-// Показать уведомление (используем локальное имя)
+// Показать уведомление
 function showCalcToast(message, isError = false) {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -58,7 +57,7 @@ function addToCart(serviceName, price, quantity) {
     renderCart();
 }
 
-// Обновление корзины
+// Обновление корзины (ИСПРАВЛЕНО - добавлен escapeHtml)
 function renderCart() {
     let total = 0;
     let totalQty = 0;
@@ -119,19 +118,11 @@ function renderCart() {
             priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
         }
 
-        // Используем глобальную escapeHtml
-        const escapeHtmlFn = window.escapeHtml || function(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        };
+        // ИСПРАВЛЕНО: используем escapeHtml для названия услуги
+        const escapedName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
 
         div.innerHTML = `
-            <div class="service-name">${escapeHtmlFn(item.name)}</div>
+            <div class="service-name">${escapedName}</div>
             <div class="service-price">${priceDisplay}</div>
             <div class="service-qty-control">
                 <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
@@ -179,7 +170,7 @@ function renderCart() {
 function populateSelect(selectId, services) {
     const select = document.getElementById(selectId);
     if (!select) {
-        console.error('Select not found:', selectId);
+        if (window.IS_DEV) console.error('Select not found:', selectId);
         return;
     }
 
@@ -206,7 +197,7 @@ function populateSelect(selectId, services) {
 
 function initSelects() {
     if (typeof SERVICES_DATA === 'undefined') {
-        console.error('SERVICES_DATA не загружен!');
+        if (window.IS_DEV) console.error('SERVICES_DATA не загружен!');
         return;
     }
     populateSelect('recruitment-select', SERVICES_DATA.recruitment);
@@ -251,12 +242,12 @@ function initAddButtons() {
                 if (serviceName) {
                     addToCart(serviceName, price, quantity);
                 } else {
-                    console.error('Не удалось получить название услуги');
+                    if (window.IS_DEV) console.error('Не удалось получить название услуги');
                     showCalcToast('❌ Ошибка: не удалось определить услугу', true);
                 }
             };
             button.addEventListener('click', button._handler);
-        } else {
+        } else if (window.IS_DEV) {
             console.error('Button not found:', btn);
         }
     });
@@ -281,7 +272,6 @@ function initTabs() {
 }
 
 // ========== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ФОРМ ==========
-// getCartData используется в 02_forms.js для отправки корзины в Google Sheets
 window.getCartData = function() {
     if (cart.length === 0) return 'Корзина пуста';
     return cart.map(item => {
@@ -298,24 +288,23 @@ window.getCartData = function() {
 // ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ==========
 
 function initCalculator() {
-    console.log('Инициализация калькулятора...');
+    if (window.IS_DEV) console.log('Инициализация калькулятора...');
 
-    // Предотвращаем двойную инициализацию
     if (window._calculatorInitialized) {
-        console.log('Калькулятор уже инициализирован');
+        if (window.IS_DEV) console.log('Калькулятор уже инициализирован');
         return;
     }
     window._calculatorInitialized = true;
 
     if (typeof SERVICES_DATA !== 'undefined') {
         initSelects();
-    } else {
+    } else if (window.IS_DEV) {
         console.error('SERVICES_DATA не загружен! Проверьте подключение services-data.js');
     }
     initAddButtons();
     initTabs();
 
-    console.log('Инициализация калькулятора завершена');
+    if (window.IS_DEV) console.log('Инициализация калькулятора завершена');
 }
 
 // Запуск при загрузке DOM
@@ -325,5 +314,4 @@ if (document.readyState === 'loading') {
     initCalculator();
 }
 
-// Экспорт для использования в других модулях
 window.initCalculator = initCalculator;
