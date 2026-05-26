@@ -538,49 +538,6 @@ function bindLiveValidation(input, type = 'phone') {
     input.addEventListener('input', () => clearFieldError(input));
 }
 
-// ========== ОТПРАВКА МАТЕРИАЛОВ НА EMAIL ==========
-let isSendingEmail = false;
-
-async function sendMaterialsToEmail(email, materialType) {
-    if (isSendingEmail) {
-        showErrorToast('⏳ Отправка уже выполняется, подождите...');
-        return false;
-    }
-
-    if (!email || !validateEmailFormat(email)) {
-        showErrorToast('❌ Введите корректный email');
-        return false;
-    }
-
-    let wantChecklist = false;
-    let wantTraining = false;
-
-    if (materialType === 'checklist') {
-        wantChecklist = true;
-    } else if (materialType === 'training') {
-        wantTraining = true;
-    } else if (materialType === 'both') {
-        wantChecklist = true;
-        wantTraining = true;
-    }
-
-    isSendingEmail = true;
-
-    try {
-        await window.sendMaterialsEmail(email, wantChecklist, wantTraining);
-        showSuccessToast('✅ Материалы отправлены! Проверьте почту');
-        return true;
-    } catch (err) {
-        showErrorToast('❌ Ошибка: ' + err.message);
-        return false;
-    } finally {
-        setTimeout(() => {
-            isSendingEmail = false;
-        }, 1000);
-    }
-}
-window.sendMaterialsToEmail = sendMaterialsToEmail;
-
 // ========== КНОПКИ «ПОДЕЛИТЬСЯ» (только копирование) ==========
 function initShareButtons() {
     const shareButtons = document.querySelectorAll('#shareButtonContacts, .floating-share-btn button');

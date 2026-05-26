@@ -54,5 +54,51 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
     }
 }
 
+// Обёртка для вызова из модального окна
+let isSendingEmail = false;
+
+async function sendMaterialsToEmail(email, materialType) {
+    if (isSendingEmail) {
+        window.showErrorToast('⏳ Отправка уже выполняется, подождите...');
+        return false;
+    }
+
+    if (!email || !isValidEmail(email)) {
+        window.showErrorToast('❌ Введите корректный email');
+        return false;
+    }
+
+    let wantChecklist = false;
+    let wantTraining = false;
+
+    if (materialType === 'checklist') {
+        wantChecklist = true;
+    } else if (materialType === 'training') {
+        wantTraining = true;
+    } else if (materialType === 'both') {
+        wantChecklist = true;
+        wantTraining = true;
+    }
+
+    isSendingEmail = true;
+
+    try {
+        await sendMaterialsEmail(email, wantChecklist, wantTraining);
+        window.showSuccessToast('✅ Материалы отправлены! Проверьте почту');
+        return true;
+    } catch (err) {
+        window.showErrorToast('❌ Ошибка: ' + err.message);
+        return false;
+    } finally {
+        setTimeout(() => {
+            isSendingEmail = false;
+        }, 1000);
+    }
+}
+
+// Экспорт
 window.sendMaterialsEmail = sendMaterialsEmail;
+window.sendMaterialsToEmail = sendMaterialsToEmail;
 window.isValidEmail = isValidEmail;
+
+console.log("✅ Email модуль загружен");

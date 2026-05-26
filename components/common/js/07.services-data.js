@@ -106,3 +106,60 @@ const SERVICES_DATA = {
 
 // Для обратной совместимости с другими модулями
 window.SERVICES_DATA = SERVICES_DATA;
+
+// ========== LOCAL_SERVICES ДЛЯ КВИЗА ==========
+window.LOCAL_SERVICES = {
+    individual_base: (SERVICES_DATA.start || [])
+        .filter(item => item.price !== null && item.price > 0 && item.price < 10000)
+        .map(item => ({ service: item.name, price: item.price })),
+
+    individual_standard: [
+        ...(SERVICES_DATA.start || [])
+            .filter(item => item.price !== null && item.price >= 10000 && item.price < 50000)
+            .map(item => ({ service: item.name, price: item.price })),
+        ...(SERVICES_DATA.growth || [])
+            .filter(item => item.price !== null && item.price >= 10000 && item.price < 50000)
+            .map(item => ({ service: item.name, price: item.price }))
+    ],
+
+    individual_premium: (SERVICES_DATA.executive || [])
+        .filter(item => item.price !== null && item.price >= 50000)
+        .map(item => ({ service: item.name, price: item.price })),
+
+    business_recruitment: (SERVICES_DATA.recruitment || [])
+        .filter(item => item.price !== null)
+        .map(item => ({ service: item.name, price: item.price })),
+
+    business_retention: (SERVICES_DATA.retention || [])
+        .filter(item => item.price !== null)
+        .map(item => ({ service: item.name, price: item.price })),
+
+    training: [
+        ...(SERVICES_DATA.training || [])
+            .filter(item => item.price !== null)
+            .map(item => ({ service: item.name, price: item.price })),
+        ...(SERVICES_DATA.businessTraining || [])
+            .filter(item => item.price !== null)
+            .map(item => ({ service: item.name, price: item.price }))
+    ],
+
+    corporate: (SERVICES_DATA.corporate || [])
+        .filter(item => item.price !== null)
+        .map(item => ({ service: item.name, price: item.price })),
+
+    author_courses: (SERVICES_DATA.courses || [])
+        .filter(item => item.price !== null)
+        .map(item => ({ service: item.name, price: item.price }))
+};
+
+// PRICE_BOOK для быстрого доступа к ценам
+window.PRICE_BOOK = {};
+for (const category of Object.values(window.LOCAL_SERVICES)) {
+    for (const item of category) {
+        if (!window.PRICE_BOOK[item.service]) {
+            window.PRICE_BOOK[item.service] = item.price;
+        }
+    }
+}
+
+console.log("✅ SERVICES_DATA и LOCAL_SERVICES загружены");

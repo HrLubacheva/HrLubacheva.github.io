@@ -1,6 +1,5 @@
 // ========== РАСЧЁТ БАЛЛОВ, ФИЛЬТРАЦИЯ И ПОДГОТОВКА ЦЕН ==========
 (function() {
-    // ========== МАППИНГ КАТЕГОРИЙ ДЛЯ ОТОБРАЖЕНИЯ ==========
     const CATEGORY_DISPLAY_NAMES = {
         business_recruitment: '🔍 HR: Рекрутинг и подбор',
         business_retention: '📊 HR: Удержание и развитие',
@@ -12,11 +11,9 @@
         author_courses: '📚 Авторские курсы'
     };
 
-    // Строим карту: услуга → категория
     function buildServiceCategoryMap() {
         const map = {};
         if (!window.LOCAL_SERVICES) return map;
-
         for (const [cat, items] of Object.entries(window.LOCAL_SERVICES)) {
             const displayName = CATEGORY_DISPLAY_NAMES[cat] || cat;
             for (const item of items) {
@@ -24,26 +21,6 @@
             }
         }
         return map;
-    }
-
-    // Строим PRICE_BOOK из LOCAL_SERVICES (включая все категории)
-    if (!window.PRICE_BOOK && window.LOCAL_SERVICES) {
-        window.PRICE_BOOK = {};
-        const categories = ['business_recruitment', 'business_retention', 'individual_base', 'individual_standard', 'individual_premium', 'training', 'corporate', 'author_courses'];
-        for (const cat of categories) {
-            if (window.LOCAL_SERVICES[cat]) {
-                for (const item of window.LOCAL_SERVICES[cat]) {
-                    window.PRICE_BOOK[item.service] = item.price;
-                }
-            }
-        }
-    }
-
-    function getNumericPrice(serviceName) {
-        if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) {
-            return window.PRICE_BOOK[serviceName];
-        }
-        return null;
     }
 
     function getServiceCategory(serviceName) {
@@ -58,41 +35,30 @@
         return `${category} — ${serviceName}`;
     }
 
-    function initPriceCategories() {
-        if (!window.PRICE_BOOK) return;
-        const categories = { base: [], standard: [], premium: [] };
-        for (const [service, price] of Object.entries(window.PRICE_BOOK)) {
-            if (price === null || price === 0) continue;
-            if (price < 10000) categories.base.push(service);
-            else if (price >= 10000 && price < 50000) categories.standard.push(service);
-            else if (price >= 50000) categories.premium.push(service);
+    function getNumericPrice(serviceName) {
+        if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) {
+            return window.PRICE_BOOK[serviceName];
         }
-        window.PRICE_CATEGORY = categories;
+        return null;
     }
 
     function getUserPriceSegment(answersArr) {
         const level = answersArr[1];
         const budget = answersArr[4];
-
         const expensiveLevels = ["Senior / ведущий", "Lead / руководитель", "Директор / Managing Director", "Топ-менеджер (C-level)", "Собственник бизнеса"];
         const isExpensiveByLevel = expensiveLevels.includes(level);
         const expensiveBudgets = ["50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"];
         const isExpensiveByBudget = expensiveBudgets.includes(budget);
-
         if (isExpensiveByLevel || isExpensiveByBudget) return "expensive";
-
         const cheapLevels = ["Junior / начинающий", "Middle / опытный"];
         const isCheapByLevel = cheapLevels.includes(level);
         const cheapBudgets = ["До 5 000 ₽", "5 000 – 15 000 ₽"];
         const isCheapByBudget = cheapBudgets.includes(budget);
-
         if (isCheapByLevel && isCheapByBudget) return "cheap";
-
         return "middle";
     }
 
     function isServiceAllowed(service, userRole, userSegment) {
-        // Определяем бизнес-услугу
         const isBusinessService = (
             service.includes("подбор") || service.includes("рекрутинг") ||
             service.includes("хэдхантинг") || service.includes("аутсорсинг") ||
@@ -109,12 +75,9 @@
             service === "Тренинг 'Удержание персонала'" ||
             service === "Тренинг 'Профилактика выгорания'"
         );
-
         const isBusinessUser = (userRole === "Подбираю сотрудников");
-
         if (isBusinessService && !isBusinessUser) return false;
         if (isBusinessUser && !isBusinessService) return false;
-
         if (!isBusinessService) {
             const price = getNumericPrice(service);
             if (price === 0) return false;
@@ -126,7 +89,6 @@
     }
 
     window.getTopTwoServices = function(answersArr) {
-        // Проверяем SERVICE_WEIGHTS
         let weights = window.SERVICE_WEIGHTS;
         let mapping = window.ANSWER_MAPPING;
 
@@ -140,14 +102,10 @@
             };
         }
 
-        if (!window.PRICE_CATEGORY || Object.keys(window.PRICE_CATEGORY).length === 0) {
-            initPriceCategories();
-        }
-
         const userRole = answersArr[0];
         const userSegment = getUserPriceSegment(answersArr);
-
         const userKeys = [];
+
         for (let i = 0; i < answersArr.length; i++) {
             const answer = answersArr[i];
             if (answer && mapping[answer]) {
@@ -163,14 +121,11 @@
         const scores = [];
         for (const [service, weightObj] of Object.entries(weights)) {
             if (!isServiceAllowed(service, userRole, userSegment)) continue;
-
             let total = 0;
             for (const key of userKeys) {
                 if (weightObj[key]) total += weightObj[key];
             }
-
             if (total === 0 && weightObj.role_any) total = weightObj.role_any;
-
             if (total > 0) {
                 const price = getNumericPrice(service);
                 scores.push({
