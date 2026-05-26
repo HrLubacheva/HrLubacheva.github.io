@@ -74,7 +74,7 @@
 }
 </script>
 
-    <!-- Безопасность (перенесено из metatags) -->
+    <!-- Безопасность -->
     <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
@@ -92,7 +92,7 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
-    <!-- Минимальный конфиг для аналитики (чтобы не ждать 00_config.js) -->
+    <!-- Минимальный конфиг для аналитики -->
     <script>
         window.APP_CONFIG = window.APP_CONFIG || {};
         Object.assign(window.APP_CONFIG, {
@@ -101,7 +101,7 @@
         });
     </script>
 
-    <!-- Динамическая загрузка счётчиков (без задержки, т.к. APP_CONFIG уже содержит ID) -->
+    <!-- Динамическая загрузка счётчиков -->
     <script>
         (function () {
             var ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
@@ -2326,10 +2326,33 @@ button:focus-visible,
 .mb-2 { margin-bottom: 16px; }
 .mb-3 { margin-bottom: 24px; }
 .mb-4 { margin-bottom: 32px; }
+
+/* Skip-link — виден только при фокусе (для доступности) */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 0 0 8px 0;
+    z-index: 1000;
+    font-weight: 500;
+    transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.5);
+}
 </style>
 </head>
 <body>
-<div id="top"></div><nav class="navbar">
+<a href="#main-content" class="skip-link">Перейти к содержанию</a>
+<div id="top"></div>
+<main id="main-content"><nav class="navbar">
     <div class="container">
         <div class="nav-top">
             <a href="#top" class="logo">
@@ -2369,7 +2392,7 @@ button:focus-visible,
             </div>
         </div>
     </div>
-</nav><section class="section" data-section-type="hero" itemscope itemtype="https://schema.org/Person">
+</nav><section class="section" data-section-type="hero" itemscope itemtype="https://schema.org/Person" id="main-content">
     <div class="container">
         <div class="hero-grid">
             <div class="hero-content cell-text fade-up" data-cell-type="text">
@@ -3204,7 +3227,8 @@ button:focus-visible,
             </a>
         </div>
     </div>
-</section><footer>
+</section></main>
+<footer>
     <div class="container">
         <div class="footer-content">
             <div class="footer-copyright">
@@ -3212,7 +3236,7 @@ button:focus-visible,
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 26.05.2026 13:59:07
+                Версия: 26.05.2026 14:06:28
             </div>
         </div>
     </div>
