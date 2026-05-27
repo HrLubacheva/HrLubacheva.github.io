@@ -1,5 +1,5 @@
 /* ==================================================================
-   РОЛИ
+   04_cards_grids.css – сетки карточек (роли, услуги)
    ================================================================== */
 .roles-grid {
     display: grid;
@@ -8,37 +8,13 @@
     list-style: none;
     padding-left: 0;
 }
-@media (min-width: 992px) {
-    .roles-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-    .roles-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@media (max-width: 767px) {
-    .roles-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-}
+@media (min-width: 992px) { .roles-grid { grid-template-columns: repeat(3,1fr); } }
+@media (min-width: 768px) and (max-width: 991px) { .roles-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 767px) { .roles-grid { grid-template-columns: 1fr; gap: 20px; } }
 
-/* ==================================================================
-   КАРТОЧКИ И СЕТКИ
-   ================================================================== */
-.process-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 30px;
-    margin: 40px 0;
-    list-style: none;
-    padding-left: 0;
-}
 .services-flex {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2,1fr);
     gap: 30px;
     margin: 40px 0;
     list-style: none;
@@ -50,7 +26,8 @@
         gap: 20px;
     }
 }
-.role-card, .service-card, .process-card {
+
+.role-card, .service-card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
     padding: 28px;
@@ -58,11 +35,11 @@
     transition: var(--transition);
     border: 1px solid var(--border);
 }
-.role-card:hover, .service-card:hover, .process-card:hover {
+.role-card:hover, .service-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
 }
-.role-card p, .service-card p, .process-card p {
+.role-card p, .service-card p {
     color: var(--text-dark);
     margin-top: 12px;
 }
@@ -82,16 +59,4 @@
     left: 0;
     color: var(--primary);
     font-weight: bold;
-}
-.process-step {
-    width: 40px;
-    height: 40px;
-    background: var(--primary);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-bottom: 15px;
 }

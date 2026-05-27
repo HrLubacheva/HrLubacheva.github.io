@@ -1,36 +1,34 @@
+/* ==================================================================
+   12_certificates.css – карусель сертификатов
+   ================================================================== */
 .certificates-section {
     background: var(--light-bg, #f8f9fa);
     padding: 60px 0;
 }
-
 .carousel-wrapper {
     position: relative;
     display: flex;
     align-items: center;
     margin: 40px 0 20px;
 }
-
 .carousel-viewport {
     overflow-x: hidden;
     width: 100%;
     border-radius: var(--radius-lg, 28px);
 }
-
 .carousel-track {
     display: flex;
     gap: 24px;
-    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94);
     will-change: transform;
 }
-
-/* Все слайды имеют одинаковую высоту 260px, ширина автоматическая */
 .carousel-slide {
     flex: 0 0 auto;
     width: auto;
     min-width: 140px;
     max-width: 260px;
     height: 260px;
-    background: white;
+    background: transparent;
     border-radius: var(--radius-md, 16px);
     overflow: hidden;
     box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
@@ -39,13 +37,10 @@
     align-items: center;
     justify-content: center;
 }
-
 .carousel-slide:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
 }
-
-/* Изображения — лёгкое масштабирование и обрезка краёв */
 .carousel-slide img {
     height: 100%;
     width: auto;
@@ -54,27 +49,22 @@
     transform: scale(1.02);
     transition: transform 0.25s ease;
     display: block;
-    background: #eef2f5;
+    background: transparent;
 }
-
 .carousel-slide:hover img {
     transform: scale(1.05);
 }
-
-/* Горизонтальные сертификаты — тоже обрезаем по краям (можно оставить cover) */
 .carousel-slide.horizontal {
     max-width: 360px;
 }
 .carousel-slide.horizontal img {
     object-fit: cover;
     transform: scale(1.02);
-    background: #eef2f5;
+    background: transparent;
 }
 .carousel-slide.horizontal:hover img {
     transform: scale(1.05);
 }
-
-/* Кнопки навигации */
 .carousel-btn {
     position: absolute;
     top: 50%;
@@ -100,10 +90,12 @@
     color: white;
     transform: translateY(-50%) scale(1.05);
 }
-.carousel-prev { left: -22px; }
-.carousel-next { right: -22px; }
-
-/* Прогресс-бар */
+.carousel-prev {
+    left: -22px;
+}
+.carousel-next {
+    right: -22px;
+}
 .carousel-progress {
     width: 100%;
     height: 2px;
@@ -119,8 +111,6 @@
     border-radius: 2px;
     transition: width 0.05s linear;
 }
-
-/* Точки-индикаторы */
 .carousel-dots {
     display: flex;
     justify-content: center;
@@ -143,8 +133,6 @@
     background: var(--primary-light, #4A8BC2);
     transform: scale(1.2);
 }
-
-/* Адаптив */
 @media (max-width: 992px) {
     .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
     .carousel-slide.horizontal { max-width: 300px; }

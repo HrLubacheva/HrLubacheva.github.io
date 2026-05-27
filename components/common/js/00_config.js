@@ -1,9 +1,11 @@
-// ========== ГЛОБАЛЬНЫЕ НАСТРОЙКИ САЙТА ==========
+// ============================================================
+// 00_config.js – Глобальные настройки сайта
+// ============================================================
 window.APP_CONFIG = {
-    // URL веб-приложения Google Apps Script (обработчик форм)
+    // URL Google Apps Script для отправки форм
     SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwHN9ej6DF2_X5s_Pak5cOQ0E3aTeEP4N_1gSB6trtrv5oZzNZjijCEKHAZ85do4rzz3A/exec',
 
-    // Контакты (для ссылок в меню и подвале)
+    // Контакты
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
@@ -13,7 +15,7 @@ window.APP_CONFIG = {
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
 
-    // ========== КОНСТАНТЫ ДЛЯ ВСЕГО САЙТА ==========
+    // Константы – всё в одном месте для удобства
     CONSTANTS: {
         TOAST_DURATION: 3000,
         TOAST_FADE_DURATION: 300,
@@ -31,32 +33,25 @@ window.APP_CONFIG = {
         CACHE_TTL: 10 * 60 * 1000,
         ANIMATION_FADE_DURATION: 700,
         STATS_ANIMATION_DURATION: 1500,
-
         BREAKPOINT_MOBILE: 768,
         BREAKPOINT_TABLET: 992,
         BREAKPOINT_DESKTOP: 1200,
         SCROLL_TOP_VISIBLE_THRESHOLD: 500,
-
         OG_IMAGE_WIDTH: 1200,
         OG_IMAGE_HEIGHT: 630,
         HERO_IMAGE_WIDTH: 480,
         HERO_IMAGE_HEIGHT: 640,
-
         DISCOUNT_PERCENT: 0.05,
         DISCOUNT_MIN_ITEMS: 2,
-
         MAX_PHONE_DIGITS: 11,
-
         GEO_API_URL: 'https://ipapi.co/json/',
-
         LOCALSTORAGE_VISITS_KEY: 'hr_visits',
         LOCALSTORAGE_GEO_KEY: 'hr_geo',
         LOCALSTORAGE_USER_ID_KEY: 'hr_user_id',
-
         DEFAULT_QUANTITY: 1,
     },
 
-    // ========== ИДЕНТИФИКАТОРЫ СЕКЦИЙ (для якорных ссылок) ==========
+    // ID секций для якорных ссылок
     SECTION_IDS: {
         home: 'home',
         roles: 'roles',

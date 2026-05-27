@@ -1,6 +1,7 @@
-// ========== ПОЛНЫЙ ПЕРЕЧЕНЬ УСЛУГ С ГРУППИРОВКОЙ ==========
+// ============================================================
+// 09_services-data.js – Полный перечень услуг с ценами и группировкой
+// ============================================================
 const SERVICES_DATA = {
-    // Подбор персонала
     recruitment: [
         {name: "Составление вакансии (с УТП)", price: 10000},
         {name: "Подбор резюме под вакансию", price: 15000},
@@ -17,7 +18,6 @@ const SERVICES_DATA = {
         {name: "IT Executive search Senior", price: 200000},
         {name: "Эксклюзивный хэдхантинг", price: 250000}
     ],
-    // Удержание и развитие
     retention: [
         {name: "Разработка УТП компании", price: 25000},
         {name: "Оценка компетенций", price: 25000},
@@ -31,7 +31,6 @@ const SERVICES_DATA = {
         {name: "Стратегическая сессия с собственниками", price: 200000},
         {name: "Стратегическая сессия в компании", price: 13000}
     ],
-    // Бизнес-тренинги
     "business-training": [
         {name: "Тренинг под запрос (1ч, до 25 чел.)", price: 12000},
         {name: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000},
@@ -39,7 +38,6 @@ const SERVICES_DATA = {
         {name: "Тренинг 'Я хочу здесь работать' мотивация", price: 15000},
         {name: "Тренинг 'Удержание персонала'", price: 12000}
     ],
-    // Корпоративным клиентам
     corporate: [
         {name: "Абонемент на HR-консультации", price: 100000},
         {name: "Корпоративная подписка на рекрутинг", price: 200000},
@@ -47,7 +45,6 @@ const SERVICES_DATA = {
         {name: "HR на час", price: 8500},
         {name: "HR реши вопрос - цена от", price: 120000}
     ],
-    // Ищу работу (B2C базовые)
     start: [
         {name: "Экспресс-диагностика (15мин) - Подбор услуги", price: 0},
         {name: "Сопроводительное письмо", price: 3000},
@@ -68,7 +65,6 @@ const SERVICES_DATA = {
         {name: "Резюме(CV) на английском", price: 15000},
         {name: "Стратегия трудоустройства", price: 15000}
     ],
-    // Карьерный рост (B2C стандартные)
     growth: [
         {name: "Подготовка к повышению", price: 10000},
         {name: "Коучинг для руководителей", price: 10000},
@@ -82,7 +78,6 @@ const SERVICES_DATA = {
         {name: "Коучинг для руководителей (пакет 4 сессии)", price: 30000},
         {name: "Стратегия роста", price: 45000}
     ],
-    // Executive (B2C премиальные)
     executive: [
         {name: "Работа «под ключ»", price: 250000},
         {name: "Executive-коучинг/мес", price: 100000},
@@ -91,73 +86,34 @@ const SERVICES_DATA = {
         {name: "Коучинг топ-менеджеров", price: 150000},
         {name: "VIP-коучинг", price: 30000}
     ],
-    // Тренинги для соискателей
     training: [
         {name: "Индивидуальный тренинг «Продай себя дорого»", price: 14000},
         {name: "Групповой тренинг «Продай себя дорого»", price: 5500},
         {name: "Наставничество для HR", price: 7000}
     ],
-    // Авторские курсы
     courses: [
         {name: "Авторский курс 'Рекрутер для недвижимости'", price: 25000},
         {name: "Обучение с '0' менеджер по продажам", price: 50000}
     ]
 };
-
-// Для обратной совместимости с другими модулями
 window.SERVICES_DATA = SERVICES_DATA;
-
-// ========== LOCAL_SERVICES ДЛЯ КВИЗА ==========
 window.LOCAL_SERVICES = {
-    individual_base: (SERVICES_DATA.start || [])
-        .filter(item => item.price !== null && item.price > 0 && item.price < 10000)
-        .map(item => ({ service: item.name, price: item.price })),
-
+    individual_base: (SERVICES_DATA.start || []).filter(item => item.price !== null && item.price > 0 && item.price < 10000).map(item => ({ service: item.name, price: item.price })),
     individual_standard: [
-        ...(SERVICES_DATA.start || [])
-            .filter(item => item.price !== null && item.price >= 10000 && item.price < 50000)
-            .map(item => ({ service: item.name, price: item.price })),
-        ...(SERVICES_DATA.growth || [])
-            .filter(item => item.price !== null && item.price >= 10000 && item.price < 50000)
-            .map(item => ({ service: item.name, price: item.price }))
+        ...(SERVICES_DATA.start || []).filter(item => item.price !== null && item.price >= 10000 && item.price < 50000).map(item => ({ service: item.name, price: item.price })),
+        ...(SERVICES_DATA.growth || []).filter(item => item.price !== null && item.price >= 10000 && item.price < 50000).map(item => ({ service: item.name, price: item.price }))
     ],
-
-    individual_premium: (SERVICES_DATA.executive || [])
-        .filter(item => item.price !== null && item.price >= 50000)
-        .map(item => ({ service: item.name, price: item.price })),
-
-    business_recruitment: (SERVICES_DATA.recruitment || [])
-        .filter(item => item.price !== null)
-        .map(item => ({ service: item.name, price: item.price })),
-
-    business_retention: (SERVICES_DATA.retention || [])
-        .filter(item => item.price !== null)
-        .map(item => ({ service: item.name, price: item.price })),
-
+    individual_premium: (SERVICES_DATA.executive || []).filter(item => item.price !== null && item.price >= 50000).map(item => ({ service: item.name, price: item.price })),
+    business_recruitment: (SERVICES_DATA.recruitment || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price })),
+    business_retention: (SERVICES_DATA.retention || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price })),
     training: [
-        ...(SERVICES_DATA.training || [])
-            .filter(item => item.price !== null)
-            .map(item => ({ service: item.name, price: item.price })),
-        ...(SERVICES_DATA["business-training"] || [])
-            .filter(item => item.price !== null)
-            .map(item => ({ service: item.name, price: item.price }))
+        ...(SERVICES_DATA.training || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price })),
+        ...(SERVICES_DATA["business-training"] || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price }))
     ],
-
-    corporate: (SERVICES_DATA.corporate || [])
-        .filter(item => item.price !== null)
-        .map(item => ({ service: item.name, price: item.price })),
-
-    author_courses: (SERVICES_DATA.courses || [])
-        .filter(item => item.price !== null)
-        .map(item => ({ service: item.name, price: item.price }))
+    corporate: (SERVICES_DATA.corporate || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price })),
+    author_courses: (SERVICES_DATA.courses || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price }))
 };
-
-// PRICE_BOOK для быстрого доступа к ценам
 window.PRICE_BOOK = {};
 for (const category of Object.values(window.LOCAL_SERVICES)) {
-    for (const item of category) {
-        if (!window.PRICE_BOOK[item.service]) {
-            window.PRICE_BOOK[item.service] = item.price;
-        }
-    }
+    for (const item of category) { if (!window.PRICE_BOOK[item.service]) window.PRICE_BOOK[item.service] = item.price; }
 }

@@ -1,7 +1,7 @@
-// ========== ВЕСА УСЛУГ ДЛЯ КВИЗА ==========
-
+// ============================================================
+// 11_quiz-weights.js – Веса услуг и соответствие ответов ключам
+// ============================================================
 window.SERVICE_WEIGHTS = {
-    // B2C: Базовые (до 10 000 ₽)
     "Экспресс-консультация (30мин)": { role_job_seeker:10, role_career_change:8, level_junior:8, level_middle:6, urgency_fast:9, urgency_1_2_months:6, importance_salary:6, importance_career:5, budget_low:10, budget_5000_15000:8 },
     "Аудит резюме": { role_job_seeker:10, role_career_change:7, level_junior:9, level_middle:7, level_senior:6, urgency_fast:7, urgency_1_2_months:6, importance_salary:6, importance_career:7, budget_low:9, budget_5000_15000:8 },
     "Сопроводительное письмо": { role_job_seeker:9, role_career_change:6, level_junior:8, level_middle:6, urgency_fast:6, importance_salary:5, budget_low:8, budget_5000_15000:7 },
@@ -15,8 +15,6 @@ window.SERVICE_WEIGHTS = {
     "Тренинг по переговорам": { role_job_seeker:7, role_growth:8, level_middle:7, level_senior:7, urgency_fast:6, importance_salary:9, budget_5000_15000:6, budget_15000_50000:6 },
     "Психологическое консультирование (1ч)": { role_job_seeker:6, role_career_change:7, level_any:5, urgency_1_2_months:5, importance_balance:10, budget_5000_15000:6 },
     "Переговоры о зарплате (1ч)": { role_job_seeker:8, role_growth:9, level_middle:7, level_senior:7, urgency_fast:8, importance_salary:10, budget_5000_15000:7, budget_15000_50000:6 },
-
-    // B2C: Стандартные (10 000 – 50 000 ₽)
     "Индивидуальный тренинг «Продай себя дорого»": { role_job_seeker:9, role_growth:8, level_middle:8, level_senior:8, urgency_fast:7, urgency_1_2_months:6, importance_salary:9, importance_career:8, budget_15000_50000:8, budget_5000_15000:6 },
     "План развития (рост в должности)": { role_growth:10, level_middle:9, level_senior:7, urgency_1_2_months:7, urgency_3_6_months:6, importance_career:10, importance_salary:7, budget_15000_50000:8, budget_5000_15000:6 },
     "Повышение грейда": { role_growth:10, level_middle:9, level_senior:7, urgency_1_2_months:8, importance_salary:9, importance_career:8, budget_15000_50000:8 },
@@ -26,14 +24,10 @@ window.SERVICE_WEIGHTS = {
     "Коучинг для руководителей (пакет 4 сессии)": { role_growth:9, level_lead:9, level_director:8, urgency_1_2_months:6, importance_career:9, budget_50000_100000:9 },
     "VIP-коучинг": { role_growth:8, role_job_seeker:7, level_senior:9, level_lead:9, level_director:8, urgency_1_2_months:6, importance_career:9, importance_salary:8, budget_50000_100000:9, budget_100000_300000:8 },
     "Стратегия роста": { role_growth:10, level_senior:8, level_lead:9, level_director:9, level_top:9, urgency_3_6_months:7, importance_career:10, budget_100000_300000:9, budget_50000_100000:7 },
-
-    // B2C: Премиальные (от 50 000 ₽)
     "Executive-коучинг/мес": { role_growth:9, level_director:9, level_top:10, urgency_1_2_months:7, importance_career:10, budget_100000_300000:9 },
     "Executive-сопровождение/мес": { role_growth:8, level_director:9, level_top:10, urgency_3_6_months:7, importance_career:9, budget_300000_500000:9, budget_higher:8 },
     "Поиск позиции C-level": { role_job_seeker:10, level_top:10, level_director:9, urgency_fast:9, importance_salary:9, importance_career:8, budget_300000_500000:10, budget_higher:9 },
     "Коучинг топ-менеджеров": { role_growth:9, level_top:10, level_director:9, urgency_1_2_months:7, importance_career:9, budget_300000_500000:9, budget_higher:8 },
-
-    // B2B: Поиск сотрудников
     "Составление вакансии (с УТП)": { role_business:10, level_junior:8, level_middle:7, urgency_fast:8, urgency_1_2_months:6, budget_5000_15000:8, budget_15000_50000:7 },
     "Подбор резюме под вакансию": { role_business:10, level_junior:8, level_middle:7, urgency_fast:9, budget_15000_50000:8, budget_5000_15000:7 },
     "База кандидатов + тестирование": { role_business:10, level_junior:8, urgency_fast:7, urgency_1_2_months:6, budget_15000_50000:8 },
@@ -48,19 +42,13 @@ window.SERVICE_WEIGHTS = {
     "IT Executive search Senior": { role_business:10, level_senior:10, level_lead:9, urgency_fast:9, budget_300000_500000:10, budget_higher:9 },
     "Эксклюзивный хэдхантинг": { role_business:10, level_director:10, level_top:10, level_owner:9, urgency_fast:9, budget_higher:10, budget_300000_500000:9 },
     "Подбор специалиста": { role_business:10, level_middle:8, level_junior:7, urgency_fast:7, urgency_1_2_months:6, budget_50000_100000:8, budget_15000_50000:7 },
-
-    // Тренинги
     "Групповой тренинг «Продай себя дорого»": { role_job_seeker:7, role_growth:7, level_any:5, urgency_1_2_months:5, importance_salary:6, budget_15000_50000:7, budget_5000_15000:6 },
     "Тренинг по запросу (1ч, до 25 чел.)": { role_business:9, urgency_fast:8, budget_15000_50000:8, budget_5000_15000:7 },
     "Тренинг 'Удержание персонала'": { role_business:9, urgency_1_2_months:7, budget_50000_100000:8, budget_15000_50000:6 },
     "Тренинг 'Профилактика выгорания'": { role_business:8, urgency_1_2_months:6, importance_balance:9, budget_15000_50000:7 },
-
-    // Авторские курсы
     "Авторский курс 'Рекрутер для недвижимости'": { role_business:9, role_career_change:7, level_junior:7, level_middle:8, urgency_1_2_months:7, urgency_3_6_months:6, importance_career:8, importance_salary:7, budget_15000_50000:8, budget_5000_15000:6 },
     "Обучение с '0' менеджер по продажам": { role_business:9, role_career_change:8, level_junior:9, level_middle:7, urgency_1_2_months:7, urgency_3_6_months:7, importance_career:9, importance_salary:8, budget_50000_100000:8, budget_15000_50000:7 }
 };
-
-// ========== МАППИНГ ОТВЕТОВ В КЛЮЧИ ==========
 window.ANSWER_MAPPING = {
     "Ищу работу": "role_job_seeker",
     "Хочу сменить профессию": "role_career_change",
@@ -92,8 +80,4 @@ window.ANSWER_MAPPING = {
     "300 000 – 500 000 ₽": "budget_300000_500000",
     "Выше 500 000 ₽": "budget_higher"
 };
-
-// Логируем только в development-режиме
-if (window.IS_DEV) {
-    console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены");
-}
+if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены");

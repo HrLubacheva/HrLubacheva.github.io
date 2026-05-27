@@ -1,9 +1,9 @@
 /* ==================================================================
-   МЕДИА СЕКЦИЯ (ТВ, ПУБЛИКАЦИИ)
+   10_media_contacts.css – медиа, контакты, футер, общие компоненты
    ================================================================== */
 .media-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3,1fr);
     gap: 30px;
     align-items: stretch;
     margin: 40px 0;
@@ -21,7 +21,7 @@
 }
 .media-image {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16/9;
     overflow: hidden;
 }
 .media-image img {
@@ -65,7 +65,7 @@
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 24px;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255,255,255,0.9);
 }
 .media-stats {
     display: flex;
@@ -74,7 +74,7 @@
     flex-wrap: wrap;
 }
 .media-stats span {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255,255,255,0.2);
     padding: 8px 16px;
     border-radius: 40px;
     font-size: 0.85rem;
@@ -85,32 +85,19 @@
         grid-template-columns: 1fr;
         gap: 24px;
     }
-    .media-description {
-        order: -1;
-    }
-    .media-stats {
-        gap: 16px;
-    }
+    .media-description { order: -1; }
+    .media-stats { gap: 16px; }
     .media-stats span {
         font-size: 0.8rem;
         padding: 6px 12px;
     }
 }
 @media (max-width: 480px) {
-    .media-description {
-        padding: 24px 20px;
-    }
-    .media-description h3 {
-        font-size: 1.2rem;
-    }
-    .media-description p {
-        font-size: 0.85rem;
-    }
+    .media-description { padding: 24px 20px; }
+    .media-description h3 { font-size: 1.2rem; }
+    .media-description p { font-size: 0.85rem; }
 }
 
-/* ==================================================================
-   КОНТАКТЫ
-   ================================================================== */
 .contact-block {
     text-align: center;
     padding: 40px 0;
@@ -164,9 +151,6 @@
     }
 }
 
-/* ==================================================================
-   ФУТЕР
-   ================================================================== */
 footer {
     background: var(--dark-bg);
     color: #cbd5e0;
@@ -203,30 +187,20 @@ footer a:hover {
     }
 }
 @media (max-width: 480px) {
-    .footer-version {
-        font-size: 0.75rem;
-    }
-    .footer-copyright {
-        font-size: 0.8rem;
-    }
+    .footer-version { font-size: 0.75rem; }
+    .footer-copyright { font-size: 0.8rem; }
 }
 
-/* ==================================================================
-   АНИМАЦИЯ ПОЯВЛЕНИЯ (FADE-UP)
-   ================================================================== */
 .fade-up {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transition: opacity 0.7s cubic-bezier(0.2,0.9,0.4,1.1), transform 0.7s cubic-bezier(0.2,0.9,0.4,1.1);
 }
 .fade-up.visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* ==================================================================
-   КНОПКА "НАВЕРХ" (единый улучшенный блок)
-   ================================================================== */
 .scroll-top {
     position: fixed;
     bottom: 30px;
@@ -255,12 +229,9 @@ footer a:hover {
 .scroll-top:hover {
     background: var(--primary-dark);
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* ==================================================================
-   КАСТОМНЫЕ ТОСТЫ
-   ================================================================== */
 .custom-toast {
     position: fixed;
     bottom: 30px;
@@ -277,7 +248,7 @@ footer a:hover {
     gap: 10px;
     font-family: 'Inter', sans-serif;
     white-space: nowrap;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 .custom-toast-error {
     background: #dc3545;
@@ -292,14 +263,8 @@ footer a:hover {
     color: #212529;
 }
 @keyframes toastFadeIn {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 @media (max-width: 640px) {
     .custom-toast {
@@ -310,9 +275,6 @@ footer a:hover {
     }
 }
 
-/* ==================================================================
-   КАСТОМНЫЙ ДРОПДАУН
-   ================================================================== */
 .custom-dropdown {
     position: relative;
     width: 100%;
@@ -336,7 +298,7 @@ footer a:hover {
 }
 .dropdown-button.active {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.15);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.15);
 }
 .dropdown-arrow {
     transition: transform 0.2s ease;
@@ -353,7 +315,7 @@ footer a:hover {
     right: 0;
     background: white;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     max-height: 320px;
     overflow-y: auto;
     z-index: 1000;
@@ -361,7 +323,7 @@ footer a:hover {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-12px);
-    transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transition: all 0.2s cubic-bezier(0.2,0.9,0.4,1.1);
 }
 .dropdown-menu.open {
     opacity: 1;
@@ -384,19 +346,7 @@ footer a:hover {
     color: white;
 }
 
-/* ==================================================================
-   A11Y: ФОКУС
-   ================================================================== */
-a:focus-visible,
-button:focus-visible,
-.quiz-option:focus-visible,
-.add-service-btn:focus-visible,
-.remove-item:focus-visible,
-.tab-btn:focus-visible,
-.btn-primary:focus-visible,
-.btn-secondary:focus-visible,
-.qty-btn:focus-visible,
-#removeQuizSelection:focus-visible {
+a:focus-visible, button:focus-visible, .quiz-option:focus-visible, .add-service-btn:focus-visible, .remove-item:focus-visible, .tab-btn:focus-visible, .btn-primary:focus-visible, .btn-secondary:focus-visible, .qty-btn:focus-visible, #removeQuizSelection:focus-visible {
     outline: 3px solid var(--primary);
     outline-offset: 3px;
     border-radius: 4px;
@@ -419,10 +369,6 @@ fieldset {
 legend {
     display: none;
 }
-
-/* ==================================================================
-   УЧЁТ REDUCED MOTION
-   ================================================================== */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -438,10 +384,6 @@ legend {
         opacity: 1 !important;
     }
 }
-
-/* ==================================================================
-   ПРОЧИЕ УЛУЧШЕНИЯ ДОСТУПНОСТИ
-   ================================================================== */
 ::placeholder {
     color: #9ca3af;
     opacity: 1;
@@ -510,8 +452,6 @@ legend {
     outline: none;
     box-shadow: 0 0 0 3px rgba(255,255,255,0.5);
 }
-
-/* Отступ для якорных ссылок */
 section[id] {
     scroll-margin-top: 80px;
 }
@@ -520,8 +460,6 @@ section[id] {
         scroll-margin-top: 70px;
     }
 }
-
-/* Секции с фоном */
 .section-dark {
     background: var(--dark-bg);
     color: #e2e8f0;
@@ -533,24 +471,4 @@ section[id] {
 .section-light {
     background: var(--light-bg);
     padding: 60px 0;
-}
-.hero-tv-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #2D6A9F 0%, #1F4A6E 100%);
-    color: white;
-    padding: 8px 20px;
-    border-radius: 60px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-sm);
-    text-decoration: none;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.hero-tv-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
 }

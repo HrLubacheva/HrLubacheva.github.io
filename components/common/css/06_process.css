@@ -1,15 +1,12 @@
 /* ==================================================================
-   СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ СЕКЦИИ "ПРОЦЕСС"
+   06_process.css – блок "Как мы работаем" (процесс)
    ================================================================== */
-
-/* ----- ТИПОГРАФИКА СЕКЦИИ ----- */
 .process-description {
     text-align: center;
     margin-bottom: 40px;
     font-size: 1rem;
     color: var(--text-muted);
 }
-
 .process-title {
     text-align: center;
     margin: 40px 0 20px;
@@ -17,7 +14,6 @@
     color: var(--primary-dark);
     word-break: break-word;
 }
-
 .process-subtitle {
     display: block;
     font-size: 0.85rem;
@@ -25,8 +21,6 @@
     color: var(--text-muted);
     margin-top: 8px;
 }
-
-/* ----- СЕТКИ КАРТОЧЕК ----- */
 .process-grid {
     display: grid;
     gap: 30px;
@@ -34,8 +28,6 @@
     list-style: none;
     margin: 40px 0;
 }
-
-/* ДЕСКТОП (≥992px) */
 @media (min-width: 992px) {
     .process-row {
         display: flex;
@@ -45,43 +37,25 @@
         flex: 1;
         min-width: 0;
     }
-    /* Блоки с 4 карточками – 2 колонки */
     .process-col .process-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2,1fr);
     }
-    /* Тренинг (6 карточек) – 3 колонки */
     .training-grid .process-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3,1fr);
     }
 }
-
-/* ПЛАНШЕТ (768–991px) – 2 колонки, блоки вертикально */
 @media (min-width: 768px) and (max-width: 991px) {
-    .process-row {
-        display: block;
-    }
-    .process-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .process-row { display: block; }
+    .process-grid { grid-template-columns: repeat(2,1fr); }
 }
-
-/* ТЕЛЕФОН (≤767px) – 1 колонка, но при ширине ≥480px – 2 колонки */
 @media (max-width: 767px) {
-    .process-row {
-        display: block;
-    }
-    .process-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
+    .process-row { display: block; }
+    .process-grid { grid-template-columns: 1fr; gap: 20px; }
 }
 @media (min-width: 480px) and (max-width: 767px) {
-    .process-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .process-grid { grid-template-columns: repeat(2,1fr); }
 }
 
-/* ----- КАРТОЧКА ПРОЦЕССА ----- */
 .process-card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -110,7 +84,6 @@
     margin-bottom: 15px;
 }
 
-/* ----- ФОТОГРАФИИ (всегда 2 в ряд) ----- */
 .process-photos {
     display: flex;
     flex-wrap: nowrap;
@@ -119,53 +92,30 @@
     margin-top: 50px;
     overflow-x: auto;
 }
-.process-photo-item:first-child {
-    flex: 0.95;
-    min-width: 160px;
-}
-.process-photo-item:last-child {
-    flex: 1.1;
-    min-width: 160px;
-}
-.process-photo-item {
-    text-align: center;
-}
+.process-photo-item:first-child { flex: 0.95; min-width: 160px; }
+.process-photo-item:last-child { flex: 1.1; min-width: 160px; }
+.process-photo-item { text-align: center; }
 .process-photo-item img {
     width: 100%;
     height: auto;
+    max-height: 850px;
+    object-fit: contain;
     border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    background: #f0f4f8;
 }
 .photo-caption {
     margin-top: 12px;
     color: var(--text-muted);
     font-size: 0.85rem;
 }
-
 @media (max-width: 640px) {
-    .process-photos {
-        gap: 12px;
-    }
+    .process-photos { gap: 12px; }
     .process-photo-item:first-child,
-    .process-photo-item:last-child {
-        min-width: 120px;
+    .process-photo-item:last-child { min-width: 120px; }
+    @media (max-width: 480px) {
+        .process-photos { gap: 8px; }
+        .process-photo-item:first-child,
+        .process-photo-item:last-child { min-width: 100px; }
     }
-}
-@media (max-width: 480px) {
-    .process-photos {
-        gap: 8px;
-    }
-    .process-photo-item:first-child,
-    .process-photo-item:last-child {
-        min-width: 100px;
-    }
-}
-
-.process-photo-item img {
-    width: 100%;
-    height: auto;
-    max-height: 760px;          /* ограничиваем высоту */
-    object-fit: contain;        /* вписываем без обрезки */
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }

@@ -1,4 +1,8 @@
-// ========== ОБЩИЕ УТИЛИТЫ ==========
+// ============================================================
+// 01_core.js – Ядро: утилиты, тосты, fetch, валидация, отправка форм, гео, UTM и т.д.
+// ============================================================
+
+// ---------- Безопасное экранирование HTML ----------
 function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -9,29 +13,20 @@ function escapeHtml(str) {
     });
 }
 
+// ---------- Режим разработки ----------
 const IS_DEV = window.location.hostname === 'localhost' ||
                window.location.hostname === '127.0.0.1' ||
                window.location.search.includes('debug=true');
-let originalConsoleLog = null;
-
 function log(...args) { if (IS_DEV) console.log(...args); }
 function logError(...args) { console.error(...args); }
 function logWarn(...args) { if (IS_DEV) console.warn(...args); }
-
 window.IS_DEV = IS_DEV;
 
-if (!IS_DEV) {
-    originalConsoleLog = console.log;
-    console.log = function() {};
-}
-
+// Включение/отключение логов (больше не переопределяем console.log глобально)
 window.enableLogs = function() {
-    if (originalConsoleLog) {
-        console.log = originalConsoleLog;
-        originalConsoleLog = null;
-    } else {
-        console.log = function(...args) { if (typeof console !== 'undefined') console.log(...args); };
-    }
+    if (typeof originalConsoleLog === 'undefined') return;
+    console.log = originalConsoleLog;
+    originalConsoleLog = null;
     showToast('🔍 Логи включены', 'success');
 };
 window.disableLogs = function() {
@@ -40,6 +35,7 @@ window.disableLogs = function() {
     showToast('🔇 Логи отключены', 'success');
 };
 
+// ---------- Пользовательский ID (localStorage) ----------
 function getOrCreateLocalUserId() {
     const key = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_USER_ID_KEY || 'hr_user_id';
     try {
@@ -57,18 +53,17 @@ function getOrCreateLocalUserId() {
     }
 }
 let currentUserId = null;
-
 function initUserId() {
     currentUserId = getOrCreateLocalUserId();
     return Promise.resolve(currentUserId);
 }
 
+// ---------- Fetch с повторными попытками ----------
 async function fetchWithRetry(url, options = {}, retries = null, timeout = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const timeoutMs = timeout !== null ? timeout : (window.APP_CONFIG?.CONSTANTS?.FETCH_TIMEOUT || 10000);
     const baseDelay = window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000;
     const maxDelay = window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_MAX || 5000;
-
     let lastError = null;
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
@@ -90,7 +85,6 @@ async function fetchTextWithRetry(url, retries = 3, timeout = 10000) {
     const response = await fetchWithRetry(url, {}, retries, timeout);
     return response.text();
 }
-
 async function loadWithCache(cacheKey, fetchFn, ttl = null) {
     const cacheTtl = ttl !== null ? ttl : (window.APP_CONFIG?.CONSTANTS?.CACHE_TTL || 10 * 60 * 1000);
     try {
@@ -99,18 +93,17 @@ async function loadWithCache(cacheKey, fetchFn, ttl = null) {
             try {
                 const { data, timestamp } = JSON.parse(cached);
                 if (Date.now() - timestamp < cacheTtl) return data;
-            } catch(e) {
-                if (IS_DEV) console.warn('Ошибка парсинга кэша', e);
-            }
+            } catch(e) { if (IS_DEV) console.warn('Ошибка парсинга кэша', e); }
         }
-    } catch(e) {}
+    } catch(e) { if (IS_DEV) console.warn('Ошибка чтения localStorage', e); }
     const data = await fetchFn();
     try {
         localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
-    } catch(e) {}
+    } catch(e) { if (IS_DEV) console.warn('Ошибка записи в localStorage', e); }
     return data;
 }
 
+// ---------- Индикатор загрузки ----------
 let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
 function showLoading(message = 'Загрузка...') {
     if (isLoadingActive) return;
@@ -160,6 +153,7 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
+// ---------- Toast-уведомления ----------
 function showToast(message, type = 'error') {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -171,12 +165,7 @@ function showToast(message, type = 'error') {
     if (type === 'error') icon = '❌';
     toast.innerHTML = `${icon} ${escapeHtml(message)}`;
     toast.setAttribute('role', 'status');
-    toast.setAttribute('aria-live', 'polite');   // ДОБАВЛЕНО для доступности
-    if (type === 'error') {
-        toast.setAttribute('aria-live', 'assertive');
-    } else {
-        toast.setAttribute('aria-live', 'polite');
-    }
+    toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
     document.body.appendChild(toast);
     setTimeout(() => {
         toast.style.opacity = '0';
@@ -187,13 +176,8 @@ function showErrorToast(message) { showToast(message, 'error'); }
 function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
-const SCRIPT_URL = window.APP_CONFIG.SCRIPT_URL;
-if (typeof window !== 'undefined') {
-    window.SCRIPT_URL = SCRIPT_URL;
-}
-
-// ========== УНИВЕРСАЛЬНАЯ ОТПРАВКА POST С ПОВТОРНЫМИ ПОПЫТКАМИ ==========
-async function postWithRetry(url, data, retries = null, baseDelay = null) {
+// ---------- POST с повторными попытками ----------
+window.postWithRetry = async function(url, data, retries = null, baseDelay = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
     let lastError = null;
@@ -207,31 +191,19 @@ async function postWithRetry(url, data, retries = null, baseDelay = null) {
             });
             if (response.ok) {
                 let result;
-                try {
-                    result = await response.json();
-                } catch(e) {
-                    throw new Error('Не удалось разобрать ответ сервера');
-                }
-                if (result && result.result === 'ok') {
-                    return true;
-                } else {
-                    throw new Error(result?.message || 'Сервер вернул ошибку');
-                }
-            } else {
-                throw new Error(`HTTP ${response.status}`);
-            }
+                try { result = await response.json(); } catch(e) { throw new Error('Не удалось разобрать ответ сервера'); }
+                if (result && result.result === 'ok') return true;
+                else throw new Error(result?.message || 'Сервер вернул ошибку');
+            } else throw new Error(`HTTP ${response.status}`);
         } catch (err) {
             lastError = err;
-            if (attempt < maxRetries) {
-                await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt - 1)));
-            }
+            if (attempt < maxRetries) await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt - 1)));
         }
     }
     throw lastError;
-}
-window.postWithRetry = postWithRetry;
+};
 
-// ========== НОРМАЛИЗАЦИЯ ТЕЛЕФОНА (ЕДИНАЯ ФУНКЦИЯ) ==========
+// ---------- Телефон: нормализация, валидация, маска ----------
 function normalizePhoneDigits(phone) {
     let digits = phone.replace(/\D/g, '');
     if (digits.length === 0) return '';
@@ -241,19 +213,16 @@ function normalizePhoneDigits(phone) {
     if (digits.length > maxDigits) digits = digits.slice(0, maxDigits);
     return digits;
 }
-
 function validatePhoneDigits(phone) {
     const digits = normalizePhoneDigits(phone);
     const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
     return digits.length === maxDigits && /^7\d{10}$/.test(digits);
 }
-
 function validateEmailFormat(email) {
     if (!email) return true;
     const re = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
     return re.test(email);
 }
-
 function showFieldError(input, message) {
     if (input._errorElement) input._errorElement.remove();
     const errorSpan = document.createElement('span');
@@ -263,7 +232,6 @@ function showFieldError(input, message) {
     input._errorElement = errorSpan;
     input.classList.add('input-error');
 }
-
 function clearFieldError(input) {
     if (input._errorElement) {
         input._errorElement.remove();
@@ -271,7 +239,6 @@ function clearFieldError(input) {
     }
     input.classList.remove('input-error');
 }
-
 function validatePhoneField(input, showImmediate = true) {
     const phone = input.value.trim();
     if (!phone) {
@@ -279,14 +246,10 @@ function validatePhoneField(input, showImmediate = true) {
         return false;
     }
     const isValid = validatePhoneDigits(phone);
-    if (!isValid && showImmediate) {
-        showFieldError(input, '❌ Некорректный номер. Нужно 11 цифр, например +7 921 791-66-55');
-    } else {
-        clearFieldError(input);
-    }
+    if (!isValid && showImmediate) showFieldError(input, '❌ Некорректный номер. Нужно 11 цифр, например +7 921 791-66-55');
+    else clearFieldError(input);
     return isValid;
 }
-
 function validateEmailField(input, showImmediate = true) {
     const email = input.value.trim();
     if (!email) {
@@ -294,29 +257,22 @@ function validateEmailField(input, showImmediate = true) {
         return true;
     }
     const isValid = validateEmailFormat(email);
-    if (!isValid && showImmediate) {
-        showFieldError(input, '❌ Введите корректный email, например name@domain.ru');
-    } else {
-        clearFieldError(input);
-    }
+    if (!isValid && showImmediate) showFieldError(input, '❌ Введите корректный email, например name@domain.ru');
+    else clearFieldError(input);
     return isValid;
 }
-
 function bindLiveValidation(input, type = 'phone') {
     if (!input) return;
     const validateFn = type === 'phone' ? validatePhoneField : validateEmailField;
     input.addEventListener('blur', () => validateFn(input, true));
     input.addEventListener('input', () => clearFieldError(input));
 }
-
-// ========== МАСКА ТЕЛЕФОНА (с выводом ошибок в общий блок формы) ==========
 function applyPhoneMask(inputElement) {
     if (!inputElement) return;
     inputElement.addEventListener('input', function(e) {
         let raw = this.value.replace(/\D/g, '');
         const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
         if (raw.length > maxDigits) raw = raw.slice(0, maxDigits);
-
         let formatted = '';
         if (raw.length > 0) {
             formatted = '+7';
@@ -341,13 +297,9 @@ function applyPhoneMask(inputElement) {
             if (raw.length >= 2 && raw.length < 5 && !formatted.includes(')')) formatted += ')';
         }
         this.value = formatted;
-
-        // Находим родительскую форму и блок сообщений
         const form = this.closest('form');
         const messagesBlock = form ? form.querySelector('.form-messages') : null;
-
         if (raw.length > 0 && raw.length !== maxDigits) {
-            // Показываем ошибку в общем блоке
             if (messagesBlock) {
                 messagesBlock.textContent = `❌ Введите ${maxDigits} цифр телефона, сейчас ${raw.length}`;
                 messagesBlock.className = 'form-messages error';
@@ -355,7 +307,6 @@ function applyPhoneMask(inputElement) {
             }
             this.classList.add('input-error');
         } else {
-            // Очищаем сообщение только если оно было про телефон (чтобы не стереть другие ошибки)
             if (messagesBlock && messagesBlock.textContent.includes('Введите') && messagesBlock.textContent.includes('цифр телефона')) {
                 messagesBlock.textContent = '';
                 messagesBlock.className = 'form-messages';
@@ -365,26 +316,19 @@ function applyPhoneMask(inputElement) {
         }
     });
 }
-
 function initPhoneMasks() {
     const phoneInputs = document.querySelectorAll('#callbackPhone, #quickPhone');
-    phoneInputs.forEach(input => {
-        if (input) applyPhoneMask(input);
-    });
+    phoneInputs.forEach(input => { if (input) applyPhoneMask(input); });
 }
 
-// ========== ОТПРАВКА ДАННЫХ В GOOGLE SHEETS ==========
+// ---------- Отправка данных в Google Sheets ----------
 async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
-    if (typeof window.getCartData === 'function') {
-        data.cart = window.getCartData();
-    } else {
-        data.cart = '';
-    }
-    return postWithRetry(SCRIPT_URL, data, retries, delay);
+    if (typeof window.getCartData === 'function') data.cart = window.getCartData();
+    else data.cart = '';
+    return window.postWithRetry(window.APP_CONFIG.SCRIPT_URL, data, retries, delay);
 }
-
 function sendDataToSheet(data) {
     sendDataToSheetWithRetry(data).catch(err => {
         logError('❌ Ошибка отправки в Google Sheets:', err);
@@ -394,6 +338,7 @@ function sendDataToSheet(data) {
 window.sendDataToSheet = sendDataToSheet;
 window.sendDataToSheetWithRetry = sendDataToSheetWithRetry;
 
+// ---------- Форматирование телефона ----------
 function formatPhoneNumber(input) {
     let digits = input.replace(/\D/g, '');
     if (digits.startsWith('8')) digits = '7' + digits.slice(1);
@@ -410,6 +355,7 @@ function formatPhoneNumber(input) {
     return formatted;
 }
 
+// ---------- Время на сайте ----------
 window.sessionStartTime = Date.now();
 function getTimeOnSite() {
     if (!window.sessionStartTime) return '-';
@@ -421,6 +367,7 @@ function getTimeOnSite() {
 }
 window.getTimeOnSite = getTimeOnSite;
 
+// ---------- Статистика визитов (localStorage) ----------
 function getVisitStats() {
     const now = new Date();
     const oneDay = 24 * 60 * 60 * 1000;
@@ -435,26 +382,15 @@ function getVisitStats() {
                 visits = JSON.parse(stored);
                 const monthAgo = now.getTime() - oneMonth;
                 visits = visits.filter(v => v > monthAgo);
-            } catch(e) {
-                if (IS_DEV) console.warn('Ошибка парсинга visits', e);
-                visits = [];
-            }
+            } catch(e) { if (IS_DEV) console.warn('Ошибка парсинга visits', e); visits = []; }
         }
-    } catch(e) {}
+    } catch(e) { if (IS_DEV) console.warn('Ошибка чтения localStorage', e); }
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
-    if (now.getTime() - lastVisit > 30 * 60 * 1000) {
-        visits.push(now.getTime());
-    }
-    try {
-        localStorage.setItem(visitsKey, JSON.stringify(visits));
-    } catch(e) {}
+    if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
+    try { localStorage.setItem(visitsKey, JSON.stringify(visits)); } catch(e) {}
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
-    return {
-        week: visits.filter(v => v > weekAgo).length,
-        month: visits.length,
-        total: visits.length
-    };
+    return { week: visits.filter(v => v > weekAgo).length, month: visits.length, total: visits.length };
 }
 function getVisitStatsText() {
     const stats = getVisitStats();
@@ -463,6 +399,7 @@ function getVisitStatsText() {
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
 
+// ---------- UTM-метки ----------
 function getUTMParams() {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -480,6 +417,7 @@ function getUTMText() {
 }
 window.getUTMText = getUTMText;
 
+// ---------- Информация об устройстве ----------
 function getDeviceInfo() {
     const ua = navigator.userAgent;
     const isMobile = /Mobile|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(ua);
@@ -508,6 +446,7 @@ function getDeviceText() {
 }
 window.getDeviceText = getDeviceText;
 
+// ---------- Информация о странице ----------
 function getPageInfo() {
     return {
         page: window.location.pathname + window.location.search,
@@ -522,15 +461,16 @@ function getPageText() {
 }
 window.getPageText = getPageText;
 
+// ---------- Геолокация (через ipapi.co) ----------
 async function getGeoData() {
     const geoKey = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_GEO_KEY || 'hr_geo';
     const apiUrl = window.APP_CONFIG?.CONSTANTS?.GEO_API_URL || 'https://ipapi.co/json/';
     let cached = null;
     try {
-        cached = localStorage.getItem(geoKey);
-        if (cached) {
+        const raw = localStorage.getItem(geoKey);
+        if (raw) {
             try {
-                cached = JSON.parse(cached);
+                cached = JSON.parse(raw);
                 if (cached && typeof cached === 'object') return cached;
             } catch(e) {}
         }
@@ -546,9 +486,7 @@ async function getGeoData() {
             country: data.country_name || '-',
             geoText: `${data.city || ''} ${data.region || ''} ${data.country_name || ''} (${data.ip || ''})`.trim().replace(/  +/g, ' ') || '-'
         };
-        try {
-            localStorage.setItem(geoKey, JSON.stringify(result));
-        } catch(e) {}
+        try { localStorage.setItem(geoKey, JSON.stringify(result)); } catch(e) {}
         return result;
     } catch(e) {
         if (IS_DEV) console.warn('Ошибка получения геоданных:', e);
@@ -557,36 +495,26 @@ async function getGeoData() {
 }
 window.getGeoData = getGeoData;
 
-// ========== ЕДИНЫЙ МОДУЛЬ ОТПРАВКИ ФОРМ ==========
+// ---------- Единая отправка форм ----------
 window.submitForm = async function(formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
     if (!form) return false;
-
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.innerText : 'Отправить';
-
     try {
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.classList.add('loading');
             submitBtn.innerText = 'Отправка...';
         }
-
         const name = form.querySelector('[name="name"]')?.value.trim() || '';
         let phone = form.querySelector('[name="phone"]')?.value.trim() || '';
         const email = form.querySelector('[name="email"]')?.value.trim() || '';
         const comment = form.querySelector('[name="comment"]')?.value.trim() || '';
         const consent = form.querySelector('[name="consent"]')?.checked || false;
-
         let additional = {};
-        if (getAdditionalData) {
-            additional = await getAdditionalData(form);
-        }
-
-        if (phone) {
-            phone = normalizePhoneDigits(phone);
-        }
-
+        if (getAdditionalData) additional = await getAdditionalData(form);
+        if (phone) phone = normalizePhoneDigits(phone);
         if (!phone && formType !== 'Запрос материалов') {
             showErrorToast('Введите номер телефона');
             throw new Error('Телефон обязателен');
@@ -596,7 +524,6 @@ window.submitForm = async function(formId, formType, getAdditionalData = null) {
             showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
             throw new Error('Неверный номер');
         }
-
         const geo = await window.getGeoData();
         const formData = {
             formType: formType,
@@ -614,7 +541,6 @@ window.submitForm = async function(formId, formType, getAdditionalData = null) {
             userId: window.getOrCreateLocalUserId(),
             ...additional
         };
-
         await window.sendDataToSheetWithRetry(formData);
         showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
         form.reset();
@@ -631,7 +557,6 @@ window.submitForm = async function(formId, formType, getAdditionalData = null) {
         }
     }
 };
-
 window.getQuizDataFromForm = function(form) {
     return {
         chosenVariant: form.querySelector('[name="chosenVariant"]')?.value || '',
@@ -644,7 +569,7 @@ window.getQuizDataFromForm = function(form) {
     };
 };
 
-// ========== КНОПКИ «ПОДЕЛИТЬСЯ» ==========
+// ---------- Кнопки поделиться ----------
 function initShareButtons() {
     const shareButtons = document.querySelectorAll('#shareButtonContacts, .floating-share-btn button');
     const getSiteShareText = () => {
@@ -655,18 +580,15 @@ function initShareButtons() {
             btn.removeEventListener('click', btn._shareHandler);
             btn._shareHandler = () => {
                 const text = getSiteShareText();
-                navigator.clipboard.writeText(text).then(() => {
-                    window.showSuccessToast('✅ Ссылка на сайт скопирована');
-                }).catch(() => {
-                    window.showErrorToast('❌ Не удалось скопировать');
-                });
+                navigator.clipboard.writeText(text).then(() => { window.showSuccessToast('✅ Ссылка на сайт скопирована'); })
+                    .catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
             };
             btn.addEventListener('click', btn._shareHandler);
         }
     });
 }
 
-// ========== ЭКСПОРТ ВСЕХ ФУНКЦИЙ ==========
+// ---------- Экспорт глобальных функций ----------
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;

@@ -1,3 +1,6 @@
+// ============================================================
+// 02_animations.js – Плавное появление элементов при скролле
+// ============================================================
 function initAnimations() {
     const elements = document.querySelectorAll('.fade-up');
     if (!elements.length) return;

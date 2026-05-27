@@ -1,5 +1,5 @@
 /* ==================================================================
-   КАЛЬКУЛЯТОР
+   07_calculator.css – калькулятор, корзина, вкладки
    ================================================================== */
 .calculator-section {
     padding: 60px 0;
@@ -50,15 +50,10 @@
     animation: fadeIn 0.25s;
 }
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
+
 .service-group {
     margin-bottom: 32px;
     padding: 24px;
@@ -103,7 +98,7 @@
 .service-select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
 }
 .calc-qty {
     width: 100px;
@@ -119,7 +114,7 @@
 .calc-qty:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
 }
 .add-service-btn {
     background: var(--primary);
@@ -139,7 +134,7 @@
 .add-service-btn:hover {
     background: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.25);
+    box-shadow: 0 6px 14px rgba(45,106,159,0.25);
 }
 .total-block {
     margin-top: 24px;
@@ -155,14 +150,11 @@
 }
 .discount-info {
     font-size: 0.75rem;
-    color: #28a745;
     margin-top: 5px;
     font-weight: 500;
 }
 @media (max-width: 768px) {
-    .total-block {
-        text-align: center;
-    }
+    .total-block { text-align: center; }
 }
 .cart-section {
     margin-top: 30px;
@@ -202,14 +194,8 @@
     animation: slideIn 0.3s ease;
 }
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 .calc-item:hover {
     background: var(--light-bg);
