@@ -295,3 +295,36 @@ function initScrollTopButton() {
         }, 200);
     });
 })();
+
+
+// ========== АКТИВНОЕ МЕНЮ ПРИ СКРОЛЛЕ ==========
+function initActiveNav() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    if (!sections.length || !navLinks.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+        const visibleSections = entries
+            .filter(entry => entry.isIntersecting && entry.intersectionRatio >= 0.25)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visibleSections.length) {
+            const activeId = visibleSections[0].target.id;
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                link.classList.toggle('active', href === `#${activeId}`);
+            });
+        }
+    }, { threshold: [0.25, 0.5, 0.75] });
+
+    sections.forEach(section => observer.observe(section));
+}
+
+// Запуск активного меню после загрузки DOM
+document.addEventListener('DOMContentLoaded', function() {
+    initActiveNav();
+    // Остальные инициализации (калькулятор, квиз, карусель) уже должны быть вызваны в этом файле или в других скриптах.
+    // Если их нет – добавьте:
+    if (typeof initCalculator === 'function') initCalculator();
+    if (typeof initQuiz === 'function') initQuiz();
+    if (typeof initCertificatesLightbox !== 'undefined') initCertificatesLightbox(); // или как у вас названа функция карусели
+});

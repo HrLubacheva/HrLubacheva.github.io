@@ -12,10 +12,8 @@
     let selectedOriginalText = '';
     let selectedOriginalPrice = '';
 
-    // Получаем константы
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const QUIZ_ANALYZE_DELAY = C.QUIZ_ANALYZE_DELAY || 700;
-    const QUIZ_SELECTION_DELAY = C.QUIZ_SELECTION_DELAY || 300;
     const TOAST_DURATION = C.TOAST_DURATION || 3000;
     const BREAKPOINT_MOBILE = C.BREAKPOINT_MOBILE || 768;
 

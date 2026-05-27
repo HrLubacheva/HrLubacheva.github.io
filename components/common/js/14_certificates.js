@@ -1,44 +1,84 @@
 (function() {
     const track = document.getElementById('carouselTrack');
     if (!track) return;
-
-    let slides = [];
-    let currentIndex = 0;
-    let slideWidth = 0;
-    let gap = 0;
-    let autoInterval = null;
-    const autoDelay = 4000;
-
+    let slides = [], currentIndex = 0, slideWidth = 0, gap = 0, autoInterval = null, progressInterval = null, isTransitioning = false;
+    const autoDelay = 5000;
     const dotsContainer = document.getElementById('carouselDots');
     const prevBtn = document.querySelector('.carousel-prev');
     const nextBtn = document.querySelector('.carousel-next');
+    const progressBar = document.getElementById('progressBar');
 
-    // Функция обновления размеров и позиции
     function updateDimensionsAndPosition() {
         if (!slides.length) return;
-        // Получаем ширину первого слайда
         slideWidth = slides[0].offsetWidth;
-        // Получаем gap из CSS (значение между слайдами)
         const trackStyle = getComputedStyle(track);
         gap = parseFloat(trackStyle.gap) || 24;
-        // Обновляем позицию
-        updateCarousel();
+        disableTransition();
+        updateCarousel(true);
+        enableTransition();
     }
-
-    function updateCarousel() {
+    function updateCarousel(instant = false) {
         const shift = -currentIndex * (slideWidth + gap);
-        track.style.transform = `translateX(${shift}px)`;
+        if (instant) {
+            track.style.transition = 'none';
+            track.style.transform = `translateX(${shift}px)`;
+            track.offsetHeight; // reflow
+            track.style.transition = '';
+        } else {
+            track.style.transform = `translateX(${shift}px)`;
+        }
         updateDots();
+        resetProgressBar();
     }
-
+    function disableTransition() { track.style.transition = 'none'; }
+    function enableTransition() { track.style.transition = ''; }
+    function nextSlide() {
+        if (isTransitioning || slides.length === 0) return;
+        isTransitioning = true;
+        const newIndex = (currentIndex + 1) % slides.length;
+        const isWrapping = (newIndex === 0 && currentIndex === slides.length - 1);
+        if (!isWrapping) {
+            currentIndex = newIndex;
+            updateCarousel();
+            setTimeout(() => { isTransitioning = false; }, 500);
+        } else {
+            currentIndex = newIndex;
+            updateCarousel();
+            setTimeout(() => {
+                disableTransition();
+                updateCarousel(true);
+                enableTransition();
+                setTimeout(() => { isTransitioning = false; }, 50);
+            }, 500);
+        }
+        startProgressAnimation();
+    }
+    function prevSlide() {
+        if (isTransitioning || slides.length === 0) return;
+        isTransitioning = true;
+        const newIndex = (currentIndex - 1 + slides.length) % slides.length;
+        const isWrapping = (newIndex === slides.length - 1 && currentIndex === 0);
+        if (!isWrapping) {
+            currentIndex = newIndex;
+            updateCarousel();
+            setTimeout(() => { isTransitioning = false; }, 500);
+        } else {
+            currentIndex = newIndex;
+            updateCarousel();
+            setTimeout(() => {
+                disableTransition();
+                updateCarousel(true);
+                enableTransition();
+                setTimeout(() => { isTransitioning = false; }, 50);
+            }, 500);
+        }
+        startProgressAnimation();
+    }
     function updateDots() {
         if (!dotsContainer) return;
         const dots = dotsContainer.querySelectorAll('.dot');
-        dots.forEach((dot, idx) => {
-            dot.classList.toggle('active', idx === currentIndex);
-        });
+        dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentIndex));
     }
-
     function createDots() {
         if (!dotsContainer) return;
         dotsContainer.innerHTML = '';
@@ -47,6 +87,7 @@
             dot.classList.add('dot');
             if (i === currentIndex) dot.classList.add('active');
             dot.addEventListener('click', () => {
+                if (isTransitioning) return;
                 stopAutoScroll();
                 currentIndex = i;
                 updateCarousel();
@@ -55,121 +96,61 @@
             dotsContainer.appendChild(dot);
         }
     }
-
-    function nextSlide() {
-        if (slides.length === 0) return;
-        currentIndex = (currentIndex + 1) % slides.length;
-        updateCarousel();
+    function resetProgressBar() { if (progressBar) progressBar.style.width = '0%'; }
+    function startProgressAnimation() {
+        if (!progressBar) return;
+        resetProgressBar();
+        let startTime = null;
+        function animateProgress(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const percent = Math.min((elapsed / autoDelay) * 100, 100);
+            progressBar.style.width = `${percent}%`;
+            if (elapsed < autoDelay) {
+                progressInterval = requestAnimationFrame(animateProgress);
+            } else {
+                progressBar.style.width = '100%';
+                cancelProgressAnimation();
+            }
+        }
+        cancelProgressAnimation();
+        progressInterval = requestAnimationFrame(animateProgress);
     }
-    function prevSlide() {
-        if (slides.length === 0) return;
-        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-        updateCarousel();
+    function cancelProgressAnimation() {
+        if (progressInterval) { cancelAnimationFrame(progressInterval); progressInterval = null; }
     }
-
     function startAutoScroll() {
         if (autoInterval) clearInterval(autoInterval);
         autoInterval = setInterval(nextSlide, autoDelay);
+        startProgressAnimation();
     }
     function stopAutoScroll() {
-        if (autoInterval) {
-            clearInterval(autoInterval);
-            autoInterval = null;
-        }
+        if (autoInterval) { clearInterval(autoInterval); autoInterval = null; }
+        cancelProgressAnimation();
+        if (progressBar) progressBar.style.width = '0%';
     }
-
-    // Обработчики кнопок
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-            stopAutoScroll();
-            prevSlide();
-            startAutoScroll();
-        });
+    if (prevBtn) prevBtn.addEventListener('click', () => { stopAutoScroll(); prevSlide(); startAutoScroll(); });
+    if (nextBtn) nextBtn.addEventListener('click', () => { stopAutoScroll(); nextSlide(); startAutoScroll(); });
+    const wrapper = document.querySelector('.carousel-wrapper');
+    if (wrapper) {
+        wrapper.addEventListener('mouseenter', stopAutoScroll);
+        wrapper.addEventListener('mouseleave', startAutoScroll);
     }
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-            stopAutoScroll();
-            nextSlide();
-            startAutoScroll();
-        });
-    }
-
-    // Остановка автопрокрутки при наведении
-    const carouselWrapper = document.querySelector('.carousel-wrapper');
-    if (carouselWrapper) {
-        carouselWrapper.addEventListener('mouseenter', stopAutoScroll);
-        carouselWrapper.addEventListener('mouseleave', startAutoScroll);
-    }
-
-    // Пересчёт при ресайзе
-    window.addEventListener('resize', () => {
-        updateDimensionsAndPosition();
-    });
-
-    // Лайтбокс
-    function initLightbox() {
-        const lightbox = document.getElementById('certLightbox');
-        if (!lightbox) return;
-        const lightboxImg = document.getElementById('certLightboxImg');
-        const lightboxCaption = document.getElementById('certLightboxCaption');
-        const closeBtn = document.querySelector('.cert-lightbox-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('click', () => {
-                lightbox.style.display = 'none';
-                lightboxImg.src = '';
-                if (lightboxCaption) lightboxCaption.innerHTML = '';
-            });
-        }
-        lightbox.addEventListener('click', (e) => {
-            if (e.target === lightbox) {
-                lightbox.style.display = 'none';
-                lightboxImg.src = '';
-                if (lightboxCaption) lightboxCaption.innerHTML = '';
-            }
-        });
-        slides.forEach(slide => {
-            const img = slide.querySelector('img');
-            if (!img) return;
-            img.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const fullSrc = img.getAttribute('data-full') || img.src;
-                lightboxImg.src = fullSrc;
-                const altText = img.getAttribute('alt') || '';
-                if (lightboxCaption) lightboxCaption.innerHTML = altText;
-                lightbox.style.display = 'flex';
-            });
-        });
-    }
-
-    // Ждём загрузки всех изображений, чтобы правильно вычислить ширину
+    window.addEventListener('resize', () => updateDimensionsAndPosition());
     function waitForImages() {
         const imgs = Array.from(track.querySelectorAll('img'));
-        if (imgs.length === 0) return Promise.resolve();
-        const promises = imgs.map(img => {
-            if (img.complete) return Promise.resolve();
-            return new Promise(resolve => {
-                img.addEventListener('load', resolve);
-                img.addEventListener('error', resolve);
-            });
-        });
-        return Promise.all(promises);
+        if (!imgs.length) return Promise.resolve();
+        return Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(resolve => { img.onload = resolve; img.onerror = resolve; })));
     }
-
-    // Основная инициализация
     function init() {
         slides = Array.from(track.children);
-        if (slides.length === 0) return;
+        if (!slides.length) return;
         waitForImages().then(() => {
             updateDimensionsAndPosition();
             createDots();
-            initLightbox();
             startAutoScroll();
         });
     }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
 })();
