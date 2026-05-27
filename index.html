@@ -906,6 +906,18 @@ body {
         font-size: 0.95rem;
     }
 }
+
+.benefit-card {
+    background: white;
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    box-shadow: var(--shadow-lg);  /* вместо 0 15px 35px rgba(0,0,0,0.2) */
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    border: none;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
 /* ==================================================================
    СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ СЕКЦИИ "ПРОЦЕСС"
    ================================================================== */
@@ -2592,22 +2604,33 @@ section[id] {
     box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
 }
 
+/* Изображения — лёгкое масштабирование и обрезка краёв */
 .carousel-slide img {
     height: 100%;
     width: auto;
     max-width: 100%;
     object-fit: cover;
+    transform: scale(1.02);
+    transition: transform 0.25s ease;
     display: block;
     background: #eef2f5;
 }
 
-/* Горизонтальные сертификаты: позволяем им быть чуть шире, но не выше */
+.carousel-slide:hover img {
+    transform: scale(1.05);
+}
+
+/* Горизонтальные сертификаты — тоже обрезаем по краям (можно оставить cover) */
 .carousel-slide.horizontal {
     max-width: 360px;
 }
 .carousel-slide.horizontal img {
-    object-fit: contain;
+    object-fit: cover;
+    transform: scale(1.02);
     background: #eef2f5;
+}
+.carousel-slide.horizontal:hover img {
+    transform: scale(1.05);
 }
 
 /* Кнопки навигации */
@@ -3956,7 +3979,7 @@ section[id] {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 27.05.2026 20:12:30
+                Версия: 27.05.2026 20:17:13
             </div>
         </div>
     </div>
