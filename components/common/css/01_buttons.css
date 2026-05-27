@@ -62,17 +62,3 @@
     display: block;
     width: 100%;
 }
-
-/* Accessibility focus styles for keyboard navigation */
-.btn-primary:focus-visible,
-.btn-secondary:focus-visible,
-.tab-btn:focus-visible,
-.add-service-btn:focus-visible,
-.remove-item:focus-visible,
-.quiz-option:focus-visible,
-.qty-btn:focus-visible,
-#removeQuizSelection:focus-visible {
-    outline: 3px solid var(--primary);
-    outline-offset: 3px;
-    border-radius: 4px;
-}

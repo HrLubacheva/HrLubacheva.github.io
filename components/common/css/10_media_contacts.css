@@ -346,21 +346,38 @@ footer a:hover {
     color: white;
 }
 
-a:focus-visible, button:focus-visible, .quiz-option:focus-visible, .add-service-btn:focus-visible, .remove-item:focus-visible, .tab-btn:focus-visible, .btn-primary:focus-visible, .btn-secondary:focus-visible, .qty-btn:focus-visible, #removeQuizSelection:focus-visible {
+/* focus-visible стили уже заданы в 13_accents.css, здесь оставляем только fallback */
+a:focus-visible,
+button:focus-visible,
+.quiz-option:focus-visible,
+.add-service-btn:focus-visible,
+.remove-item:focus-visible,
+.tab-btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.qty-btn:focus-visible,
+#removeQuizSelection:focus-visible {
     outline: 3px solid var(--primary);
     outline-offset: 3px;
     border-radius: 4px;
 }
+
+/* Более мягкий fallback для старых браузеров (без !important) */
 :focus {
-    outline: 2px solid var(--primary) !important;
-    outline-offset: 2px !important;
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
-input:focus, textarea:focus, select:focus, button:focus {
-    outline-offset: 1px !important;
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+    outline-offset: 1px;
     outline-color: var(--primary);
     outline-width: 2px;
     outline-style: solid;
 }
+
 fieldset {
     border: none;
     padding: 0;

@@ -89,10 +89,10 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
+
+/* Специфичный цвет outline для TV бейджа (белый) */
 .hero-tv-badge:focus-visible {
-    outline: 3px solid white;
-    outline-offset: 2px;
-    border-radius: 60px;
+    outline-color: white;
 }
 
 @media (min-width: 1024px) {

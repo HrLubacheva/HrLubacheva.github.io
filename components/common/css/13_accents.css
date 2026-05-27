@@ -42,12 +42,51 @@ a:not(.btn-primary):not(.btn-secondary):hover {
     color: var(--primary-dark);
 }
 
+/* ========== Все :focus-visible в одном месте ========== */
+.btn-primary:focus-visible,
+.btn-secondary:focus-visible,
+.tab-btn:focus-visible,
+.add-service-btn:focus-visible,
+.remove-item:focus-visible,
+.quiz-option:focus-visible,
+.qty-btn:focus-visible,
+#removeQuizSelection:focus-visible,
 .quiz-link:focus-visible,
 .hero-tv-badge:focus-visible,
-.role-card:focus-visible,
-.service-card:focus-visible,
-.benefit-card:focus-visible,
-.process-card:focus-visible {
-    outline: 2px solid var(--primary);
-    outline-offset: 2px;
+.burger-menu:focus-visible,
+.nav-links a:focus-visible,
+.social-icons a:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Специфичные корректировки */
+.hero-tv-badge:focus-visible {
+    outline-color: white;
+    border-radius: 60px;
+}
+.burger-menu:focus-visible {
+    border-radius: 8px;
+}
+.social-icons a:focus-visible {
+    border-radius: 50%;
+}
+
+/* ========== Активные состояния карточек ========== */
+.role-card:active,
+.service-card:active,
+.process-card:active,
+.benefit-card:active {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+    .role-card:active,
+    .service-card:active,
+    .process-card:active,
+    .benefit-card:active {
+        transform: translateY(-2px);
+    }
 }
