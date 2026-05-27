@@ -124,8 +124,8 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <!-- CSP с поддержкой WebSocket для Яндекс.Метрики -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com;">
+    <!-- CSP с поддержкой WebSocket для Яндекс.Метрики (исправлено: добавлены wss://mc.yandex.ru и ws://mc.yandex.ru) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru;">
 
     <!-- Preconnect и preload шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2912,15 +2912,15 @@ a:not(.btn-primary):not(.btn-secondary):hover {
         <ul class="benefits-grid" role="list">
             <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
                 <h4 itemprop="name">🌱 Начинающий → Опытный специалист</h4>
-                <p itemprop="description">Помогаю начинающим найти первую работу и вырасти.</p>
+                <p itemprop="description">Помогаю начинающим найти первую работу и построить стратегию роста и развития</p>
             </li>
             <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
                 <h4 itemprop="name">📈 Опытный специалист → Ведущий специалист</h4>
-                <p itemprop="description">Разбираюсь, где вас недооценивают, готовлю к переходу на новый уровень.</p>
+                <p itemprop="description">Упаковываю Ваш опыт так, чтобы хэдхантеры Вас сами искали и  хотели «купить».</p>
             </li>
             <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
                 <h4 itemprop="name">🏆 Ведущий специалист → Руководитель</h4>
-                <p itemprop="description">Упаковываю опыт так, чтобы вас искали хедхантеры.</p>
+                <p itemprop="description">Создаю решение под ваш запрос, а не вставляю в готовый шаблон.</p>
             </li>
             <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
                 <h4 itemprop="name">⚡ Системность и скорость</h4>
@@ -2932,7 +2932,7 @@ a:not(.btn-primary):not(.btn-secondary):hover {
             </li>
             <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
                 <h4 itemprop="name">⏱️ Работа на результат</h4>
-                <p itemprop="description">Оплата за факт, а не за количество часов.</p>
+                <p itemprop="description">Беру оплату за результат, а не ища часы.</p>
             </li>
         </ul>
     </div>
@@ -3845,7 +3845,7 @@ a:not(.btn-primary):not(.btn-secondary):hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 27.05.2026 20:23:50
+                Версия: 27.05.2026 20:38:51
             </div>
         </div>
     </div>
@@ -3883,7 +3883,7 @@ a:not(.btn-primary):not(.btn-secondary):hover {
 // ============================================================
 window.APP_CONFIG = {
     // URL Google Apps Script для отправки форм
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwHRGiHJGn0xxnvW8VnMKWYCaALuRjy9W1wpPhyYlNBw4ztskHjpcOf0JcaogZ45uC75Q/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzO7HAqcMX-t2N7O4EOhPmXvfTyyJwrzcMEpVjp_vElXcn9qLJOxciZR0sQUEJcdqLG5A/exec',
 
     // Контакты
     TELEGRAM: 'https://t.me/HrLubacheva',
@@ -3929,6 +3929,8 @@ window.APP_CONFIG = {
         LOCALSTORAGE_GEO_KEY: 'hr_geo',
         LOCALSTORAGE_USER_ID_KEY: 'hr_user_id',
         DEFAULT_QUANTITY: 1,
+        // НОВОЕ: режим дебага (можно включить через ?debug=1)
+        DEBUG_MODE_ENABLED: false,   // будет переопределено при наличии debug=1
     },
 
     // ID секций для якорных ссылок
@@ -4534,6 +4536,83 @@ function initShareButtons() {
         }
     });
 }
+
+// ========== НОВОЕ: автоматический сбор ошибок и режим дебага ==========
+(function() {
+    // Режим дебага (включение через ?debug=1 или localStorage)
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceDebug = urlParams.has('debug') || localStorage.getItem('hr_debug_mode') === 'true';
+    if (forceDebug && !window.IS_DEV) {
+        window.IS_DEV = true;
+        console.log('🔍 Режим отладки включён');
+        localStorage.setItem('hr_debug_mode', 'true');
+    }
+    window.toggleDebugMode = function() {
+        const isDebug = localStorage.getItem('hr_debug_mode') === 'true';
+        if (isDebug) {
+            localStorage.removeItem('hr_debug_mode');
+            console.log('🔇 Режим отладки выключен');
+        } else {
+            localStorage.setItem('hr_debug_mode', 'true');
+            console.log('🔍 Режим отладки включён');
+        }
+        location.reload();
+    };
+
+    // Отправка технической ошибки на бэкенд
+    function sendTechnicalError(errorInfo) {
+        const url = window.APP_CONFIG?.SCRIPT_URL;
+        if (!url) return;
+
+        const formData = new URLSearchParams();
+        formData.append('formType', 'Техническая ошибка');
+        formData.append('name', 'System');
+        formData.append('comment', JSON.stringify(errorInfo));
+        formData.append('consent', 'Да');
+        formData.append('userId', window.getOrCreateLocalUserId?.() || 'unknown');
+        formData.append('timeOnSite', window.getTimeOnSite?.() || '-');
+        formData.append('page', window.location.href);
+        formData.append('userAgent', navigator.userAgent);
+
+        // sendBeacon – не блокирует закрытие страницы
+        navigator.sendBeacon(url, formData);
+    }
+
+    // Перехват необработанных ошибок
+    window.addEventListener('error', function(event) {
+        sendTechnicalError({
+            type: 'runtime',
+            message: event.message,
+            filename: event.filename,
+            lineno: event.lineno,
+            colno: event.colno,
+            stack: event.error?.stack
+        });
+    });
+
+    // Перехват rejected промисов
+    window.addEventListener('unhandledrejection', function(event) {
+        sendTechnicalError({
+            type: 'promise',
+            reason: String(event.reason),
+            stack: event.reason?.stack
+        });
+    });
+
+    // Логирование консольных ошибок (переопределяем console.error)
+    const originalConsoleError = console.error;
+    console.error = function(...args) {
+        originalConsoleError.apply(console, args);
+        if (args[0] && typeof args[0] === 'string' && args[0].includes('CSP')) {
+            // Не спамим CSP ошибками
+            return;
+        }
+        sendTechnicalError({
+            type: 'console',
+            message: args.map(a => String(a)).join(' ')
+        });
+    };
+})();
 
 // ---------- Экспорт глобальных функций ----------
 window.escapeHtml = escapeHtml;
@@ -5724,10 +5803,6 @@ window.isValidEmail = isValidEmail;
     const STATS_ANIMATION_DURATION = C.STATS_ANIMATION_DURATION || 1500;
     const SCROLL_TOP_THRESHOLD = C.SCROLL_TOP_VISIBLE_THRESHOLD || 500;
 
-    if (typeof initAnimations === 'function') initAnimations();
-    else console.warn('initAnimations not found');
-
-
     // Повторная инициализация анимаций после динамических изменений (например, переключение вкладок)
     function reinitAnimations() {
         const elements = document.querySelectorAll('.fade-up:not(.visible)');
@@ -5942,7 +6017,7 @@ window.isValidEmail = isValidEmail;
         sections.forEach(section => observer.observe(section));
     }
 
-    // Карусель сертификатов (вызов, чтобы не зависеть от автоинициализации)
+    // Карусель сертификатов
     function initCarousel() {
         if (typeof window.initInfiniteCarousel === 'function') {
             window.initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
@@ -5950,9 +6025,8 @@ window.isValidEmail = isValidEmail;
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // 1. Инициализация модулей (только функции, без авто-вызовов)
-        if (typeof initUserId === 'function') initUserId().catch(() => {
-        });
+        // 1. Инициализация модулей
+        if (typeof initUserId === 'function') initUserId().catch(() => {});
         if (typeof initModal === 'function') initModal();
         if (typeof initCopyButtons === 'function') initCopyButtons();
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
@@ -5977,22 +6051,27 @@ window.isValidEmail = isValidEmail;
             setTimeout(animateStats, 200);
         };
 
-        // 3. Запускаем их один раз
+        // 3. Запускаем основные модули
         window.initCalculator();
         window.initQuiz();
 
-        // 4. Остальные инициализации (без animateStats – он будет вызван на load)
+        // 4. Остальные инициализации
         initActiveNav();
         initFormValidation();
         initScrollTopButton();
         initMaterialsEmailButtons();
         initCarousel();
 
-        // 5. Дополнительный вызов анимаций для уже видимых элементов (резерв)
-        setTimeout(reinitAnimations, 500);
+        // 5. Явный вызов анимации для статических элементов (важно!)
+        if (typeof initAnimations === 'function') {
+            initAnimations();
+        } else {
+            console.warn('initAnimations не найдена');
+        }
+        setTimeout(reinitAnimations, 100);
     });
 
-    // 6. При полной загрузке страницы – показываем элементы, которые уже видны, и запускаем анимацию статистики
+    // При полной загрузке – ещё раз пробегаемся по fade-up
     window.addEventListener('load', function () {
         setTimeout(function () {
             document.querySelectorAll('.fade-up').forEach(el => {
