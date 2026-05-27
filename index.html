@@ -56,11 +56,8 @@
 
 <link rel="canonical" href="https://hrlubacheva.github.io/">
 
-<!-- Иконки -->
+<!-- Иконки — оставляем только SVG, чтобы не было 404 -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%232D6A9F'/%3E%3Ctext x='50' y='72' font-size='70' text-anchor='middle' fill='white' font-family='Arial'%3EHR%3C/text%3E%3C/svg%3E">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="apple-touch-icon" href="https://hrlubacheva.github.io/assets/images/apple-touch-icon.png">
-<link rel="icon" sizes="192x192" href="https://hrlubacheva.github.io/assets/images/android-icon-192x192.png">
 
 <!-- Schema.org Person -->
 <script type="application/ld+json">
@@ -124,11 +121,11 @@
 </script>
 
     <!-- Безопасность -->
-    <meta http-equiv="X-Frame-Options" content="DENY">
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://script.google.com https://ipapi.co;">
+    <!-- CSP с поддержкой WebSocket для Яндекс.Метрики -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com;">
 
     <!-- Preconnect и preload шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -219,7 +216,7 @@
     </script>
 <style>
 /* ==================================================================
-   ПЕРЕМЕННЫЕ, СБРОС, БАЗОВАЯ ТИПОГРАФИКА
+   00_variables.css – переменные и сбросы
    ================================================================== */
 :root {
     --primary: #2D6A9F;
@@ -234,13 +231,12 @@
     --text-dark: #1a202c;
     --text-light: #f8f9fa;
     --text-muted: #4a5568;
-    --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+    --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+    --shadow-md: 0 8px 24px rgba(0,0,0,0.1);
+    --shadow-lg: 0 20px 30px -12px rgba(0,0,0,0.15);
     --radius-md: 16px;
     --radius-lg: 28px;
     --transition: all 0.25s ease;
-    /* Брейкпоинты */
     --breakpoint-mobile: 768px;
     --breakpoint-tablet: 992px;
     --breakpoint-desktop: 1200px;
@@ -257,7 +253,6 @@ body {
     color: var(--text-dark);
     background: #ffffff;
     line-height: 1.5;
-    scroll-behavior: smooth;
 }
 
 .container {
@@ -266,9 +261,6 @@ body {
     padding: 0 20px;
 }
 
-/* ==================================================================
-   ТИПОГРАФИКА
-   ================================================================== */
 .section-title {
     font-size: 2.2rem;
     font-weight: 700;
@@ -291,12 +283,8 @@ body {
     }
 }
 
-/* ==================================================================
-   ОБЩИЕ ВСПОМОГАТЕЛЬНЫЕ КЛАССЫ
-   ================================================================== */
-.text-center {
-    text-align: center;
-}
+.text-center { text-align: center; }
+
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -304,11 +292,11 @@ body {
     margin: -1px;
     padding: 0;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+    clip: rect(0,0,0,0);
     border: 0;
 }
 /* ==================================================================
-   КНОПКИ
+   01_buttons.css – кнопки
    ================================================================== */
 .btn-primary, .btn-secondary {
     display: inline-block;
@@ -321,6 +309,7 @@ body {
     border: none;
     font-size: 1rem;
 }
+
 .btn-primary {
     background: var(--primary);
     color: white;
@@ -334,16 +323,23 @@ body {
 .btn-primary:active {
     transform: scale(0.97);
 }
+
 .btn-secondary {
     background: transparent;
     color: var(--primary);
-    border: 1px solid var(--primary);
+    border: 2px solid var(--primary);
+    font-weight: 600;
 }
 .btn-secondary:hover {
-    background: var(--primary);
-    color: white;
+    background: rgba(45, 106, 159, 0.08);
+    border-color: var(--primary-dark);
+    color: var(--primary-dark);
     transform: translateY(-2px);
 }
+.btn-secondary:active {
+    transform: translateY(1px);
+}
+
 .btn-small {
     padding: 8px 16px;
     font-size: 0.85rem;
@@ -353,11 +349,11 @@ body {
     width: 100%;
 }
 /* ==================================================================
-   НАВИГАЦИЯ (адаптивная, с бургер-меню)
+   02_navbar.css – навигационная панель
    ================================================================== */
 .navbar {
     background: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     position: sticky;
     top: 0;
     z-index: 1000;
@@ -414,7 +410,6 @@ body {
     fill: none;
 }
 
-/* Бургер-кнопка */
 .burger-menu {
     display: none;
     background: none;
@@ -431,23 +426,17 @@ body {
     margin: 5px 0;
     transition: 0.2s;
 }
-.burger-menu.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-.burger-menu.active span:nth-child(2) {
-    opacity: 0;
-}
-.burger-menu.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -6px);
-}
+.burger-menu.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+.burger-menu.active span:nth-child(2) { opacity: 0; }
+.burger-menu.active span:nth-child(3) { transform: rotate(-45deg) translate(7px,-6px); }
 
-/* Нижнее меню (десктоп) */
 .nav-bottom {
     background: var(--light-bg);
     border-radius: 50px;
     padding: 10px 20px;
     margin: 10px 0;
 }
+
 .nav-links {
     display: flex;
     justify-content: center;
@@ -464,11 +453,8 @@ body {
     color: var(--primary);
 }
 
-/* Мобильная версия (≤768px) */
 @media (max-width: 768px) {
-    .burger-menu {
-        display: block;
-    }
+    .burger-menu { display: block; }
     .nav-bottom {
         position: fixed;
         top: 0;
@@ -486,9 +472,7 @@ body {
         -webkit-overflow-scrolling: touch;
         box-shadow: none;
     }
-    .nav-bottom.open {
-        transform: translateX(0);
-    }
+    .nav-bottom.open { transform: translateX(0); }
     .nav-links {
         flex-direction: column;
         align-items: center;
@@ -498,33 +482,21 @@ body {
         font-size: 1.2rem;
         padding: 8px 0;
     }
-    body.menu-open {
-        overflow: hidden;
-    }
-    /* Корректировка логотипа и иконок на маленьких экранах */
+    body.menu-open { overflow: hidden; }
     .nav-top {
         flex-wrap: nowrap;
         justify-content: space-between;
     }
-    .logo {
-        font-size: 1.2rem;
-    }
-    .logo-sub {
-        font-size: 0.75rem;
-    }
+    .logo { font-size: 1.2rem; }
+    .logo-sub { font-size: 0.75rem; }
 }
 
 @media (max-width: 480px) {
-    .social-icons svg {
-        width: 20px;
-        height: 20px;
-    }
-    .logo {
-        font-size: 1rem;
-    }
+    .social-icons svg { width: 20px; height: 20px; }
+    .logo { font-size: 1rem; }
 }
 /* ==================================================================
-   HERO СЕКЦИЯ
+   03_hero.css – главный экран
    ================================================================== */
 .hero-grid {
     display: flex;
@@ -533,9 +505,8 @@ body {
     padding: 60px 0;
     flex-wrap: wrap;
 }
-.hero-content {
-    flex: 1.2;
-}
+
+.hero-content { flex: 1.2; }
 .hero-title {
     font-size: 2.8rem;
     font-weight: 800;
@@ -607,7 +578,15 @@ body {
     font-weight: 600;
     margin-bottom: 20px;
     box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+.hero-tv-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
 @media (min-width: 1024px) {
     .hero-image img {
         max-width: 480px;
@@ -649,7 +628,7 @@ body {
     }
 }
 /* ==================================================================
-   РОЛИ
+   04_cards_grids.css – сетки карточек (роли, услуги)
    ================================================================== */
 .roles-grid {
     display: grid;
@@ -658,37 +637,13 @@ body {
     list-style: none;
     padding-left: 0;
 }
-@media (min-width: 992px) {
-    .roles-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-    .roles-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@media (max-width: 767px) {
-    .roles-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-}
+@media (min-width: 992px) { .roles-grid { grid-template-columns: repeat(3,1fr); } }
+@media (min-width: 768px) and (max-width: 991px) { .roles-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 767px) { .roles-grid { grid-template-columns: 1fr; gap: 20px; } }
 
-/* ==================================================================
-   КАРТОЧКИ И СЕТКИ
-   ================================================================== */
-.process-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 30px;
-    margin: 40px 0;
-    list-style: none;
-    padding-left: 0;
-}
 .services-flex {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2,1fr);
     gap: 30px;
     margin: 40px 0;
     list-style: none;
@@ -700,7 +655,8 @@ body {
         gap: 20px;
     }
 }
-.role-card, .service-card, .process-card {
+
+.role-card, .service-card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
     padding: 28px;
@@ -708,11 +664,11 @@ body {
     transition: var(--transition);
     border: 1px solid var(--border);
 }
-.role-card:hover, .service-card:hover, .process-card:hover {
+.role-card:hover, .service-card:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
 }
-.role-card p, .service-card p, .process-card p {
+.role-card p, .service-card p {
     color: var(--text-dark);
     margin-top: 12px;
 }
@@ -733,20 +689,8 @@ body {
     color: var(--primary);
     font-weight: bold;
 }
-.process-step {
-    width: 40px;
-    height: 40px;
-    background: var(--primary);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
 /* ==================================================================
-   СТАТИСТИКА
+   05_stats_benefits.css – статистика и преимущества
    ================================================================== */
 .stats-grid {
     display: grid;
@@ -754,16 +698,9 @@ body {
     gap: 30px;
     margin: 40px 0;
 }
-@media (min-width: 576px) {
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@media (min-width: 992px) {
-    .stats-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
+@media (min-width: 576px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 992px) { .stats-grid { grid-template-columns: repeat(3, 1fr); } }
+
 .stat-item {
     text-align: center;
     background: var(--surface-soft);
@@ -804,31 +741,15 @@ body {
     font-weight: 500;
 }
 @media (max-width: 768px) {
-    .stats-grid {
-        gap: 20px;
-        margin: 30px 0;
-    }
-    .stat-number {
-        font-size: 2.2rem;
-    }
-    .stat-plus {
-        font-size: 1.6rem;
-    }
-    .stat-label {
-        font-size: 0.9rem;
-    }
+    .stats-grid { gap: 20px; margin: 30px 0; }
+    .stat-number { font-size: 2.2rem; }
+    .stat-plus { font-size: 1.6rem; }
+    .stat-label { font-size: 0.9rem; }
 }
 @media (max-width: 360px) {
-    .stat-number-wrapper {
-        white-space: normal;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+    .stat-number-wrapper { white-space: normal; flex-wrap: wrap; justify-content: center; }
 }
 
-/* ==================================================================
-   ПРЕИМУЩЕСТВА
-   ================================================================== */
 .benefits-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -837,18 +758,14 @@ body {
     list-style: none;
     padding-left: 0;
 }
-@media (min-width: 768px) {
-    .benefits-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 32px;
-    }
-}
+@media (min-width: 768px) { .benefits-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; } }
+
 .benefit-card {
     background: white;
     border-radius: var(--radius-lg);
     padding: 32px 28px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
     border: none;
     position: relative;
     overflow: hidden;
@@ -866,9 +783,7 @@ body {
     transform-origin: left;
     transition: transform 0.4s ease;
 }
-.benefit-card:hover::before {
-    transform: scaleX(1);
-}
+.benefit-card:hover::before { transform: scaleX(1); }
 .benefit-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 25px 40px rgba(0, 0, 0, 0.3);
@@ -881,9 +796,7 @@ body {
     color: var(--primary-dark);
     transition: color 0.2s;
 }
-.benefit-card:hover h4 {
-    color: var(--primary);
-}
+.benefit-card:hover h4 { color: var(--primary); }
 .benefit-card p {
     font-size: 1rem;
     line-height: 1.5;
@@ -892,44 +805,20 @@ body {
     font-weight: 500;
 }
 @media (max-width: 768px) {
-    .benefits-grid {
-        gap: 24px;
-        margin: 32px 0;
-    }
-    .benefit-card {
-        padding: 24px 20px;
-    }
-    .benefit-card h4 {
-        font-size: 1.3rem;
-    }
-    .benefit-card p {
-        font-size: 0.95rem;
-    }
-}
-
-.benefit-card {
-    background: white;
-    border-radius: var(--radius-lg);
-    padding: 32px 28px;
-    box-shadow: var(--shadow-lg);  /* вместо 0 15px 35px rgba(0,0,0,0.2) */
-    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    border: none;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
+    .benefits-grid { gap: 24px; margin: 32px 0; }
+    .benefit-card { padding: 24px 20px; }
+    .benefit-card h4 { font-size: 1.3rem; }
+    .benefit-card p { font-size: 0.95rem; }
 }
 /* ==================================================================
-   СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ СЕКЦИИ "ПРОЦЕСС"
+   06_process.css – блок "Как мы работаем" (процесс)
    ================================================================== */
-
-/* ----- ТИПОГРАФИКА СЕКЦИИ ----- */
 .process-description {
     text-align: center;
     margin-bottom: 40px;
     font-size: 1rem;
     color: var(--text-muted);
 }
-
 .process-title {
     text-align: center;
     margin: 40px 0 20px;
@@ -937,7 +826,6 @@ body {
     color: var(--primary-dark);
     word-break: break-word;
 }
-
 .process-subtitle {
     display: block;
     font-size: 0.85rem;
@@ -945,8 +833,6 @@ body {
     color: var(--text-muted);
     margin-top: 8px;
 }
-
-/* ----- СЕТКИ КАРТОЧЕК ----- */
 .process-grid {
     display: grid;
     gap: 30px;
@@ -954,8 +840,6 @@ body {
     list-style: none;
     margin: 40px 0;
 }
-
-/* ДЕСКТОП (≥992px) */
 @media (min-width: 992px) {
     .process-row {
         display: flex;
@@ -965,43 +849,25 @@ body {
         flex: 1;
         min-width: 0;
     }
-    /* Блоки с 4 карточками – 2 колонки */
     .process-col .process-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2,1fr);
     }
-    /* Тренинг (6 карточек) – 3 колонки */
     .training-grid .process-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3,1fr);
     }
 }
-
-/* ПЛАНШЕТ (768–991px) – 2 колонки, блоки вертикально */
 @media (min-width: 768px) and (max-width: 991px) {
-    .process-row {
-        display: block;
-    }
-    .process-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .process-row { display: block; }
+    .process-grid { grid-template-columns: repeat(2,1fr); }
 }
-
-/* ТЕЛЕФОН (≤767px) – 1 колонка, но при ширине ≥480px – 2 колонки */
 @media (max-width: 767px) {
-    .process-row {
-        display: block;
-    }
-    .process-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
+    .process-row { display: block; }
+    .process-grid { grid-template-columns: 1fr; gap: 20px; }
 }
 @media (min-width: 480px) and (max-width: 767px) {
-    .process-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .process-grid { grid-template-columns: repeat(2,1fr); }
 }
 
-/* ----- КАРТОЧКА ПРОЦЕССА ----- */
 .process-card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -1030,7 +896,6 @@ body {
     margin-bottom: 15px;
 }
 
-/* ----- ФОТОГРАФИИ (всегда 2 в ряд) ----- */
 .process-photos {
     display: flex;
     flex-wrap: nowrap;
@@ -1039,58 +904,35 @@ body {
     margin-top: 50px;
     overflow-x: auto;
 }
-.process-photo-item:first-child {
-    flex: 0.95;
-    min-width: 160px;
-}
-.process-photo-item:last-child {
-    flex: 1.1;
-    min-width: 160px;
-}
-.process-photo-item {
-    text-align: center;
-}
+.process-photo-item:first-child { flex: 0.95; min-width: 160px; }
+.process-photo-item:last-child { flex: 1.1; min-width: 160px; }
+.process-photo-item { text-align: center; }
 .process-photo-item img {
     width: 100%;
     height: auto;
+    max-height: 850px;
+    object-fit: contain;
     border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    background: #f0f4f8;
 }
 .photo-caption {
     margin-top: 12px;
     color: var(--text-muted);
     font-size: 0.85rem;
 }
-
 @media (max-width: 640px) {
-    .process-photos {
-        gap: 12px;
-    }
+    .process-photos { gap: 12px; }
     .process-photo-item:first-child,
-    .process-photo-item:last-child {
-        min-width: 120px;
+    .process-photo-item:last-child { min-width: 120px; }
+    @media (max-width: 480px) {
+        .process-photos { gap: 8px; }
+        .process-photo-item:first-child,
+        .process-photo-item:last-child { min-width: 100px; }
     }
-}
-@media (max-width: 480px) {
-    .process-photos {
-        gap: 8px;
-    }
-    .process-photo-item:first-child,
-    .process-photo-item:last-child {
-        min-width: 100px;
-    }
-}
-
-.process-photo-item img {
-    width: 100%;
-    height: auto;
-    max-height: 760px;          /* ограничиваем высоту */
-    object-fit: contain;        /* вписываем без обрезки */
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 /* ==================================================================
-   КАЛЬКУЛЯТОР
+   07_calculator.css – калькулятор, корзина, вкладки
    ================================================================== */
 .calculator-section {
     padding: 60px 0;
@@ -1141,15 +983,10 @@ body {
     animation: fadeIn 0.25s;
 }
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(8px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
 }
+
 .service-group {
     margin-bottom: 32px;
     padding: 24px;
@@ -1194,7 +1031,7 @@ body {
 .service-select:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
 }
 .calc-qty {
     width: 100px;
@@ -1210,7 +1047,7 @@ body {
 .calc-qty:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
 }
 .add-service-btn {
     background: var(--primary);
@@ -1230,7 +1067,7 @@ body {
 .add-service-btn:hover {
     background: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.25);
+    box-shadow: 0 6px 14px rgba(45,106,159,0.25);
 }
 .total-block {
     margin-top: 24px;
@@ -1246,14 +1083,11 @@ body {
 }
 .discount-info {
     font-size: 0.75rem;
-    color: #28a745;
     margin-top: 5px;
     font-weight: 500;
 }
 @media (max-width: 768px) {
-    .total-block {
-        text-align: center;
-    }
+    .total-block { text-align: center; }
 }
 .cart-section {
     margin-top: 30px;
@@ -1293,14 +1127,8 @@ body {
     animation: slideIn 0.3s ease;
 }
 @keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 .calc-item:hover {
     background: var(--light-bg);
@@ -1379,7 +1207,7 @@ body {
     margin-top: 15px;
 }
 /* ==================================================================
-   ФОРМА ОБРАТНОГО ЗВОНКА И БЫСТРОГО ЗАКАЗА
+   08_forms.css – формы обратной связи
    ================================================================== */
 .calendar-card {
     max-width: 800px;
@@ -1415,7 +1243,7 @@ body {
 .form-field:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
 }
 .form-textarea {
     border-radius: 24px;
@@ -1460,7 +1288,7 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%,-50%);
     color: white;
     font-size: 16px;
     font-weight: bold;
@@ -1611,7 +1439,7 @@ body {
     text-decoration: underline;
 }
 /* ==================================================================
-   КВИЗ
+   09_quiz_freebies.css – квиз и бесплатные материалы
    ================================================================== */
 .quiz-question {
     margin-bottom: 30px;
@@ -1639,8 +1467,8 @@ body {
     font-size: 1rem;
     color: #1e4663;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: all 0.25s cubic-bezier(0.2,0.9,0.4,1.1);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     text-align: center;
     flex: 0 1 auto;
     min-width: 140px;
@@ -1650,13 +1478,13 @@ body {
     border-color: var(--primary);
     color: white;
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(45, 106, 159, 0.25);
+    box-shadow: 0 8px 20px rgba(45,106,159,0.25);
 }
 .quiz-option.selected {
     background: var(--primary);
     border-color: var(--primary);
     color: white;
-    box-shadow: 0 4px 12px rgba(45, 106, 159, 0.3);
+    box-shadow: 0 4px 12px rgba(45,106,159,0.3);
     transform: scale(0.98);
 }
 .quiz-nav {
@@ -1696,18 +1524,13 @@ body {
     border-radius: 50%;
     animation: quiz-spin 0.8s linear infinite;
 }
-@keyframes quiz-spin {
-    to { transform: rotate(360deg); }
-}
+@keyframes quiz-spin { to { transform: rotate(360deg); } }
 .quiz-loading p {
     margin-top: 15px;
     font-size: 1rem;
     color: var(--text-muted);
 }
 @media (max-width: 640px) {
-    .quiz-card {
-        padding: 24px 16px;
-    }
     .quiz-options {
         flex-direction: column;
         align-items: stretch;
@@ -1726,9 +1549,6 @@ body {
     }
 }
 
-/* ==================================================================
-   БЕСПЛАТНЫЕ МАТЕРИАЛЫ
-   ================================================================== */
 .checklist-card {
     background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
     border-radius: var(--radius-lg);
@@ -1827,19 +1647,15 @@ body {
     margin-top: 8px;
 }
 @media (max-width: 640px) {
-    .freebies-grid {
-        gap: 24px;
-    }
-    .freebie-item {
-        min-width: 140px;
-    }
+    .freebies-grid { gap: 24px; }
+    .freebie-item { min-width: 140px; }
 }
 /* ==================================================================
-   МЕДИА СЕКЦИЯ (ТВ, ПУБЛИКАЦИИ)
+   10_media_contacts.css – медиа, контакты, футер, общие компоненты
    ================================================================== */
 .media-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3,1fr);
     gap: 30px;
     align-items: stretch;
     margin: 40px 0;
@@ -1857,7 +1673,7 @@ body {
 }
 .media-image {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16/9;
     overflow: hidden;
 }
 .media-image img {
@@ -1901,7 +1717,7 @@ body {
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 24px;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255,255,255,0.9);
 }
 .media-stats {
     display: flex;
@@ -1910,7 +1726,7 @@ body {
     flex-wrap: wrap;
 }
 .media-stats span {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255,255,255,0.2);
     padding: 8px 16px;
     border-radius: 40px;
     font-size: 0.85rem;
@@ -1921,32 +1737,19 @@ body {
         grid-template-columns: 1fr;
         gap: 24px;
     }
-    .media-description {
-        order: -1;
-    }
-    .media-stats {
-        gap: 16px;
-    }
+    .media-description { order: -1; }
+    .media-stats { gap: 16px; }
     .media-stats span {
         font-size: 0.8rem;
         padding: 6px 12px;
     }
 }
 @media (max-width: 480px) {
-    .media-description {
-        padding: 24px 20px;
-    }
-    .media-description h3 {
-        font-size: 1.2rem;
-    }
-    .media-description p {
-        font-size: 0.85rem;
-    }
+    .media-description { padding: 24px 20px; }
+    .media-description h3 { font-size: 1.2rem; }
+    .media-description p { font-size: 0.85rem; }
 }
 
-/* ==================================================================
-   КОНТАКТЫ
-   ================================================================== */
 .contact-block {
     text-align: center;
     padding: 40px 0;
@@ -2000,9 +1803,6 @@ body {
     }
 }
 
-/* ==================================================================
-   ФУТЕР
-   ================================================================== */
 footer {
     background: var(--dark-bg);
     color: #cbd5e0;
@@ -2039,30 +1839,20 @@ footer a:hover {
     }
 }
 @media (max-width: 480px) {
-    .footer-version {
-        font-size: 0.75rem;
-    }
-    .footer-copyright {
-        font-size: 0.8rem;
-    }
+    .footer-version { font-size: 0.75rem; }
+    .footer-copyright { font-size: 0.8rem; }
 }
 
-/* ==================================================================
-   АНИМАЦИЯ ПОЯВЛЕНИЯ (FADE-UP)
-   ================================================================== */
 .fade-up {
     opacity: 0;
     transform: translateY(30px);
-    transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transition: opacity 0.7s cubic-bezier(0.2,0.9,0.4,1.1), transform 0.7s cubic-bezier(0.2,0.9,0.4,1.1);
 }
 .fade-up.visible {
     opacity: 1;
     transform: translateY(0);
 }
 
-/* ==================================================================
-   КНОПКА "НАВЕРХ" (единый улучшенный блок)
-   ================================================================== */
 .scroll-top {
     position: fixed;
     bottom: 30px;
@@ -2091,12 +1881,9 @@ footer a:hover {
 .scroll-top:hover {
     background: var(--primary-dark);
     transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-/* ==================================================================
-   КАСТОМНЫЕ ТОСТЫ
-   ================================================================== */
 .custom-toast {
     position: fixed;
     bottom: 30px;
@@ -2113,7 +1900,7 @@ footer a:hover {
     gap: 10px;
     font-family: 'Inter', sans-serif;
     white-space: nowrap;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 .custom-toast-error {
     background: #dc3545;
@@ -2128,14 +1915,8 @@ footer a:hover {
     color: #212529;
 }
 @keyframes toastFadeIn {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
+    from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    to { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 @media (max-width: 640px) {
     .custom-toast {
@@ -2146,9 +1927,6 @@ footer a:hover {
     }
 }
 
-/* ==================================================================
-   КАСТОМНЫЙ ДРОПДАУН
-   ================================================================== */
 .custom-dropdown {
     position: relative;
     width: 100%;
@@ -2172,7 +1950,7 @@ footer a:hover {
 }
 .dropdown-button.active {
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.15);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.15);
 }
 .dropdown-arrow {
     transition: transform 0.2s ease;
@@ -2189,7 +1967,7 @@ footer a:hover {
     right: 0;
     background: white;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     max-height: 320px;
     overflow-y: auto;
     z-index: 1000;
@@ -2197,7 +1975,7 @@ footer a:hover {
     opacity: 0;
     visibility: hidden;
     transform: translateY(-12px);
-    transition: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transition: all 0.2s cubic-bezier(0.2,0.9,0.4,1.1);
 }
 .dropdown-menu.open {
     opacity: 1;
@@ -2220,19 +1998,7 @@ footer a:hover {
     color: white;
 }
 
-/* ==================================================================
-   A11Y: ФОКУС
-   ================================================================== */
-a:focus-visible,
-button:focus-visible,
-.quiz-option:focus-visible,
-.add-service-btn:focus-visible,
-.remove-item:focus-visible,
-.tab-btn:focus-visible,
-.btn-primary:focus-visible,
-.btn-secondary:focus-visible,
-.qty-btn:focus-visible,
-#removeQuizSelection:focus-visible {
+a:focus-visible, button:focus-visible, .quiz-option:focus-visible, .add-service-btn:focus-visible, .remove-item:focus-visible, .tab-btn:focus-visible, .btn-primary:focus-visible, .btn-secondary:focus-visible, .qty-btn:focus-visible, #removeQuizSelection:focus-visible {
     outline: 3px solid var(--primary);
     outline-offset: 3px;
     border-radius: 4px;
@@ -2255,10 +2021,6 @@ fieldset {
 legend {
     display: none;
 }
-
-/* ==================================================================
-   УЧЁТ REDUCED MOTION
-   ================================================================== */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -2274,10 +2036,6 @@ legend {
         opacity: 1 !important;
     }
 }
-
-/* ==================================================================
-   ПРОЧИЕ УЛУЧШЕНИЯ ДОСТУПНОСТИ
-   ================================================================== */
 ::placeholder {
     color: #9ca3af;
     opacity: 1;
@@ -2346,8 +2104,6 @@ legend {
     outline: none;
     box-shadow: 0 0 0 3px rgba(255,255,255,0.5);
 }
-
-/* Отступ для якорных ссылок */
 section[id] {
     scroll-margin-top: 80px;
 }
@@ -2356,8 +2112,6 @@ section[id] {
         scroll-margin-top: 70px;
     }
 }
-
-/* Секции с фоном */
 .section-dark {
     background: var(--dark-bg);
     color: #e2e8f0;
@@ -2370,52 +2124,29 @@ section[id] {
     background: var(--light-bg);
     padding: 60px 0;
 }
-.hero-tv-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #2D6A9F 0%, #1F4A6E 100%);
-    color: white;
-    padding: 8px 20px;
-    border-radius: 60px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-sm);
-    text-decoration: none;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.hero-tv-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
 /* ==================================================================
-   ПРАЙС-ЛИСТ (аккордеоны)
+   11_pricelist.css – полный прайс-лист (аккордеоны)
    ================================================================== */
 .price-list-section {
     margin: 2rem 0;
 }
-
 .price-details {
     background: var(--surface-soft, #fff);
     border-radius: 24px;
     margin-bottom: 1.5rem;
-    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.05));
+    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
     transition: box-shadow 0.3s ease, margin-bottom 0.2s ease;
     border: 1px solid var(--border, #e0e0e0);
     overflow: hidden;
 }
-
 .price-details[open] {
-    box-shadow: var(--shadow-md, 0 8px 24px rgba(0, 0, 0, 0.1));
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
 }
-
 .price-summary {
     font-size: 1.4rem;
     font-weight: 700;
     padding: 1rem 1.5rem;
-    background: linear-gradient(135deg, var(--primary-dark, #1F4A6E) 0%, var(--primary, #2D6A9F) 100%);
+    background: linear-gradient(135deg, var(--primary-dark,#1F4A6E) 0%, var(--primary,#2D6A9F) 100%);
     color: white;
     cursor: pointer;
     list-style: none;
@@ -2425,11 +2156,9 @@ section[id] {
     align-items: baseline;
     gap: 0.5rem;
 }
-
 .price-summary::-webkit-details-marker {
     display: none;
 }
-
 .price-summary::before {
     content: '▶';
     display: inline-block;
@@ -2437,32 +2166,26 @@ section[id] {
     font-size: 1rem;
     transition: transform 0.2s;
 }
-
 .price-details[open] .price-summary::before {
     transform: rotate(90deg);
 }
-
 .summary-note {
     font-size: 0.85rem;
     font-weight: normal;
     opacity: 0.85;
 }
-
 .price-summary:hover {
-    background: linear-gradient(135deg, var(--primary, #2D6A9F) 0%, var(--primary-light, #4A8BC2) 100%);
+    background: linear-gradient(135deg, var(--primary,#2D6A9F) 0%, var(--primary-light,#4A8BC2) 100%);
 }
-
 .price-table-wrapper {
     padding: 0.5rem 0 1rem 0;
     overflow-x: auto;
 }
-
 .price-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95rem;
 }
-
 .price-table th,
 .price-table td {
     padding: 0.9rem 1rem;
@@ -2470,18 +2193,15 @@ section[id] {
     border-bottom: 1px solid var(--border, #e0e0e0);
     vertical-align: top;
 }
-
 .price-table th {
     background-color: var(--light-bg, #f8f9fa);
     font-weight: 600;
     color: var(--primary-dark, #1F4A6E);
 }
-
 .price-table td:first-child,
 .price-table th:first-child {
     padding-left: 1.5rem;
 }
-
 .price-table td:last-child,
 .price-table th:last-child {
     text-align: right;
@@ -2489,54 +2209,39 @@ section[id] {
     font-weight: 500;
     white-space: nowrap;
 }
-
 .price-table tbody tr:hover {
-    background-color: rgba(45, 106, 159, 0.04);
+    background-color: rgba(45,106,159,0.04);
     transition: background 0.15s;
 }
-
 .category-separator th.category-header {
     text-align: center;
-    background-color: rgba(45, 106, 159, 0.12);
+    background-color: rgba(45,106,159,0.12);
     font-size: 1.05rem;
     letter-spacing: -0.2px;
     border-top: 2px solid var(--primary-light, #4A8BC2);
     border-bottom: 1px solid var(--primary-light, #4A8BC2);
     font-weight: 700;
 }
-
-/* Плавное открытие details */
 .price-details[open] .price-table-wrapper {
-    animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    animation: fadeSlideUp 0.5s cubic-bezier(0.2,0.9,0.4,1.1);
 }
-
 @keyframes fadeSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
-/* Hover-эффект для кнопок якорей */
 .price-anchors .btn-secondary {
-    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
 }
 .price-anchors .btn-secondary:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.2);
+    box-shadow: 0 6px 14px rgba(45,106,159,0.2);
 }
-
 @media (max-width: 640px) {
     .price-summary {
         font-size: 1.1rem;
         padding: 0.8rem 1rem;
     }
-    .price-table th,
-    .price-table td {
+    .price-table th, .price-table td {
         padding: 0.6rem 0.8rem;
         font-size: 0.85rem;
     }
@@ -2548,7 +2253,6 @@ section[id] {
         font-size: 0.9rem;
     }
 }
-
 @media (prefers-reduced-motion: reduce) {
     .price-summary::before {
         transition: none;
@@ -2557,39 +2261,37 @@ section[id] {
         animation: none;
     }
 }
+/* ==================================================================
+   12_certificates.css – карусель сертификатов
+   ================================================================== */
 .certificates-section {
     background: var(--light-bg, #f8f9fa);
     padding: 60px 0;
 }
-
 .carousel-wrapper {
     position: relative;
     display: flex;
     align-items: center;
     margin: 40px 0 20px;
 }
-
 .carousel-viewport {
     overflow-x: hidden;
     width: 100%;
     border-radius: var(--radius-lg, 28px);
 }
-
 .carousel-track {
     display: flex;
     gap: 24px;
-    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94);
     will-change: transform;
 }
-
-/* Все слайды имеют одинаковую высоту 260px, ширина автоматическая */
 .carousel-slide {
     flex: 0 0 auto;
     width: auto;
     min-width: 140px;
     max-width: 260px;
     height: 260px;
-    background: white;
+    background: transparent;
     border-radius: var(--radius-md, 16px);
     overflow: hidden;
     box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
@@ -2598,13 +2300,10 @@ section[id] {
     align-items: center;
     justify-content: center;
 }
-
 .carousel-slide:hover {
     transform: translateY(-5px);
     box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
 }
-
-/* Изображения — лёгкое масштабирование и обрезка краёв */
 .carousel-slide img {
     height: 100%;
     width: auto;
@@ -2613,27 +2312,22 @@ section[id] {
     transform: scale(1.02);
     transition: transform 0.25s ease;
     display: block;
-    background: #eef2f5;
+    background: transparent;
 }
-
 .carousel-slide:hover img {
     transform: scale(1.05);
 }
-
-/* Горизонтальные сертификаты — тоже обрезаем по краям (можно оставить cover) */
 .carousel-slide.horizontal {
     max-width: 360px;
 }
 .carousel-slide.horizontal img {
     object-fit: cover;
     transform: scale(1.02);
-    background: #eef2f5;
+    background: transparent;
 }
 .carousel-slide.horizontal:hover img {
     transform: scale(1.05);
 }
-
-/* Кнопки навигации */
 .carousel-btn {
     position: absolute;
     top: 50%;
@@ -2659,10 +2353,12 @@ section[id] {
     color: white;
     transform: translateY(-50%) scale(1.05);
 }
-.carousel-prev { left: -22px; }
-.carousel-next { right: -22px; }
-
-/* Прогресс-бар */
+.carousel-prev {
+    left: -22px;
+}
+.carousel-next {
+    right: -22px;
+}
 .carousel-progress {
     width: 100%;
     height: 2px;
@@ -2678,8 +2374,6 @@ section[id] {
     border-radius: 2px;
     transition: width 0.05s linear;
 }
-
-/* Точки-индикаторы */
 .carousel-dots {
     display: flex;
     justify-content: center;
@@ -2702,8 +2396,6 @@ section[id] {
     background: var(--primary-light, #4A8BC2);
     transform: scale(1.2);
 }
-
-/* Адаптив */
 @media (max-width: 992px) {
     .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
     .carousel-slide.horizontal { max-width: 300px; }
@@ -2721,12 +2413,187 @@ section[id] {
     .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
     .carousel-slide.horizontal { max-width: 200px; }
 }
+/* ==================================================================
+   13_accents.css – усиление контраста (без новых цветов)
+   ================================================================== */
+.btn-secondary {
+    border-width: 2px;
+    font-weight: 600;
+}
+.btn-secondary:hover {
+    background: rgba(45, 106, 159, 0.08);
+    border-color: var(--primary-dark);
+    color: var(--primary-dark);
+}
+.tab-btn {
+    background: #eef2f5;
+    border: 1px solid #d0d7de;
+}
+.tab-btn.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.tab-btn:hover:not(.active) {
+    background: #e2e8f0;
+}
+.add-service-btn {
+    background: var(--primary);
+    font-weight: 700;
+}
+.add-service-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(45, 106, 159, 0.25);
+}
+a:not(.btn-primary):not(.btn-secondary) {
+    transition: all 0.2s;
+}
+a:not(.btn-primary):not(.btn-secondary):hover {
+    border-bottom: 1px solid var(--primary);
+}
+.discount-info {
+    font-weight: 700;
+    color: var(--primary-dark);
+}
+/* ==================================================================
+   14_modal.css – модальные окна (материалы, политика)
+   ================================================================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 10002;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+.modal.show {
+    display: flex;
+    opacity: 1;
+}
+.modal-content {
+    background: white;
+    border-radius: 32px;
+    max-width: 500px;
+    width: 90%;
+    padding: 32px 28px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transform: scale(0.95);
+    transition: transform 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
+}
+.modal.show .modal-content {
+    transform: scale(1);
+}
+.modal-content h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--primary-dark, #1F4A6E);
+    text-align: center;
+}
+.modal-content p {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    color: var(--text-dark, #1a202c);
+    text-align: center;
+}
+.modal-email-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid var(--border, #e0e0e0);
+    border-radius: 60px;
+    font-size: 1rem;
+    font-family: inherit;
+    margin-bottom: 20px;
+    transition: all 0.2s;
+}
+.modal-email-input:focus {
+    outline: none;
+    border-color: var(--primary, #2D6A9F);
+    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+}
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+.modal-buttons button {
+    padding: 10px 24px;
+    font-size: 0.95rem;
+}
+@media (max-width: 640px) {
+    .modal-content {
+        padding: 24px 20px;
+        width: 92%;
+    }
+    .modal-content h3 {
+        font-size: 1.3rem;
+    }
+    .modal-buttons {
+        flex-direction: column;
+    }
+    .modal-buttons button {
+        width: 100%;
+    }
+}
+#sendMaterialsBtn {
+    background: var(--primary, #2D6A9F);
+    color: white;
+}
+#sendMaterialsBtn:hover {
+    background: var(--primary-dark, #1F4A6E);
+}
+/* ==================================================================
+   15_cookie.css – стили для куки-баннера
+   ================================================================== */
+.cookie-consent {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--dark-bg);
+    color: var(--text-light);
+    padding: 16px 20px;
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+.cookie-consent__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+.cookie-consent__inner p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+.cookie-consent a {
+    color: var(--primary-light);
+}
+@media (max-width: 640px) {
+    .cookie-consent__inner {
+        flex-direction: column;
+        text-align: center;
+    }
+}
 </style>
 </head>
 <body>
 <a href="#main-content" class="skip-link">Перейти к содержанию</a>
 <div id="top"></div>
-<main id="main-content"><nav class="navbar">
+<div id="main-content"></div><nav class="navbar">
     <div class="container">
         <div class="nav-top">
             <a href="#home" class="logo">
@@ -2863,7 +2730,6 @@ section[id] {
 <section id="certificates" class="section certificates-section fade-up">
     <div class="container">
         <h2 class="section-title">📜 Мои сертификаты и дипломы</h2>
-
         <div class="carousel-wrapper">
             <button class="carousel-btn carousel-prev" aria-label="Назад">❮</button>
             <div class="carousel-viewport">
@@ -3979,13 +3845,13 @@ section[id] {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 27.05.2026 17:17:31
+                Версия: 27.05.2026 20:01:09
             </div>
         </div>
     </div>
 </footer><div id="cookieConsent" class="cookie-consent" style="display: none;">
     <div class="cookie-consent__inner">
-        <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с <a href="#" id="cookiePrivacyLink">политикой конфиденциальности</a>.</p>
+        <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая пользоваться сайтом, вы соглашаетесь с <a href="privacy.html" target="_blank" id="cookiePrivacyLink">политикой конфиденциальности</a>.</p>
         <button id="acceptCookies" class="btn-primary btn-small">Принять</button>
         <button id="declineCookies" class="btn-secondary btn-small">Отклонить</button>
     </div>
@@ -4005,19 +3871,21 @@ section[id] {
     <div class="modal-content">
         <h3>📧 Получить материалы на email</h3>
         <p>Введите ваш email, и мы отправим ссылки на скачивание.</p>
-        <input type="email" id="materialsEmail" placeholder="Ваш email" style="width:100%; margin:15px 0; padding:12px; border-radius:40px; border:1px solid #ccc;">
-        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <input type="email" id="materialsEmail" placeholder="Ваш email" class="modal-email-input">
+        <div class="modal-buttons">
             <button id="sendMaterialsBtn" class="btn-primary">Отправить</button>
             <button id="closeMaterialsModal" class="btn-secondary">Закрыть</button>
         </div>
     </div>
 </div><script defer>
-// ========== ГЛОБАЛЬНЫЕ НАСТРОЙКИ САЙТА ==========
+// ============================================================
+// 00_config.js – Глобальные настройки сайта
+// ============================================================
 window.APP_CONFIG = {
-    // URL веб-приложения Google Apps Script (обработчик форм)
+    // URL Google Apps Script для отправки форм
     SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwHN9ej6DF2_X5s_Pak5cOQ0E3aTeEP4N_1gSB6trtrv5oZzNZjijCEKHAZ85do4rzz3A/exec',
 
-    // Контакты (для ссылок в меню и подвале)
+    // Контакты
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
@@ -4027,7 +3895,7 @@ window.APP_CONFIG = {
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
 
-    // ========== КОНСТАНТЫ ДЛЯ ВСЕГО САЙТА ==========
+    // Константы – всё в одном месте для удобства
     CONSTANTS: {
         TOAST_DURATION: 3000,
         TOAST_FADE_DURATION: 300,
@@ -4045,32 +3913,25 @@ window.APP_CONFIG = {
         CACHE_TTL: 10 * 60 * 1000,
         ANIMATION_FADE_DURATION: 700,
         STATS_ANIMATION_DURATION: 1500,
-
         BREAKPOINT_MOBILE: 768,
         BREAKPOINT_TABLET: 992,
         BREAKPOINT_DESKTOP: 1200,
         SCROLL_TOP_VISIBLE_THRESHOLD: 500,
-
         OG_IMAGE_WIDTH: 1200,
         OG_IMAGE_HEIGHT: 630,
         HERO_IMAGE_WIDTH: 480,
         HERO_IMAGE_HEIGHT: 640,
-
         DISCOUNT_PERCENT: 0.05,
         DISCOUNT_MIN_ITEMS: 2,
-
         MAX_PHONE_DIGITS: 11,
-
         GEO_API_URL: 'https://ipapi.co/json/',
-
         LOCALSTORAGE_VISITS_KEY: 'hr_visits',
         LOCALSTORAGE_GEO_KEY: 'hr_geo',
         LOCALSTORAGE_USER_ID_KEY: 'hr_user_id',
-
         DEFAULT_QUANTITY: 1,
     },
 
-    // ========== ИДЕНТИФИКАТОРЫ СЕКЦИЙ (для якорных ссылок) ==========
+    // ID секций для якорных ссылок
     SECTION_IDS: {
         home: 'home',
         roles: 'roles',
@@ -4084,7 +3945,11 @@ window.APP_CONFIG = {
         callbackForm: 'callback-form',
     }
 };
-// ========== ОБЩИЕ УТИЛИТЫ ==========
+// ============================================================
+// 01_core.js – Ядро: утилиты, тосты, fetch, валидация, отправка форм, гео, UTM и т.д.
+// ============================================================
+
+// ---------- Безопасное экранирование HTML ----------
 function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -4095,29 +3960,20 @@ function escapeHtml(str) {
     });
 }
 
+// ---------- Режим разработки ----------
 const IS_DEV = window.location.hostname === 'localhost' ||
                window.location.hostname === '127.0.0.1' ||
                window.location.search.includes('debug=true');
-let originalConsoleLog = null;
-
 function log(...args) { if (IS_DEV) console.log(...args); }
 function logError(...args) { console.error(...args); }
 function logWarn(...args) { if (IS_DEV) console.warn(...args); }
-
 window.IS_DEV = IS_DEV;
 
-if (!IS_DEV) {
-    originalConsoleLog = console.log;
-    console.log = function() {};
-}
-
+// Включение/отключение логов (больше не переопределяем console.log глобально)
 window.enableLogs = function() {
-    if (originalConsoleLog) {
-        console.log = originalConsoleLog;
-        originalConsoleLog = null;
-    } else {
-        console.log = function(...args) { if (typeof console !== 'undefined') console.log(...args); };
-    }
+    if (typeof originalConsoleLog === 'undefined') return;
+    console.log = originalConsoleLog;
+    originalConsoleLog = null;
     showToast('🔍 Логи включены', 'success');
 };
 window.disableLogs = function() {
@@ -4126,6 +3982,7 @@ window.disableLogs = function() {
     showToast('🔇 Логи отключены', 'success');
 };
 
+// ---------- Пользовательский ID (localStorage) ----------
 function getOrCreateLocalUserId() {
     const key = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_USER_ID_KEY || 'hr_user_id';
     try {
@@ -4143,18 +4000,17 @@ function getOrCreateLocalUserId() {
     }
 }
 let currentUserId = null;
-
 function initUserId() {
     currentUserId = getOrCreateLocalUserId();
     return Promise.resolve(currentUserId);
 }
 
+// ---------- Fetch с повторными попытками ----------
 async function fetchWithRetry(url, options = {}, retries = null, timeout = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const timeoutMs = timeout !== null ? timeout : (window.APP_CONFIG?.CONSTANTS?.FETCH_TIMEOUT || 10000);
     const baseDelay = window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000;
     const maxDelay = window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_MAX || 5000;
-
     let lastError = null;
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
@@ -4176,7 +4032,6 @@ async function fetchTextWithRetry(url, retries = 3, timeout = 10000) {
     const response = await fetchWithRetry(url, {}, retries, timeout);
     return response.text();
 }
-
 async function loadWithCache(cacheKey, fetchFn, ttl = null) {
     const cacheTtl = ttl !== null ? ttl : (window.APP_CONFIG?.CONSTANTS?.CACHE_TTL || 10 * 60 * 1000);
     try {
@@ -4185,18 +4040,17 @@ async function loadWithCache(cacheKey, fetchFn, ttl = null) {
             try {
                 const { data, timestamp } = JSON.parse(cached);
                 if (Date.now() - timestamp < cacheTtl) return data;
-            } catch(e) {
-                if (IS_DEV) console.warn('Ошибка парсинга кэша', e);
-            }
+            } catch(e) { if (IS_DEV) console.warn('Ошибка парсинга кэша', e); }
         }
-    } catch(e) {}
+    } catch(e) { if (IS_DEV) console.warn('Ошибка чтения localStorage', e); }
     const data = await fetchFn();
     try {
         localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
-    } catch(e) {}
+    } catch(e) { if (IS_DEV) console.warn('Ошибка записи в localStorage', e); }
     return data;
 }
 
+// ---------- Индикатор загрузки ----------
 let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
 function showLoading(message = 'Загрузка...') {
     if (isLoadingActive) return;
@@ -4246,6 +4100,7 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
+// ---------- Toast-уведомления ----------
 function showToast(message, type = 'error') {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -4257,12 +4112,7 @@ function showToast(message, type = 'error') {
     if (type === 'error') icon = '❌';
     toast.innerHTML = `${icon} ${escapeHtml(message)}`;
     toast.setAttribute('role', 'status');
-    toast.setAttribute('aria-live', 'polite');   // ДОБАВЛЕНО для доступности
-    if (type === 'error') {
-        toast.setAttribute('aria-live', 'assertive');
-    } else {
-        toast.setAttribute('aria-live', 'polite');
-    }
+    toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
     document.body.appendChild(toast);
     setTimeout(() => {
         toast.style.opacity = '0';
@@ -4273,13 +4123,8 @@ function showErrorToast(message) { showToast(message, 'error'); }
 function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
-const SCRIPT_URL = window.APP_CONFIG.SCRIPT_URL;
-if (typeof window !== 'undefined') {
-    window.SCRIPT_URL = SCRIPT_URL;
-}
-
-// ========== УНИВЕРСАЛЬНАЯ ОТПРАВКА POST С ПОВТОРНЫМИ ПОПЫТКАМИ ==========
-async function postWithRetry(url, data, retries = null, baseDelay = null) {
+// ---------- POST с повторными попытками ----------
+window.postWithRetry = async function(url, data, retries = null, baseDelay = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
     let lastError = null;
@@ -4293,31 +4138,19 @@ async function postWithRetry(url, data, retries = null, baseDelay = null) {
             });
             if (response.ok) {
                 let result;
-                try {
-                    result = await response.json();
-                } catch(e) {
-                    throw new Error('Не удалось разобрать ответ сервера');
-                }
-                if (result && result.result === 'ok') {
-                    return true;
-                } else {
-                    throw new Error(result?.message || 'Сервер вернул ошибку');
-                }
-            } else {
-                throw new Error(`HTTP ${response.status}`);
-            }
+                try { result = await response.json(); } catch(e) { throw new Error('Не удалось разобрать ответ сервера'); }
+                if (result && result.result === 'ok') return true;
+                else throw new Error(result?.message || 'Сервер вернул ошибку');
+            } else throw new Error(`HTTP ${response.status}`);
         } catch (err) {
             lastError = err;
-            if (attempt < maxRetries) {
-                await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt - 1)));
-            }
+            if (attempt < maxRetries) await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt - 1)));
         }
     }
     throw lastError;
-}
-window.postWithRetry = postWithRetry;
+};
 
-// ========== НОРМАЛИЗАЦИЯ ТЕЛЕФОНА (ЕДИНАЯ ФУНКЦИЯ) ==========
+// ---------- Телефон: нормализация, валидация, маска ----------
 function normalizePhoneDigits(phone) {
     let digits = phone.replace(/\D/g, '');
     if (digits.length === 0) return '';
@@ -4327,19 +4160,16 @@ function normalizePhoneDigits(phone) {
     if (digits.length > maxDigits) digits = digits.slice(0, maxDigits);
     return digits;
 }
-
 function validatePhoneDigits(phone) {
     const digits = normalizePhoneDigits(phone);
     const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
     return digits.length === maxDigits && /^7\d{10}$/.test(digits);
 }
-
 function validateEmailFormat(email) {
     if (!email) return true;
     const re = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
     return re.test(email);
 }
-
 function showFieldError(input, message) {
     if (input._errorElement) input._errorElement.remove();
     const errorSpan = document.createElement('span');
@@ -4349,7 +4179,6 @@ function showFieldError(input, message) {
     input._errorElement = errorSpan;
     input.classList.add('input-error');
 }
-
 function clearFieldError(input) {
     if (input._errorElement) {
         input._errorElement.remove();
@@ -4357,7 +4186,6 @@ function clearFieldError(input) {
     }
     input.classList.remove('input-error');
 }
-
 function validatePhoneField(input, showImmediate = true) {
     const phone = input.value.trim();
     if (!phone) {
@@ -4365,14 +4193,10 @@ function validatePhoneField(input, showImmediate = true) {
         return false;
     }
     const isValid = validatePhoneDigits(phone);
-    if (!isValid && showImmediate) {
-        showFieldError(input, '❌ Некорректный номер. Нужно 11 цифр, например +7 921 791-66-55');
-    } else {
-        clearFieldError(input);
-    }
+    if (!isValid && showImmediate) showFieldError(input, '❌ Некорректный номер. Нужно 11 цифр, например +7 921 791-66-55');
+    else clearFieldError(input);
     return isValid;
 }
-
 function validateEmailField(input, showImmediate = true) {
     const email = input.value.trim();
     if (!email) {
@@ -4380,29 +4204,22 @@ function validateEmailField(input, showImmediate = true) {
         return true;
     }
     const isValid = validateEmailFormat(email);
-    if (!isValid && showImmediate) {
-        showFieldError(input, '❌ Введите корректный email, например name@domain.ru');
-    } else {
-        clearFieldError(input);
-    }
+    if (!isValid && showImmediate) showFieldError(input, '❌ Введите корректный email, например name@domain.ru');
+    else clearFieldError(input);
     return isValid;
 }
-
 function bindLiveValidation(input, type = 'phone') {
     if (!input) return;
     const validateFn = type === 'phone' ? validatePhoneField : validateEmailField;
     input.addEventListener('blur', () => validateFn(input, true));
     input.addEventListener('input', () => clearFieldError(input));
 }
-
-// ========== МАСКА ТЕЛЕФОНА (с выводом ошибок в общий блок формы) ==========
 function applyPhoneMask(inputElement) {
     if (!inputElement) return;
     inputElement.addEventListener('input', function(e) {
         let raw = this.value.replace(/\D/g, '');
         const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
         if (raw.length > maxDigits) raw = raw.slice(0, maxDigits);
-
         let formatted = '';
         if (raw.length > 0) {
             formatted = '+7';
@@ -4427,13 +4244,9 @@ function applyPhoneMask(inputElement) {
             if (raw.length >= 2 && raw.length < 5 && !formatted.includes(')')) formatted += ')';
         }
         this.value = formatted;
-
-        // Находим родительскую форму и блок сообщений
         const form = this.closest('form');
         const messagesBlock = form ? form.querySelector('.form-messages') : null;
-
         if (raw.length > 0 && raw.length !== maxDigits) {
-            // Показываем ошибку в общем блоке
             if (messagesBlock) {
                 messagesBlock.textContent = `❌ Введите ${maxDigits} цифр телефона, сейчас ${raw.length}`;
                 messagesBlock.className = 'form-messages error';
@@ -4441,7 +4254,6 @@ function applyPhoneMask(inputElement) {
             }
             this.classList.add('input-error');
         } else {
-            // Очищаем сообщение только если оно было про телефон (чтобы не стереть другие ошибки)
             if (messagesBlock && messagesBlock.textContent.includes('Введите') && messagesBlock.textContent.includes('цифр телефона')) {
                 messagesBlock.textContent = '';
                 messagesBlock.className = 'form-messages';
@@ -4451,26 +4263,19 @@ function applyPhoneMask(inputElement) {
         }
     });
 }
-
 function initPhoneMasks() {
     const phoneInputs = document.querySelectorAll('#callbackPhone, #quickPhone');
-    phoneInputs.forEach(input => {
-        if (input) applyPhoneMask(input);
-    });
+    phoneInputs.forEach(input => { if (input) applyPhoneMask(input); });
 }
 
-// ========== ОТПРАВКА ДАННЫХ В GOOGLE SHEETS ==========
+// ---------- Отправка данных в Google Sheets ----------
 async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
-    if (typeof window.getCartData === 'function') {
-        data.cart = window.getCartData();
-    } else {
-        data.cart = '';
-    }
-    return postWithRetry(SCRIPT_URL, data, retries, delay);
+    if (typeof window.getCartData === 'function') data.cart = window.getCartData();
+    else data.cart = '';
+    return window.postWithRetry(window.APP_CONFIG.SCRIPT_URL, data, retries, delay);
 }
-
 function sendDataToSheet(data) {
     sendDataToSheetWithRetry(data).catch(err => {
         logError('❌ Ошибка отправки в Google Sheets:', err);
@@ -4480,6 +4285,7 @@ function sendDataToSheet(data) {
 window.sendDataToSheet = sendDataToSheet;
 window.sendDataToSheetWithRetry = sendDataToSheetWithRetry;
 
+// ---------- Форматирование телефона ----------
 function formatPhoneNumber(input) {
     let digits = input.replace(/\D/g, '');
     if (digits.startsWith('8')) digits = '7' + digits.slice(1);
@@ -4496,6 +4302,7 @@ function formatPhoneNumber(input) {
     return formatted;
 }
 
+// ---------- Время на сайте ----------
 window.sessionStartTime = Date.now();
 function getTimeOnSite() {
     if (!window.sessionStartTime) return '-';
@@ -4507,6 +4314,7 @@ function getTimeOnSite() {
 }
 window.getTimeOnSite = getTimeOnSite;
 
+// ---------- Статистика визитов (localStorage) ----------
 function getVisitStats() {
     const now = new Date();
     const oneDay = 24 * 60 * 60 * 1000;
@@ -4521,26 +4329,15 @@ function getVisitStats() {
                 visits = JSON.parse(stored);
                 const monthAgo = now.getTime() - oneMonth;
                 visits = visits.filter(v => v > monthAgo);
-            } catch(e) {
-                if (IS_DEV) console.warn('Ошибка парсинга visits', e);
-                visits = [];
-            }
+            } catch(e) { if (IS_DEV) console.warn('Ошибка парсинга visits', e); visits = []; }
         }
-    } catch(e) {}
+    } catch(e) { if (IS_DEV) console.warn('Ошибка чтения localStorage', e); }
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
-    if (now.getTime() - lastVisit > 30 * 60 * 1000) {
-        visits.push(now.getTime());
-    }
-    try {
-        localStorage.setItem(visitsKey, JSON.stringify(visits));
-    } catch(e) {}
+    if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
+    try { localStorage.setItem(visitsKey, JSON.stringify(visits)); } catch(e) {}
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
-    return {
-        week: visits.filter(v => v > weekAgo).length,
-        month: visits.length,
-        total: visits.length
-    };
+    return { week: visits.filter(v => v > weekAgo).length, month: visits.length, total: visits.length };
 }
 function getVisitStatsText() {
     const stats = getVisitStats();
@@ -4549,6 +4346,7 @@ function getVisitStatsText() {
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
 
+// ---------- UTM-метки ----------
 function getUTMParams() {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -4566,6 +4364,7 @@ function getUTMText() {
 }
 window.getUTMText = getUTMText;
 
+// ---------- Информация об устройстве ----------
 function getDeviceInfo() {
     const ua = navigator.userAgent;
     const isMobile = /Mobile|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(ua);
@@ -4594,6 +4393,7 @@ function getDeviceText() {
 }
 window.getDeviceText = getDeviceText;
 
+// ---------- Информация о странице ----------
 function getPageInfo() {
     return {
         page: window.location.pathname + window.location.search,
@@ -4608,15 +4408,16 @@ function getPageText() {
 }
 window.getPageText = getPageText;
 
+// ---------- Геолокация (через ipapi.co) ----------
 async function getGeoData() {
     const geoKey = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_GEO_KEY || 'hr_geo';
     const apiUrl = window.APP_CONFIG?.CONSTANTS?.GEO_API_URL || 'https://ipapi.co/json/';
     let cached = null;
     try {
-        cached = localStorage.getItem(geoKey);
-        if (cached) {
+        const raw = localStorage.getItem(geoKey);
+        if (raw) {
             try {
-                cached = JSON.parse(cached);
+                cached = JSON.parse(raw);
                 if (cached && typeof cached === 'object') return cached;
             } catch(e) {}
         }
@@ -4632,9 +4433,7 @@ async function getGeoData() {
             country: data.country_name || '-',
             geoText: `${data.city || ''} ${data.region || ''} ${data.country_name || ''} (${data.ip || ''})`.trim().replace(/  +/g, ' ') || '-'
         };
-        try {
-            localStorage.setItem(geoKey, JSON.stringify(result));
-        } catch(e) {}
+        try { localStorage.setItem(geoKey, JSON.stringify(result)); } catch(e) {}
         return result;
     } catch(e) {
         if (IS_DEV) console.warn('Ошибка получения геоданных:', e);
@@ -4643,36 +4442,26 @@ async function getGeoData() {
 }
 window.getGeoData = getGeoData;
 
-// ========== ЕДИНЫЙ МОДУЛЬ ОТПРАВКИ ФОРМ ==========
+// ---------- Единая отправка форм ----------
 window.submitForm = async function(formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
     if (!form) return false;
-
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.innerText : 'Отправить';
-
     try {
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.classList.add('loading');
             submitBtn.innerText = 'Отправка...';
         }
-
         const name = form.querySelector('[name="name"]')?.value.trim() || '';
         let phone = form.querySelector('[name="phone"]')?.value.trim() || '';
         const email = form.querySelector('[name="email"]')?.value.trim() || '';
         const comment = form.querySelector('[name="comment"]')?.value.trim() || '';
         const consent = form.querySelector('[name="consent"]')?.checked || false;
-
         let additional = {};
-        if (getAdditionalData) {
-            additional = await getAdditionalData(form);
-        }
-
-        if (phone) {
-            phone = normalizePhoneDigits(phone);
-        }
-
+        if (getAdditionalData) additional = await getAdditionalData(form);
+        if (phone) phone = normalizePhoneDigits(phone);
         if (!phone && formType !== 'Запрос материалов') {
             showErrorToast('Введите номер телефона');
             throw new Error('Телефон обязателен');
@@ -4682,7 +4471,6 @@ window.submitForm = async function(formId, formType, getAdditionalData = null) {
             showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
             throw new Error('Неверный номер');
         }
-
         const geo = await window.getGeoData();
         const formData = {
             formType: formType,
@@ -4700,7 +4488,6 @@ window.submitForm = async function(formId, formType, getAdditionalData = null) {
             userId: window.getOrCreateLocalUserId(),
             ...additional
         };
-
         await window.sendDataToSheetWithRetry(formData);
         showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
         form.reset();
@@ -4717,7 +4504,6 @@ window.submitForm = async function(formId, formType, getAdditionalData = null) {
         }
     }
 };
-
 window.getQuizDataFromForm = function(form) {
     return {
         chosenVariant: form.querySelector('[name="chosenVariant"]')?.value || '',
@@ -4730,7 +4516,7 @@ window.getQuizDataFromForm = function(form) {
     };
 };
 
-// ========== КНОПКИ «ПОДЕЛИТЬСЯ» ==========
+// ---------- Кнопки поделиться ----------
 function initShareButtons() {
     const shareButtons = document.querySelectorAll('#shareButtonContacts, .floating-share-btn button');
     const getSiteShareText = () => {
@@ -4741,18 +4527,15 @@ function initShareButtons() {
             btn.removeEventListener('click', btn._shareHandler);
             btn._shareHandler = () => {
                 const text = getSiteShareText();
-                navigator.clipboard.writeText(text).then(() => {
-                    window.showSuccessToast('✅ Ссылка на сайт скопирована');
-                }).catch(() => {
-                    window.showErrorToast('❌ Не удалось скопировать');
-                });
+                navigator.clipboard.writeText(text).then(() => { window.showSuccessToast('✅ Ссылка на сайт скопирована'); })
+                    .catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
             };
             btn.addEventListener('click', btn._shareHandler);
         }
     });
 }
 
-// ========== ЭКСПОРТ ВСЕХ ФУНКЦИЙ ==========
+// ---------- Экспорт глобальных функций ----------
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
@@ -4780,6 +4563,9 @@ window.showWarningToast = showWarningToast;
 window.initShareButtons = initShareButtons;
 window.applyPhoneMask = applyPhoneMask;
 window.initPhoneMasks = initPhoneMasks;
+// ============================================================
+// 02_animations.js – Плавное появление элементов при скролле
+// ============================================================
 function initAnimations() {
     const elements = document.querySelectorAll('.fade-up');
     if (!elements.length) return;
@@ -4798,100 +4584,59 @@ function initAnimations() {
     elements.forEach(el => observer.observe(el));
 }
 window.initAnimations = initAnimations;
+// ============================================================
+// 03_forms.js – Формы обратной связи и копирование корзины
+// ============================================================
 function initCallbackForm() {
-    // ========== ИСПРАВЛЕНО: используем глобальные функции валидации ==========
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
     const FORM_MESSAGE_HIDE_DELAY = C.FORM_MESSAGE_HIDE_DELAY || 5000;
 
-    // ========== Форма обратного звонка ==========
+    // ----- Форма обратного звонка -----
     const callbackForm = document.getElementById('callbackForm');
     const callbackMessages = document.getElementById('callbackFormMessages');
-
     if (callbackForm && callbackMessages) {
         function showCallbackMessage(message, isError = true) {
             callbackMessages.textContent = message;
             callbackMessages.className = 'form-messages ' + (isError ? 'error' : 'success');
-            if (!isError) {
-                setTimeout(() => {
-                    callbackMessages.textContent = '';
-                    callbackMessages.className = 'form-messages';
-                }, FORM_MESSAGE_HIDE_DELAY);
-            }
+            if (!isError) setTimeout(() => { callbackMessages.textContent = ''; callbackMessages.className = 'form-messages'; }, FORM_MESSAGE_HIDE_DELAY);
         }
-        function clearCallbackMessage() {
-            callbackMessages.textContent = '';
-            callbackMessages.className = 'form-messages';
-        }
-
+        function clearCallbackMessage() { callbackMessages.textContent = ''; callbackMessages.className = 'form-messages'; }
         const callbackPhone = document.getElementById('callbackPhone');
         const callbackEmail = document.getElementById('callbackEmail');
         const callbackConsent = document.getElementById('callbackConsent');
-
         if (callbackPhone) {
-            // ДОБАВЛЕНО: маска телефона
-            if (typeof window.applyPhoneMask === 'function') {
-                window.applyPhoneMask(callbackPhone);
-            }
             callbackPhone.addEventListener('blur', () => {
                 let digits = callbackPhone.value.replace(/\D/g, '');
                 if (digits.startsWith('8')) digits = '7' + digits.slice(1);
                 if (!digits.startsWith('7')) digits = '7' + digits;
                 const isValid = digits.length === MAX_PHONE_DIGITS;
-                if (!isValid && callbackPhone.value.trim() !== '') {
-                    showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
-                } else {
-                    clearCallbackMessage();
-                }
+                if (!isValid && callbackPhone.value.trim() !== '') showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                else clearCallbackMessage();
             });
             callbackPhone.addEventListener('input', () => clearCallbackMessage());
         }
         if (callbackEmail) {
             callbackEmail.addEventListener('blur', () => {
                 const email = callbackEmail.value.trim();
-                if (email && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email)) {
-                    showCallbackMessage('❌ Введите корректный email');
-                } else {
-                    clearCallbackMessage();
-                }
+                if (email && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email)) showCallbackMessage('❌ Введите корректный email');
+                else clearCallbackMessage();
             });
-            callbackEmail.addEventListener('input', () => {
-                if (callbackMessages.textContent === '❌ Введите корректный email') clearCallbackMessage();
-            });
+            callbackEmail.addEventListener('input', () => { if (callbackMessages.textContent === '❌ Введите корректный email') clearCallbackMessage(); });
         }
-
         callbackForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             clearCallbackMessage();
-
             let isValid = true;
             let phoneDigits = callbackPhone.value.replace(/\D/g, '');
             if (phoneDigits.startsWith('8')) phoneDigits = '7' + phoneDigits.slice(1);
             if (!phoneDigits.startsWith('7')) phoneDigits = '7' + phoneDigits;
-
-            if (phoneDigits.length !== MAX_PHONE_DIGITS) {
-                showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
-                isValid = false;
-            }
-            if (callbackEmail && callbackEmail.value.trim() && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(callbackEmail.value.trim())) {
-                showCallbackMessage('❌ Введите корректный email');
-                isValid = false;
-            }
-            if (!callbackConsent.checked) {
-                showCallbackMessage('❌ Необходимо согласие на обработку данных');
-                isValid = false;
-            }
+            if (phoneDigits.length !== MAX_PHONE_DIGITS) { showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9'); isValid = false; }
+            if (callbackEmail && callbackEmail.value.trim() && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(callbackEmail.value.trim())) { showCallbackMessage('❌ Введите корректный email'); isValid = false; }
+            if (!callbackConsent.checked) { showCallbackMessage('❌ Необходимо согласие на обработку данных'); isValid = false; }
             if (!isValid) return;
-
-            if (window.normalizePhoneDigits) {
-                callbackPhone.value = window.normalizePhoneDigits(callbackPhone.value);
-            } else {
-                let digits = callbackPhone.value.replace(/\D/g, '');
-                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-                if (!digits.startsWith('7')) digits = '7' + digits;
-                callbackPhone.value = digits;
-            }
-
+            if (window.normalizePhoneDigits) callbackPhone.value = window.normalizePhoneDigits(callbackPhone.value);
+            else { let digits = callbackPhone.value.replace(/\D/g, ''); if (digits.startsWith('8')) digits = '7' + digits.slice(1); if (!digits.startsWith('7')) digits = '7' + digits; callbackPhone.value = digits; }
             await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
                 const quizBlock = document.getElementById('quizSelectionBlock');
                 if (quizBlock) quizBlock.style.display = 'none';
@@ -4900,81 +4645,43 @@ function initCallbackForm() {
         });
     }
 
-    // ========== Форма быстрого заказа ==========
+    // ----- Форма быстрого заказа (в калькуляторе) -----
     const quickForm = document.getElementById('quickOrderForm');
     const quickMessages = document.getElementById('quickFormMessages');
-
     if (quickForm && quickMessages) {
         function showQuickMessage(message, isError = true) {
             quickMessages.textContent = message;
             quickMessages.className = 'form-messages ' + (isError ? 'error' : 'success');
-            if (!isError) {
-                setTimeout(() => {
-                    quickMessages.textContent = '';
-                    quickMessages.className = 'form-messages';
-                }, FORM_MESSAGE_HIDE_DELAY);
-            }
+            if (!isError) setTimeout(() => { quickMessages.textContent = ''; quickMessages.className = 'form-messages'; }, FORM_MESSAGE_HIDE_DELAY);
         }
-        function clearQuickMessage() {
-            quickMessages.textContent = '';
-            quickMessages.className = 'form-messages';
-        }
-
+        function clearQuickMessage() { quickMessages.textContent = ''; quickMessages.className = 'form-messages'; }
         const quickPhone = document.getElementById('quickPhone');
         const quickConsent = document.getElementById('quickConsent');
-
         if (quickPhone) {
-            // ДОБАВЛЕНО: маска телефона
-            if (typeof window.applyPhoneMask === 'function') {
-                window.applyPhoneMask(quickPhone);
-            }
             quickPhone.addEventListener('blur', () => {
                 let digits = quickPhone.value.replace(/\D/g, '');
                 if (digits.startsWith('8')) digits = '7' + digits.slice(1);
                 if (!digits.startsWith('7')) digits = '7' + digits;
                 const isValid = digits.length === MAX_PHONE_DIGITS;
-                if (!isValid && quickPhone.value.trim() !== '') {
-                    showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
-                } else {
-                    clearQuickMessage();
-                }
+                if (!isValid && quickPhone.value.trim() !== '') showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                else clearQuickMessage();
             });
             quickPhone.addEventListener('input', () => clearQuickMessage());
         }
-
         quickForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             clearQuickMessage();
-
             let isValid = true;
             let digits = quickPhone.value.replace(/\D/g, '');
             if (digits.startsWith('8')) digits = '7' + digits.slice(1);
             if (!digits.startsWith('7')) digits = '7' + digits;
-
-            if (digits.length !== MAX_PHONE_DIGITS) {
-                showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
-                isValid = false;
-            }
-            if (!quickConsent.checked) {
-                showQuickMessage('❌ Необходимо согласие на обработку данных');
-                isValid = false;
-            }
+            if (digits.length !== MAX_PHONE_DIGITS) { showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9'); isValid = false; }
+            if (!quickConsent.checked) { showQuickMessage('❌ Необходимо согласие на обработку данных'); isValid = false; }
             const cartData = window.getCartData ? window.getCartData() : '';
-            if (!cartData || cartData === 'Корзина пуста') {
-                showQuickMessage('🛒 Добавьте хотя бы одну услугу в корзину');
-                isValid = false;
-            }
+            if (!cartData || cartData === 'Корзина пуста') { showQuickMessage('🛒 Добавьте хотя бы одну услугу в корзину'); isValid = false; }
             if (!isValid) return;
-
-            if (window.normalizePhoneDigits) {
-                quickPhone.value = window.normalizePhoneDigits(quickPhone.value);
-            } else {
-                let normDigits = quickPhone.value.replace(/\D/g, '');
-                if (normDigits.startsWith('8')) normDigits = '7' + normDigits.slice(1);
-                if (!normDigits.startsWith('7')) normDigits = '7' + normDigits;
-                quickPhone.value = normDigits;
-            }
-
+            if (window.normalizePhoneDigits) quickPhone.value = window.normalizePhoneDigits(quickPhone.value);
+            else { let normDigits = quickPhone.value.replace(/\D/g, ''); if (normDigits.startsWith('8')) normDigits = '7' + normDigits.slice(1); if (!normDigits.startsWith('7')) normDigits = '7' + normDigits; quickPhone.value = normDigits; }
             await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
                 const quizData = window.getQuizDataFromForm(form);
                 return { ...quizData, cart: cartData };
@@ -4982,82 +4689,52 @@ function initCallbackForm() {
         });
     }
 
-    // ========== Копирование корзины ==========
+    // ----- Копирование корзины -----
     const copyCartBtn = document.getElementById('copyCartBtn');
     if (copyCartBtn) {
         copyCartBtn.addEventListener('click', () => {
             const cartText = window.getCartData ? window.getCartData() : '';
-            if (!cartText || cartText === 'Корзина пуста') {
-                window.showWarningToast('🛒 Корзина пуста. Добавьте услуги.');
-                return;
-            }
+            if (!cartText || cartText === 'Корзина пуста') { window.showWarningToast('🛒 Корзина пуста. Добавьте услуги.'); return; }
             const totalPrice = document.getElementById('totalPrice')?.innerText || '0 ₽';
             const fullText = `Корзина:\n${cartText}\n\n💰 Итого: ${totalPrice}`;
-            navigator.clipboard.writeText(fullText).then(() => {
-                window.showSuccessToast('✅ Корзина скопирована в буфер обмена');
-            }).catch(() => {
-                window.showErrorToast('❌ Не удалось скопировать');
-            });
+            navigator.clipboard.writeText(fullText).then(() => { window.showSuccessToast('✅ Корзина скопирована в буфер обмена'); })
+                .catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
         });
     }
 }
-
 function initFormEnterSubmit() {
     const form = document.getElementById('callbackForm');
-    if (form) {
-        form.querySelectorAll('input, textarea').forEach(input => {
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    const btn = form.querySelector('button[type="submit"]');
-                    if (btn) btn.click();
-                }
-            });
-        });
-    }
+    if (form) form.querySelectorAll('input, textarea').forEach(input => { input.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const btn = form.querySelector('button[type="submit"]'); if (btn) btn.click(); } }); });
     const quickForm = document.getElementById('quickOrderForm');
-    if (quickForm) {
-        quickForm.querySelectorAll('input, textarea').forEach(input => {
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    const btn = quickForm.querySelector('button[type="submit"]');
-                    if (btn) btn.click();
-                }
-            });
-        });
-    }
+    if (quickForm) quickForm.querySelectorAll('input, textarea').forEach(input => { input.addEventListener('keypress', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); const btn = quickForm.querySelector('button[type="submit"]'); if (btn) btn.click(); } }); });
 }
-
 window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
+// ============================================================
+// 04_certificates.js – Бесконечная карусель сертификатов
+// ============================================================
 (function() {
     function initInfiniteCarousel(trackId, prevBtnClass, nextBtnClass, progressId, dotsId) {
         const track = document.getElementById(trackId);
         if (!track) return;
-
         let originalSlides = Array.from(track.children);
         if (originalSlides.length === 0) return;
         const slideCount = originalSlides.length;
-
-        // Клонируем слайды для бесконечности
         const cloneStart = originalSlides.map(slide => slide.cloneNode(true));
         const cloneEnd = originalSlides.map(slide => slide.cloneNode(true));
         cloneStart.forEach(clone => track.appendChild(clone));
         cloneEnd.forEach(clone => track.insertBefore(clone, track.firstChild));
-
         let allSlides = Array.from(track.children);
-        let currentIndex = slideCount; // начинаем с первого оригинала
+        let currentIndex = slideCount;
         let slideWidth = 0, gap = 0;
         let autoInterval = null, progressInterval = null;
         let isTransitioning = false;
-        const autoDelay = 5000;
-
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const autoDelay = prefersReducedMotion ? 0 : 5000;
         const prevBtn = document.querySelector(prevBtnClass);
         const nextBtn = document.querySelector(nextBtnClass);
         const progressBar = document.getElementById(progressId);
         const dotsContainer = document.getElementById(dotsId);
-
         function updateDimensionsAndPosition() {
             if (!allSlides.length) return;
             slideWidth = allSlides[0].offsetWidth;
@@ -5067,64 +4744,35 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             updateCarousel(true);
             enableTransition();
         }
-
         function updateCarousel(instant = false) {
             const shift = -currentIndex * (slideWidth + gap);
-            if (instant) {
-                track.style.transition = 'none';
-                track.style.transform = `translateX(${shift}px)`;
-                track.offsetHeight;
-                track.style.transition = '';
-            } else {
-                track.style.transform = `translateX(${shift}px)`;
-            }
+            if (instant) { track.style.transition = 'none'; track.style.transform = `translateX(${shift}px)`; track.offsetHeight; track.style.transition = ''; }
+            else { track.style.transform = `translateX(${shift}px)`; }
             updateDots();
             resetProgressBar();
         }
-
         function disableTransition() { track.style.transition = 'none'; }
         function enableTransition() { track.style.transition = ''; }
-
         function nextSlide() {
             if (isTransitioning) return;
             isTransitioning = true;
             currentIndex++;
             updateCarousel();
-
             if (currentIndex >= slideCount * 2) {
-                setTimeout(() => {
-                    disableTransition();
-                    currentIndex = slideCount;
-                    updateCarousel(true);
-                    enableTransition();
-                    setTimeout(() => { isTransitioning = false; }, 50);
-                }, 250);
-            } else {
-                setTimeout(() => { isTransitioning = false; }, 250);
-            }
-            startProgressAnimation();
+                setTimeout(() => { disableTransition(); currentIndex = slideCount; updateCarousel(true); enableTransition(); setTimeout(() => { isTransitioning = false; }, 50); }, 250);
+            } else { setTimeout(() => { isTransitioning = false; }, 250); }
+            if (autoDelay > 0) startProgressAnimation();
         }
-
         function prevSlide() {
             if (isTransitioning) return;
             isTransitioning = true;
             currentIndex--;
             updateCarousel();
-
             if (currentIndex < slideCount) {
-                setTimeout(() => {
-                    disableTransition();
-                    currentIndex = slideCount * 2 - 1;
-                    updateCarousel(true);
-                    enableTransition();
-                    setTimeout(() => { isTransitioning = false; }, 50);
-                }, 250);
-            } else {
-                setTimeout(() => { isTransitioning = false; }, 250);
-            }
-            startProgressAnimation();
+                setTimeout(() => { disableTransition(); currentIndex = slideCount * 2 - 1; updateCarousel(true); enableTransition(); setTimeout(() => { isTransitioning = false; }, 50); }, 250);
+            } else { setTimeout(() => { isTransitioning = false; }, 250); }
+            if (autoDelay > 0) startProgressAnimation();
         }
-
         function updateDots() {
             if (!dotsContainer) return;
             const dots = dotsContainer.querySelectorAll('.dot');
@@ -5132,7 +4780,6 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (originalIndex < 0) originalIndex += slideCount;
             dots.forEach((dot, idx) => dot.classList.toggle('active', idx === originalIndex));
         }
-
         function createDots() {
             if (!dotsContainer) return;
             dotsContainer.innerHTML = '';
@@ -5140,20 +4787,13 @@ window.initFormEnterSubmit = initFormEnterSubmit;
                 const dot = document.createElement('div');
                 dot.classList.add('dot');
                 if (i === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => {
-                    if (isTransitioning) return;
-                    stopAutoScroll();
-                    currentIndex = slideCount + i;
-                    updateCarousel();
-                    startAutoScroll();
-                });
+                dot.addEventListener('click', () => { if (isTransitioning) return; stopAutoScroll(); currentIndex = slideCount + i; updateCarousel(); if (autoDelay > 0) startAutoScroll(); });
                 dotsContainer.appendChild(dot);
             }
         }
-
         function resetProgressBar() { if (progressBar) progressBar.style.width = '0%'; }
         function startProgressAnimation() {
-            if (!progressBar) return;
+            if (!progressBar || autoDelay === 0) return;
             resetProgressBar();
             let startTime = null;
             function animateProgress(timestamp) {
@@ -5161,21 +4801,15 @@ window.initFormEnterSubmit = initFormEnterSubmit;
                 const elapsed = timestamp - startTime;
                 const percent = Math.min((elapsed / autoDelay) * 100, 100);
                 progressBar.style.width = `${percent}%`;
-                if (elapsed < autoDelay) {
-                    progressInterval = requestAnimationFrame(animateProgress);
-                } else {
-                    progressBar.style.width = '100%';
-                    cancelProgressAnimation();
-                }
+                if (elapsed < autoDelay) progressInterval = requestAnimationFrame(animateProgress);
+                else { progressBar.style.width = '100%'; cancelProgressAnimation(); }
             }
             cancelProgressAnimation();
             progressInterval = requestAnimationFrame(animateProgress);
         }
-        function cancelProgressAnimation() {
-            if (progressInterval) { cancelAnimationFrame(progressInterval); progressInterval = null; }
-        }
-
+        function cancelProgressAnimation() { if (progressInterval) { cancelAnimationFrame(progressInterval); progressInterval = null; } }
         function startAutoScroll() {
+            if (autoDelay === 0) return;
             if (autoInterval) clearInterval(autoInterval);
             autoInterval = setInterval(nextSlide, autoDelay);
             startProgressAnimation();
@@ -5185,43 +4819,28 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             cancelProgressAnimation();
             if (progressBar) progressBar.style.width = '0%';
         }
-
-        if (prevBtn) prevBtn.addEventListener('click', () => { stopAutoScroll(); prevSlide(); startAutoScroll(); });
-        if (nextBtn) nextBtn.addEventListener('click', () => { stopAutoScroll(); nextSlide(); startAutoScroll(); });
-
+        if (prevBtn) prevBtn.addEventListener('click', () => { stopAutoScroll(); prevSlide(); if (autoDelay > 0) startAutoScroll(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { stopAutoScroll(); nextSlide(); if (autoDelay > 0) startAutoScroll(); });
         const wrapper = track.closest('.carousel-wrapper');
-        if (wrapper) {
+        if (wrapper && autoDelay > 0) {
             wrapper.addEventListener('mouseenter', stopAutoScroll);
             wrapper.addEventListener('mouseleave', startAutoScroll);
         }
-
         window.addEventListener('resize', () => updateDimensionsAndPosition());
-
         function waitForImages() {
             const imgs = Array.from(track.querySelectorAll('img'));
             if (!imgs.length) return Promise.resolve();
             return Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(resolve => { img.onload = resolve; img.onerror = resolve; })));
         }
-
-        function init() {
-            if (!allSlides.length) return;
-            waitForImages().then(() => {
-                updateDimensionsAndPosition();
-                createDots();
-                startAutoScroll();
-            });
-        }
-
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-        else init();
+        function init() { if (!allSlides.length) return; waitForImages().then(() => { updateDimensionsAndPosition(); createDots(); if (autoDelay > 0) startAutoScroll(); }); }
+        init();
     }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
-    });
+    window.initInfiniteCarousel = initInfiniteCarousel;
 })();
+// ============================================================
+// 05_modal.js – Модальные окна (политика конфиденциальности)
+// ============================================================
 let lastFocusedElement = null;
-
 function showModal(modal) {
     if (!modal) return;
     lastFocusedElement = document.activeElement;
@@ -5230,210 +4849,90 @@ function showModal(modal) {
     modal.classList.add('show');
     document.body.classList.add('modal-open');
     const focusable = modal.querySelectorAll('button, a, input, textarea, select, [tabindex]:not([tabindex="-1"])');
-    if (focusable.length) {
-        focusable[0].focus();
-    } else {
-        modal.setAttribute('tabindex', '-1');
-        modal.focus();
-    }
+    if (focusable.length) focusable[0].focus();
+    else { modal.setAttribute('tabindex', '-1'); modal.focus(); }
 }
-
 function hideModal(modal) {
     if (!modal) return;
     modal.classList.remove('show');
     document.body.classList.remove('modal-open');
-    modal.addEventListener('transitionend', function onEnd() {
-        if (!modal.classList.contains('show')) modal.style.display = 'none';
-        modal.removeEventListener('transitionend', onEnd);
-    }, { once: true });
-    if (lastFocusedElement && lastFocusedElement.focus) {
-        lastFocusedElement.focus();
-        lastFocusedElement = null;
-    }
+    modal.addEventListener('transitionend', function onEnd() { if (!modal.classList.contains('show')) modal.style.display = 'none'; modal.removeEventListener('transitionend', onEnd); }, { once: true });
+    if (lastFocusedElement && lastFocusedElement.focus) { lastFocusedElement.focus(); lastFocusedElement = null; }
 }
-
 function initModal() {
-    // Только модальное окно политики конфиденциальности
     const privacyModal = document.getElementById('privacyModal');
     const closePrivacyBtn = document.getElementById('closePrivacyModalBtn');
     const closePrivacy = document.getElementById('closePrivacyModal');
-
     if (closePrivacyBtn) closePrivacyBtn.addEventListener('click', () => hideModal(privacyModal));
     if (closePrivacy) closePrivacy.addEventListener('click', () => hideModal(privacyModal));
-
-    window.addEventListener('click', (e) => {
-        if (e.target === privacyModal) hideModal(privacyModal);
-    });
+    window.addEventListener('click', (e) => { if (e.target === privacyModal) hideModal(privacyModal); });
 }
-
 window.initModal = initModal;
 window.showModal = showModal;
 window.hideModal = hideModal;
+// ============================================================
+// 06_cookie-consent.js – Управление согласием на cookie
+// ============================================================
 function initCookieConsent() {
     let consent = null;
-    try {
-        consent = localStorage.getItem('cookie_consent');
-    } catch(e) {
-        if (window.IS_DEV) console.warn('localStorage недоступен', e);
-    }
+    try { consent = localStorage.getItem('cookie_consent'); } catch(e) { if (window.IS_DEV) console.warn('localStorage недоступен', e); }
     const banner = document.getElementById('cookieConsent');
     if (!banner) return;
-
-    if (consent === null) {
-        banner.style.display = 'block';
-    } else {
-        banner.style.display = 'none';
-    }
-
+    if (consent === null) banner.style.display = 'block';
+    else banner.style.display = 'none';
     const acceptBtn = document.getElementById('acceptCookies');
     const declineBtn = document.getElementById('declineCookies');
-
-    if (acceptBtn) {
-        acceptBtn.addEventListener('click', () => {
-            try {
-                localStorage.setItem('cookie_consent', 'accepted');
-            } catch(e) {}
-            banner.style.display = 'none';
-            if (typeof gtag !== 'undefined') {
-                gtag('consent', 'update', { analytics_storage: 'granted' });
-            }
-        });
-    }
-
-    if (declineBtn) {
-        declineBtn.addEventListener('click', () => {
-            try {
-                localStorage.setItem('cookie_consent', 'declined');
-            } catch(e) {}
-            banner.style.display = 'none';
-            if (typeof gtag !== 'undefined') {
-                gtag('consent', 'update', { analytics_storage: 'denied' });
-            }
-        });
-    }
+    if (acceptBtn) acceptBtn.addEventListener('click', () => {
+        try { localStorage.setItem('cookie_consent', 'accepted'); } catch(e) {}
+        banner.style.display = 'none';
+        if (typeof gtag !== 'undefined') gtag('consent', 'update', { analytics_storage: 'granted' });
+        if (typeof window.loadMetricsOnConsent === 'function') window.loadMetricsOnConsent();
+    });
+    if (declineBtn) declineBtn.addEventListener('click', () => {
+        try { localStorage.setItem('cookie_consent', 'declined'); } catch(e) {}
+        banner.style.display = 'none';
+        if (typeof gtag !== 'undefined') gtag('consent', 'update', { analytics_storage: 'denied' });
+    });
 }
 window.initCookieConsent = initCookieConsent;
-// ========== БУРГЕР-МЕНЮ (телефонная версия) ==========
+// ============================================================
+// 07_navigation.js – Бургер-меню для мобильных устройств
+// ============================================================
 function initBurgerMenu() {
     const burger = document.getElementById('burgerMenu');
     const navBottom = document.getElementById('navBottom');
     const body = document.body;
     const MOBILE_BREAKPOINT = window.APP_CONFIG?.CONSTANTS?.BREAKPOINT_MOBILE || 768;
-
     if (!burger || !navBottom) return;
-
-    function closeMenu() {
-        burger.classList.remove('active');
-        navBottom.classList.remove('open');
-        body.classList.remove('menu-open');
-        burger.setAttribute('aria-expanded', 'false');
-    }
-
-    function openMenu() {
-        burger.classList.add('active');
-        navBottom.classList.add('open');
-        body.classList.add('menu-open');
-        burger.setAttribute('aria-expanded', 'true');
-    }
-
-    function toggleMenu() {
-        if (navBottom.classList.contains('open')) {
-            closeMenu();
-        } else {
-            openMenu();
-        }
-    }
-
-    // Обработчики для мыши и касания
+    function closeMenu() { burger.classList.remove('active'); navBottom.classList.remove('open'); body.classList.remove('menu-open'); burger.setAttribute('aria-expanded', 'false'); }
+    function openMenu() { burger.classList.add('active'); navBottom.classList.add('open'); body.classList.add('menu-open'); burger.setAttribute('aria-expanded', 'true'); }
+    function toggleMenu() { if (navBottom.classList.contains('open')) closeMenu(); else openMenu(); }
     burger.addEventListener('click', toggleMenu);
-    burger.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        toggleMenu();
-    });
-
-    // Закрытие меню при клике/касании на любую ссылку внутри
-    navBottom.querySelectorAll('a').forEach(link => {
-        const handler = (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href');
-            closeMenu();
-            if (targetId && targetId !== '#') {
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    setTimeout(() => {
-                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 200);
-                }
-            }
-        };
-        link.addEventListener('click', handler);
-        link.addEventListener('touchstart', handler);
-    });
-
-    // При ресайзе, если ширина стала больше брейкпоинта, закрываем меню
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > MOBILE_BREAKPOINT && navBottom.classList.contains('open')) {
-            closeMenu();
-        }
-    });
+    burger.addEventListener('touchstart', (e) => { e.preventDefault(); toggleMenu(); });
+    navBottom.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => closeMenu()); link.addEventListener('touchstart', () => closeMenu()); });
+    window.addEventListener('resize', () => { if (window.innerWidth > MOBILE_BREAKPOINT && navBottom.classList.contains('open')) closeMenu(); });
 }
-
-// ========== ПЛАВНЫЙ СКРОЛЛ ДЛЯ ЯКОРЕЙ (простая версия) ==========
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]:not(.nav-links a)').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            if (targetId === '#top') {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                return;
-            }
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
-}
-
-// ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ==========
-function initNavigation() {
-    initBurgerMenu();
-    initSmoothScroll();
-}
-
-// Экспорт для возможного использования в других скриптах
+function initNavigation() { initBurgerMenu(); }
 window.initBurgerMenu = initBurgerMenu;
-window.initSmoothScroll = initSmoothScroll;
 window.initNavigation = initNavigation;
-
-// Автозапуск
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNavigation);
-} else {
-    initNavigation();
-}
+// ============================================================
+// 08_copy.js – Копирование телефона и никнейма в буфер
+// ============================================================
 function initCopyButtons() {
     document.querySelectorAll('.copyable-phone, .copyable-text').forEach(el => {
         el.addEventListener('click', function(e) {
             e.stopPropagation();
             const textToCopy = this.getAttribute('data-copy');
             if (!textToCopy) return;
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                showToast('✅ Скопировано!');
-            }).catch(err => {
-                logError('Ошибка копирования:', err);
-                showErrorToast('Не удалось скопировать. Попробуйте вручную.');
-            });
+            navigator.clipboard.writeText(textToCopy).then(() => { showToast('✅ Скопировано!'); }).catch(err => { logError('Ошибка копирования:', err); showErrorToast('Не удалось скопировать. Попробуйте вручную.'); });
         });
     });
 }
 window.initCopyButtons = initCopyButtons;
-// ========== ПОЛНЫЙ ПЕРЕЧЕНЬ УСЛУГ С ГРУППИРОВКОЙ ==========
+// ============================================================
+// 09_services-data.js – Полный перечень услуг с ценами и группировкой
+// ============================================================
 const SERVICES_DATA = {
-    // Подбор персонала
     recruitment: [
         {name: "Составление вакансии (с УТП)", price: 10000},
         {name: "Подбор резюме под вакансию", price: 15000},
@@ -5450,7 +4949,6 @@ const SERVICES_DATA = {
         {name: "IT Executive search Senior", price: 200000},
         {name: "Эксклюзивный хэдхантинг", price: 250000}
     ],
-    // Удержание и развитие
     retention: [
         {name: "Разработка УТП компании", price: 25000},
         {name: "Оценка компетенций", price: 25000},
@@ -5464,7 +4962,6 @@ const SERVICES_DATA = {
         {name: "Стратегическая сессия с собственниками", price: 200000},
         {name: "Стратегическая сессия в компании", price: 13000}
     ],
-    // Бизнес-тренинги
     "business-training": [
         {name: "Тренинг под запрос (1ч, до 25 чел.)", price: 12000},
         {name: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000},
@@ -5472,7 +4969,6 @@ const SERVICES_DATA = {
         {name: "Тренинг 'Я хочу здесь работать' мотивация", price: 15000},
         {name: "Тренинг 'Удержание персонала'", price: 12000}
     ],
-    // Корпоративным клиентам
     corporate: [
         {name: "Абонемент на HR-консультации", price: 100000},
         {name: "Корпоративная подписка на рекрутинг", price: 200000},
@@ -5480,7 +4976,6 @@ const SERVICES_DATA = {
         {name: "HR на час", price: 8500},
         {name: "HR реши вопрос - цена от", price: 120000}
     ],
-    // Ищу работу (B2C базовые)
     start: [
         {name: "Экспресс-диагностика (15мин) - Подбор услуги", price: 0},
         {name: "Сопроводительное письмо", price: 3000},
@@ -5501,7 +4996,6 @@ const SERVICES_DATA = {
         {name: "Резюме(CV) на английском", price: 15000},
         {name: "Стратегия трудоустройства", price: 15000}
     ],
-    // Карьерный рост (B2C стандартные)
     growth: [
         {name: "Подготовка к повышению", price: 10000},
         {name: "Коучинг для руководителей", price: 10000},
@@ -5515,7 +5009,6 @@ const SERVICES_DATA = {
         {name: "Коучинг для руководителей (пакет 4 сессии)", price: 30000},
         {name: "Стратегия роста", price: 45000}
     ],
-    // Executive (B2C премиальные)
     executive: [
         {name: "Работа «под ключ»", price: 250000},
         {name: "Executive-коучинг/мес", price: 100000},
@@ -5524,276 +5017,104 @@ const SERVICES_DATA = {
         {name: "Коучинг топ-менеджеров", price: 150000},
         {name: "VIP-коучинг", price: 30000}
     ],
-    // Тренинги для соискателей
     training: [
         {name: "Индивидуальный тренинг «Продай себя дорого»", price: 14000},
         {name: "Групповой тренинг «Продай себя дорого»", price: 5500},
         {name: "Наставничество для HR", price: 7000}
     ],
-    // Авторские курсы
     courses: [
         {name: "Авторский курс 'Рекрутер для недвижимости'", price: 25000},
         {name: "Обучение с '0' менеджер по продажам", price: 50000}
     ]
 };
-
-// Для обратной совместимости с другими модулями
 window.SERVICES_DATA = SERVICES_DATA;
-
-// ========== LOCAL_SERVICES ДЛЯ КВИЗА ==========
 window.LOCAL_SERVICES = {
-    individual_base: (SERVICES_DATA.start || [])
-        .filter(item => item.price !== null && item.price > 0 && item.price < 10000)
-        .map(item => ({ service: item.name, price: item.price })),
-
+    individual_base: (SERVICES_DATA.start || []).filter(item => item.price !== null && item.price > 0 && item.price < 10000).map(item => ({ service: item.name, price: item.price })),
     individual_standard: [
-        ...(SERVICES_DATA.start || [])
-            .filter(item => item.price !== null && item.price >= 10000 && item.price < 50000)
-            .map(item => ({ service: item.name, price: item.price })),
-        ...(SERVICES_DATA.growth || [])
-            .filter(item => item.price !== null && item.price >= 10000 && item.price < 50000)
-            .map(item => ({ service: item.name, price: item.price }))
+        ...(SERVICES_DATA.start || []).filter(item => item.price !== null && item.price >= 10000 && item.price < 50000).map(item => ({ service: item.name, price: item.price })),
+        ...(SERVICES_DATA.growth || []).filter(item => item.price !== null && item.price >= 10000 && item.price < 50000).map(item => ({ service: item.name, price: item.price }))
     ],
-
-    individual_premium: (SERVICES_DATA.executive || [])
-        .filter(item => item.price !== null && item.price >= 50000)
-        .map(item => ({ service: item.name, price: item.price })),
-
-    business_recruitment: (SERVICES_DATA.recruitment || [])
-        .filter(item => item.price !== null)
-        .map(item => ({ service: item.name, price: item.price })),
-
-    business_retention: (SERVICES_DATA.retention || [])
-        .filter(item => item.price !== null)
-        .map(item => ({ service: item.name, price: item.price })),
-
+    individual_premium: (SERVICES_DATA.executive || []).filter(item => item.price !== null && item.price >= 50000).map(item => ({ service: item.name, price: item.price })),
+    business_recruitment: (SERVICES_DATA.recruitment || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price })),
+    business_retention: (SERVICES_DATA.retention || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price })),
     training: [
-        ...(SERVICES_DATA.training || [])
-            .filter(item => item.price !== null)
-            .map(item => ({ service: item.name, price: item.price })),
-        ...(SERVICES_DATA["business-training"] || [])
-            .filter(item => item.price !== null)
-            .map(item => ({ service: item.name, price: item.price }))
+        ...(SERVICES_DATA.training || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price })),
+        ...(SERVICES_DATA["business-training"] || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price }))
     ],
-
-    corporate: (SERVICES_DATA.corporate || [])
-        .filter(item => item.price !== null)
-        .map(item => ({ service: item.name, price: item.price })),
-
-    author_courses: (SERVICES_DATA.courses || [])
-        .filter(item => item.price !== null)
-        .map(item => ({ service: item.name, price: item.price }))
+    corporate: (SERVICES_DATA.corporate || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price })),
+    author_courses: (SERVICES_DATA.courses || []).filter(item => item.price !== null).map(item => ({ service: item.name, price: item.price }))
 };
-
-// PRICE_BOOK для быстрого доступа к ценам
 window.PRICE_BOOK = {};
 for (const category of Object.values(window.LOCAL_SERVICES)) {
-    for (const item of category) {
-        if (!window.PRICE_BOOK[item.service]) {
-            window.PRICE_BOOK[item.service] = item.price;
-        }
-    }
+    for (const item of category) { if (!window.PRICE_BOOK[item.service]) window.PRICE_BOOK[item.service] = item.price; }
 }
-// ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+// ============================================================
+// 10_calculator.js – Калькулятор стоимости услуг, корзина, скидка
+// ============================================================
 let cart = [];
-
-// ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
-
-function formatPrice(price) {
-    if (price === null) return 'по запросу';
-    if (price === 0) return '0 ₽';
-    return price.toLocaleString() + ' ₽';
-}
-
-function getNumericPrice(price) {
-    if (price === null) return 0;
-    return price;
-}
-
-function showCalcToast(message, isError = false) {
-    const existingToast = document.querySelector('.custom-toast');
-    if (existingToast) existingToast.remove();
-
-    const toast = document.createElement('div');
-    toast.className = 'custom-toast';
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: ${isError ? '#dc3545' : '#28a745'};
-        color: white;
-        padding: 12px 24px;
-        border-radius: 50px;
-        font-size: 14px;
-        z-index: 10000;
-        font-weight: 500;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    `;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    const duration = window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 2000;
-    setTimeout(() => toast.remove(), duration);
-}
-
-// ========== ФУНКЦИИ КОРЗИНЫ ==========
+function formatPrice(price) { if (price === null) return 'по запросу'; if (price === 0) return '0 ₽'; return price.toLocaleString() + ' ₽'; }
+function getNumericPrice(price) { if (price === null) return 0; return price; }
 
 function addToCart(serviceName, price, quantity) {
     const existing = cart.find(item => item.name === serviceName);
-    if (existing) {
-        existing.qty += quantity;
-        showCalcToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`);
-    } else {
-        cart.push({name: serviceName, price: price, qty: quantity});
-        showCalcToast(`✅ "${serviceName}" добавлен(а) в корзину`);
-    }
+    if (existing) { existing.qty += quantity; window.showSuccessToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`); }
+    else { cart.push({name: serviceName, price: price, qty: quantity}); window.showSuccessToast(`✅ "${serviceName}" добавлен(а) в корзину`); }
     renderCart();
 }
-
 function renderCart() {
-    let total = 0;
-    let totalQty = 0;
-
-    cart.forEach(item => {
-        const itemPrice = getNumericPrice(item.price);
-        total += itemPrice * item.qty;
-        totalQty += item.qty;
-    });
-
-    let finalTotal = total;
-    let discount = 0;
-    let discountApplied = false;
-
+    let total = 0, totalQty = 0;
+    cart.forEach(item => { const itemPrice = getNumericPrice(item.price); total += itemPrice * item.qty; totalQty += item.qty; });
+    let finalTotal = total, discount = 0, discountApplied = false;
     const minItems = window.APP_CONFIG?.CONSTANTS?.DISCOUNT_MIN_ITEMS || 2;
     const discountPercent = window.APP_CONFIG?.CONSTANTS?.DISCOUNT_PERCENT || 0.05;
-
-    if (totalQty >= minItems && total > 0) {
-        discount = total * discountPercent;
-        finalTotal = total - discount;
-        discountApplied = true;
-    }
-
+    if (totalQty >= minItems && total > 0) { discount = total * discountPercent; finalTotal = total - discount; discountApplied = true; }
     const totalPriceSpan = document.getElementById('totalPrice');
-    if (totalPriceSpan) {
-        totalPriceSpan.innerHTML = formatPrice(finalTotal);
-    }
-
+    if (totalPriceSpan) totalPriceSpan.innerHTML = formatPrice(finalTotal);
     const discountDiv = document.getElementById('discountInfo');
     if (discountDiv) {
-        if (discountApplied) {
-            discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
-        } else if (totalQty === 1 && total > 0) {
-            discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
-        } else if (totalQty >= 1 && total === 0) {
-            discountDiv.innerHTML = '🔹 Бесплатные услуги не участвуют в скидке. Добавьте платные услуги.';
-        } else {
-            discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
-        }
+        if (discountApplied) discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
+        else if (totalQty === 1 && total > 0) discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
+        else if (totalQty >= 1 && total === 0) discountDiv.innerHTML = '🔹 Бесплатные услуги не участвуют в скидке. Добавьте платные услуги.';
+        else discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
     }
-
     const container = document.getElementById('servicesList');
     if (!container) return;
-
-    if (cart.length === 0) {
-        container.innerHTML = '';
-        return;
-    }
-
+    if (cart.length === 0) { container.innerHTML = ''; return; }
     container.innerHTML = '';
     cart.forEach((item, idx) => {
         const div = document.createElement('div');
         div.className = 'calc-item';
-
         let priceDisplay;
-        if (item.price === null) {
-            priceDisplay = 'по запросу';
-        } else if (item.price === 0) {
-            priceDisplay = '0 ₽';
-        } else {
-            priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
-        }
-
+        if (item.price === null) priceDisplay = 'по запросу';
+        else if (item.price === 0) priceDisplay = '0 ₽';
+        else priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
         const escapedName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
-
-        div.innerHTML = `
-            <div class="service-name">${escapedName}</div>
-            <div class="service-price">${priceDisplay}</div>
-            <div class="service-qty-control">
-                <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
-                <span class="qty-value">${item.qty}</span>
-                <button class="qty-btn qty-plus" data-idx="${idx}">+</button>
-            </div>
-            <div class="service-remove">
-                <button class="remove-item" data-idx="${idx}">✖</button>
-            </div>
-        `;
+        div.innerHTML = `<div class="service-name">${escapedName}</div><div class="service-price">${priceDisplay}</div><div class="service-qty-control"><button class="qty-btn qty-minus" data-idx="${idx}">−</button><span class="qty-value">${item.qty}</span><button class="qty-btn qty-plus" data-idx="${idx}">+</button></div><div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>`;
         container.appendChild(div);
     });
-
-    document.querySelectorAll('.qty-minus').forEach(btn => {
-        btn.onclick = () => {
-            const idx = parseInt(btn.dataset.idx, 10);
-            if (cart[idx].qty > 1) {
-                cart[idx].qty--;
-            } else {
-                cart.splice(idx, 1);
-            }
-            renderCart();
-        };
-    });
-
-    document.querySelectorAll('.qty-plus').forEach(btn => {
-        btn.onclick = () => {
-            const idx = parseInt(btn.dataset.idx, 10);
-            cart[idx].qty++;
-            renderCart();
-        };
-    });
-
-    document.querySelectorAll('.remove-item').forEach(btn => {
-        btn.onclick = () => {
-            const idx = parseInt(btn.dataset.idx, 10);
-            cart.splice(idx, 1);
-            renderCart();
-        };
-    });
+    document.querySelectorAll('.qty-minus').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); if (cart[idx].qty > 1) cart[idx].qty--; else cart.splice(idx, 1); renderCart(); }; });
+    document.querySelectorAll('.qty-plus').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); cart[idx].qty++; renderCart(); }; });
+    document.querySelectorAll('.remove-item').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); cart.splice(idx, 1); renderCart(); }; });
 }
-
-// ========== ЗАПОЛНЕНИЕ SELECT'ОВ ==========
-
 function populateSelect(selectId, services) {
     const select = document.getElementById(selectId);
-    if (!select) {
-        if (window.IS_DEV) console.error('Select not found:', selectId);
-        return;
-    }
-
+    if (!select) { if (window.IS_DEV) console.error('Select not found:', selectId); return; }
     select.innerHTML = '';
     services.forEach((service) => {
         const option = document.createElement('option');
         option.value = service.price !== null ? service.price : 'null';
-
         let priceDisplay;
-        if (service.price === null) {
-            priceDisplay = 'по запросу';
-        } else if (service.price === 0) {
-            priceDisplay = '0 ₽';
-        } else {
-            priceDisplay = service.price.toLocaleString() + ' ₽';
-        }
-
+        if (service.price === null) priceDisplay = 'по запросу';
+        else if (service.price === 0) priceDisplay = '0 ₽';
+        else priceDisplay = service.price.toLocaleString() + ' ₽';
         option.textContent = `${service.name} — ${priceDisplay}`;
         option.setAttribute('data-name', service.name);
         option.setAttribute('data-price', service.price !== null ? service.price : 'null');
         select.appendChild(option);
     });
 }
-
 function initSelects() {
-    if (typeof SERVICES_DATA === 'undefined') {
-        if (window.IS_DEV) console.error('SERVICES_DATA не загружен!');
-        return;
-    }
+    if (typeof SERVICES_DATA === 'undefined') { if (window.IS_DEV) console.error('SERVICES_DATA не загружен!'); return; }
     populateSelect('recruitment-select', SERVICES_DATA.recruitment);
     populateSelect('retention-select', SERVICES_DATA.retention);
     populateSelect('business-training-select', SERVICES_DATA["business-training"]);
@@ -5804,9 +5125,6 @@ function initSelects() {
     populateSelect('training-select', SERVICES_DATA.training);
     populateSelect('courses-select', SERVICES_DATA.courses);
 }
-
-// ========== ИНИЦИАЛИЗАЦИЯ КНОПОК ДОБАВЛЕНИЯ ==========
-
 function initAddButtons() {
     const handlers = [
         {btn: 'recruitment-add', select: 'recruitment-select', qty: 'recruitment-qty'},
@@ -5819,7 +5137,6 @@ function initAddButtons() {
         {btn: 'training-add', select: 'training-select', qty: 'training-qty'},
         {btn: 'courses-add', select: 'courses-select', qty: 'courses-qty'}
     ];
-
     handlers.forEach(({btn, select, qty}) => {
         const button = document.getElementById(btn);
         if (button) {
@@ -5833,23 +5150,13 @@ function initAddButtons() {
                 let quantity = parseInt(document.getElementById(qty).value, 10);
                 const defaultQty = window.APP_CONFIG?.CONSTANTS?.DEFAULT_QUANTITY || 1;
                 if (isNaN(quantity) || quantity < defaultQty) quantity = defaultQty;
-
-                if (serviceName) {
-                    addToCart(serviceName, price, quantity);
-                } else {
-                    if (window.IS_DEV) console.error('Не удалось получить название услуги');
-                    showCalcToast('❌ Ошибка: не удалось определить услугу', true);
-                }
+                if (serviceName) addToCart(serviceName, price, quantity);
+                else { if (window.IS_DEV) console.error('Не удалось получить название услуги'); window.showErrorToast('❌ Ошибка: не удалось определить услугу'); }
             };
             button.addEventListener('click', button._handler);
-        } else if (window.IS_DEV) {
-            console.error('Button not found:', btn);
-        }
+        } else if (window.IS_DEV) console.error('Button not found:', btn);
     });
 }
-
-// ========== ИНИЦИАЛИЗАЦИЯ ВКЛАДОК ==========
-
 function initTabs() {
     const tabs = document.querySelectorAll('#calculator .tab-btn');
     tabs.forEach(btn => {
@@ -5865,46 +5172,22 @@ function initTabs() {
         btn.addEventListener('click', btn._tabHandler);
     });
 }
-
-// ========== ВСПОМОГАТЕЛЬНАЯ ФУНКЦИЯ ДЛЯ ФОРМ ==========
-window.getCartData = function() {
-    if (cart.length === 0) return 'Корзина пуста';
-    return cart.map(item => {
-        const price = getNumericPrice(item.price);
-        const totalPrice = price * item.qty;
-        let priceDisplay;
-        if (price === 0) priceDisplay = '0 ₽';
-        else if (price === null) priceDisplay = 'по запросу';
-        else priceDisplay = totalPrice.toLocaleString() + ' ₽';
-        return `${item.name} x${item.qty} = ${priceDisplay}`;
-    }).join('\n');
-};
-
-// ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ (вызывается только из 99_public-main.js) ==========
-
+window.getCartData = function() { if (cart.length === 0) return 'Корзина пуста'; return cart.map(item => { const price = getNumericPrice(item.price); const totalPrice = price * item.qty; let priceDisplay; if (price === 0) priceDisplay = '0 ₽'; else if (price === null) priceDisplay = 'по запросу'; else priceDisplay = totalPrice.toLocaleString() + ' ₽'; return `${item.name} x${item.qty} = ${priceDisplay}`; }).join('\n'); };
 function initCalculator() {
     if (window.IS_DEV) console.log('Инициализация калькулятора...');
-    if (window._calculatorInitialized) {
-        if (window.IS_DEV) console.log('Калькулятор уже инициализирован');
-        return;
-    }
+    if (window._calculatorInitialized) { if (window.IS_DEV) console.log('Калькулятор уже инициализирован'); return; }
     window._calculatorInitialized = true;
-
-    if (typeof SERVICES_DATA !== 'undefined') {
-        initSelects();
-    } else if (window.IS_DEV) {
-        console.error('SERVICES_DATA не загружен! Проверьте подключение services-data.js');
-    }
+    if (typeof SERVICES_DATA !== 'undefined') initSelects();
+    else if (window.IS_DEV) console.error('SERVICES_DATA не загружен! Проверьте подключение services-data.js');
     initAddButtons();
     initTabs();
     if (window.IS_DEV) console.log('Инициализация калькулятора завершена');
 }
-
 window.initCalculator = initCalculator;
-// ========== ВЕСА УСЛУГ ДЛЯ КВИЗА ==========
-
+// ============================================================
+// 11_quiz-weights.js – Веса услуг и соответствие ответов ключам
+// ============================================================
 window.SERVICE_WEIGHTS = {
-    // B2C: Базовые (до 10 000 ₽)
     "Экспресс-консультация (30мин)": { role_job_seeker:10, role_career_change:8, level_junior:8, level_middle:6, urgency_fast:9, urgency_1_2_months:6, importance_salary:6, importance_career:5, budget_low:10, budget_5000_15000:8 },
     "Аудит резюме": { role_job_seeker:10, role_career_change:7, level_junior:9, level_middle:7, level_senior:6, urgency_fast:7, urgency_1_2_months:6, importance_salary:6, importance_career:7, budget_low:9, budget_5000_15000:8 },
     "Сопроводительное письмо": { role_job_seeker:9, role_career_change:6, level_junior:8, level_middle:6, urgency_fast:6, importance_salary:5, budget_low:8, budget_5000_15000:7 },
@@ -5918,8 +5201,6 @@ window.SERVICE_WEIGHTS = {
     "Тренинг по переговорам": { role_job_seeker:7, role_growth:8, level_middle:7, level_senior:7, urgency_fast:6, importance_salary:9, budget_5000_15000:6, budget_15000_50000:6 },
     "Психологическое консультирование (1ч)": { role_job_seeker:6, role_career_change:7, level_any:5, urgency_1_2_months:5, importance_balance:10, budget_5000_15000:6 },
     "Переговоры о зарплате (1ч)": { role_job_seeker:8, role_growth:9, level_middle:7, level_senior:7, urgency_fast:8, importance_salary:10, budget_5000_15000:7, budget_15000_50000:6 },
-
-    // B2C: Стандартные (10 000 – 50 000 ₽)
     "Индивидуальный тренинг «Продай себя дорого»": { role_job_seeker:9, role_growth:8, level_middle:8, level_senior:8, urgency_fast:7, urgency_1_2_months:6, importance_salary:9, importance_career:8, budget_15000_50000:8, budget_5000_15000:6 },
     "План развития (рост в должности)": { role_growth:10, level_middle:9, level_senior:7, urgency_1_2_months:7, urgency_3_6_months:6, importance_career:10, importance_salary:7, budget_15000_50000:8, budget_5000_15000:6 },
     "Повышение грейда": { role_growth:10, level_middle:9, level_senior:7, urgency_1_2_months:8, importance_salary:9, importance_career:8, budget_15000_50000:8 },
@@ -5929,14 +5210,10 @@ window.SERVICE_WEIGHTS = {
     "Коучинг для руководителей (пакет 4 сессии)": { role_growth:9, level_lead:9, level_director:8, urgency_1_2_months:6, importance_career:9, budget_50000_100000:9 },
     "VIP-коучинг": { role_growth:8, role_job_seeker:7, level_senior:9, level_lead:9, level_director:8, urgency_1_2_months:6, importance_career:9, importance_salary:8, budget_50000_100000:9, budget_100000_300000:8 },
     "Стратегия роста": { role_growth:10, level_senior:8, level_lead:9, level_director:9, level_top:9, urgency_3_6_months:7, importance_career:10, budget_100000_300000:9, budget_50000_100000:7 },
-
-    // B2C: Премиальные (от 50 000 ₽)
     "Executive-коучинг/мес": { role_growth:9, level_director:9, level_top:10, urgency_1_2_months:7, importance_career:10, budget_100000_300000:9 },
     "Executive-сопровождение/мес": { role_growth:8, level_director:9, level_top:10, urgency_3_6_months:7, importance_career:9, budget_300000_500000:9, budget_higher:8 },
     "Поиск позиции C-level": { role_job_seeker:10, level_top:10, level_director:9, urgency_fast:9, importance_salary:9, importance_career:8, budget_300000_500000:10, budget_higher:9 },
     "Коучинг топ-менеджеров": { role_growth:9, level_top:10, level_director:9, urgency_1_2_months:7, importance_career:9, budget_300000_500000:9, budget_higher:8 },
-
-    // B2B: Поиск сотрудников
     "Составление вакансии (с УТП)": { role_business:10, level_junior:8, level_middle:7, urgency_fast:8, urgency_1_2_months:6, budget_5000_15000:8, budget_15000_50000:7 },
     "Подбор резюме под вакансию": { role_business:10, level_junior:8, level_middle:7, urgency_fast:9, budget_15000_50000:8, budget_5000_15000:7 },
     "База кандидатов + тестирование": { role_business:10, level_junior:8, urgency_fast:7, urgency_1_2_months:6, budget_15000_50000:8 },
@@ -5951,19 +5228,13 @@ window.SERVICE_WEIGHTS = {
     "IT Executive search Senior": { role_business:10, level_senior:10, level_lead:9, urgency_fast:9, budget_300000_500000:10, budget_higher:9 },
     "Эксклюзивный хэдхантинг": { role_business:10, level_director:10, level_top:10, level_owner:9, urgency_fast:9, budget_higher:10, budget_300000_500000:9 },
     "Подбор специалиста": { role_business:10, level_middle:8, level_junior:7, urgency_fast:7, urgency_1_2_months:6, budget_50000_100000:8, budget_15000_50000:7 },
-
-    // Тренинги
     "Групповой тренинг «Продай себя дорого»": { role_job_seeker:7, role_growth:7, level_any:5, urgency_1_2_months:5, importance_salary:6, budget_15000_50000:7, budget_5000_15000:6 },
     "Тренинг по запросу (1ч, до 25 чел.)": { role_business:9, urgency_fast:8, budget_15000_50000:8, budget_5000_15000:7 },
     "Тренинг 'Удержание персонала'": { role_business:9, urgency_1_2_months:7, budget_50000_100000:8, budget_15000_50000:6 },
     "Тренинг 'Профилактика выгорания'": { role_business:8, urgency_1_2_months:6, importance_balance:9, budget_15000_50000:7 },
-
-    // Авторские курсы
     "Авторский курс 'Рекрутер для недвижимости'": { role_business:9, role_career_change:7, level_junior:7, level_middle:8, urgency_1_2_months:7, urgency_3_6_months:6, importance_career:8, importance_salary:7, budget_15000_50000:8, budget_5000_15000:6 },
     "Обучение с '0' менеджер по продажам": { role_business:9, role_career_change:8, level_junior:9, level_middle:7, urgency_1_2_months:7, urgency_3_6_months:7, importance_career:9, importance_salary:8, budget_50000_100000:8, budget_15000_50000:7 }
 };
-
-// ========== МАППИНГ ОТВЕТОВ В КЛЮЧИ ==========
 window.ANSWER_MAPPING = {
     "Ищу работу": "role_job_seeker",
     "Хочу сменить профессию": "role_career_change",
@@ -5995,12 +5266,74 @@ window.ANSWER_MAPPING = {
     "300 000 – 500 000 ₽": "budget_300000_500000",
     "Выше 500 000 ₽": "budget_higher"
 };
-
-// Логируем только в development-режиме
-if (window.IS_DEV) {
-    console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены");
-}
-// ========== РАСЧЁТ БАЛЛОВ, ФИЛЬТРАЦИЯ И ПОДГОТОВКА ЦЕН ==========
+if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены");
+// ============================================================
+// 12_close-burger.js – Закрытие бургер-меню (используется в smooth-scroll)
+// ============================================================
+(function() {
+    'use strict';
+    function closeBurgerMenuIfOpen() {
+        const burger = document.getElementById('burgerMenu');
+        const navBottom = document.getElementById('navBottom');
+        if (burger && navBottom && navBottom.classList.contains('open')) {
+            burger.classList.remove('active');
+            navBottom.classList.remove('open');
+            document.body.classList.remove('menu-open');
+            burger.setAttribute('aria-expanded', 'false');
+        }
+    }
+    window.closeBurgerMenu = closeBurgerMenuIfOpen;
+})();
+// ============================================================
+// 13_smooth-scroll.js – Плавный скролл по якорным ссылкам
+// ============================================================
+(function() {
+    'use strict';
+    function getNavbarHeight() {
+        const navbar = document.querySelector('.navbar');
+        return navbar ? navbar.offsetHeight : 0;
+    }
+    window.smoothScrollTo = function(targetElement) {
+        if (!targetElement) return;
+        const navbarHeight = getNavbarHeight();
+        const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = elementPosition - navbarHeight - 15;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    };
+    function closeMenu() {
+        if (typeof window.closeBurgerMenu === 'function') window.closeBurgerMenu();
+        else {
+            const burger = document.getElementById('burgerMenu');
+            const navBottom = document.getElementById('navBottom');
+            if (burger && navBottom && navBottom.classList.contains('open')) {
+                burger.classList.remove('active');
+                navBottom.classList.remove('open');
+                document.body.classList.remove('menu-open');
+                burger.setAttribute('aria-expanded', 'false');
+            }
+        }
+    }
+    document.addEventListener('click', function(e) {
+        const link = e.target.closest('a[href^="#"]');
+        if (!link) return;
+        const href = link.getAttribute('href');
+        if (href === '#' || href === '#top') {
+            e.preventDefault();
+            closeMenu();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return;
+        }
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+            e.preventDefault();
+            closeMenu();
+            setTimeout(() => { window.smoothScrollTo(targetElement); }, 0);
+        }
+    });
+})();
+// ============================================================
+// 14_quiz-scoring.js – Расчёт баллов и подбор двух лучших услуг
+// ============================================================
 (function() {
     const CATEGORY_DISPLAY_NAMES = {
         business_recruitment: '🔍 HR: Рекрутинг и подбор',
@@ -6012,38 +5345,21 @@ if (window.IS_DEV) {
         corporate: '🏢 Корпоративным клиентам',
         author_courses: '📚 Авторские курсы'
     };
-
     function buildServiceCategoryMap() {
         const map = {};
         if (!window.LOCAL_SERVICES) return map;
         for (const [cat, items] of Object.entries(window.LOCAL_SERVICES)) {
             const displayName = CATEGORY_DISPLAY_NAMES[cat] || cat;
-            for (const item of items) {
-                map[item.service] = displayName;
-            }
+            for (const item of items) map[item.service] = displayName;
         }
         return map;
     }
-
     function getServiceCategory(serviceName) {
-        if (!window.SERVICE_CATEGORY_MAP) {
-            window.SERVICE_CATEGORY_MAP = buildServiceCategoryMap();
-        }
+        if (!window.SERVICE_CATEGORY_MAP) window.SERVICE_CATEGORY_MAP = buildServiceCategoryMap();
         return window.SERVICE_CATEGORY_MAP[serviceName] || '📌 Другое';
     }
-
-    function formatServiceWithCategory(serviceName) {
-        const category = getServiceCategory(serviceName);
-        return `${category} — ${serviceName}`;
-    }
-
-    function getNumericPrice(serviceName) {
-        if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) {
-            return window.PRICE_BOOK[serviceName];
-        }
-        return null;
-    }
-
+    function formatServiceWithCategory(serviceName) { return `${getServiceCategory(serviceName)} — ${serviceName}`; }
+    function getNumericPrice(serviceName) { if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) return window.PRICE_BOOK[serviceName]; return null; }
     function getUserPriceSegment(answersArr) {
         const level = answersArr[1];
         const budget = answersArr[4];
@@ -6059,10 +5375,8 @@ if (window.IS_DEV) {
         if (isCheapByLevel && isCheapByBudget) return "cheap";
         return "middle";
     }
-
     function isServiceAllowed(service, userRole, userSegment) {
-        const isBusinessService = (
-            service.includes("подбор") || service.includes("рекрутинг") ||
+        const isBusinessService = (service.includes("подбор") || service.includes("рекрутинг") ||
             service.includes("хэдхантинг") || service.includes("аутсорсинг") ||
             service.includes("вакансии") || service.includes("кандидатов") ||
             service.includes("стажировки") || service.includes("Программу стажировки") ||
@@ -6075,8 +5389,7 @@ if (window.IS_DEV) {
             service === "Стратегическая сессия (1ч, до 12 чел.)" ||
             service === "Мастер-класс (3ч, до 25 чел.)" ||
             service === "Тренинг 'Удержание персонала'" ||
-            service === "Тренинг 'Профилактика выгорания'"
-        );
+            service === "Тренинг 'Профилактика выгорания'");
         const isBusinessUser = (userRole === "Подбираю сотрудников");
         if (isBusinessService && !isBusinessUser) return false;
         if (isBusinessUser && !isBusinessService) return false;
@@ -6089,81 +5402,46 @@ if (window.IS_DEV) {
         }
         return true;
     }
-
     window.getTopTwoServices = function(answersArr) {
         let weights = window.SERVICE_WEIGHTS;
         let mapping = window.ANSWER_MAPPING;
-
         if (!weights || Object.keys(weights).length === 0 || !mapping) {
-            return {
-                variantA: "Индивидуальная консультация (1ч)",
-                variantB: "Экспресс-консультация (30мин)",
-                variantAFormatted: "👤 B2C: Стандартные — Индивидуальная консультация (1ч)",
-                variantBFormatted: "👤 B2C: Базовые — Экспресс-консультация (30мин)"
-            };
+            return { variantA: "Индивидуальная консультация (1ч)", variantB: "Экспресс-консультация (30мин)", variantAFormatted: "👤 B2C: Стандартные — Индивидуальная консультация (1ч)", variantBFormatted: "👤 B2C: Базовые — Экспресс-консультация (30мин)" };
         }
-
         const userRole = answersArr[0];
         const userSegment = getUserPriceSegment(answersArr);
         const userKeys = [];
-
         for (let i = 0; i < answersArr.length; i++) {
             const answer = answersArr[i];
-            if (answer && mapping[answer]) {
-                userKeys.push(mapping[answer]);
-            }
+            if (answer && mapping[answer]) userKeys.push(mapping[answer]);
         }
-
         if (userRole === "Подбираю сотрудников") userKeys.push("role_business");
         else if (userRole === "Рост в текущей компании") userKeys.push("role_growth");
         else if (userRole === "Хочу сменить профессию") userKeys.push("role_career_change");
         else if (userRole === "Ищу работу") userKeys.push("role_job_seeker");
-
         const scores = [];
         for (const [service, weightObj] of Object.entries(weights)) {
             if (!isServiceAllowed(service, userRole, userSegment)) continue;
             let total = 0;
-            for (const key of userKeys) {
-                if (weightObj[key]) total += weightObj[key];
-            }
+            for (const key of userKeys) if (weightObj[key]) total += weightObj[key];
             if (total === 0 && weightObj.role_any) total = weightObj.role_any;
             if (total > 0) {
                 const price = getNumericPrice(service);
-                scores.push({
-                    service,
-                    score: total,
-                    price: (price !== null && price !== undefined) ? price.toLocaleString() + ' ₽' : 'цена по запросу'
-                });
+                scores.push({ service, score: total, price: (price !== null && price !== undefined) ? price.toLocaleString() + ' ₽' : 'цена по запросу' });
             }
         }
-
         scores.sort((a, b) => b.score - a.score);
-
         if (scores.length === 0) {
-            return {
-                variantA: "Индивидуальная консультация (1ч)",
-                variantB: "Экспресс-консультация (30мин)",
-                variantAFormatted: "👤 B2C: Стандартные — Индивидуальная консультация (1ч)",
-                variantBFormatted: "👤 B2C: Базовые — Экспресс-консультация (30мин)"
-            };
+            return { variantA: "Индивидуальная консультация (1ч)", variantB: "Экспресс-консультация (30мин)", variantAFormatted: "👤 B2C: Стандартные — Индивидуальная консультация (1ч)", variantBFormatted: "👤 B2C: Базовые — Экспресс-консультация (30мин)" };
         }
-
         const top = scores[0];
         const second = scores[1] || scores[0];
-
-        return {
-            variantA: top.service,
-            variantB: second.service,
-            variantAFormatted: formatServiceWithCategory(top.service),
-            variantBFormatted: formatServiceWithCategory(second.service),
-            scoreA: top.score,
-            scoreB: second.score,
-            priceA: top.price,
-            priceB: second.price
-        };
+        return { variantA: top.service, variantB: second.service, variantAFormatted: formatServiceWithCategory(top.service), variantBFormatted: formatServiceWithCategory(second.service), scoreA: top.score, scoreB: second.score, priceA: top.price, priceB: second.price };
     };
 })();
-// ========== КВИЗ (с блокировкой перехода без выбора ответа) ==========
+// ============================================================
+// 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора
+// ============================================================
 (function () {
     let quizQuestions = [];
     let answers = [null, null, null, null, null];
@@ -6171,329 +5449,152 @@ if (window.IS_DEV) {
     let currentQuestionIndex = 0;
     let isSubmittingChoice = false;
     let isAnalyzing = false;
-
     let selectedVariantText = '';
     let selectedVariantPrice = '';
     let selectedOriginalText = '';
     let selectedOriginalPrice = '';
-
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const QUIZ_ANALYZE_DELAY = C.QUIZ_ANALYZE_DELAY || 700;
     const TOAST_DURATION = C.TOAST_DURATION || 3000;
     const BREAKPOINT_MOBILE = C.BREAKPOINT_MOBILE || 768;
-
     if (typeof window.escapeHtml !== 'function') {
-        window.escapeHtml = function (str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function (m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        };
+        window.escapeHtml = function (str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); };
     }
-
-    function showSuccessToast(msg) {
-        const toast = document.createElement('div');
-        toast.className = 'custom-toast-success';
-        toast.innerHTML = `✅ ${window.escapeHtml(msg)}`;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, TOAST_DURATION);
-    }
-
-    function showWarningToast(msg) {
-        const toast = document.createElement('div');
-        toast.className = 'custom-toast-warning';
-        toast.innerHTML = `🔔 ${window.escapeHtml(msg)}`;
-        document.body.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            setTimeout(() => toast.remove(), 300);
-        }, TOAST_DURATION);
-    }
-
-    function getPrice(serviceName) {
-        if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) {
-            const price = window.PRICE_BOOK[serviceName];
-            if (price === 0) return '0 ₽';
-            if (price === null) return 'цена по запросу';
-            return price.toLocaleString() + ' ₽';
-        }
-        return 'цена по запросу';
-    }
-
+    function getPrice(serviceName) { if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) { const price = window.PRICE_BOOK[serviceName]; if (price === 0) return '0 ₽'; if (price === null) return 'цена по запросу'; return price.toLocaleString() + ' ₽'; } return 'цена по запросу'; }
     function updateFormHiddenFields(chosenText, chosenPrice, originalText, originalPrice, recommendedStr, answersStr) {
         const forms = ['callbackForm', 'quickOrderForm'];
         forms.forEach(formId => {
             const form = document.getElementById(formId);
             if (!form) return;
-            const fields = {
-                chosenVariant: chosenText,
-                chosenVariantPrice: chosenPrice,
-                originalChosenVariant: originalText,
-                originalChosenVariantPrice: originalPrice,
-                recommendedVariants: recommendedStr,
-                quizAnswersRaw: answersStr
-            };
+            const fields = { chosenVariant: chosenText, chosenVariantPrice: chosenPrice, originalChosenVariant: originalText, originalChosenVariantPrice: originalPrice, recommendedVariants: recommendedStr, quizAnswersRaw: answersStr };
             for (const [name, value] of Object.entries(fields)) {
                 let input = form.querySelector(`[name="${name}"]`);
-                if (!input) {
-                    input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = name;
-                    input.id = name;
-                    form.appendChild(input);
-                }
+                if (!input) { input = document.createElement('input'); input.type = 'hidden'; input.name = name; input.id = name; form.appendChild(input); }
                 input.value = value;
             }
         });
     }
-
     function updateSelectionBlock(variantText, variantPrice) {
         const block = document.getElementById('quizSelectionBlock');
         if (!block) return;
         const nameSpan = block.querySelector('.service-name');
         const priceSpan = block.querySelector('.service-price');
-
         if (variantText && variantText.trim() !== '') {
             if (nameSpan) nameSpan.innerHTML = window.escapeHtml(variantText);
-            if (priceSpan && variantPrice && variantPrice !== '') {
-                priceSpan.innerHTML = window.escapeHtml(variantPrice);
-            } else if (priceSpan) {
-                priceSpan.innerHTML = '';
-            }
+            if (priceSpan && variantPrice && variantPrice !== '') priceSpan.innerHTML = window.escapeHtml(variantPrice);
+            else if (priceSpan) priceSpan.innerHTML = '';
             block.style.display = '';
-            if (window.innerWidth <= BREAKPOINT_MOBILE) {
-                block.style.display = 'flex';
-            } else {
-                block.style.display = 'grid';
-            }
-        } else {
-            block.style.display = 'none';
-            if (nameSpan) nameSpan.innerHTML = '';
-            if (priceSpan) priceSpan.innerHTML = '';
-        }
+            if (window.innerWidth <= BREAKPOINT_MOBILE) block.style.display = 'flex';
+            else block.style.display = 'grid';
+        } else { block.style.display = 'none'; if (nameSpan) nameSpan.innerHTML = ''; if (priceSpan) priceSpan.innerHTML = ''; }
     }
-
     function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, originalText, originalPrice) {
         const scriptUrl = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
         if (!scriptUrl) return;
-        const formData = {
-            formType: 'Квиз ответы',
-            quizAnswersRaw: answersStr,
-            recommendedVariants: recommendedStr,
-            chosenVariant: chosenText,
-            chosenVariantPrice: chosenPrice,
-            originalChosenVariant: originalText,
-            originalChosenVariantPrice: originalPrice,
-            userId: typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : ''
-        };
+        const formData = { formType: 'Квиз ответы', quizAnswersRaw: answersStr, recommendedVariants: recommendedStr, chosenVariant: chosenText, chosenVariantPrice: chosenPrice, originalChosenVariant: originalText, originalChosenVariantPrice: originalPrice, userId: typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : '' };
         if (typeof window.getTimeOnSite === 'function') formData.timeOnSite = window.getTimeOnSite();
         if (typeof window.getVisitStatsText === 'function') formData.visitStats = window.getVisitStatsText();
         if (typeof window.getUTMText === 'function') formData.utm = window.getUTMText();
         if (typeof window.getDeviceText === 'function') formData.device = window.getDeviceText();
         if (typeof window.getPageText === 'function') formData.page = window.getPageText();
-
-        if (typeof window.postWithRetry === 'function') {
-            window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => {
-                if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза', err);
-            });
-        } else {
-            fetch(scriptUrl, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: new URLSearchParams(formData)
-            }).catch(e => {
-                if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e);
-            });
-        }
+        if (typeof window.postWithRetry === 'function') window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза', err); });
+        else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
-
-    const FIRST_QUESTION = {
-        text: "1. Ваша роль?",
-        options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"]
-    };
-    const LEVEL_JOBSEEKER = {
-        text: "2. Ваш текущий уровень?",
-        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"]
-    };
-    const LEVEL_RECRUITER = {
-        text: "2. Какой уровень сотрудника ищете?",
-        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"]
-    };
-    const URGENCY_QUESTION = {
-        text: "3. Как быстро нужен результат?",
-        options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"]
-    };
-    const IMPORTANCE_QUESTION = {
-        text: "4. Что для вас важнее всего?",
-        options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"]
-    };
-    const BUDGET_QUESTION = {
-        text: "5. Бюджет на консультацию/подбор?",
-        options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"]
-    };
-
+    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] };
+    const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
+    const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
+    const URGENCY_QUESTION = { text: "3. Как быстро нужен результат?", options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"] };
+    const IMPORTANCE_QUESTION = { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"] };
+    const BUDGET_QUESTION = { text: "5. Бюджет на консультацию/подбор?", options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"] };
     let currentRole = null;
-
     function startQuiz() {
         answers = [null, null, null, null, null];
         currentQuestionIndex = 0;
         quizState = 'questions';
         currentRole = null;
         quizQuestions = [FIRST_QUESTION, LEVEL_JOBSEEKER, URGENCY_QUESTION, IMPORTANCE_QUESTION, BUDGET_QUESTION];
-        selectedVariantText = '';
-        selectedVariantPrice = '';
-        selectedOriginalText = '';
-        selectedOriginalPrice = '';
+        selectedVariantText = ''; selectedVariantPrice = ''; selectedOriginalText = ''; selectedOriginalPrice = '';
         updateFormHiddenFields('', '', '', '', '', '');
         updateSelectionBlock('', '');
         renderQuiz();
     }
-
     function updateSecondQuestion(role) {
         if (role === "Подбираю сотрудников") quizQuestions[1] = {...LEVEL_RECRUITER};
         else quizQuestions[1] = {...LEVEL_JOBSEEKER};
         if (answers[1] && !quizQuestions[1].options.includes(answers[1])) answers[1] = null;
         if (currentQuestionIndex === 1 && quizState === 'questions') renderQuiz();
     }
-
     function renderQuiz() {
         const container = document.getElementById('quizContainer');
         if (!container) return;
-
         if (quizState === 'questions') {
             const currentQ = quizQuestions[currentQuestionIndex];
-            if (!currentQ || !currentQ.options) {
-                container.innerHTML = '<div style="text-align:center; padding:40px;">Ошибка загрузки вопроса</div>';
-                return;
-            }
+            if (!currentQ || !currentQ.options) { container.innerHTML = '<div style="text-align:center; padding:40px;">Ошибка загрузки вопроса</div>'; return; }
             const progressWidth = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
-            let html = `<div class="quiz-progress"><div class="quiz-progress-bar" style="width: ${progressWidth}%;"></div></div>
-                        <div class="quiz-question"><p>${window.escapeHtml(currentQ.text)}</p><div class="quiz-options">`;
-            for (let opt of currentQ.options) {
-                const isSelected = (answers[currentQuestionIndex] === opt);
-                html += `<button class="quiz-option ${isSelected ? 'selected' : ''}" data-opt="${window.escapeHtml(opt)}" type="button">${window.escapeHtml(opt)}</button>`;
-            }
+            let html = `<div class="quiz-progress"><div class="quiz-progress-bar" style="width: ${progressWidth}%;"></div></div><div class="quiz-question"><p>${window.escapeHtml(currentQ.text)}</p><div class="quiz-options">`;
+            for (let opt of currentQ.options) { const isSelected = (answers[currentQuestionIndex] === opt); html += `<button class="quiz-option ${isSelected ? 'selected' : ''}" data-opt="${window.escapeHtml(opt)}" type="button">${window.escapeHtml(opt)}</button>`; }
             html += `</div></div><div class="quiz-nav"><button id="quizPrevBtn" class="btn-secondary" ${currentQuestionIndex === 0 ? 'disabled' : ''}>◀ Назад</button>`;
             if (currentQuestionIndex < quizQuestions.length - 1) html += `<button id="quizNextBtn" class="btn-primary">Далее ▶</button>`;
             html += `</div>`;
             container.innerHTML = html;
-
             document.querySelectorAll('.quiz-option').forEach(opt => {
                 opt.removeEventListener('click', opt._handler);
                 opt._handler = (e) => {
                     if (isAnalyzing) return;
                     const selected = e.currentTarget.dataset.opt;
                     answers[currentQuestionIndex] = selected;
-                    if (currentQuestionIndex === 0) {
-                        currentRole = selected;
-                        updateSecondQuestion(currentRole);
-                    }
+                    if (currentQuestionIndex === 0) { currentRole = selected; updateSecondQuestion(currentRole); }
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         isAnalyzing = true;
                         container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
-                        setTimeout(() => {
-                            const topTwo = window.getTopTwoServices(answers);
-                            quizState = 'choice';
-                            renderResult(topTwo);
-                            isAnalyzing = false;
-                        }, QUIZ_ANALYZE_DELAY);
-                    } else {
-                        currentQuestionIndex++;
-                        renderQuiz();
-                    }
+                        setTimeout(() => { const topTwo = window.getTopTwoServices(answers); quizState = 'choice'; renderResult(topTwo); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
+                    } else { currentQuestionIndex++; renderQuiz(); }
                 };
                 opt.addEventListener('click', opt._handler);
             });
-
             const nextBtn = document.getElementById('quizNextBtn');
             if (nextBtn) {
                 nextBtn.removeEventListener('click', nextBtn._nextHandler);
                 nextBtn._nextHandler = () => {
                     if (isAnalyzing) return;
-                    if (answers[currentQuestionIndex] === null) {
-                        showWarningToast('📌 Выберите вариант ответа, чтобы продолжить');
-                        return;
-                    }
+                    if (answers[currentQuestionIndex] === null) { window.showWarningToast('📌 Выберите вариант ответа, чтобы продолжить'); return; }
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         isAnalyzing = true;
                         container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
-                        setTimeout(() => {
-                            const topTwo = window.getTopTwoServices(answers);
-                            quizState = 'choice';
-                            renderResult(topTwo);
-                            isAnalyzing = false;
-                        }, QUIZ_ANALYZE_DELAY);
-                    } else {
-                        currentQuestionIndex++;
-                        renderQuiz();
-                    }
+                        setTimeout(() => { const topTwo = window.getTopTwoServices(answers); quizState = 'choice'; renderResult(topTwo); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
+                    } else { currentQuestionIndex++; renderQuiz(); }
                 };
                 nextBtn.addEventListener('click', nextBtn._nextHandler);
             }
-
             const prevBtn = document.getElementById('quizPrevBtn');
             if (prevBtn) {
                 prevBtn.removeEventListener('click', prevBtn._prevHandler);
-                prevBtn._prevHandler = () => {
-                    if (currentQuestionIndex > 0) {
-                        currentQuestionIndex--;
-                        renderQuiz();
-                    }
-                };
+                prevBtn._prevHandler = () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuiz(); } };
                 prevBtn.addEventListener('click', prevBtn._prevHandler);
             }
         }
     }
-
     function renderResult(topTwo) {
         const container = document.getElementById('quizContainer');
         if (!container) return;
-
         const displayNameA = topTwo.variantAFormatted || topTwo.variantA;
         const displayNameB = topTwo.variantBFormatted || topTwo.variantB;
         const priceA = topTwo.priceA || getPrice(topTwo.variantA);
         const priceB = topTwo.priceB || getPrice(topTwo.variantB);
         const recommendations = `📌 Рекомендация 1: ${displayNameA} (${priceA})\n🎯 Рекомендация 2: ${displayNameB} (${priceB})`;
-
-        let html = `
-            <p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подобрали оптимальные варианты:</p>
-            <div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;">
-                <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
-                    <div style="font-size:32px; margin-bottom:12px;">📌</div>
-                    <h4>Рекомендация 1</h4>
-                    <p style="font-size:0.85rem; color:#666; margin-bottom:8px;">${window.escapeHtml(displayNameA.split(' — ')[0])}</p>
-                    <p><strong>${window.escapeHtml(displayNameA.split(' — ')[1] || displayNameA)}</strong></p>
-                    <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${window.escapeHtml(priceA)}</p>
-                    <button class="btn-primary choose-option" data-choice="1" data-text="${window.escapeHtml(topTwo.variantA)}" data-price="${window.escapeHtml(priceA)}" data-display="${window.escapeHtml(displayNameA)}">Узнать подробнее →</button>
-                </div>
-                <div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
-                    <div style="font-size:32px; margin-bottom:12px;">🎯</div>
-                    <h4>Рекомендация 2</h4>
-                    <p style="font-size:0.85rem; color:#666; margin-bottom:8px;">${window.escapeHtml(displayNameB.split(' — ')[0])}</p>
-                    <p><strong>${window.escapeHtml(displayNameB.split(' — ')[1] || displayNameB)}</strong></p>
-                    <p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${window.escapeHtml(priceB)}</p>
-                    <button class="btn-primary choose-option" data-choice="2" data-text="${window.escapeHtml(topTwo.variantB)}" data-price="${window.escapeHtml(priceB)}" data-display="${window.escapeHtml(displayNameB)}">Узнать подробнее →</button>
-                </div>
-                <div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;">
-                    <div style="font-size:32px; margin-bottom:12px;">🤔</div>
-                    <h4>Вариант 3</h4>
-                    <p><strong>Не уверены в выборе?</strong></p>
-                    <p style="font-size:0.9rem; margin-bottom:10px;">Позвольте помочь – бесплатная консультация 15 минут.</p>
-                    <button class="btn-secondary choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Помогите выбрать →</button>
-                </div>
-            </div>
-            <div style="text-align:center; margin-top:20px;">
-                <button id="resetQuizBtn" class="btn-secondary">🔁 Пройти заново</button>
-            </div>
-        `;
+        const esc = window.escapeHtml;
+        const categoryA = esc(displayNameA.split(' — ')[0] || '');
+        const nameA = esc(displayNameA.split(' — ')[1] || displayNameA);
+        const categoryB = esc(displayNameB.split(' — ')[0] || '');
+        const nameB = esc(displayNameB.split(' — ')[1] || displayNameB);
+        const priceAEsc = esc(priceA);
+        const priceBEsc = esc(priceB);
+        const varA = esc(topTwo.variantA);
+        const varB = esc(topTwo.variantB);
+        const displayA = esc(displayNameA);
+        const displayB = esc(displayNameB);
+        let html = `<p style="font-weight:600; margin-bottom:20px;">На основе ваших ответов мы подобрали оптимальные варианты:</p><div style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center;"><div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;"><div style="font-size:32px; margin-bottom:12px;">📌</div><h4>Рекомендация 1</h4><p style="font-size:0.85rem; color:#666; margin-bottom:8px;">${categoryA}</p><p><strong>${nameA}</strong></p><p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceAEsc}</p><button class="btn-primary choose-option" data-choice="1" data-text="${varA}" data-price="${priceAEsc}" data-display="${displayA}">Узнать подробнее →</button></div><div style="flex:1; min-width:250px; background:white; border-radius:28px; padding:28px; border:1px solid #e0e0e0;"><div style="font-size:32px; margin-bottom:12px;">🎯</div><h4>Рекомендация 2</h4><p style="font-size:0.85rem; color:#666; margin-bottom:8px;">${categoryB}</p><p><strong>${nameB}</strong></p><p class="service-price" style="color: var(--primary); font-weight: 700; margin: 10px 0;">💰 ${priceBEsc}</p><button class="btn-primary choose-option" data-choice="2" data-text="${varB}" data-price="${priceBEsc}" data-display="${displayB}">Узнать подробнее →</button></div><div style="flex:1; min-width:250px; background:#f8f9fa; border-radius:28px; padding:28px; border:1px solid #e0e0e0;"><div style="font-size:32px; margin-bottom:12px;">🤔</div><h4>Вариант 3</h4><p><strong>Не уверены в выборе?</strong></p><p style="font-size:0.9rem; margin-bottom:10px;">Позвольте помочь – бесплатная консультация 15 минут.</p><button class="btn-secondary choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Помогите выбрать →</button></div></div><div style="text-align:center; margin-top:20px;"><button id="resetQuizBtn" class="btn-secondary">🔁 Пройти заново</button></div>`;
         container.innerHTML = html;
-
         document.querySelectorAll('.choose-option').forEach(btn => {
             btn.removeEventListener('click', btn._choiceHandler);
             btn._choiceHandler = () => {
@@ -6502,27 +5603,20 @@ if (window.IS_DEV) {
                 const variantText = btn.dataset.text;
                 const variantPrice = btn.dataset.price;
                 const displayText = btn.dataset.display || variantText;
-
                 selectedVariantText = displayText;
                 selectedVariantPrice = variantPrice;
                 selectedOriginalText = variantText;
                 selectedOriginalPrice = variantPrice;
-
-                const answersStr = answers.map((a, idx) => {
-                    const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
-                    return `${qText}: ${a || 'не выбран'}`;
-                }).join('\n');
-
+                const answersStr = answers.map((a, idx) => { const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx]; return `${qText}: ${a || 'не выбран'}`; }).join('\n');
                 updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
                 updateSelectionBlock(selectedVariantText, selectedVariantPrice);
                 sendQuizStats(answersStr, recommendations, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
-                showSuccessToast('Выбор сохранён');
+                window.showSuccessToast('Выбор сохранён');
                 showFinalScreen();
                 isSubmittingChoice = false;
             };
             btn.addEventListener('click', btn._choiceHandler);
         });
-
         const helpBtn = document.querySelector('.choose-help');
         if (helpBtn) {
             helpBtn.removeEventListener('click', helpBtn._helpHandler);
@@ -6533,68 +5627,39 @@ if (window.IS_DEV) {
                 selectedVariantPrice = '';
                 selectedOriginalText = 'Помогите выбрать (бесплатная консультация)';
                 selectedOriginalPrice = '';
-
-                const answersStr = answers.map((a, idx) => {
-                    const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
-                    return `${qText}: ${a || 'не выбран'}`;
-                }).join('\n');
-
+                const answersStr = answers.map((a, idx) => { const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx]; return `${qText}: ${a || 'не выбран'}`; }).join('\n');
                 updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
                 updateSelectionBlock(selectedOriginalText, selectedOriginalPrice);
                 sendQuizStats(answersStr, recommendations, '', '', selectedOriginalText, selectedOriginalPrice);
-                showSuccessToast('Спасибо!');
+                window.showSuccessToast('Спасибо!');
                 showFinalScreen();
                 isSubmittingChoice = false;
             };
             helpBtn.addEventListener('click', helpBtn._helpHandler);
         }
-
         const resetBtn = document.getElementById('resetQuizBtn');
         if (resetBtn) {
             resetBtn.removeEventListener('click', resetBtn._resetHandler);
             resetBtn._resetHandler = () => startQuiz();
             resetBtn.addEventListener('click', resetBtn._resetHandler);
         }
-
         function showFinalScreen() {
-            container.innerHTML = `
-                <p style="text-align:center; font-size:1.2rem; margin-bottom:20px;">✨ Спасибо за прохождение квиза! ✨</p>
-                <p style="text-align:center; margin-bottom:20px;">📋 Заполните форму ниже, и я свяжусь с вами.</p>
-                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-                    <button id="goToCallbackBtn" class="btn-primary" style="min-width: 200px;">📝 Перейти к форме заявки</button>
-                    <button id="goToCalculatorBtn" class="btn-secondary" style="min-width: 200px;">🔍 Посмотреть все услуги</button>
-                </div>
-                <div style="text-align:center; margin-top:20px;">
-                    <button id="resetQuizBtnAfter" class="btn-secondary">🔁 Пройти заново</button>
-                </div>
-            `;
-            document.getElementById('goToCallbackBtn')?.addEventListener('click', () => {
-                const target = document.getElementById('callback-form');
-                if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
-            });
-            document.getElementById('goToCalculatorBtn')?.addEventListener('click', () => {
-                const target = document.getElementById('calculator');
-                if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
-            });
+            container.innerHTML = `<p style="text-align:center; font-size:1.2rem; margin-bottom:20px;">✨ Спасибо за прохождение квиза! ✨</p><p style="text-align:center; margin-bottom:20px;">📋 Заполните форму ниже, и я свяжусь с вами.</p><div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;"><button id="goToCallbackBtn" class="btn-primary" style="min-width: 200px;">📝 Перейти к форме заявки</button><button id="goToCalculatorBtn" class="btn-secondary" style="min-width: 200px;">🔍 Посмотреть все услуги</button></div><div style="text-align:center; margin-top:20px;"><button id="resetQuizBtnAfter" class="btn-secondary">🔁 Пройти заново</button></div>`;
+            const goToCallback = document.getElementById('goToCallbackBtn');
+            const goToCalculator = document.getElementById('goToCalculatorBtn');
+            if (goToCallback) goToCallback.addEventListener('click', () => { const target = document.getElementById('callback-form'); if (target && window.smoothScrollTo) window.smoothScrollTo(target); });
+            if (goToCalculator) goToCalculator.addEventListener('click', () => { const target = document.getElementById('calculator'); if (target && window.smoothScrollTo) window.smoothScrollTo(target); });
             document.getElementById('resetQuizBtnAfter')?.addEventListener('click', () => startQuiz());
         }
     }
-
     window.initQuiz = function () {
         startQuiz();
         const removeBtn = document.getElementById('removeQuizSelection');
         if (removeBtn) {
             removeBtn.removeEventListener('click', removeBtn._removeHandler);
-            removeBtn._removeHandler = function () {
-                selectedVariantText = '';
-                selectedVariantPrice = '';
-                updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', '');
-                updateSelectionBlock('', '');
-                showSuccessToast('Выбранный вариант удалён');
-            };
+            removeBtn._removeHandler = function () { selectedVariantText = ''; selectedVariantPrice = ''; updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', ''); updateSelectionBlock('', ''); window.showSuccessToast('Выбранный вариант удалён'); };
             removeBtn.addEventListener('click', removeBtn._removeHandler);
         }
-
         const copyResultBtn = document.getElementById('copyQuizResultBtn');
         if (copyResultBtn) {
             copyResultBtn.removeEventListener('click', copyResultBtn._copyHandler);
@@ -6603,146 +5668,63 @@ if (window.IS_DEV) {
                 const chosenVariantPrice = document.getElementById('chosenVariantPrice')?.value || '';
                 const originalChosenVariant = document.getElementById('originalChosenVariant')?.value || '';
                 const recommendedVariants = document.getElementById('recommendedVariants')?.value || '';
-
-                if (!chosenVariant && !originalChosenVariant) {
-                    window.showWarningToast('📋 Пройдите квиз и выберите вариант, чтобы скопировать рекомендации.');
-                    return;
-                }
-
+                if (!chosenVariant && !originalChosenVariant) { window.showWarningToast('📋 Пройдите квиз и выберите вариант, чтобы скопировать рекомендации.'); return; }
                 let copyText = '🎯 Мои результаты квиза у Виктории Любачевой:\n\n';
-                if (chosenVariant) {
-                    copyText += `✅ Выбранный вариант: ${chosenVariant}`;
-                    if (chosenVariantPrice) copyText += ` (${chosenVariantPrice})`;
-                    copyText += '\n';
-                }
-                if (originalChosenVariant && originalChosenVariant !== chosenVariant) {
-                    copyText += `📌 Исходный выбор: ${originalChosenVariant}\n`;
-                }
-                if (recommendedVariants) {
-                    copyText += `\n📌 Рекомендации эксперта:\n${recommendedVariants}\n`;
-                }
+                if (chosenVariant) { copyText += `✅ Выбранный вариант: ${chosenVariant}`; if (chosenVariantPrice) copyText += ` (${chosenVariantPrice})`; copyText += '\n'; }
+                if (originalChosenVariant && originalChosenVariant !== chosenVariant) copyText += `📌 Исходный выбор: ${originalChosenVariant}\n`;
+                if (recommendedVariants) copyText += `\n📌 Рекомендации эксперта:\n${recommendedVariants}\n`;
                 copyText += `\n🔗 ${window.location.href.split('?')[0]}`;
-
-                navigator.clipboard.writeText(copyText).then(() => {
-                    window.showSuccessToast('✅ Рекомендации скопированы в буфер');
-                }).catch(() => {
-                    window.showErrorToast('❌ Не удалось скопировать');
-                });
+                navigator.clipboard.writeText(copyText).then(() => { window.showSuccessToast('✅ Рекомендации скопированы в буфер'); }).catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
             };
             copyResultBtn.addEventListener('click', copyResultBtn._copyHandler);
         }
     };
 })();
-// ========== ОТПРАВКА МАТЕРИАЛОВ С ПОВТОРНЫМИ ПОПЫТКАМИ И ЗАЩИТОЙ ОТ СПАМА ==========
+// ============================================================
+// 16_email.js – Отправка материалов (чек-лист, программа) на email
+// ============================================================
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 2000;
-
-// Флаги для предотвращения одновременных отправок
 let isSendingMaterials = false;
 let lastSendTime = 0;
-const MIN_INTERVAL_MS = 5000; // 5 секунд между отправками
-
-function isValidEmail(email) {
-    return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email);
-}
-
+const MIN_INTERVAL_MS = 5000;
+function isValidEmail(email) { return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email); }
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
-    // Проверка на одновременную отправку
-    if (isSendingMaterials) {
-        throw new Error('Пожалуйста, подождите, предыдущая отправка ещё не завершена');
-    }
-
-    // Проверка минимального интервала между отправками
+    if (isSendingMaterials) throw new Error('Пожалуйста, подождите, предыдущая отправка ещё не завершена');
     const now = Date.now();
-    if (now - lastSendTime < MIN_INTERVAL_MS) {
-        const secondsLeft = Math.ceil((MIN_INTERVAL_MS - (now - lastSendTime)) / 1000);
-        throw new Error(`Пожалуйста, подождите ${secondsLeft} секунд перед повторной отправкой`);
-    }
-
-    if (!email || !isValidEmail(email)) {
-        throw new Error('Введите корректный email');
-    }
-
+    if (now - lastSendTime < MIN_INTERVAL_MS) { const secondsLeft = Math.ceil((MIN_INTERVAL_MS - (now - lastSendTime)) / 1000); throw new Error(`Пожалуйста, подождите ${secondsLeft} секунд перед повторной отправкой`); }
+    if (!email || !isValidEmail(email)) throw new Error('Введите корректный email');
     const url = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
-    if (!url) {
-        throw new Error('URL скрипта не задан');
-    }
-
-    const formData = {
-        formType: 'Запрос материалов',
-        name: email,
-        comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`,
-        consent: true,
-        userId: window.getOrCreateLocalUserId()
-    };
-
+    if (!url) throw new Error('URL скрипта не задан');
+    const formData = { formType: 'Запрос материалов', name: email, comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`, consent: true, userId: window.getOrCreateLocalUserId() };
     isSendingMaterials = true;
-
-    try {
-        const result = await window.postWithRetry(url, formData, MAX_RETRIES, RETRY_DELAY);
-        lastSendTime = Date.now();
-        return result;
-    } finally {
-        setTimeout(() => {
-            isSendingMaterials = false;
-        }, 1000);
-    }
+    try { const result = await window.postWithRetry(url, formData, MAX_RETRIES, RETRY_DELAY); lastSendTime = Date.now(); return result; } finally { setTimeout(() => { isSendingMaterials = false; }, 1000); }
 }
-
-// Обёртка для вызова из модального окна
 let isSendingEmail = false;
-
 async function sendMaterialsToEmail(email, materialType) {
-    if (isSendingEmail) {
-        window.showErrorToast('⏳ Отправка уже выполняется, подождите...');
-        return false;
-    }
-
-    if (!email || !isValidEmail(email)) {
-        window.showErrorToast('❌ Введите корректный email');
-        return false;
-    }
-
-    let wantChecklist = false;
-    let wantTraining = false;
-
-    if (materialType === 'checklist') {
-        wantChecklist = true;
-    } else if (materialType === 'training') {
-        wantTraining = true;
-    } else if (materialType === 'both') {
-        wantChecklist = true;
-        wantTraining = true;
-    }
-
+    if (isSendingEmail) { window.showErrorToast('⏳ Отправка уже выполняется, подождите...'); return false; }
+    if (!email || !isValidEmail(email)) { window.showErrorToast('❌ Введите корректный email'); return false; }
+    let wantChecklist = false, wantTraining = false;
+    if (materialType === 'checklist') wantChecklist = true;
+    else if (materialType === 'training') wantTraining = true;
+    else if (materialType === 'both') { wantChecklist = true; wantTraining = true; }
     isSendingEmail = true;
-
-    try {
-        await sendMaterialsEmail(email, wantChecklist, wantTraining);
-        window.showSuccessToast('✅ Материалы отправлены! Проверьте почту');
-        return true;
-    } catch (err) {
-        window.showErrorToast('❌ Ошибка: ' + err.message);
-        return false;
-    } finally {
-        setTimeout(() => {
-            isSendingEmail = false;
-        }, 1000);
-    }
+    try { await sendMaterialsEmail(email, wantChecklist, wantTraining); window.showSuccessToast('✅ Материалы отправлены! Проверьте почту'); return true; } catch (err) { window.showErrorToast('❌ Ошибка: ' + err.message); return false; } finally { setTimeout(() => { isSendingEmail = false; }, 1000); }
 }
-
-// Экспорт
 window.sendMaterialsEmail = sendMaterialsEmail;
 window.sendMaterialsToEmail = sendMaterialsToEmail;
 window.isValidEmail = isValidEmail;
+// ============================================================
+// 99_main.js – Главная инициализация: анимации, статистика, активное меню, вызов модулей
+// ============================================================
 (function () {
     'use strict';
-
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MOBILE_BREAKPOINT = C.BREAKPOINT_MOBILE || 768;
     const STATS_ANIMATION_DURATION = C.STATS_ANIMATION_DURATION || 1500;
     const SCROLL_TOP_THRESHOLD = C.SCROLL_TOP_VISIBLE_THRESHOLD || 500;
 
+    // Повторная инициализация анимаций после динамических изменений (например, переключение вкладок)
     function reinitAnimations() {
         const elements = document.querySelectorAll('.fade-up:not(.visible)');
         if (!elements.length) return;
@@ -6760,15 +5742,12 @@ window.isValidEmail = isValidEmail;
         elements.forEach(el => observer.observe(el));
     }
 
+    // Анимация цифр в статистике
     function animateStats() {
         const statNumbers = document.querySelectorAll('.stat-number');
         if (!statNumbers.length) return;
         if (window._statsAnimated) return;
-
-        function formatNumber(num) {
-            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-        }
-
+        function formatNumber(num) { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -6776,64 +5755,56 @@ window.isValidEmail = isValidEmail;
                     const final = parseInt(target.getAttribute('data-target'), 10);
                     const duration = STATS_ANIMATION_DURATION;
                     const startTime = performance.now();
-
                     function update(currentTime) {
                         const elapsed = currentTime - startTime;
                         let progress = Math.min(elapsed / duration, 1);
                         const easeProgress = 1 - Math.pow(1 - progress, 1.5);
                         const current = Math.floor(easeProgress * final);
                         target.innerText = formatNumber(current);
-                        if (progress < 1) {
-                            requestAnimationFrame(update);
-                        } else {
-                            target.innerText = formatNumber(final);
-                        }
+                        if (progress < 1) requestAnimationFrame(update);
+                        else target.innerText = formatNumber(final);
                     }
-
                     requestAnimationFrame(update);
                     observer.unobserve(target);
                     window._statsAnimated = true;
                 }
             });
         }, { threshold: 0.3 });
-
         statNumbers.forEach(el => observer.observe(el));
     }
 
+    // Валидация формы (подсветка полей)
     function initFormValidation() {
         const phoneInput = document.getElementById('callbackPhone');
-        if (phoneInput) {
-            phoneInput.addEventListener('input', function () {
-                const digits = this.value.replace(/\D/g, '');
-                if (digits.length === 11) {
-                    this.style.borderColor = '#28a745';
-                    this.style.boxShadow = '0 0 0 2px rgba(40,167,69,0.2)';
-                } else if (digits.length > 0) {
-                    this.style.borderColor = '#dc3545';
-                    this.style.boxShadow = '0 0 0 2px rgba(220,53,69,0.2)';
-                } else {
-                    this.style.borderColor = 'var(--border)';
-                    this.style.boxShadow = 'none';
-                }
-            });
-        }
+        if (phoneInput) phoneInput.addEventListener('input', function () {
+            const digits = this.value.replace(/\D/g, '');
+            if (digits.length === 11) {
+                this.style.borderColor = '#28a745';
+                this.style.boxShadow = '0 0 0 2px rgba(40,167,69,0.2)';
+            } else if (digits.length > 0) {
+                this.style.borderColor = '#dc3545';
+                this.style.boxShadow = '0 0 0 2px rgba(220,53,69,0.2)';
+            } else {
+                this.style.borderColor = 'var(--border)';
+                this.style.boxShadow = 'none';
+            }
+        });
         const nameInput = document.getElementById('callbackName');
-        if (nameInput) {
-            nameInput.addEventListener('input', function () {
-                if (this.value.length >= 2) {
-                    this.style.borderColor = '#28a745';
-                    this.style.boxShadow = '0 0 0 2px rgba(40,167,69,0.2)';
-                } else if (this.value.length > 0) {
-                    this.style.borderColor = '#dc3545';
-                    this.style.boxShadow = '0 0 0 2px rgba(220,53,69,0.2)';
-                } else {
-                    this.style.borderColor = 'var(--border)';
-                    this.style.boxShadow = 'none';
-                }
-            });
-        }
+        if (nameInput) nameInput.addEventListener('input', function () {
+            if (this.value.length >= 2) {
+                this.style.borderColor = '#28a745';
+                this.style.boxShadow = '0 0 0 2px rgba(40,167,69,0.2)';
+            } else if (this.value.length > 0) {
+                this.style.borderColor = '#dc3545';
+                this.style.boxShadow = '0 0 0 2px rgba(220,53,69,0.2)';
+            } else {
+                this.style.borderColor = 'var(--border)';
+                this.style.boxShadow = 'none';
+            }
+        });
     }
 
+    // Кнопка "Наверх"
     function initScrollTopButton() {
         const btn = document.createElement('button');
         btn.className = 'scroll-top';
@@ -6842,25 +5813,19 @@ window.isValidEmail = isValidEmail;
         document.body.appendChild(btn);
 
         function toggleScrollTop() {
-            if (window.scrollY > SCROLL_TOP_THRESHOLD) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
+            if (window.scrollY > SCROLL_TOP_THRESHOLD) btn.classList.add('visible');
+            else btn.classList.remove('visible');
         }
         window.addEventListener('scroll', toggleScrollTop);
         toggleScrollTop();
 
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            if (typeof window.smoothScrollTo === 'function') {
-                window.smoothScrollTo(0, 900);
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
+    // Модалка для отправки материалов на email
     function initMaterialsEmailButtons() {
         const buttons = document.querySelectorAll('.material-email-simple');
         const modal = document.getElementById('materialsModal');
@@ -6868,9 +5833,7 @@ window.isValidEmail = isValidEmail;
         const sendBtn = document.getElementById('sendMaterialsBtn');
         let currentMaterial = null;
         let isModalSending = false;
-
         if (!modal) return;
-
         buttons.forEach(btn => {
             btn.removeEventListener('click', btn._materialsHandler);
             btn._materialsHandler = () => {
@@ -6885,7 +5848,6 @@ window.isValidEmail = isValidEmail;
             };
             btn.addEventListener('click', btn._materialsHandler);
         });
-
         if (closeBtn) {
             closeBtn.removeEventListener('click', closeBtn._closeHandler);
             closeBtn._closeHandler = () => {
@@ -6900,7 +5862,6 @@ window.isValidEmail = isValidEmail;
             };
             closeBtn.addEventListener('click', closeBtn._closeHandler);
         }
-
         if (sendBtn) {
             sendBtn.removeEventListener('click', sendBtn._sendHandler);
             sendBtn._sendHandler = async () => {
@@ -6910,11 +5871,9 @@ window.isValidEmail = isValidEmail;
                 }
                 const email = document.getElementById('materialsEmail').value;
                 const originalText = sendBtn.innerText;
-
                 isModalSending = true;
                 sendBtn.disabled = true;
                 sendBtn.innerText = '⏳ Отправка...';
-
                 try {
                     const success = await window.sendMaterialsToEmail(email, currentMaterial);
                     if (success) {
@@ -6931,14 +5890,11 @@ window.isValidEmail = isValidEmail;
                 } finally {
                     sendBtn.disabled = false;
                     sendBtn.innerText = originalText;
-                    setTimeout(() => {
-                        isModalSending = false;
-                    }, 500);
+                    setTimeout(() => { isModalSending = false; }, 500);
                 }
             };
             sendBtn.addEventListener('click', sendBtn._sendHandler);
         }
-
         window.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.classList.remove('show');
@@ -6953,12 +5909,11 @@ window.isValidEmail = isValidEmail;
         });
     }
 
-    // ========== АКТИВНОЕ МЕНЮ ПРИ СКРОЛЛЕ ==========
+    // Активное меню при скролле
     function initActiveNav() {
         const sections = document.querySelectorAll('section[id]');
         const navLinks = document.querySelectorAll('.nav-links a');
         if (!sections.length || !navLinks.length) return;
-
         const observer = new IntersectionObserver((entries) => {
             const visibleSections = entries
                 .filter(entry => entry.isIntersecting && entry.intersectionRatio >= 0.25)
@@ -6971,70 +5926,59 @@ window.isValidEmail = isValidEmail;
                 });
             }
         }, { threshold: [0.25, 0.5, 0.75] });
-
         sections.forEach(section => observer.observe(section));
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            document.querySelectorAll('.fade-up').forEach(el => {
-                el.classList.add('visible');
-                el.style.opacity = '1';
-                el.style.transform = 'none';
-            });
-            if (typeof initAnimations === 'function') window.initAnimations = function () {};
+    // Карусель сертификатов (вызов, чтобы не зависеть от автоинициализации)
+    function initCarousel() {
+        if (typeof window.initInfiniteCarousel === 'function') {
+            window.initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
         }
+    }
 
-        if (typeof initAnimations === 'function') initAnimations();
-        animateStats();
-        initActiveNav(); // <-- добавлен вызов активного меню
-
+    document.addEventListener('DOMContentLoaded', function () {
+        // 1. Инициализация модулей (только функции, без авто-вызовов)
         if (typeof initUserId === 'function') initUserId().catch(() => {});
-        if (typeof initCalculator === 'function') initCalculator();
-        if (typeof initQuiz === 'function') initQuiz();
         if (typeof initModal === 'function') initModal();
-        if (typeof initCallbackForm === 'function') initCallbackForm();
-        if (typeof initSmoothScroll === 'function') initSmoothScroll();
         if (typeof initCopyButtons === 'function') initCopyButtons();
-        if (typeof initBurgerMenu === 'function') initBurgerMenu();
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
         if (typeof initCookieConsent === 'function') initCookieConsent();
         if (typeof initShareButtons === 'function') initShareButtons();
         if (typeof window.initPhoneMasks === 'function') window.initPhoneMasks();
+        if (typeof initBurgerMenu === 'function') initBurgerMenu();
+        if (typeof initCallbackForm === 'function') initCallbackForm();
 
+        // 2. Переопределяем калькулятор и квиз с обёртками для анимаций
+        const originalInitCalculator = window.initCalculator;
+        const originalInitQuiz = window.initQuiz;
+
+        window.initCalculator = async function () {
+            await originalInitCalculator();
+            setTimeout(reinitAnimations, 100);
+            setTimeout(animateStats, 150);
+        };
+        window.initQuiz = function () {
+            originalInitQuiz();
+            setTimeout(reinitAnimations, 150);
+            setTimeout(animateStats, 200);
+        };
+
+        // 3. Запускаем их один раз
+        window.initCalculator();
+        window.initQuiz();
+
+        // 4. Остальные инициализации (без animateStats – он будет вызван на load)
+        initActiveNav();
         initFormValidation();
         initScrollTopButton();
         initMaterialsEmailButtons();
+        initCarousel();
 
-        const originalInitCalculator = window.initCalculator;
-        if (originalInitCalculator) {
-            window.initCalculator = async function () {
-                await originalInitCalculator();
-                setTimeout(reinitAnimations, 100);
-                setTimeout(animateStats, 150);
-            };
-        }
-
-        const originalInitQuiz = window.initQuiz;
-        if (originalInitQuiz) {
-            window.initQuiz = function () {
-                originalInitQuiz();
-                setTimeout(reinitAnimations, 150);
-                setTimeout(animateStats, 200);
-            };
-        }
-
-        document.addEventListener('click', function (e) {
-            if (e.target.closest('.tab-btn')) {
-                setTimeout(reinitAnimations, 50);
-                setTimeout(animateStats, 100);
-            }
-        });
-
+        // 5. Дополнительный вызов анимаций для уже видимых элементов (резерв)
         setTimeout(reinitAnimations, 500);
-        setTimeout(animateStats, 600);
     });
 
+    // 6. При полной загрузке страницы – показываем элементы, которые уже видны, и запускаем анимацию статистики
     window.addEventListener('load', function () {
         setTimeout(function () {
             document.querySelectorAll('.fade-up').forEach(el => {
