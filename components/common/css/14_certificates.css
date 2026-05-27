@@ -154,3 +154,158 @@
     #carouselTrackVert .carousel-slide { width: 120px; gap: 16px; }
     #carouselTrackHoriz .carousel-slide { width: 200px; gap: 16px; }
 }
+
+.certificates-section {
+    background: var(--light-bg, #f8f9fa);
+    padding: 60px 0;
+}
+
+.carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 40px 0 20px;
+}
+
+.carousel-viewport {
+    overflow-x: hidden;
+    width: 100%;
+    border-radius: var(--radius-lg, 28px);
+}
+
+.carousel-track {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+}
+
+/* Все слайды имеют одинаковую высоту 260px, ширина автоматическая */
+.carousel-slide {
+    flex: 0 0 auto;
+    width: auto;          /* ширина определяется содержимым */
+    min-width: 140px;     /* чтобы не сжимались слишком сильно */
+    max-width: 260px;     /* максимальная ширина для горизонтальных */
+    height: 260px;        /* фиксированная высота */
+    background: white;
+    border-radius: var(--radius-md, 16px);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-slide:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
+}
+
+/* Изображения заполняют контейнер по высоте, ширина автоматически */
+.carousel-slide img {
+    height: 100%;
+    width: auto;
+    max-width: 100%;
+    object-fit: cover;   /* заполняет высоту, обрезая края по ширине */
+    display: block;
+    background: #eef2f5;
+}
+
+/* Горизонтальные сертификаты: позволяем им быть чуть шире, но не выше */
+.carousel-slide.horizontal {
+    max-width: 360px;
+}
+.carousel-slide.horizontal img {
+    object-fit: contain;  /* для горизонтальных лучше показать полностью */
+    background: #eef2f5;
+}
+
+/* Кнопки навигации */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary, #2D6A9F);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 3;
+}
+.carousel-btn:hover {
+    background: var(--primary, #2D6A9F);
+    color: white;
+    transform: translateY(-50%) scale(1.05);
+}
+.carousel-prev { left: -22px; }
+.carousel-next { right: -22px; }
+
+/* Прогресс-бар */
+.carousel-progress {
+    width: 100%;
+    height: 2px;
+    background: #e2e8f0;
+    border-radius: 2px;
+    margin: 24px 0 20px;
+    overflow: hidden;
+}
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--primary, #2D6A9F);
+    border-radius: 2px;
+    transition: width 0.05s linear;
+}
+
+/* Точки-индикаторы */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #cbd5e0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.dot.active {
+    background: var(--primary, #2D6A9F);
+    width: 24px;
+    border-radius: 6px;
+}
+.dot:hover {
+    background: var(--primary-light, #4A8BC2);
+    transform: scale(1.2);
+}
+
+/* Адаптив */
+@media (max-width: 992px) {
+    .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
+    .carousel-slide.horizontal { max-width: 300px; }
+    .carousel-prev { left: -16px; }
+    .carousel-next { right: -16px; }
+}
+@media (max-width: 768px) {
+    .carousel-slide { min-width: 100px; max-width: 180px; height: 180px; }
+    .carousel-slide.horizontal { max-width: 240px; }
+    .carousel-btn { width: 36px; height: 36px; font-size: 20px; }
+    .carousel-prev { left: -12px; }
+    .carousel-next { right: -12px; }
+}
+@media (max-width: 576px) {
+    .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
+    .carousel-slide.horizontal { max-width: 200px; }
+}

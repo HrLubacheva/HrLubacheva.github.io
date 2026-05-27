@@ -7,14 +7,14 @@
         if (originalSlides.length === 0) return;
         const slideCount = originalSlides.length;
 
-        // Клонирование для бесконечности
+        // Клонируем слайды для бесконечности
         const cloneStart = originalSlides.map(slide => slide.cloneNode(true));
         const cloneEnd = originalSlides.map(slide => slide.cloneNode(true));
         cloneStart.forEach(clone => track.appendChild(clone));
         cloneEnd.forEach(clone => track.insertBefore(clone, track.firstChild));
 
         let allSlides = Array.from(track.children);
-        let currentIndex = slideCount;
+        let currentIndex = slideCount; // начинаем с первого оригинала
         let slideWidth = 0, gap = 0;
         let autoInterval = null, progressInterval = null;
         let isTransitioning = false;
@@ -184,7 +184,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        initInfiniteCarousel('carouselTrackVert', '.carousel-prev-vert', '.carousel-next-vert', 'progressVert', 'dotsVert');
-        initInfiniteCarousel('carouselTrackHoriz', '.carousel-prev-horiz', '.carousel-next-horiz', 'progressHoriz', 'dotsHoriz');
+        initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
     });
 })();
