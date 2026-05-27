@@ -120,30 +120,24 @@
 }
 </script>
 
-    <!-- Безопасность -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <!-- CSP с поддержкой WebSocket для Яндекс.Метрики (добавлены wss://mc.yandex.ru) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru;">
 
-    <!-- Preconnect и preload шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 
-    <!-- DNS Prefetch -->
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
-    <!-- Предзагрузка критических изображений -->
     <link rel="preload" as="image" href="assets/images/01-hero.jpg" imagesrcset="assets/images/01-hero.jpg 480w" imagesizes="(max-width: 768px) 280px, 480px">
 
-    <!-- Минимальный конфиг для аналитики -->
     <script>
         window.APP_CONFIG = window.APP_CONFIG || {};
         Object.assign(window.APP_CONFIG, {
@@ -151,17 +145,13 @@
             GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117'
         });
     </script>
-
-    <!-- Динамическая загрузка счётчиков с улучшенным consent -->
     <script>
         (function () {
             var ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
             var gaId = window.APP_CONFIG.GOOGLE_ANALYTICS_ID;
-
             function loadMetrics() {
                 if (window._metricsLoaded) return;
                 window._metricsLoaded = true;
-
                 if (ymId) {
                     (function (m, e, t, r, i, k, a) {
                         m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
@@ -193,24 +183,14 @@
                     function gtag() { dataLayer.push(arguments); }
                     window.gtag = gtag;
                     gtag('js', new Date());
-                    gtag('consent', 'default', {
-                        ad_storage: 'denied',
-                        analytics_storage: 'denied',
-                        wait_for_update: 500
-                    });
+                    gtag('consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied', wait_for_update: 500 });
                     gtag('config', gaId);
                 }
             }
-
             try {
                 var consent = localStorage.getItem('cookie_consent');
-                if (consent === 'accepted') {
-                    loadMetrics();
-                }
-            } catch(e) {
-                if (window.IS_DEV) console.warn('localStorage недоступен', e);
-            }
-
+                if (consent === 'accepted') loadMetrics();
+            } catch(e) { if (window.IS_DEV) console.warn(e); }
             window.loadMetricsOnConsent = loadMetrics;
         })();
     </script>
@@ -2915,18 +2895,7 @@ a:not(.btn-primary):not(.btn-secondary):hover {
                 <p itemprop="description">Помогаю начинающим найти первую работу и построить стратегию роста и
                     развития</p>
             </li>
-            <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
-                <h4 itemprop="name">📈 Опытный специалист → Ведущий специалист</h4>
-                <p itemprop="description">Разбираюсь где Вас недооценивают.
-                    Ваш опыт уже стоит дороже. Просто он плохо упакован. Исправляю за 3 дня.
-                </p>
-            </li>
-            <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
-                <h4 itemprop="name">🏆 Ведущий специалист → Руководитель</h4>
-                <p itemprop="description">Упаковываю Ваш опыт так, чтобы хэдхантеры Вас сами искали и хотели «купить»
-                    Превращаю «был там-то, делал то-то» в «вот что я приношу деньгами».
-                </p>
-            </li>
+
             <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
                 <h4 itemprop="name">⚡ Системность и скорость</h4>
                 <p itemprop="description">Сокращаю Ваш путь от вакансии до оффера в 2 раза. Влияю на время и качество
@@ -2934,8 +2903,20 @@ a:not(.btn-primary):not(.btn-secondary):hover {
                 </p>
             </li>
             <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
+                <h4 itemprop="name">📈 Опытный специалист → Ведущий специалист</h4>
+                <p itemprop="description">Разбираюсь где Вас недооценивают.
+                    Ваш опыт уже стоит дороже. Просто он плохо упакован. Исправляю за 3 дня.
+                </p>
+            </li>
+            <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
                 <h4 itemprop="name">🎯 Подход без шаблонов</h4>
                 <p itemprop="description">Создаю новое решение именно под Ваш запрос.</p>
+            </li>
+            <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
+                <h4 itemprop="name">🏆 Ведущий специалист → Руководитель</h4>
+                <p itemprop="description">Упаковываю Ваш опыт так, чтобы хэдхантеры Вас сами искали и хотели «купить»
+                    Превращаю «был там-то, делал то-то» в «вот что я приношу деньгами».
+                </p>
             </li>
             <li class="benefit-card fade-up" role="listitem" itemscope itemtype="https://schema.org/Claim">
                 <h4 itemprop="name">⏱️ Работа на результат</h4>
@@ -3852,7 +3833,7 @@ a:not(.btn-primary):not(.btn-secondary):hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 28.05.2026 00:15:42
+                Версия: 28.05.2026 00:19:26
             </div>
         </div>
     </div>
@@ -3889,20 +3870,13 @@ a:not(.btn-primary):not(.btn-secondary):hover {
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    // URL Google Apps Script для отправки форм
     SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwHRGiHJGn0xxnvW8VnMKWYCaALuRjy9W1wpPhyYlNBw4ztskHjpcOf0JcaogZ45uC75Q/exec',
-
-    // Контакты
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
     PHONE: '+79217916655',
-
-    // ID счётчиков аналитики
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
-
-    // Константы – всё в одном месте для удобства
     CONSTANTS: {
         TOAST_DURATION: 3000,
         TOAST_FADE_DURATION: 300,
@@ -3936,21 +3910,9 @@ window.APP_CONFIG = {
         LOCALSTORAGE_GEO_KEY: 'hr_geo',
         LOCALSTORAGE_USER_ID_KEY: 'hr_user_id',
         DEFAULT_QUANTITY: 1,
-
-        // ========== УРОВНИ ДЕТАЛИЗАЦИИ ЛОГОВ ==========
-        // 0 - НИЧЕГО (логи отключены)
-        // 1 - МИНИМУМ (только критические ошибки)
-        // 2 - СРЕДНЯЯ (ошибки + предупреждения)
-        // 3 - ВАЖНО (ошибки + предупреждения + основные этапы инициализации)
-        // 4 - КРИТИЧЕСКИ ВАЖНО (всё, кроме отладочных сообщений)
-        // 5 - ДЕТАЛЬНО (включая отладочные сообщения)
-        // 6 - ДЕТАЛЬНО ПОШАГОВО (каждый вызов функции, каждое событие)
-        // 7 - ПРЯМ КАЖДОЕ ВЗАИМОДЕЙСТВИЕ (включая клики, скроллы, ввод текста)
-        LOG_LEVEL: 0,   // по умолчанию 0 (ничего), но при debug=1 будет установлен в 5
+        LOG_LEVEL: 5,
         FORCE_SEND_LOGS_TO_SERVER: false,
     },
-
-    // ID секций для якорных ссылок
     SECTION_IDS: {
         home: 'home',
         roles: 'roles',
@@ -3968,7 +3930,6 @@ window.APP_CONFIG = {
 // 01_core.js – Ядро: утилиты, тосты, fetch, валидация, отправка форм, гео, UTM и т.д.
 // ============================================================
 
-// ---------- Безопасное экранирование HTML ----------
 function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -3979,7 +3940,6 @@ function escapeHtml(str) {
     });
 }
 
-// ---------- Режим разработки ----------
 const IS_DEV = window.location.hostname === 'localhost' ||
                window.location.hostname === '127.0.0.1' ||
                window.location.search.includes('debug=true');
@@ -3988,7 +3948,6 @@ function logError(...args) { console.error(...args); }
 function logWarn(...args) { if (IS_DEV) console.warn(...args); }
 window.IS_DEV = IS_DEV;
 
-// Включение/отключение логов
 window.enableLogs = function() {
     if (typeof originalConsoleLog === 'undefined') return;
     console.log = originalConsoleLog;
@@ -4001,7 +3960,6 @@ window.disableLogs = function() {
     showToast('🔇 Логи отключены', 'success');
 };
 
-// ---------- Пользовательский ID (localStorage) ----------
 function getOrCreateLocalUserId() {
     const key = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_USER_ID_KEY || 'hr_user_id';
     try {
@@ -4024,7 +3982,6 @@ function initUserId() {
     return Promise.resolve(currentUserId);
 }
 
-// ---------- Fetch с повторными попытками ----------
 async function fetchWithRetry(url, options = {}, retries = null, timeout = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const timeoutMs = timeout !== null ? timeout : (window.APP_CONFIG?.CONSTANTS?.FETCH_TIMEOUT || 10000);
@@ -4059,17 +4016,14 @@ async function loadWithCache(cacheKey, fetchFn, ttl = null) {
             try {
                 const { data, timestamp } = JSON.parse(cached);
                 if (Date.now() - timestamp < cacheTtl) return data;
-            } catch(e) { if (IS_DEV) console.warn('Ошибка парсинга кэша', e); }
+            } catch(e) { if (IS_DEV) console.warn(e); }
         }
-    } catch(e) { if (IS_DEV) console.warn('Ошибка чтения localStorage', e); }
+    } catch(e) {}
     const data = await fetchFn();
-    try {
-        localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
-    } catch(e) { if (IS_DEV) console.warn('Ошибка записи в localStorage', e); }
+    try { localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() })); } catch(e) {}
     return data;
 }
 
-// ---------- Индикатор загрузки ----------
 let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
 function showLoading(message = 'Загрузка...') {
     if (isLoadingActive) return;
@@ -4101,9 +4055,7 @@ function showLoading(message = 'Загрузка...') {
                 border-radius: 50%;
                 animation: loading-spin 0.8s linear infinite;
             }
-            @keyframes loading-spin {
-                to { transform: rotate(360deg); }
-            }
+            @keyframes loading-spin { to { transform: rotate(360deg); } }
         `;
         document.head.appendChild(style);
         loadingStylesAdded = true;
@@ -4119,7 +4071,6 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
-// ---------- Toast-уведомления ----------
 function showToast(message, type = 'error') {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -4133,16 +4084,12 @@ function showToast(message, type = 'error') {
     toast.setAttribute('role', 'status');
     toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
     document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-    }, window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000);
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000);
 }
 function showErrorToast(message) { showToast(message, 'error'); }
 function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
-// ---------- POST с повторными попытками ----------
 window.postWithRetry = async function(url, data, retries = null, baseDelay = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
@@ -4169,7 +4116,6 @@ window.postWithRetry = async function(url, data, retries = null, baseDelay = nul
     throw lastError;
 };
 
-// ---------- Телефон: нормализация, валидация, маска ----------
 function normalizePhoneDigits(phone) {
     let digits = phone.replace(/\D/g, '');
     if (digits.length === 0) return '';
@@ -4287,7 +4233,6 @@ function initPhoneMasks() {
     phoneInputs.forEach(input => { if (input) applyPhoneMask(input); });
 }
 
-// ---------- Отправка данных в Google Sheets ----------
 async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
@@ -4304,7 +4249,6 @@ function sendDataToSheet(data) {
 window.sendDataToSheet = sendDataToSheet;
 window.sendDataToSheetWithRetry = sendDataToSheetWithRetry;
 
-// ---------- Форматирование телефона ----------
 function formatPhoneNumber(input) {
     let digits = input.replace(/\D/g, '');
     if (digits.startsWith('8')) digits = '7' + digits.slice(1);
@@ -4321,7 +4265,6 @@ function formatPhoneNumber(input) {
     return formatted;
 }
 
-// ---------- Время на сайте ----------
 window.sessionStartTime = Date.now();
 function getTimeOnSite() {
     if (!window.sessionStartTime) return '-';
@@ -4333,7 +4276,6 @@ function getTimeOnSite() {
 }
 window.getTimeOnSite = getTimeOnSite;
 
-// ---------- Статистика визитов (localStorage) ----------
 function getVisitStats() {
     const now = new Date();
     const oneDay = 24 * 60 * 60 * 1000;
@@ -4348,9 +4290,9 @@ function getVisitStats() {
                 visits = JSON.parse(stored);
                 const monthAgo = now.getTime() - oneMonth;
                 visits = visits.filter(v => v > monthAgo);
-            } catch(e) { if (IS_DEV) console.warn('Ошибка парсинга visits', e); visits = []; }
+            } catch(e) { if (IS_DEV) console.warn(e); visits = []; }
         }
-    } catch(e) { if (IS_DEV) console.warn('Ошибка чтения localStorage', e); }
+    } catch(e) {}
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
     if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
     try { localStorage.setItem(visitsKey, JSON.stringify(visits)); } catch(e) {}
@@ -4365,7 +4307,6 @@ function getVisitStatsText() {
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
 
-// ---------- UTM-метки ----------
 function getUTMParams() {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -4383,7 +4324,6 @@ function getUTMText() {
 }
 window.getUTMText = getUTMText;
 
-// ---------- Информация об устройстве ----------
 function getDeviceInfo() {
     const ua = navigator.userAgent;
     const isMobile = /Mobile|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(ua);
@@ -4412,7 +4352,6 @@ function getDeviceText() {
 }
 window.getDeviceText = getDeviceText;
 
-// ---------- Информация о странице ----------
 function getPageInfo() {
     return {
         page: window.location.pathname + window.location.search,
@@ -4427,7 +4366,6 @@ function getPageText() {
 }
 window.getPageText = getPageText;
 
-// ---------- Геолокация (через ipapi.co) ----------
 async function getGeoData() {
     const geoKey = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_GEO_KEY || 'hr_geo';
     const apiUrl = window.APP_CONFIG?.CONSTANTS?.GEO_API_URL || 'https://ipapi.co/json/';
@@ -4455,13 +4393,12 @@ async function getGeoData() {
         try { localStorage.setItem(geoKey, JSON.stringify(result)); } catch(e) {}
         return result;
     } catch(e) {
-        if (IS_DEV) console.warn('Ошибка получения геоданных:', e);
+        if (IS_DEV) console.warn(e);
         return { ip: '-', city: '-', region: '-', country: '-', geoText: '-' };
     }
 }
 window.getGeoData = getGeoData;
 
-// ---------- Единая отправка форм ----------
 window.submitForm = async function(formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
     if (!form) return false;
@@ -4535,7 +4472,6 @@ window.getQuizDataFromForm = function(form) {
     };
 };
 
-// ---------- Кнопки поделиться ----------
 function initShareButtons() {
     const shareButtons = document.querySelectorAll('#shareButtonContacts, .floating-share-btn button');
     const getSiteShareText = () => {
@@ -4554,12 +4490,10 @@ function initShareButtons() {
     });
 }
 
-// ========== НОВОЕ: ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ С УРОВНЯМИ ==========
+// ========== ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ С УРОВНЯМИ ==========
 window.initLogs = [];
 
-// Определяем уровень детализации
 let currentLogLevel = window.APP_CONFIG?.CONSTANTS?.LOG_LEVEL || 0;
-// Если debug=1 или localStorage, повышаем до 5 минимум
 if (window.location.search.includes('debug=1') || localStorage.getItem('hr_debug_mode') === 'true') {
     currentLogLevel = Math.max(currentLogLevel, 5);
 }
@@ -4571,11 +4505,9 @@ if (!isNaN(urlLogLevel) && urlLogLevel >= 0 && urlLogLevel <= 7) {
 window.currentLogLevel = currentLogLevel;
 
 function logInit(message, level = 'INFO', context = '', requiredLevel = 3) {
-    // requiredLevel – минимальный уровень детализации, при котором это сообщение должно выводиться
     const timestamp = new Date().toISOString();
     const logEntry = { timestamp, level, message, context, url: window.location.href, requiredLevel };
     window.initLogs.push(logEntry);
-
     const isDebug = currentLogLevel >= requiredLevel;
     if (isDebug) {
         let style = '';
@@ -4586,14 +4518,11 @@ function logInit(message, level = 'INFO', context = '', requiredLevel = 3) {
         else style = 'color:green';
         console.log(`%c[${timestamp}] [${level}] ${message} ${context ? '('+context+')' : ''}`, style);
     }
-
-    // Отправляем на сервер при уровне ERROR/WARN или если debug=1 и requiredLevel <= currentLogLevel
     const forceSend = window.APP_CONFIG?.CONSTANTS?.FORCE_SEND_LOGS_TO_SERVER || false;
     if (level === 'ERROR' || level === 'WARN' || (window.location.search.includes('debug=1') && currentLogLevel >= requiredLevel) || forceSend) {
         sendInitLog(logEntry);
     }
 }
-
 function sendInitLog(logEntry) {
     const url = window.APP_CONFIG?.SCRIPT_URL;
     if (!url) return;
@@ -4607,8 +4536,6 @@ function sendInitLog(logEntry) {
     formData.append('userAgent', navigator.userAgent);
     navigator.sendBeacon(url, formData);
 }
-
-// Перехват необработанных ошибок
 const originalErrorHandler = window.onerror;
 window.onerror = function(message, source, lineno, colno, error) {
     logInit(`Uncaught error: ${message} at ${source}:${lineno}:${colno}`, 'ERROR', error?.stack, 1);
@@ -4620,7 +4547,6 @@ window.onunhandledrejection = function(event) {
     if (originalUnhandledRejection) originalUnhandledRejection(event);
 };
 
-// ---------- Экспорт глобальных функций ----------
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
@@ -4649,9 +4575,6 @@ window.initShareButtons = initShareButtons;
 window.applyPhoneMask = applyPhoneMask;
 window.initPhoneMasks = initPhoneMasks;
 window.logInit = logInit;
-// ============================================================
-// 02_animations.js – Плавное появление элементов при скролле
-// ============================================================
 function initAnimations() {
     logInit('initAnimations started', 'INFO', '', 3);
     const elements = document.querySelectorAll('.fade-up');
@@ -4670,24 +4593,17 @@ function initAnimations() {
                 logInit(`Элемент .fade-up стал видимым`, 'DEBUG', '', 5);
             }
         });
-    }, {
-        threshold: 0.1,
-        rootMargin: isMobile ? '0px 0px -30px 0px' : '0px 0px -80px 0px'
-    });
+    }, { threshold: 0.1, rootMargin: isMobile ? '0px 0px -30px 0px' : '0px 0px -80px 0px' });
     elements.forEach(el => observer.observe(el));
     logInit('initAnimations finished', 'INFO', '', 3);
 }
 window.initAnimations = initAnimations;
-// ============================================================
-// 03_forms.js – Формы обратной связи и копирование корзины
-// ============================================================
 function initCallbackForm() {
     logInit('initCallbackForm started', 'INFO', '', 3);
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
     const FORM_MESSAGE_HIDE_DELAY = C.FORM_MESSAGE_HIDE_DELAY || 5000;
 
-    // ----- Форма обратного звонка -----
     const callbackForm = document.getElementById('callbackForm');
     const callbackMessages = document.getElementById('callbackFormMessages');
     if (callbackForm && callbackMessages) {
@@ -4742,7 +4658,6 @@ function initCallbackForm() {
         });
     }
 
-    // ----- Форма быстрого заказа (в калькуляторе) -----
     const quickForm = document.getElementById('quickOrderForm');
     const quickMessages = document.getElementById('quickFormMessages');
     if (quickForm && quickMessages) {
@@ -4788,7 +4703,6 @@ function initCallbackForm() {
         });
     }
 
-    // ----- Копирование корзины -----
     const copyCartBtn = document.getElementById('copyCartBtn');
     if (copyCartBtn) {
         copyCartBtn.addEventListener('click', () => {
