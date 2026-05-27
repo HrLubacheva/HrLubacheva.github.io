@@ -119,3 +119,8 @@
     .benefit-card h4 { font-size: 1.3rem; }
     .benefit-card p { font-size: 0.95rem; }
 }
+
+.benefit-card:active {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.25);
+}

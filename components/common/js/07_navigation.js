@@ -18,5 +18,26 @@ function initBurgerMenu() {
     logInit('initBurgerMenu finished', 'INFO', '', 3);
 }
 function initNavigation() { initBurgerMenu(); }
+
+function toggleMenu() {
+    if (navBottom.classList.contains('open')) {
+        closeMenu();
+    } else {
+        openMenu();
+    }
+}
+function openMenu() {
+    burger.classList.add('active');
+    navBottom.classList.add('open');
+    body.classList.add('menu-open');
+    burger.setAttribute('aria-expanded', 'true');
+}
+function closeMenu() {
+    burger.classList.remove('active');
+    navBottom.classList.remove('open');
+    body.classList.remove('menu-open');
+    burger.setAttribute('aria-expanded', 'false');
+}
+
 window.initBurgerMenu = initBurgerMenu;
 window.initNavigation = initNavigation;

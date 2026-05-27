@@ -18,10 +18,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 
-    <!-- Оптимизированные dns-prefetch (только самые необходимые) -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
     <link rel="preload" as="image" href="assets/images/01-hero.jpg">
 
@@ -54,7 +54,8 @@
                     var div = document.createElement('div');
                     var img = document.createElement('img');
                     img.src = 'https://mc.yandex.ru/watch/' + ymId;
-                    img.className = 'visually-hidden-image';
+                    img.style.position = 'absolute';
+                    img.style.left = '-9999px';
                     img.alt = '';
                     div.appendChild(img);
                     noscript.appendChild(div);

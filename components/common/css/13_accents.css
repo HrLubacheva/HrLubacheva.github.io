@@ -41,3 +41,13 @@ a:not(.btn-primary):not(.btn-secondary):hover {
     font-weight: 700;
     color: var(--primary-dark);
 }
+
+.quiz-link:focus-visible,
+.hero-tv-badge:focus-visible,
+.role-card:focus-visible,
+.service-card:focus-visible,
+.benefit-card:focus-visible,
+.process-card:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}

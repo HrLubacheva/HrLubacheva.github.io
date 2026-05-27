@@ -89,6 +89,11 @@
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
+.hero-tv-badge:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 2px;
+    border-radius: 60px;
+}
 
 @media (min-width: 1024px) {
     .hero-image img {

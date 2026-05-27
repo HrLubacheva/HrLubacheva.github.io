@@ -39,6 +39,10 @@
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
 }
+.role-card:active, .service-card:active {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
 .role-card p, .service-card p {
     color: var(--text-dark);
     margin-top: 12px;
@@ -59,4 +63,11 @@
     left: 0;
     color: var(--primary);
     font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .role-card:active,
+    .service-card:active {
+        transform: translateY(-2px);
+    }
 }

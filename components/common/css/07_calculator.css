@@ -6,6 +6,7 @@
     background: var(--light-bg, #f8f9fa);
 }
 .quiz-card {
+    max-width: 900px;
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
     padding: 40px;
@@ -272,4 +273,9 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 15px;
+}
+
+.add-service-btn:active,
+.tab-btn:active {
+    transform: translateY(0px);
 }

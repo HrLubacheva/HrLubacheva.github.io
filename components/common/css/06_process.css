@@ -113,9 +113,15 @@
     .process-photos { gap: 12px; }
     .process-photo-item:first-child,
     .process-photo-item:last-child { min-width: 120px; }
-    @media (max-width: 480px) {
-        .process-photos { gap: 8px; }
-        .process-photo-item:first-child,
-        .process-photo-item:last-child { min-width: 100px; }
-    }
+}
+
+@media (max-width: 480px) {
+    .process-photos { gap: 8px; }
+    .process-photo-item:first-child,
+    .process-photo-item:last-child { min-width: 100px; }
+}
+
+.process-card:active {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
 }
