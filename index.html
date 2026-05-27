@@ -353,7 +353,7 @@ body {
     width: 100%;
 }
 /* ==================================================================
-   НАВИГАЦИЯ
+   НАВИГАЦИЯ (адаптивная, с бургер-меню)
    ================================================================== */
 .navbar {
     background: white;
@@ -363,13 +363,16 @@ body {
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
 }
+
 .nav-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
     flex-wrap: wrap;
+    gap: 15px;
 }
+
 .logo {
     display: flex;
     align-items: center;
@@ -378,12 +381,14 @@ body {
     font-size: 1.5rem;
     font-weight: 800;
     color: var(--primary);
+    white-space: nowrap;
 }
 .logo-sub {
     font-weight: 400;
     font-size: 0.9rem;
     color: var(--secondary);
 }
+
 .social-icons {
     display: flex;
     gap: 15px;
@@ -408,12 +413,15 @@ body {
     stroke-width: 1.8;
     fill: none;
 }
+
+/* Бургер-кнопка */
 .burger-menu {
     display: none;
     background: none;
     border: none;
     cursor: pointer;
     padding: 10px;
+    z-index: 1001;
 }
 .burger-menu span {
     display: block;
@@ -423,6 +431,17 @@ body {
     margin: 5px 0;
     transition: 0.2s;
 }
+.burger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.burger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+.burger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Нижнее меню (десктоп) */
 .nav-bottom {
     background: var(--light-bg);
     border-radius: 50px;
@@ -444,34 +463,65 @@ body {
 .nav-links a:hover {
     color: var(--primary);
 }
+
+/* Мобильная версия (≤768px) */
 @media (max-width: 768px) {
     .burger-menu {
         display: block;
     }
     .nav-bottom {
-        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         background: white;
         border-radius: 0;
-        padding: 20px;
+        padding: 80px 20px 30px;
         margin: 0;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 999;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        box-shadow: none;
     }
     .nav-bottom.open {
-        display: block;
+        transform: translateX(0);
     }
     .nav-links {
         flex-direction: column;
         align-items: center;
-        gap: 15px;
+        gap: 20px;
+    }
+    .nav-links a {
+        font-size: 1.2rem;
+        padding: 8px 0;
     }
     body.menu-open {
         overflow: hidden;
     }
+    /* Корректировка логотипа и иконок на маленьких экранах */
+    .nav-top {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+    }
+    .logo {
+        font-size: 1.2rem;
+    }
+    .logo-sub {
+        font-size: 0.75rem;
+    }
 }
-.nav-links a.active {
-    color: var(--primary);
-    font-weight: 700;
-    border-bottom: 2px solid var(--primary);
-    padding-bottom: 4px;
+
+@media (max-width: 480px) {
+    .social-icons svg {
+        width: 20px;
+        height: 20px;
+    }
+    .logo {
+        font-size: 1rem;
+    }
 }
 /* ==================================================================
    HERO СЕКЦИЯ
@@ -1017,6 +1067,15 @@ body {
     .process-photo-item:last-child {
         min-width: 100px;
     }
+}
+
+.process-photo-item img {
+    width: 100%;
+    height: auto;
+    max-height: 760px;          /* ограничиваем высоту */
+    object-fit: contain;        /* вписываем без обрезки */
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 /* ==================================================================
    КАЛЬКУЛЯТОР
@@ -2491,163 +2550,6 @@ section[id] {
     padding: 60px 0;
 }
 
-.carousel-group {
-    margin-bottom: 60px;
-}
-.carousel-group-title {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: var(--primary-dark);
-    margin-bottom: 20px;
-    padding-left: 8px;
-    border-left: 4px solid var(--primary);
-}
-
-.carousel-wrapper {
-    position: relative;
-    display: flex;
-    align-items: center;
-    margin: 20px 0;
-}
-
-.carousel-viewport {
-    overflow-x: hidden;
-    width: 100%;
-    border-radius: var(--radius-lg, 28px);
-}
-
-.carousel-track {
-    display: flex;
-    gap: 24px;
-    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    will-change: transform;
-}
-
-/* Вертикальные слайды */
-#carouselTrackVert .carousel-slide {
-    flex: 0 0 auto;
-    width: 180px;
-    background: white;
-    border-radius: var(--radius-md, 16px);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-/* Горизонтальные слайды шире */
-#carouselTrackHoriz .carousel-slide {
-    flex: 0 0 auto;
-    width: 280px;
-    background: white;
-    border-radius: var(--radius-md, 16px);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-.carousel-slide:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
-}
-.carousel-slide img {
-    width: 100%;
-    height: auto;
-    display: block;
-    background: #eef2f5;
-}
-
-/* Кнопки */
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: white;
-    border: none;
-    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
-    cursor: pointer;
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary, #2D6A9F);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    z-index: 3;
-}
-.carousel-btn:hover {
-    background: var(--primary, #2D6A9F);
-    color: white;
-    transform: translateY(-50%) scale(1.05);
-}
-.carousel-prev-vert, .carousel-prev-horiz { left: -22px; }
-.carousel-next-vert, .carousel-next-horiz { right: -22px; }
-
-/* Прогресс-бар */
-.carousel-progress {
-    width: 100%;
-    height: 2px;
-    background: #e2e8f0;
-    border-radius: 2px;
-    margin: 16px 0 12px;
-    overflow: hidden;
-}
-.progress-bar {
-    width: 0%;
-    height: 100%;
-    background: var(--primary, #2D6A9F);
-    border-radius: 2px;
-    transition: width 0.05s linear;
-}
-
-/* Точки */
-.carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #cbd5e0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.dot.active {
-    background: var(--primary, #2D6A9F);
-    width: 24px;
-    border-radius: 6px;
-}
-.dot:hover {
-    background: var(--primary-light, #4A8BC2);
-    transform: scale(1.2);
-}
-
-/* Адаптив */
-@media (max-width: 992px) {
-    #carouselTrackVert .carousel-slide { width: 160px; }
-    #carouselTrackHoriz .carousel-slide { width: 240px; }
-    .carousel-prev-vert, .carousel-prev-horiz { left: -16px; }
-    .carousel-next-vert, .carousel-next-horiz { right: -16px; }
-}
-@media (max-width: 768px) {
-    #carouselTrackVert .carousel-slide { width: 140px; gap: 20px; }
-    #carouselTrackHoriz .carousel-slide { width: 220px; gap: 20px; }
-    .carousel-btn { width: 36px; height: 36px; font-size: 20px; }
-    .carousel-prev-vert, .carousel-prev-horiz { left: -12px; }
-    .carousel-next-vert, .carousel-next-horiz { right: -12px; }
-}
-@media (max-width: 576px) {
-    #carouselTrackVert .carousel-slide { width: 120px; gap: 16px; }
-    #carouselTrackHoriz .carousel-slide { width: 200px; gap: 16px; }
-}
-
-.certificates-section {
-    background: var(--light-bg, #f8f9fa);
-    padding: 60px 0;
-}
-
 .carousel-wrapper {
     position: relative;
     display: flex;
@@ -2671,10 +2573,10 @@ section[id] {
 /* Все слайды имеют одинаковую высоту 260px, ширина автоматическая */
 .carousel-slide {
     flex: 0 0 auto;
-    width: auto;          /* ширина определяется содержимым */
-    min-width: 140px;     /* чтобы не сжимались слишком сильно */
-    max-width: 260px;     /* максимальная ширина для горизонтальных */
-    height: 260px;        /* фиксированная высота */
+    width: auto;
+    min-width: 140px;
+    max-width: 260px;
+    height: 260px;
     background: white;
     border-radius: var(--radius-md, 16px);
     overflow: hidden;
@@ -2690,12 +2592,11 @@ section[id] {
     box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
 }
 
-/* Изображения заполняют контейнер по высоте, ширина автоматически */
 .carousel-slide img {
     height: 100%;
     width: auto;
     max-width: 100%;
-    object-fit: cover;   /* заполняет высоту, обрезая края по ширине */
+    object-fit: cover;
     display: block;
     background: #eef2f5;
 }
@@ -2705,7 +2606,7 @@ section[id] {
     max-width: 360px;
 }
 .carousel-slide.horizontal img {
-    object-fit: contain;  /* для горизонтальных лучше показать полностью */
+    object-fit: contain;
     background: #eef2f5;
 }
 
@@ -2806,7 +2707,6 @@ section[id] {
     <div class="container">
         <div class="nav-top">
             <a href="#home" class="logo">
-                <div class="logo-triangle"></div>
                 <span>HR <span class="logo-sub">HrLubacheva</span></span>
             </a>
             <button class="burger-menu" id="burgerMenu" aria-label="Меню" aria-expanded="false">
@@ -2940,7 +2840,6 @@ section[id] {
 <section id="certificates" class="section certificates-section fade-up">
     <div class="container">
         <h2 class="section-title">📜 Мои сертификаты и дипломы</h2>
-        <p class="section-subtitle"></p>
 
         <div class="carousel-wrapper">
             <button class="carousel-btn carousel-prev" aria-label="Назад">❮</button>
@@ -4057,7 +3956,7 @@ section[id] {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 27.05.2026 19:59:42
+                Версия: 27.05.2026 20:12:30
             </div>
         </div>
     </div>
@@ -5109,6 +5008,195 @@ function initFormEnterSubmit() {
 
 window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
+(function() {
+    function initInfiniteCarousel(trackId, prevBtnClass, nextBtnClass, progressId, dotsId) {
+        const track = document.getElementById(trackId);
+        if (!track) return;
+
+        let originalSlides = Array.from(track.children);
+        if (originalSlides.length === 0) return;
+        const slideCount = originalSlides.length;
+
+        // Клонируем слайды для бесконечности
+        const cloneStart = originalSlides.map(slide => slide.cloneNode(true));
+        const cloneEnd = originalSlides.map(slide => slide.cloneNode(true));
+        cloneStart.forEach(clone => track.appendChild(clone));
+        cloneEnd.forEach(clone => track.insertBefore(clone, track.firstChild));
+
+        let allSlides = Array.from(track.children);
+        let currentIndex = slideCount; // начинаем с первого оригинала
+        let slideWidth = 0, gap = 0;
+        let autoInterval = null, progressInterval = null;
+        let isTransitioning = false;
+        const autoDelay = 5000;
+
+        const prevBtn = document.querySelector(prevBtnClass);
+        const nextBtn = document.querySelector(nextBtnClass);
+        const progressBar = document.getElementById(progressId);
+        const dotsContainer = document.getElementById(dotsId);
+
+        function updateDimensionsAndPosition() {
+            if (!allSlides.length) return;
+            slideWidth = allSlides[0].offsetWidth;
+            const trackStyle = getComputedStyle(track);
+            gap = parseFloat(trackStyle.gap) || 24;
+            disableTransition();
+            updateCarousel(true);
+            enableTransition();
+        }
+
+        function updateCarousel(instant = false) {
+            const shift = -currentIndex * (slideWidth + gap);
+            if (instant) {
+                track.style.transition = 'none';
+                track.style.transform = `translateX(${shift}px)`;
+                track.offsetHeight;
+                track.style.transition = '';
+            } else {
+                track.style.transform = `translateX(${shift}px)`;
+            }
+            updateDots();
+            resetProgressBar();
+        }
+
+        function disableTransition() { track.style.transition = 'none'; }
+        function enableTransition() { track.style.transition = ''; }
+
+        function nextSlide() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            currentIndex++;
+            updateCarousel();
+
+            if (currentIndex >= slideCount * 2) {
+                setTimeout(() => {
+                    disableTransition();
+                    currentIndex = slideCount;
+                    updateCarousel(true);
+                    enableTransition();
+                    setTimeout(() => { isTransitioning = false; }, 50);
+                }, 250);
+            } else {
+                setTimeout(() => { isTransitioning = false; }, 250);
+            }
+            startProgressAnimation();
+        }
+
+        function prevSlide() {
+            if (isTransitioning) return;
+            isTransitioning = true;
+            currentIndex--;
+            updateCarousel();
+
+            if (currentIndex < slideCount) {
+                setTimeout(() => {
+                    disableTransition();
+                    currentIndex = slideCount * 2 - 1;
+                    updateCarousel(true);
+                    enableTransition();
+                    setTimeout(() => { isTransitioning = false; }, 50);
+                }, 250);
+            } else {
+                setTimeout(() => { isTransitioning = false; }, 250);
+            }
+            startProgressAnimation();
+        }
+
+        function updateDots() {
+            if (!dotsContainer) return;
+            const dots = dotsContainer.querySelectorAll('.dot');
+            let originalIndex = currentIndex % slideCount;
+            if (originalIndex < 0) originalIndex += slideCount;
+            dots.forEach((dot, idx) => dot.classList.toggle('active', idx === originalIndex));
+        }
+
+        function createDots() {
+            if (!dotsContainer) return;
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < slideCount; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (i === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => {
+                    if (isTransitioning) return;
+                    stopAutoScroll();
+                    currentIndex = slideCount + i;
+                    updateCarousel();
+                    startAutoScroll();
+                });
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        function resetProgressBar() { if (progressBar) progressBar.style.width = '0%'; }
+        function startProgressAnimation() {
+            if (!progressBar) return;
+            resetProgressBar();
+            let startTime = null;
+            function animateProgress(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+                const percent = Math.min((elapsed / autoDelay) * 100, 100);
+                progressBar.style.width = `${percent}%`;
+                if (elapsed < autoDelay) {
+                    progressInterval = requestAnimationFrame(animateProgress);
+                } else {
+                    progressBar.style.width = '100%';
+                    cancelProgressAnimation();
+                }
+            }
+            cancelProgressAnimation();
+            progressInterval = requestAnimationFrame(animateProgress);
+        }
+        function cancelProgressAnimation() {
+            if (progressInterval) { cancelAnimationFrame(progressInterval); progressInterval = null; }
+        }
+
+        function startAutoScroll() {
+            if (autoInterval) clearInterval(autoInterval);
+            autoInterval = setInterval(nextSlide, autoDelay);
+            startProgressAnimation();
+        }
+        function stopAutoScroll() {
+            if (autoInterval) { clearInterval(autoInterval); autoInterval = null; }
+            cancelProgressAnimation();
+            if (progressBar) progressBar.style.width = '0%';
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', () => { stopAutoScroll(); prevSlide(); startAutoScroll(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { stopAutoScroll(); nextSlide(); startAutoScroll(); });
+
+        const wrapper = track.closest('.carousel-wrapper');
+        if (wrapper) {
+            wrapper.addEventListener('mouseenter', stopAutoScroll);
+            wrapper.addEventListener('mouseleave', startAutoScroll);
+        }
+
+        window.addEventListener('resize', () => updateDimensionsAndPosition());
+
+        function waitForImages() {
+            const imgs = Array.from(track.querySelectorAll('img'));
+            if (!imgs.length) return Promise.resolve();
+            return Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(resolve => { img.onload = resolve; img.onerror = resolve; })));
+        }
+
+        function init() {
+            if (!allSlides.length) return;
+            waitForImages().then(() => {
+                updateDimensionsAndPosition();
+                createDots();
+                startAutoScroll();
+            });
+        }
+
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+        else init();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
+    });
+})();
 let lastFocusedElement = null;
 
 function showModal(modal) {
@@ -5202,7 +5290,7 @@ function initCookieConsent() {
     }
 }
 window.initCookieConsent = initCookieConsent;
-// Бургер-меню
+// ========== БУРГЕР-МЕНЮ (телефонная версия) ==========
 function initBurgerMenu() {
     const burger = document.getElementById('burgerMenu');
     const navBottom = document.getElementById('navBottom');
@@ -5226,14 +5314,23 @@ function initBurgerMenu() {
     }
 
     function toggleMenu() {
-        if (navBottom.classList.contains('open')) closeMenu();
-        else openMenu();
+        if (navBottom.classList.contains('open')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
     }
 
+    // Обработчики для мыши и касания
     burger.addEventListener('click', toggleMenu);
+    burger.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        toggleMenu();
+    });
 
+    // Закрытие меню при клике/касании на любую ссылку внутри
     navBottom.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', (e) => {
+        const handler = (e) => {
             e.preventDefault();
             const targetId = link.getAttribute('href');
             closeMenu();
@@ -5245,9 +5342,12 @@ function initBurgerMenu() {
                     }, 200);
                 }
             }
-        });
+        };
+        link.addEventListener('click', handler);
+        link.addEventListener('touchstart', handler);
     });
 
+    // При ресайзе, если ширина стала больше брейкпоинта, закрываем меню
     window.addEventListener('resize', () => {
         if (window.innerWidth > MOBILE_BREAKPOINT && navBottom.classList.contains('open')) {
             closeMenu();
@@ -5255,6 +5355,7 @@ function initBurgerMenu() {
     });
 }
 
+// ========== ПЛАВНЫЙ СКРОЛЛ ДЛЯ ЯКОРЕЙ (простая версия) ==========
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]:not(.nav-links a)').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -5274,176 +5375,18 @@ function initSmoothScroll() {
     });
 }
 
+// ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ==========
 function initNavigation() {
     initBurgerMenu();
     initSmoothScroll();
 }
 
+// Экспорт для возможного использования в других скриптах
 window.initBurgerMenu = initBurgerMenu;
 window.initSmoothScroll = initSmoothScroll;
 window.initNavigation = initNavigation;
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNavigation);
-} else {
-    initNavigation();
-}
-
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]:not(.nav-links a)').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            if (targetId === '#top') {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                return;
-            }
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
-}
-
-function initNavigation() {
-    initBurgerMenu();
-    initSmoothScroll();
-}
-
-window.initBurgerMenu = initBurgerMenu;
-window.initSmoothScroll = initSmoothScroll;
-window.initNavigation = initNavigation;
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNavigation);
-} else {
-    initNavigation();
-}
-
-// Плавный кастомный скролл с easing
-function smoothScrollTo(targetY, duration = 900) {
-    const startY = window.scrollY;
-    const distance = targetY - startY;
-    if (Math.abs(distance) < 5) return;
-    const startTime = performance.now();
-
-    function easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function animation(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeProgress = easeInOutCubic(progress);
-        window.scrollTo(0, startY + distance * easeProgress);
-        if (progress < 1) {
-            requestAnimationFrame(animation);
-        }
-    }
-    requestAnimationFrame(animation);
-}
-
-// Вспомогательная функция: дождаться загрузки всех изображений внутри элемента
-function waitForImagesInElement(element, timeout = 2000) {
-    return new Promise((resolve) => {
-        if (!element) return resolve();
-        const images = element.querySelectorAll('img');
-        if (images.length === 0) return resolve();
-        let pending = images.length;
-        let resolved = false;
-        const timeoutId = setTimeout(() => {
-            if (!resolved) resolve();
-        }, timeout);
-        const onLoadOrError = () => {
-            pending--;
-            if (pending === 0 && !resolved) {
-                resolved = true;
-                clearTimeout(timeoutId);
-                resolve();
-            }
-        };
-        images.forEach(img => {
-            if (img.complete) {
-                onLoadOrError();
-            } else {
-                img.addEventListener('load', onLoadOrError);
-                img.addEventListener('error', onLoadOrError);
-            }
-        });
-    });
-}
-
-// Плавный скролл для всех якорей с автооткрытием details и коррекцией позиции
-function initSmoothScroll() {
-    const navbar = document.querySelector('.navbar');
-    let navbarHeight = navbar ? navbar.offsetHeight : 80;
-    const extraOffset = 20;
-    const scrollDuration = 900;
-
-    // Пересчитываем высоту навбара при ресайзе и после загрузки
-    function updateNavbarHeight() {
-        if (navbar) navbarHeight = navbar.offsetHeight;
-    }
-    window.addEventListener('resize', updateNavbarHeight);
-    window.addEventListener('load', updateNavbarHeight);
-
-    // Функция, которая вычисляет целевую позицию и выполняет скролл с ожиданием загрузки картинок
-    async function scrollToTarget(targetElement) {
-        if (!targetElement) return;
-
-        // Сначала дождаться загрузки изображений внутри целевого элемента и его родителей до ближайшего section
-        const section = targetElement.closest('section');
-        const elementToWait = section || targetElement;
-        await waitForImagesInElement(elementToWait);
-
-        // Повторно вычисляем позицию после загрузки картинок
-        const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight - extraOffset;
-        smoothScrollTo(targetPosition, scrollDuration);
-
-        // Открываем details после окончания скролла
-        setTimeout(() => {
-            if (targetElement.tagName === 'DETAILS') {
-                targetElement.open = true;
-            } else {
-                const parentDetails = targetElement.closest('details');
-                if (parentDetails) parentDetails.open = true;
-            }
-        }, scrollDuration + 50);
-    }
-
-    // Обработчик кликов по якорям
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            if (targetId === '#top' || targetId === '#') {
-                e.preventDefault();
-                smoothScrollTo(0, scrollDuration);
-                return;
-            }
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                scrollToTarget(targetElement);
-            }
-        });
-    });
-}
-
-// Экспорт
-function initNavigation() {
-    initBurgerMenu();
-    initSmoothScroll();
-}
-
-window.initBurgerMenu = initBurgerMenu;
-window.initSmoothScroll = initSmoothScroll;
-window.initNavigation = initNavigation;
-window.smoothScrollTo = smoothScrollTo;
-
+// Автозапуск
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initNavigation);
 } else {
@@ -6769,195 +6712,6 @@ async function sendMaterialsToEmail(email, materialType) {
 window.sendMaterialsEmail = sendMaterialsEmail;
 window.sendMaterialsToEmail = sendMaterialsToEmail;
 window.isValidEmail = isValidEmail;
-(function() {
-    function initInfiniteCarousel(trackId, prevBtnClass, nextBtnClass, progressId, dotsId) {
-        const track = document.getElementById(trackId);
-        if (!track) return;
-
-        let originalSlides = Array.from(track.children);
-        if (originalSlides.length === 0) return;
-        const slideCount = originalSlides.length;
-
-        // Клонируем слайды для бесконечности
-        const cloneStart = originalSlides.map(slide => slide.cloneNode(true));
-        const cloneEnd = originalSlides.map(slide => slide.cloneNode(true));
-        cloneStart.forEach(clone => track.appendChild(clone));
-        cloneEnd.forEach(clone => track.insertBefore(clone, track.firstChild));
-
-        let allSlides = Array.from(track.children);
-        let currentIndex = slideCount; // начинаем с первого оригинала
-        let slideWidth = 0, gap = 0;
-        let autoInterval = null, progressInterval = null;
-        let isTransitioning = false;
-        const autoDelay = 5000;
-
-        const prevBtn = document.querySelector(prevBtnClass);
-        const nextBtn = document.querySelector(nextBtnClass);
-        const progressBar = document.getElementById(progressId);
-        const dotsContainer = document.getElementById(dotsId);
-
-        function updateDimensionsAndPosition() {
-            if (!allSlides.length) return;
-            slideWidth = allSlides[0].offsetWidth;
-            const trackStyle = getComputedStyle(track);
-            gap = parseFloat(trackStyle.gap) || 24;
-            disableTransition();
-            updateCarousel(true);
-            enableTransition();
-        }
-
-        function updateCarousel(instant = false) {
-            const shift = -currentIndex * (slideWidth + gap);
-            if (instant) {
-                track.style.transition = 'none';
-                track.style.transform = `translateX(${shift}px)`;
-                track.offsetHeight;
-                track.style.transition = '';
-            } else {
-                track.style.transform = `translateX(${shift}px)`;
-            }
-            updateDots();
-            resetProgressBar();
-        }
-
-        function disableTransition() { track.style.transition = 'none'; }
-        function enableTransition() { track.style.transition = ''; }
-
-        function nextSlide() {
-            if (isTransitioning) return;
-            isTransitioning = true;
-            currentIndex++;
-            updateCarousel();
-
-            if (currentIndex >= slideCount * 2) {
-                setTimeout(() => {
-                    disableTransition();
-                    currentIndex = slideCount;
-                    updateCarousel(true);
-                    enableTransition();
-                    setTimeout(() => { isTransitioning = false; }, 50);
-                }, 250);
-            } else {
-                setTimeout(() => { isTransitioning = false; }, 250);
-            }
-            startProgressAnimation();
-        }
-
-        function prevSlide() {
-            if (isTransitioning) return;
-            isTransitioning = true;
-            currentIndex--;
-            updateCarousel();
-
-            if (currentIndex < slideCount) {
-                setTimeout(() => {
-                    disableTransition();
-                    currentIndex = slideCount * 2 - 1;
-                    updateCarousel(true);
-                    enableTransition();
-                    setTimeout(() => { isTransitioning = false; }, 50);
-                }, 250);
-            } else {
-                setTimeout(() => { isTransitioning = false; }, 250);
-            }
-            startProgressAnimation();
-        }
-
-        function updateDots() {
-            if (!dotsContainer) return;
-            const dots = dotsContainer.querySelectorAll('.dot');
-            let originalIndex = currentIndex % slideCount;
-            if (originalIndex < 0) originalIndex += slideCount;
-            dots.forEach((dot, idx) => dot.classList.toggle('active', idx === originalIndex));
-        }
-
-        function createDots() {
-            if (!dotsContainer) return;
-            dotsContainer.innerHTML = '';
-            for (let i = 0; i < slideCount; i++) {
-                const dot = document.createElement('div');
-                dot.classList.add('dot');
-                if (i === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => {
-                    if (isTransitioning) return;
-                    stopAutoScroll();
-                    currentIndex = slideCount + i;
-                    updateCarousel();
-                    startAutoScroll();
-                });
-                dotsContainer.appendChild(dot);
-            }
-        }
-
-        function resetProgressBar() { if (progressBar) progressBar.style.width = '0%'; }
-        function startProgressAnimation() {
-            if (!progressBar) return;
-            resetProgressBar();
-            let startTime = null;
-            function animateProgress(timestamp) {
-                if (!startTime) startTime = timestamp;
-                const elapsed = timestamp - startTime;
-                const percent = Math.min((elapsed / autoDelay) * 100, 100);
-                progressBar.style.width = `${percent}%`;
-                if (elapsed < autoDelay) {
-                    progressInterval = requestAnimationFrame(animateProgress);
-                } else {
-                    progressBar.style.width = '100%';
-                    cancelProgressAnimation();
-                }
-            }
-            cancelProgressAnimation();
-            progressInterval = requestAnimationFrame(animateProgress);
-        }
-        function cancelProgressAnimation() {
-            if (progressInterval) { cancelAnimationFrame(progressInterval); progressInterval = null; }
-        }
-
-        function startAutoScroll() {
-            if (autoInterval) clearInterval(autoInterval);
-            autoInterval = setInterval(nextSlide, autoDelay);
-            startProgressAnimation();
-        }
-        function stopAutoScroll() {
-            if (autoInterval) { clearInterval(autoInterval); autoInterval = null; }
-            cancelProgressAnimation();
-            if (progressBar) progressBar.style.width = '0%';
-        }
-
-        if (prevBtn) prevBtn.addEventListener('click', () => { stopAutoScroll(); prevSlide(); startAutoScroll(); });
-        if (nextBtn) nextBtn.addEventListener('click', () => { stopAutoScroll(); nextSlide(); startAutoScroll(); });
-
-        const wrapper = track.closest('.carousel-wrapper');
-        if (wrapper) {
-            wrapper.addEventListener('mouseenter', stopAutoScroll);
-            wrapper.addEventListener('mouseleave', startAutoScroll);
-        }
-
-        window.addEventListener('resize', () => updateDimensionsAndPosition());
-
-        function waitForImages() {
-            const imgs = Array.from(track.querySelectorAll('img'));
-            if (!imgs.length) return Promise.resolve();
-            return Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(resolve => { img.onload = resolve; img.onerror = resolve; })));
-        }
-
-        function init() {
-            if (!allSlides.length) return;
-            waitForImages().then(() => {
-                updateDimensionsAndPosition();
-                createDots();
-                startAutoScroll();
-            });
-        }
-
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-        else init();
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
-    });
-})();
 (function () {
     'use strict';
 
@@ -7057,34 +6811,32 @@ window.isValidEmail = isValidEmail;
         }
     }
 
-function initScrollTopButton() {
-    const btn = document.createElement('button');
-    btn.className = 'scroll-top';
-    btn.innerHTML = '↑';
-    btn.setAttribute('aria-label', 'Наверх');
-    document.body.appendChild(btn);
+    function initScrollTopButton() {
+        const btn = document.createElement('button');
+        btn.className = 'scroll-top';
+        btn.innerHTML = '↑';
+        btn.setAttribute('aria-label', 'Наверх');
+        document.body.appendChild(btn);
 
-    // Плавное появление/исчезновение кнопки
-    function toggleScrollTop() {
-        if (window.scrollY > SCROLL_TOP_THRESHOLD) {
-            btn.classList.add('visible');
-        } else {
-            btn.classList.remove('visible');
+        function toggleScrollTop() {
+            if (window.scrollY > SCROLL_TOP_THRESHOLD) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
         }
+        window.addEventListener('scroll', toggleScrollTop);
+        toggleScrollTop();
+
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof window.smoothScrollTo === 'function') {
+                window.smoothScrollTo(0, 900);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
     }
-    window.addEventListener('scroll', toggleScrollTop);
-    toggleScrollTop();
-
-    // Плавный скролл вверх при клике
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (typeof window.smoothScrollTo === 'function') {
-            window.smoothScrollTo(0, 900);
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    });
-}
 
     function initMaterialsEmailButtons() {
         const buttons = document.querySelectorAll('.material-email-simple');
@@ -7178,6 +6930,28 @@ function initScrollTopButton() {
         });
     }
 
+    // ========== АКТИВНОЕ МЕНЮ ПРИ СКРОЛЛЕ ==========
+    function initActiveNav() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        if (!sections.length || !navLinks.length) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            const visibleSections = entries
+                .filter(entry => entry.isIntersecting && entry.intersectionRatio >= 0.25)
+                .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+            if (visibleSections.length) {
+                const activeId = visibleSections[0].target.id;
+                navLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    link.classList.toggle('active', href === `#${activeId}`);
+                });
+            }
+        }, { threshold: [0.25, 0.5, 0.75] });
+
+        sections.forEach(section => observer.observe(section));
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.querySelectorAll('.fade-up').forEach(el => {
@@ -7190,6 +6964,7 @@ function initScrollTopButton() {
 
         if (typeof initAnimations === 'function') initAnimations();
         animateStats();
+        initActiveNav(); // <-- добавлен вызов активного меню
 
         if (typeof initUserId === 'function') initUserId().catch(() => {});
         if (typeof initCalculator === 'function') initCalculator();
@@ -7201,13 +6976,8 @@ function initScrollTopButton() {
         if (typeof initBurgerMenu === 'function') initBurgerMenu();
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
         if (typeof initCookieConsent === 'function') initCookieConsent();
-
         if (typeof initShareButtons === 'function') initShareButtons();
-
-        // ДОБАВЛЕНО: инициализация масок телефонов
-        if (typeof window.initPhoneMasks === 'function') {
-            window.initPhoneMasks();
-        }
+        if (typeof window.initPhoneMasks === 'function') window.initPhoneMasks();
 
         initFormValidation();
         initScrollTopButton();
@@ -7255,37 +7025,4 @@ function initScrollTopButton() {
         }, 200);
     });
 })();
-
-
-// ========== АКТИВНОЕ МЕНЮ ПРИ СКРОЛЛЕ ==========
-function initActiveNav() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-links a');
-    if (!sections.length || !navLinks.length) return;
-
-    const observer = new IntersectionObserver((entries) => {
-        const visibleSections = entries
-            .filter(entry => entry.isIntersecting && entry.intersectionRatio >= 0.25)
-            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visibleSections.length) {
-            const activeId = visibleSections[0].target.id;
-            navLinks.forEach(link => {
-                const href = link.getAttribute('href');
-                link.classList.toggle('active', href === `#${activeId}`);
-            });
-        }
-    }, { threshold: [0.25, 0.5, 0.75] });
-
-    sections.forEach(section => observer.observe(section));
-}
-
-// Запуск активного меню после загрузки DOM
-document.addEventListener('DOMContentLoaded', function() {
-    initActiveNav();
-    // Остальные инициализации (калькулятор, квиз, карусель) уже должны быть вызваны в этом файле или в других скриптах.
-    // Если их нет – добавьте:
-    if (typeof initCalculator === 'function') initCalculator();
-    if (typeof initQuiz === 'function') initQuiz();
-    if (typeof initCertificatesLightbox !== 'undefined') initCertificatesLightbox(); // или как у вас названа функция карусели
-});
 </script>

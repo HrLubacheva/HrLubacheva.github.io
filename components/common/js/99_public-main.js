@@ -97,34 +97,32 @@
         }
     }
 
-function initScrollTopButton() {
-    const btn = document.createElement('button');
-    btn.className = 'scroll-top';
-    btn.innerHTML = '↑';
-    btn.setAttribute('aria-label', 'Наверх');
-    document.body.appendChild(btn);
+    function initScrollTopButton() {
+        const btn = document.createElement('button');
+        btn.className = 'scroll-top';
+        btn.innerHTML = '↑';
+        btn.setAttribute('aria-label', 'Наверх');
+        document.body.appendChild(btn);
 
-    // Плавное появление/исчезновение кнопки
-    function toggleScrollTop() {
-        if (window.scrollY > SCROLL_TOP_THRESHOLD) {
-            btn.classList.add('visible');
-        } else {
-            btn.classList.remove('visible');
+        function toggleScrollTop() {
+            if (window.scrollY > SCROLL_TOP_THRESHOLD) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
         }
+        window.addEventListener('scroll', toggleScrollTop);
+        toggleScrollTop();
+
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (typeof window.smoothScrollTo === 'function') {
+                window.smoothScrollTo(0, 900);
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
     }
-    window.addEventListener('scroll', toggleScrollTop);
-    toggleScrollTop();
-
-    // Плавный скролл вверх при клике
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        if (typeof window.smoothScrollTo === 'function') {
-            window.smoothScrollTo(0, 900);
-        } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    });
-}
 
     function initMaterialsEmailButtons() {
         const buttons = document.querySelectorAll('.material-email-simple');
@@ -218,6 +216,28 @@ function initScrollTopButton() {
         });
     }
 
+    // ========== АКТИВНОЕ МЕНЮ ПРИ СКРОЛЛЕ ==========
+    function initActiveNav() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a');
+        if (!sections.length || !navLinks.length) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            const visibleSections = entries
+                .filter(entry => entry.isIntersecting && entry.intersectionRatio >= 0.25)
+                .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+            if (visibleSections.length) {
+                const activeId = visibleSections[0].target.id;
+                navLinks.forEach(link => {
+                    const href = link.getAttribute('href');
+                    link.classList.toggle('active', href === `#${activeId}`);
+                });
+            }
+        }, { threshold: [0.25, 0.5, 0.75] });
+
+        sections.forEach(section => observer.observe(section));
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
             document.querySelectorAll('.fade-up').forEach(el => {
@@ -230,6 +250,7 @@ function initScrollTopButton() {
 
         if (typeof initAnimations === 'function') initAnimations();
         animateStats();
+        initActiveNav(); // <-- добавлен вызов активного меню
 
         if (typeof initUserId === 'function') initUserId().catch(() => {});
         if (typeof initCalculator === 'function') initCalculator();
@@ -241,13 +262,8 @@ function initScrollTopButton() {
         if (typeof initBurgerMenu === 'function') initBurgerMenu();
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
         if (typeof initCookieConsent === 'function') initCookieConsent();
-
         if (typeof initShareButtons === 'function') initShareButtons();
-
-        // ДОБАВЛЕНО: инициализация масок телефонов
-        if (typeof window.initPhoneMasks === 'function') {
-            window.initPhoneMasks();
-        }
+        if (typeof window.initPhoneMasks === 'function') window.initPhoneMasks();
 
         initFormValidation();
         initScrollTopButton();
@@ -295,36 +311,3 @@ function initScrollTopButton() {
         }, 200);
     });
 })();
-
-
-// ========== АКТИВНОЕ МЕНЮ ПРИ СКРОЛЛЕ ==========
-function initActiveNav() {
-    const sections = document.querySelectorAll('section[id]');
-    const navLinks = document.querySelectorAll('.nav-links a');
-    if (!sections.length || !navLinks.length) return;
-
-    const observer = new IntersectionObserver((entries) => {
-        const visibleSections = entries
-            .filter(entry => entry.isIntersecting && entry.intersectionRatio >= 0.25)
-            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-        if (visibleSections.length) {
-            const activeId = visibleSections[0].target.id;
-            navLinks.forEach(link => {
-                const href = link.getAttribute('href');
-                link.classList.toggle('active', href === `#${activeId}`);
-            });
-        }
-    }, { threshold: [0.25, 0.5, 0.75] });
-
-    sections.forEach(section => observer.observe(section));
-}
-
-// Запуск активного меню после загрузки DOM
-document.addEventListener('DOMContentLoaded', function() {
-    initActiveNav();
-    // Остальные инициализации (калькулятор, квиз, карусель) уже должны быть вызваны в этом файле или в других скриптах.
-    // Если их нет – добавьте:
-    if (typeof initCalculator === 'function') initCalculator();
-    if (typeof initQuiz === 'function') initQuiz();
-    if (typeof initCertificatesLightbox !== 'undefined') initCertificatesLightbox(); // или как у вас названа функция карусели
-});
