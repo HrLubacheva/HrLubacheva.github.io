@@ -67,6 +67,7 @@
     const BUDGET_QUESTION = { text: "5. Бюджет на консультацию/подбор?", options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"] };
     let currentRole = null;
     function startQuiz() {
+        logInit('Квиз: startQuiz', 'INFO', '', 3);
         answers = [null, null, null, null, null];
         currentQuestionIndex = 0;
         quizState = 'questions';
@@ -84,6 +85,7 @@
         if (currentQuestionIndex === 1 && quizState === 'questions') renderQuiz();
     }
     function renderQuiz() {
+        logInit(`Квиз: renderQuiz, state=${quizState}, questionIndex=${currentQuestionIndex}`, 'DEBUG', '', 5);
         const container = document.getElementById('quizContainer');
         if (!container) return;
         if (quizState === 'questions') {
@@ -134,6 +136,7 @@
         }
     }
     function renderResult(topTwo) {
+        logInit('Квиз: renderResult', 'INFO', '', 3);
         const container = document.getElementById('quizContainer');
         if (!container) return;
         const displayNameA = topTwo.variantAFormatted || topTwo.variantA;

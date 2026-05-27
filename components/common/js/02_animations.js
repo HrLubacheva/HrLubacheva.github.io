@@ -6,8 +6,10 @@ function initAnimations() {
         logInit('Нет элементов .fade-up, выход', 'WARN', '', 2);
         return;
     }
-    const isMobile = window.innerWidth <= (window.APP_CONFIG?.CONSTANTS?.BREAKPOINT_MOBILE || 768);
-    logInit(`isMobile = ${isMobile}`, 'INFO', '', 5);
+
+    // Гарантируем, что изначально класс visible не стоит (если вдруг кто-то добавил)
+    elements.forEach(el => el.classList.remove('visible'));
+
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -16,7 +18,11 @@ function initAnimations() {
                 logInit(`Элемент .fade-up стал видимым`, 'DEBUG', '', 5);
             }
         });
-    }, { threshold: 0.1, rootMargin: isMobile ? '0px 0px -30px 0px' : '0px 0px -80px 0px' });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px 0px 0px'   // ← больше никаких отрицательных отступов
+    });
+
     elements.forEach(el => observer.observe(el));
     logInit('initAnimations finished', 'INFO', '', 3);
 }

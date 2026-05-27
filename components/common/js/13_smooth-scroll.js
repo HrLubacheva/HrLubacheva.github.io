@@ -1,12 +1,19 @@
 // ============================================================
-// 13_smooth-scroll.js – Плавный скролл по якорным ссылкам
+// 13_smooth-scroll.js – Плавный скролл по якорям
 // ============================================================
 (function() {
     'use strict';
+
+    // Добавляем CSS-правило, чтобы браузер точно использовал smooth scroll
+    const style = document.createElement('style');
+    style.textContent = `html { scroll-behavior: smooth; }`;
+    document.head.appendChild(style);
+
     function getNavbarHeight() {
         const navbar = document.querySelector('.navbar');
         return navbar ? navbar.offsetHeight : 0;
     }
+
     window.smoothScrollTo = function(targetElement) {
         if (!targetElement) return;
         const navbarHeight = getNavbarHeight();
@@ -14,9 +21,11 @@
         const offsetPosition = elementPosition - navbarHeight - 15;
         window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
     };
+
     function closeMenu() {
-        if (typeof window.closeBurgerMenu === 'function') window.closeBurgerMenu();
-        else {
+        if (typeof window.closeBurgerMenu === 'function') {
+            window.closeBurgerMenu();
+        } else {
             const burger = document.getElementById('burgerMenu');
             const navBottom = document.getElementById('navBottom');
             if (burger && navBottom && navBottom.classList.contains('open')) {
@@ -27,9 +36,11 @@
             }
         }
     }
+
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a[href^="#"]');
         if (!link) return;
+
         const href = link.getAttribute('href');
         if (href === '#' || href === '#top') {
             e.preventDefault();
@@ -37,11 +48,14 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
+
         const targetElement = document.querySelector(href);
         if (targetElement) {
             e.preventDefault();
             closeMenu();
-            setTimeout(() => { window.smoothScrollTo(targetElement); }, 0);
+            setTimeout(() => {
+                window.smoothScrollTo(targetElement);
+            }, 0);
         }
     });
 })();
