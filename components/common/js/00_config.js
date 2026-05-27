@@ -3,7 +3,7 @@
 // ============================================================
 window.APP_CONFIG = {
     // URL Google Apps Script для отправки форм
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwHN9ej6DF2_X5s_Pak5cOQ0E3aTeEP4N_1gSB6trtrv5oZzNZjijCEKHAZ85do4rzz3A/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwHRGiHJGn0xxnvW8VnMKWYCaALuRjy9W1wpPhyYlNBw4ztskHjpcOf0JcaogZ45uC75Q/exec',
 
     // Контакты
     TELEGRAM: 'https://t.me/HrLubacheva',

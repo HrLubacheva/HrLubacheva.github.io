@@ -8,6 +8,10 @@
     const STATS_ANIMATION_DURATION = C.STATS_ANIMATION_DURATION || 1500;
     const SCROLL_TOP_THRESHOLD = C.SCROLL_TOP_VISIBLE_THRESHOLD || 500;
 
+    if (typeof initAnimations === 'function') initAnimations();
+    else console.warn('initAnimations not found');
+
+
     // Повторная инициализация анимаций после динамических изменений (например, переключение вкладок)
     function reinitAnimations() {
         const elements = document.querySelectorAll('.fade-up:not(.visible)');
@@ -22,7 +26,7 @@
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold, rootMargin });
+        }, {threshold, rootMargin});
         elements.forEach(el => observer.observe(el));
     }
 
@@ -31,7 +35,11 @@
         const statNumbers = document.querySelectorAll('.stat-number');
         if (!statNumbers.length) return;
         if (window._statsAnimated) return;
-        function formatNumber(num) { return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        }
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -39,6 +47,7 @@
                     const final = parseInt(target.getAttribute('data-target'), 10);
                     const duration = STATS_ANIMATION_DURATION;
                     const startTime = performance.now();
+
                     function update(currentTime) {
                         const elapsed = currentTime - startTime;
                         let progress = Math.min(elapsed / duration, 1);
@@ -48,12 +57,13 @@
                         if (progress < 1) requestAnimationFrame(update);
                         else target.innerText = formatNumber(final);
                     }
+
                     requestAnimationFrame(update);
                     observer.unobserve(target);
                     window._statsAnimated = true;
                 }
             });
-        }, { threshold: 0.3 });
+        }, {threshold: 0.3});
         statNumbers.forEach(el => observer.observe(el));
     }
 
@@ -100,12 +110,13 @@
             if (window.scrollY > SCROLL_TOP_THRESHOLD) btn.classList.add('visible');
             else btn.classList.remove('visible');
         }
+
         window.addEventListener('scroll', toggleScrollTop);
         toggleScrollTop();
 
         btn.addEventListener('click', (e) => {
             e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({top: 0, behavior: 'smooth'});
         });
     }
 
@@ -174,7 +185,9 @@
                 } finally {
                     sendBtn.disabled = false;
                     sendBtn.innerText = originalText;
-                    setTimeout(() => { isModalSending = false; }, 500);
+                    setTimeout(() => {
+                        isModalSending = false;
+                    }, 500);
                 }
             };
             sendBtn.addEventListener('click', sendBtn._sendHandler);
@@ -209,7 +222,7 @@
                     link.classList.toggle('active', href === `#${activeId}`);
                 });
             }
-        }, { threshold: [0.25, 0.5, 0.75] });
+        }, {threshold: [0.25, 0.5, 0.75]});
         sections.forEach(section => observer.observe(section));
     }
 
@@ -222,7 +235,8 @@
 
     document.addEventListener('DOMContentLoaded', function () {
         // 1. Инициализация модулей (только функции, без авто-вызовов)
-        if (typeof initUserId === 'function') initUserId().catch(() => {});
+        if (typeof initUserId === 'function') initUserId().catch(() => {
+        });
         if (typeof initModal === 'function') initModal();
         if (typeof initCopyButtons === 'function') initCopyButtons();
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
