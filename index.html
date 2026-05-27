@@ -33,8 +33,6 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Виктория Любачева — Карьерный консультант">
 <meta property="og:locale" content="ru_RU">
-<meta property="og:email" content="hrlubacheva@yandex.ru">
-<meta property="og:phone_number" content="+79217916655">
 
 <!-- Twitter Card (использует те же значения, что og) -->
 <meta name="twitter:card" content="summary_large_image">
@@ -121,7 +119,7 @@
 }
 </script>
 
-<!-- BreadcrumbList Schema.org (добавлено) -->
+<!-- BreadcrumbList Schema.org -->
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -142,6 +140,8 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
+    <!-- Content-Security-Policy (базовая, разрешает скрипты аналитики и шрифты) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru; connect-src 'self' https://script.google.com https://ipapi.co;">
 
     <!-- Preconnect и preload шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -267,29 +267,8 @@
     box-sizing: border-box;
 }
 
-/* Плавное открытие/закрытие details */
-.price-details[open] .price-table-wrapper {
-    animation: fadeSlideDown 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-}
-
-@keyframes fadeSlideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Дополнительно: плавное изменение тени при открытии */
-.price-details {
-    transition: box-shadow 0.3s ease, margin-bottom 0.2s ease;
-}
-
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     color: var(--text-dark);
     background: #ffffff;
     line-height: 1.5;
@@ -300,11 +279,6 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-}
-
-/* Улучшенная загрузка шрифтов — удалён дублирующий @font-face, оставлен только Google Fonts из head */
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* ==================================================================
@@ -892,47 +866,125 @@ body {
     }
 }
 /* ==================================================================
-   ПРОЦЕСС: заголовки, подзаголовки, фото
+   СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ СЕКЦИИ "ПРОЦЕСС"
    ================================================================== */
-.process-title {
-    text-align: center;
-    margin: 40px 0 20px;
-    font-size: 1.8rem;
-    color: var(--primary-dark);
-}
-.process-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-}
-.process-col {
-    flex: 1;
-    min-width: 280px;
-}
-@media (max-width: 768px) {
-    .process-row {
-        flex-direction: column;
-    }
-}
-.process-description.text-center {
+
+/* ----- ТИПОГРАФИКА СЕКЦИИ ----- */
+.process-description {
     text-align: center;
     margin-bottom: 40px;
     font-size: 1rem;
     color: var(--text-muted);
 }
+
+.process-title {
+    text-align: center;
+    margin: 40px 0 20px;
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+    word-break: break-word;
+}
+
 .process-subtitle {
     display: block;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: normal;
     color: var(--text-muted);
-    margin-top: 5px;
+    margin-top: 8px;
 }
+
+/* ----- СЕТКИ КАРТОЧЕК ----- */
+.process-grid {
+    display: grid;
+    gap: 30px;
+    padding-left: 0;
+    list-style: none;
+    margin: 40px 0;
+}
+
+/* ДЕСКТОП (≥992px) */
+@media (min-width: 992px) {
+    .process-row {
+        display: flex;
+        gap: 40px;
+    }
+    .process-col {
+        flex: 1;
+        min-width: 0;
+    }
+    /* Блоки с 4 карточками – 2 колонки */
+    .process-col .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    /* Тренинг (6 карточек) – 3 колонки */
+    .training-grid .process-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ПЛАНШЕТ (768–991px) – 2 колонки, блоки вертикально */
+@media (min-width: 768px) and (max-width: 991px) {
+    .process-row {
+        display: block;
+    }
+    .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ТЕЛЕФОН (≤767px) – 1 колонка, но при ширине ≥480px – 2 колонки */
+@media (max-width: 767px) {
+    .process-row {
+        display: block;
+    }
+    .process-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+    .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ----- КАРТОЧКА ПРОЦЕССА ----- */
+.process-card {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid var(--border);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.process-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+}
+.process-step {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* ----- ФОТОГРАФИИ (всегда 2 в ряд) ----- */
 .process-photos {
     display: flex;
     flex-wrap: nowrap;
     gap: 24px;
     justify-content: center;
     margin-top: 50px;
+    overflow-x: auto;
 }
 .process-photo-item:first-child {
     flex: 0.95;
@@ -956,6 +1008,7 @@ body {
     color: var(--text-muted);
     font-size: 0.85rem;
 }
+
 @media (max-width: 640px) {
     .process-photos {
         gap: 12px;
@@ -972,23 +1025,6 @@ body {
     .process-photo-item:first-child,
     .process-photo-item:last-child {
         min-width: 100px;
-    }
-}
-
-.training-grid .process-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-}
-@media (max-width: 900px) {
-    .training-grid .process-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@media (max-width: 600px) {
-    .training-grid .process-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
     }
 }
 /* ==================================================================
@@ -1963,7 +1999,7 @@ footer a:hover {
 }
 
 /* ==================================================================
-   КНОПКА "НАВЕРХ"
+   КНОПКА "НАВЕРХ" (единый улучшенный блок)
    ================================================================== */
 .scroll-top {
     position: fixed;
@@ -1974,17 +2010,17 @@ footer a:hover {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     cursor: pointer;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.2s ease, background 0.2s ease;
     z-index: 99;
     box-shadow: var(--shadow-md);
     border: none;
     font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .scroll-top.visible {
     opacity: 1;
@@ -1993,6 +2029,7 @@ footer a:hover {
 .scroll-top:hover {
     background: var(--primary-dark);
     transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* ==================================================================
@@ -2283,16 +2320,14 @@ section[id] {
     font-weight: 600;
     margin-bottom: 20px;
     box-shadow: var(--shadow-sm);
-    text-decoration: none;   /* убираем подчёркивание */
+    text-decoration: none;
     cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 .hero-tv-badge:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
-
 /* ==================================================================
    ПРАЙС-ЛИСТ (аккордеоны)
    ================================================================== */
@@ -2305,7 +2340,7 @@ section[id] {
     border-radius: 24px;
     margin-bottom: 1.5rem;
     box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.05));
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.3s ease, margin-bottom 0.2s ease;
     border: 1px solid var(--border, #e0e0e0);
     overflow: hidden;
 }
@@ -2408,6 +2443,31 @@ section[id] {
     font-weight: 700;
 }
 
+/* Плавное открытие details */
+.price-details[open] .price-table-wrapper {
+    animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover-эффект для кнопок якорей */
+.price-anchors .btn-secondary {
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+.price-anchors .btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.2);
+}
+
 @media (max-width: 640px) {
     .price-summary {
         font-size: 1.1rem;
@@ -2431,32 +2491,9 @@ section[id] {
     .price-summary::before {
         transition: none;
     }
-}
-
-/* Плавное открытие details с увеличенной длительностью */
-.price-details[open] .price-table-wrapper {
-    animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-}
-
-@keyframes fadeSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
+    .price-details[open] .price-table-wrapper {
+        animation: none;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Дополнительный hover-эффект для кнопок якорей */
-.price-anchors .btn-secondary {
-    transition: all 0.3s ease;
-}
-
-.price-anchors .btn-secondary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.2);
 }
 </style>
 </head>
@@ -2773,103 +2810,53 @@ section[id] {
 <section id="process" aria-labelledby="process-title">
     <div class="container">
         <h2 class="section-title fade-up" id="process-title">Как мы будем работать вместе</h2>
-        <p class="process-description fade-up text-center">Прозрачный процесс без лишних этапов. Вы всегда знаете, что будет дальше.</p>
+        <p class="process-description fade-up">Прозрачный процесс без лишних этапов. Вы всегда знаете, что будет дальше.</p>
 
+        <!-- Ряд из двух блоков: Карьерная консультация и Подбор персонала -->
         <div class="process-row">
+            <!-- Карьерная консультация (4 карточки) -->
             <div class="process-col">
                 <h3 class="process-title fade-up">
                     📌 Карьерная консультация
                     <span class="process-subtitle">Средний рост дохода +35%</span>
                 </h3>
                 <ul class="process-grid" role="list">
-                    <li class="process-card fade-up" role="listitem">
-                        <div class="process-step" aria-hidden="true">1</div>
-                        <h4>Диагностика</h4>
-                        <p>Разбор целей, точки А и Б.</p>
-                    </li>
-                    <li class="process-card fade-up" role="listitem">
-                        <div class="process-step" aria-hidden="true">2</div>
-                        <h4>Стратегия</h4>
-                        <p>План: резюме, каналы поиска.</p>
-                    </li>
-                    <li class="process-card fade-up" role="listitem">
-                        <div class="process-step" aria-hidden="true">3</div>
-                        <h4>Интенсив</h4>
-                        <p>Резюме,<br>сопроводительные,<br>интервью.</p>
-                    </li>
-                    <li class="process-card fade-up" role="listitem">
-                        <div class="process-step" aria-hidden="true">4</div>
-                        <h4>Сопровождение до оффера</h4>
-                        <p>Переговоры и адаптация.</p>
-                    </li>
+                    <li class="process-card fade-up"><div class="process-step">1</div><h4>Диагностика</h4><p>Разбор целей, точки А и Б.</p></li>
+                    <li class="process-card fade-up"><div class="process-step">2</div><h4>Стратегия</h4><p>План: резюме, каналы поиска.</p></li>
+                    <li class="process-card fade-up"><div class="process-step">3</div><h4>Интенсив</h4><p>Резюме,<br>сопроводительные,<br>интервью.</p></li>
+                    <li class="process-card fade-up"><div class="process-step">4</div><h4>Сопровождение до оффера</h4><p>Переговоры и адаптация.</p></li>
                 </ul>
             </div>
+
+            <!-- Подбор персонала (4 карточки) -->
             <div class="process-col">
                 <h3 class="process-title fade-up">
                     🏢 Подбор персонала
                     <span class="process-subtitle">Гарантия 3 месяца — бесплатная замена</span>
                 </h3>
                 <ul class="process-grid" role="list">
-                    <li class="process-card fade-up" role="listitem">
-                        <div class="process-step" aria-hidden="true">1</div>
-                        <h4>Аудит вакансии</h4>
-                        <p>Профиль, культура, бюджет.</p>
-                    </li>
-                    <li class="process-card fade-up" role="listitem">
-                        <div class="process-step" aria-hidden="true">2</div>
-                        <h4>Поиск и скрининг</h4>
-                        <p>Сортировка 100+ резюме.</p>
-                    </li>
-                    <li class="process-card fade-up" role="listitem">
-                        <div class="process-step" aria-hidden="true">3</div>
-                        <h4>Интервью и оценка</h4>
-                        <p>Собеседования, рекомендации.</p>
-                    </li>
-                    <li class="process-card fade-up" role="listitem">
-                        <div class="process-step" aria-hidden="true">4</div>
-                        <h4>Оффер и онбординг</h4>
-                        <p>Предложение,<br>адаптация,<br>поддержка.</p>
-                    </li>
+                    <li class="process-card fade-up"><div class="process-step">1</div><h4>Аудит вакансии</h4><p>Профиль, культура, бюджет.</p></li>
+                    <li class="process-card fade-up"><div class="process-step">2</div><h4>Поиск и скрининг</h4><p>Сортировка 100+ резюме.</p></li>
+                    <li class="process-card fade-up"><div class="process-step">3</div><h4>Интервью и оценка</h4><p>Собеседования,<br>рекомендации.</p></li>
+                    <li class="process-card fade-up"><div class="process-step">4</div><h4>Оффер и онбординг</h4><p>Предложение,<br>адаптация,<br>поддержка.</p></li>
                 </ul>
             </div>
         </div>
 
+        <!-- Тренинг «Продай себя дорого» (6 карточек) -->
         <div class="training-grid">
             <h3 class="process-title fade-up">🎓 Тренинг «Продай себя дорого»</h3>
             <ul class="process-grid" role="list">
-                <li class="process-card fade-up" role="listitem">
-                    <div class="process-step" aria-hidden="true">1</div>
-                    <h4>Самодиагностика</h4>
-                    <p>Оценка навыков и точек роста.</p>
-                </li>
-                <li class="process-card fade-up" role="listitem">
-                    <div class="process-step" aria-hidden="true">2</div>
-                    <h4>Резюме‑бомба</h4>
-                    <p>Правила, ключевые слова, структура.</p>
-                </li>
-                <li class="process-card fade-up" role="listitem">
-                    <div class="process-step" aria-hidden="true">3</div>
-                    <h4>Интервью‑игра</h4>
-                    <p>Техника STAR, частые вопросы.</p>
-                </li>
-                <li class="process-card fade-up" role="listitem">
-                    <div class="process-step" aria-hidden="true">4</div>
-                    <h4>Торги за зарплату</h4>
-                    <p>Как просить +30% и получать.</p>
-                </li>
-                <li class="process-card fade-up" role="listitem">
-                    <div class="process-step" aria-hidden="true">5</div>
-                    <h4>Обход ИИ и АТС</h4>
-                    <p>Адаптация под автоматические фильтры.</p>
-                </li>
-                <li class="process-card fade-up" role="listitem">
-                    <div class="process-step" aria-hidden="true">6</div>
-                    <h4>Закрепление и обратная связь</h4>
-                    <p>Разбор результатов, ответы на вопросы.</p>
-                </li>
+                <li class="process-card fade-up"><div class="process-step">1</div><h4>Самодиагностика</h4><p>Оценка навыков и точек роста.</p></li>
+                <li class="process-card fade-up"><div class="process-step">2</div><h4>Резюме‑бомба</h4><p>Правила, ключевые слова, структура.</p></li>
+                <li class="process-card fade-up"><div class="process-step">3</div><h4>Интервью‑игра</h4><p>Техника STAR, частые вопросы.</p></li>
+                <li class="process-card fade-up"><div class="process-step">4</div><h4>Торги за зарплату</h4><p>Как просить +30% и получать.</p></li>
+                <li class="process-card fade-up"><div class="process-step">5</div><h4>Обход ИИ и АТС</h4><p>Адаптация под автоматические фильтры.</p></li>
+                <li class="process-card fade-up"><div class="process-step">6</div><h4>Закрепление и обратная связь</h4><p>Разбор результатов, ответы на вопросы.</p></li>
             </ul>
         </div>
 
+        <!-- Фотографии (всегда 2 в ряд) -->
         <div class="process-photos">
             <div class="process-photo-item">
                 <img src="assets/images/02-process-training.jpg" alt="Бизнес-тренинг под запрос" loading="lazy">
@@ -3728,7 +3715,7 @@ section[id] {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 27.05.2026 12:28:04
+                Версия: 27.05.2026 15:37:49
             </div>
         </div>
     </div>
@@ -4919,6 +4906,7 @@ function initBurgerMenu() {
 function smoothScrollTo(targetY, duration = 900) {
     const startY = window.scrollY;
     const distance = targetY - startY;
+    if (Math.abs(distance) < 5) return;
     const startTime = performance.now();
 
     function easeInOutCubic(t) {
@@ -4930,27 +4918,87 @@ function smoothScrollTo(targetY, duration = 900) {
         const progress = Math.min(elapsed / duration, 1);
         const easeProgress = easeInOutCubic(progress);
         window.scrollTo(0, startY + distance * easeProgress);
-
         if (progress < 1) {
             requestAnimationFrame(animation);
         }
     }
-
     requestAnimationFrame(animation);
 }
 
-// Плавный скролл с автооткрытием details
+// Вспомогательная функция: дождаться загрузки всех изображений внутри элемента
+function waitForImagesInElement(element, timeout = 2000) {
+    return new Promise((resolve) => {
+        if (!element) return resolve();
+        const images = element.querySelectorAll('img');
+        if (images.length === 0) return resolve();
+        let pending = images.length;
+        let resolved = false;
+        const timeoutId = setTimeout(() => {
+            if (!resolved) resolve();
+        }, timeout);
+        const onLoadOrError = () => {
+            pending--;
+            if (pending === 0 && !resolved) {
+                resolved = true;
+                clearTimeout(timeoutId);
+                resolve();
+            }
+        };
+        images.forEach(img => {
+            if (img.complete) {
+                onLoadOrError();
+            } else {
+                img.addEventListener('load', onLoadOrError);
+                img.addEventListener('error', onLoadOrError);
+            }
+        });
+    });
+}
+
+// Плавный скролл для всех якорей с автооткрытием details и коррекцией позиции
 function initSmoothScroll() {
     const navbar = document.querySelector('.navbar');
-    const navbarHeight = navbar ? navbar.offsetHeight : 80;
-    const extraOffset = 20; // комфортный отступ от шапки
-    const scrollDuration = 900; // мс
+    let navbarHeight = navbar ? navbar.offsetHeight : 80;
+    const extraOffset = 20;
+    const scrollDuration = 900;
 
+    // Пересчитываем высоту навбара при ресайзе и после загрузки
+    function updateNavbarHeight() {
+        if (navbar) navbarHeight = navbar.offsetHeight;
+    }
+    window.addEventListener('resize', updateNavbarHeight);
+    window.addEventListener('load', updateNavbarHeight);
+
+    // Функция, которая вычисляет целевую позицию и выполняет скролл с ожиданием загрузки картинок
+    async function scrollToTarget(targetElement) {
+        if (!targetElement) return;
+
+        // Сначала дождаться загрузки изображений внутри целевого элемента и его родителей до ближайшего section
+        const section = targetElement.closest('section');
+        const elementToWait = section || targetElement;
+        await waitForImagesInElement(elementToWait);
+
+        // Повторно вычисляем позицию после загрузки картинок
+        const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight - extraOffset;
+        smoothScrollTo(targetPosition, scrollDuration);
+
+        // Открываем details после окончания скролла
+        setTimeout(() => {
+            if (targetElement.tagName === 'DETAILS') {
+                targetElement.open = true;
+            } else {
+                const parentDetails = targetElement.closest('details');
+                if (parentDetails) parentDetails.open = true;
+            }
+        }, scrollDuration + 50);
+    }
+
+    // Обработчик кликов по якорям
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
-            if (targetId === '#top') {
+            if (targetId === '#top' || targetId === '#') {
                 e.preventDefault();
                 smoothScrollTo(0, scrollDuration);
                 return;
@@ -4958,24 +5006,13 @@ function initSmoothScroll() {
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 e.preventDefault();
-                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight - extraOffset;
-
-                smoothScrollTo(targetPosition, scrollDuration);
-
-                // Открываем details после окончания скролла
-                setTimeout(() => {
-                    if (targetElement.tagName === 'DETAILS') {
-                        targetElement.open = true;
-                    } else {
-                        const parentDetails = targetElement.closest('details');
-                        if (parentDetails) parentDetails.open = true;
-                    }
-                }, scrollDuration + 50);
+                scrollToTarget(targetElement);
             }
         });
     });
 }
 
+// Экспорт
 function initNavigation() {
     initBurgerMenu();
     initSmoothScroll();
@@ -4984,6 +5021,7 @@ function initNavigation() {
 window.initBurgerMenu = initBurgerMenu;
 window.initSmoothScroll = initSmoothScroll;
 window.initNavigation = initNavigation;
+window.smoothScrollTo = smoothScrollTo;
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initNavigation);
@@ -5455,11 +5493,10 @@ window.getCartData = function() {
     }).join('\n');
 };
 
-// ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ==========
+// ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ (вызывается только из 99_public-main.js) ==========
 
 function initCalculator() {
     if (window.IS_DEV) console.log('Инициализация калькулятора...');
-
     if (window._calculatorInitialized) {
         if (window.IS_DEV) console.log('Калькулятор уже инициализирован');
         return;
@@ -5473,14 +5510,7 @@ function initCalculator() {
     }
     initAddButtons();
     initTabs();
-
     if (window.IS_DEV) console.log('Инициализация калькулятора завершена');
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCalculator);
-} else {
-    initCalculator();
 }
 
 window.initCalculator = initCalculator;
@@ -5962,7 +5992,6 @@ if (window.IS_DEV) {
                         <div class="quiz-question"><p>${window.escapeHtml(currentQ.text)}</p><div class="quiz-options">`;
             for (let opt of currentQ.options) {
                 const isSelected = (answers[currentQuestionIndex] === opt);
-                // ИСПРАВЛЕНО: div заменён на button для доступности клавиатуры
                 html += `<button class="quiz-option ${isSelected ? 'selected' : ''}" data-opt="${window.escapeHtml(opt)}" type="button">${window.escapeHtml(opt)}</button>`;
             }
             html += `</div></div><div class="quiz-nav"><button id="quizPrevBtn" class="btn-secondary" ${currentQuestionIndex === 0 ? 'disabled' : ''}>◀ Назад</button>`;
@@ -6420,23 +6449,34 @@ window.isValidEmail = isValidEmail;
         }
     }
 
-    function initScrollTopButton() {
-        const btn = document.createElement('button');
-        btn.className = 'scroll-top';
-        btn.innerHTML = '↑';
-        btn.setAttribute('aria-label', 'Наверх');
-        document.body.appendChild(btn);
-        btn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > SCROLL_TOP_THRESHOLD) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
-        });
+function initScrollTopButton() {
+    const btn = document.createElement('button');
+    btn.className = 'scroll-top';
+    btn.innerHTML = '↑';
+    btn.setAttribute('aria-label', 'Наверх');
+    document.body.appendChild(btn);
+
+    // Плавное появление/исчезновение кнопки
+    function toggleScrollTop() {
+        if (window.scrollY > SCROLL_TOP_THRESHOLD) {
+            btn.classList.add('visible');
+        } else {
+            btn.classList.remove('visible');
+        }
     }
+    window.addEventListener('scroll', toggleScrollTop);
+    toggleScrollTop();
+
+    // Плавный скролл вверх при клике
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (typeof window.smoothScrollTo === 'function') {
+            window.smoothScrollTo(0, 900);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+}
 
     function initMaterialsEmailButtons() {
         const buttons = document.querySelectorAll('.material-email-simple');

@@ -1,45 +1,123 @@
 /* ==================================================================
-   ПРОЦЕСС: заголовки, подзаголовки, фото
+   СПЕЦИФИЧНЫЕ СТИЛИ ДЛЯ СЕКЦИИ "ПРОЦЕСС"
    ================================================================== */
-.process-title {
-    text-align: center;
-    margin: 40px 0 20px;
-    font-size: 1.8rem;
-    color: var(--primary-dark);
-}
-.process-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-}
-.process-col {
-    flex: 1;
-    min-width: 280px;
-}
-@media (max-width: 768px) {
-    .process-row {
-        flex-direction: column;
-    }
-}
-.process-description.text-center {
+
+/* ----- ТИПОГРАФИКА СЕКЦИИ ----- */
+.process-description {
     text-align: center;
     margin-bottom: 40px;
     font-size: 1rem;
     color: var(--text-muted);
 }
+
+.process-title {
+    text-align: center;
+    margin: 40px 0 20px;
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+    word-break: break-word;
+}
+
 .process-subtitle {
     display: block;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     font-weight: normal;
     color: var(--text-muted);
-    margin-top: 5px;
+    margin-top: 8px;
 }
+
+/* ----- СЕТКИ КАРТОЧЕК ----- */
+.process-grid {
+    display: grid;
+    gap: 30px;
+    padding-left: 0;
+    list-style: none;
+    margin: 40px 0;
+}
+
+/* ДЕСКТОП (≥992px) */
+@media (min-width: 992px) {
+    .process-row {
+        display: flex;
+        gap: 40px;
+    }
+    .process-col {
+        flex: 1;
+        min-width: 0;
+    }
+    /* Блоки с 4 карточками – 2 колонки */
+    .process-col .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    /* Тренинг (6 карточек) – 3 колонки */
+    .training-grid .process-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ПЛАНШЕТ (768–991px) – 2 колонки, блоки вертикально */
+@media (min-width: 768px) and (max-width: 991px) {
+    .process-row {
+        display: block;
+    }
+    .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ТЕЛЕФОН (≤767px) – 1 колонка, но при ширине ≥480px – 2 колонки */
+@media (max-width: 767px) {
+    .process-row {
+        display: block;
+    }
+    .process-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+@media (min-width: 480px) and (max-width: 767px) {
+    .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ----- КАРТОЧКА ПРОЦЕССА ----- */
+.process-card {
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 24px 20px;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border: 1px solid var(--border);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.process-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+}
+.process-step {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* ----- ФОТОГРАФИИ (всегда 2 в ряд) ----- */
 .process-photos {
     display: flex;
     flex-wrap: nowrap;
     gap: 24px;
     justify-content: center;
     margin-top: 50px;
+    overflow-x: auto;
 }
 .process-photo-item:first-child {
     flex: 0.95;
@@ -63,6 +141,7 @@
     color: var(--text-muted);
     font-size: 0.85rem;
 }
+
 @media (max-width: 640px) {
     .process-photos {
         gap: 12px;
@@ -79,22 +158,5 @@
     .process-photo-item:first-child,
     .process-photo-item:last-child {
         min-width: 100px;
-    }
-}
-
-.training-grid .process-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px;
-}
-@media (max-width: 900px) {
-    .training-grid .process-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-@media (max-width: 600px) {
-    .training-grid .process-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
     }
 }

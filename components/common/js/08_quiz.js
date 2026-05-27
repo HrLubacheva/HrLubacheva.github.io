@@ -214,7 +214,6 @@
                         <div class="quiz-question"><p>${window.escapeHtml(currentQ.text)}</p><div class="quiz-options">`;
             for (let opt of currentQ.options) {
                 const isSelected = (answers[currentQuestionIndex] === opt);
-                // ИСПРАВЛЕНО: div заменён на button для доступности клавиатуры
                 html += `<button class="quiz-option ${isSelected ? 'selected' : ''}" data-opt="${window.escapeHtml(opt)}" type="button">${window.escapeHtml(opt)}</button>`;
             }
             html += `</div></div><div class="quiz-nav"><button id="quizPrevBtn" class="btn-secondary" ${currentQuestionIndex === 0 ? 'disabled' : ''}>◀ Назад</button>`;

@@ -44,6 +44,7 @@ function initBurgerMenu() {
 function smoothScrollTo(targetY, duration = 900) {
     const startY = window.scrollY;
     const distance = targetY - startY;
+    if (Math.abs(distance) < 5) return;
     const startTime = performance.now();
 
     function easeInOutCubic(t) {
@@ -55,27 +56,87 @@ function smoothScrollTo(targetY, duration = 900) {
         const progress = Math.min(elapsed / duration, 1);
         const easeProgress = easeInOutCubic(progress);
         window.scrollTo(0, startY + distance * easeProgress);
-
         if (progress < 1) {
             requestAnimationFrame(animation);
         }
     }
-
     requestAnimationFrame(animation);
 }
 
-// Плавный скролл с автооткрытием details
+// Вспомогательная функция: дождаться загрузки всех изображений внутри элемента
+function waitForImagesInElement(element, timeout = 2000) {
+    return new Promise((resolve) => {
+        if (!element) return resolve();
+        const images = element.querySelectorAll('img');
+        if (images.length === 0) return resolve();
+        let pending = images.length;
+        let resolved = false;
+        const timeoutId = setTimeout(() => {
+            if (!resolved) resolve();
+        }, timeout);
+        const onLoadOrError = () => {
+            pending--;
+            if (pending === 0 && !resolved) {
+                resolved = true;
+                clearTimeout(timeoutId);
+                resolve();
+            }
+        };
+        images.forEach(img => {
+            if (img.complete) {
+                onLoadOrError();
+            } else {
+                img.addEventListener('load', onLoadOrError);
+                img.addEventListener('error', onLoadOrError);
+            }
+        });
+    });
+}
+
+// Плавный скролл для всех якорей с автооткрытием details и коррекцией позиции
 function initSmoothScroll() {
     const navbar = document.querySelector('.navbar');
-    const navbarHeight = navbar ? navbar.offsetHeight : 80;
-    const extraOffset = 20; // комфортный отступ от шапки
-    const scrollDuration = 900; // мс
+    let navbarHeight = navbar ? navbar.offsetHeight : 80;
+    const extraOffset = 20;
+    const scrollDuration = 900;
 
+    // Пересчитываем высоту навбара при ресайзе и после загрузки
+    function updateNavbarHeight() {
+        if (navbar) navbarHeight = navbar.offsetHeight;
+    }
+    window.addEventListener('resize', updateNavbarHeight);
+    window.addEventListener('load', updateNavbarHeight);
+
+    // Функция, которая вычисляет целевую позицию и выполняет скролл с ожиданием загрузки картинок
+    async function scrollToTarget(targetElement) {
+        if (!targetElement) return;
+
+        // Сначала дождаться загрузки изображений внутри целевого элемента и его родителей до ближайшего section
+        const section = targetElement.closest('section');
+        const elementToWait = section || targetElement;
+        await waitForImagesInElement(elementToWait);
+
+        // Повторно вычисляем позицию после загрузки картинок
+        const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight - extraOffset;
+        smoothScrollTo(targetPosition, scrollDuration);
+
+        // Открываем details после окончания скролла
+        setTimeout(() => {
+            if (targetElement.tagName === 'DETAILS') {
+                targetElement.open = true;
+            } else {
+                const parentDetails = targetElement.closest('details');
+                if (parentDetails) parentDetails.open = true;
+            }
+        }, scrollDuration + 50);
+    }
+
+    // Обработчик кликов по якорям
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
-            if (targetId === '#top') {
+            if (targetId === '#top' || targetId === '#') {
                 e.preventDefault();
                 smoothScrollTo(0, scrollDuration);
                 return;
@@ -83,24 +144,13 @@ function initSmoothScroll() {
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 e.preventDefault();
-                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight - extraOffset;
-
-                smoothScrollTo(targetPosition, scrollDuration);
-
-                // Открываем details после окончания скролла
-                setTimeout(() => {
-                    if (targetElement.tagName === 'DETAILS') {
-                        targetElement.open = true;
-                    } else {
-                        const parentDetails = targetElement.closest('details');
-                        if (parentDetails) parentDetails.open = true;
-                    }
-                }, scrollDuration + 50);
+                scrollToTarget(targetElement);
             }
         });
     });
 }
 
+// Экспорт
 function initNavigation() {
     initBurgerMenu();
     initSmoothScroll();
@@ -109,6 +159,7 @@ function initNavigation() {
 window.initBurgerMenu = initBurgerMenu;
 window.initSmoothScroll = initSmoothScroll;
 window.initNavigation = initNavigation;
+window.smoothScrollTo = smoothScrollTo;
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initNavigation);

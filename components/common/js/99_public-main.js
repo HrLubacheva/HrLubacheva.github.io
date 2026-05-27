@@ -97,23 +97,34 @@
         }
     }
 
-    function initScrollTopButton() {
-        const btn = document.createElement('button');
-        btn.className = 'scroll-top';
-        btn.innerHTML = '↑';
-        btn.setAttribute('aria-label', 'Наверх');
-        document.body.appendChild(btn);
-        btn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > SCROLL_TOP_THRESHOLD) {
-                btn.classList.add('visible');
-            } else {
-                btn.classList.remove('visible');
-            }
-        });
+function initScrollTopButton() {
+    const btn = document.createElement('button');
+    btn.className = 'scroll-top';
+    btn.innerHTML = '↑';
+    btn.setAttribute('aria-label', 'Наверх');
+    document.body.appendChild(btn);
+
+    // Плавное появление/исчезновение кнопки
+    function toggleScrollTop() {
+        if (window.scrollY > SCROLL_TOP_THRESHOLD) {
+            btn.classList.add('visible');
+        } else {
+            btn.classList.remove('visible');
+        }
     }
+    window.addEventListener('scroll', toggleScrollTop);
+    toggleScrollTop();
+
+    // Плавный скролл вверх при клике
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (typeof window.smoothScrollTo === 'function') {
+            window.smoothScrollTo(0, 900);
+        } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    });
+}
 
     function initMaterialsEmailButtons() {
         const buttons = document.querySelectorAll('.material-email-simple');

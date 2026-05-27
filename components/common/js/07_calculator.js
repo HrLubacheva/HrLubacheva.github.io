@@ -284,11 +284,10 @@ window.getCartData = function() {
     }).join('\n');
 };
 
-// ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ==========
+// ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ (вызывается только из 99_public-main.js) ==========
 
 function initCalculator() {
     if (window.IS_DEV) console.log('Инициализация калькулятора...');
-
     if (window._calculatorInitialized) {
         if (window.IS_DEV) console.log('Калькулятор уже инициализирован');
         return;
@@ -302,14 +301,7 @@ function initCalculator() {
     }
     initAddButtons();
     initTabs();
-
     if (window.IS_DEV) console.log('Инициализация калькулятора завершена');
-}
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCalculator);
-} else {
-    initCalculator();
 }
 
 window.initCalculator = initCalculator;

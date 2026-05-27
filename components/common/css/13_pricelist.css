@@ -10,7 +10,7 @@
     border-radius: 24px;
     margin-bottom: 1.5rem;
     box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.05));
-    transition: box-shadow 0.2s;
+    transition: box-shadow 0.3s ease, margin-bottom 0.2s ease;
     border: 1px solid var(--border, #e0e0e0);
     overflow: hidden;
 }
@@ -113,6 +113,31 @@
     font-weight: 700;
 }
 
+/* Плавное открытие details */
+.price-details[open] .price-table-wrapper {
+    animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Hover-эффект для кнопок якорей */
+.price-anchors .btn-secondary {
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+.price-anchors .btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.2);
+}
+
 @media (max-width: 640px) {
     .price-summary {
         font-size: 1.1rem;
@@ -136,30 +161,7 @@
     .price-summary::before {
         transition: none;
     }
-}
-
-/* Плавное открытие details с увеличенной длительностью */
-.price-details[open] .price-table-wrapper {
-    animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-}
-
-@keyframes fadeSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
+    .price-details[open] .price-table-wrapper {
+        animation: none;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Дополнительный hover-эффект для кнопок якорей */
-.price-anchors .btn-secondary {
-    transition: all 0.3s ease;
-}
-
-.price-anchors .btn-secondary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.2);
 }

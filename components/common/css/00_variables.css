@@ -32,29 +32,8 @@
     box-sizing: border-box;
 }
 
-/* Плавное открытие/закрытие details */
-.price-details[open] .price-table-wrapper {
-    animation: fadeSlideDown 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-}
-
-@keyframes fadeSlideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-15px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Дополнительно: плавное изменение тени при открытии */
-.price-details {
-    transition: box-shadow 0.3s ease, margin-bottom 0.2s ease;
-}
-
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     color: var(--text-dark);
     background: #ffffff;
     line-height: 1.5;
@@ -65,11 +44,6 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-}
-
-/* Улучшенная загрузка шрифтов — удалён дублирующий @font-face, оставлен только Google Fonts из head */
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 /* ==================================================================
