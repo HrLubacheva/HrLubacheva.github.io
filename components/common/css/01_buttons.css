@@ -26,6 +26,12 @@
 .btn-primary:active {
     transform: scale(0.97);
 }
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
 
 .btn-secondary {
     background: transparent;
@@ -41,6 +47,11 @@
 }
 .btn-secondary:active {
     transform: translateY(1px);
+}
+.btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .btn-small {
