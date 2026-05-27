@@ -1,4 +1,4 @@
-// Бургер-меню для мобильных
+// Бургер-меню
 function initBurgerMenu() {
     const burger = document.getElementById('burgerMenu');
     const navBottom = document.getElementById('navBottom');
@@ -10,9 +10,7 @@ function initBurgerMenu() {
     function updateAria() {
         const isOpen = navBottom.classList.contains('open');
         burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        if (mainElement) {
-            mainElement.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
-        }
+        if (mainElement) mainElement.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
     }
 
     burger.addEventListener('click', function() {
@@ -39,37 +37,81 @@ function initBurgerMenu() {
             updateAria();
         }
     });
-
     updateAria();
 }
 
-// Плавный скролл
+// Плавный кастомный скролл с easing
+function smoothScrollTo(targetY, duration = 900) {
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const startTime = performance.now();
+
+    function easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function animation(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeProgress = easeInOutCubic(progress);
+        window.scrollTo(0, startY + distance * easeProgress);
+
+        if (progress < 1) {
+            requestAnimationFrame(animation);
+        }
+    }
+
+    requestAnimationFrame(animation);
+}
+
+// Плавный скролл с автооткрытием details
 function initSmoothScroll() {
+    const navbar = document.querySelector('.navbar');
+    const navbarHeight = navbar ? navbar.offsetHeight : 80;
+    const extraOffset = 20; // комфортный отступ от шапки
+    const scrollDuration = 900; // мс
+
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
             if (targetId === '#top') {
                 e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                smoothScrollTo(0, scrollDuration);
                 return;
             }
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 e.preventDefault();
-                const navbar = document.querySelector('.navbar');
-                const navbarHeight = navbar ? navbar.offsetHeight : 80;
-                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight;
-                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight - extraOffset;
+
+                smoothScrollTo(targetPosition, scrollDuration);
+
+                // Открываем details после окончания скролла
+                setTimeout(() => {
+                    if (targetElement.tagName === 'DETAILS') {
+                        targetElement.open = true;
+                    } else {
+                        const parentDetails = targetElement.closest('details');
+                        if (parentDetails) parentDetails.open = true;
+                    }
+                }, scrollDuration + 50);
             }
         });
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function initNavigation() {
     initBurgerMenu();
     initSmoothScroll();
-});
+}
 
 window.initBurgerMenu = initBurgerMenu;
 window.initSmoothScroll = initSmoothScroll;
+window.initNavigation = initNavigation;
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNavigation);
+} else {
+    initNavigation();
+}

@@ -267,6 +267,27 @@
     box-sizing: border-box;
 }
 
+/* Плавное открытие/закрытие details */
+.price-details[open] .price-table-wrapper {
+    animation: fadeSlideDown 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+@keyframes fadeSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Дополнительно: плавное изменение тени при открытии */
+.price-details {
+    transition: box-shadow 0.3s ease, margin-bottom 0.2s ease;
+}
+
 body {
     font-family: 'Inter', sans-serif;
     color: var(--text-dark);
@@ -2272,6 +2293,171 @@ section[id] {
     box-shadow: var(--shadow-md);
 }
 
+/* ==================================================================
+   ПРАЙС-ЛИСТ (аккордеоны)
+   ================================================================== */
+.price-list-section {
+    margin: 2rem 0;
+}
+
+.price-details {
+    background: var(--surface-soft, #fff);
+    border-radius: 24px;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.05));
+    transition: box-shadow 0.2s;
+    border: 1px solid var(--border, #e0e0e0);
+    overflow: hidden;
+}
+
+.price-details[open] {
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(0, 0, 0, 0.1));
+}
+
+.price-summary {
+    font-size: 1.4rem;
+    font-weight: 700;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-dark, #1F4A6E) 0%, var(--primary, #2D6A9F) 100%);
+    color: white;
+    cursor: pointer;
+    list-style: none;
+    transition: background 0.2s;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.price-summary::-webkit-details-marker {
+    display: none;
+}
+
+.price-summary::before {
+    content: '▶';
+    display: inline-block;
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    transition: transform 0.2s;
+}
+
+.price-details[open] .price-summary::before {
+    transform: rotate(90deg);
+}
+
+.summary-note {
+    font-size: 0.85rem;
+    font-weight: normal;
+    opacity: 0.85;
+}
+
+.price-summary:hover {
+    background: linear-gradient(135deg, var(--primary, #2D6A9F) 0%, var(--primary-light, #4A8BC2) 100%);
+}
+
+.price-table-wrapper {
+    padding: 0.5rem 0 1rem 0;
+    overflow-x: auto;
+}
+
+.price-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.price-table th,
+.price-table td {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border, #e0e0e0);
+    vertical-align: top;
+}
+
+.price-table th {
+    background-color: var(--light-bg, #f8f9fa);
+    font-weight: 600;
+    color: var(--primary-dark, #1F4A6E);
+}
+
+.price-table td:first-child,
+.price-table th:first-child {
+    padding-left: 1.5rem;
+}
+
+.price-table td:last-child,
+.price-table th:last-child {
+    text-align: right;
+    padding-right: 1.5rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.price-table tbody tr:hover {
+    background-color: rgba(45, 106, 159, 0.04);
+    transition: background 0.15s;
+}
+
+.category-separator th.category-header {
+    text-align: center;
+    background-color: rgba(45, 106, 159, 0.12);
+    font-size: 1.05rem;
+    letter-spacing: -0.2px;
+    border-top: 2px solid var(--primary-light, #4A8BC2);
+    border-bottom: 1px solid var(--primary-light, #4A8BC2);
+    font-weight: 700;
+}
+
+@media (max-width: 640px) {
+    .price-summary {
+        font-size: 1.1rem;
+        padding: 0.8rem 1rem;
+    }
+    .price-table th,
+    .price-table td {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    .price-table td:last-child,
+    .price-table th:last-child {
+        white-space: nowrap;
+    }
+    .category-separator th.category-header {
+        font-size: 0.9rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .price-summary::before {
+        transition: none;
+    }
+}
+
+/* Плавное открытие details с увеличенной длительностью */
+.price-details[open] .price-table-wrapper {
+    animation: fadeSlideUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Дополнительный hover-эффект для кнопок якорей */
+.price-anchors .btn-secondary {
+    transition: all 0.3s ease;
+}
+
+.price-anchors .btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(45, 106, 159, 0.2);
+}
 </style>
 </head>
 <body>
@@ -3288,46 +3474,46 @@ section[id] {
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Тренинг под запрос (1ч, до 25 чел.)</td>
                         <td><span itemprop="price">12 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Тренинг «Удержание персонала»</td>
                         <td><span itemprop="price">12 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Тренинг «Профилактика выгорания»</td>
                         <td><span itemprop="price">12 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Тренинг «Я хочу здесь работать» (мотивация)</td>
                         <td><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
 
                     <!-- HR «ПОД КЛЮЧ» -->
                     <tr class="category-separator"><th colspan="2" class="category-header">🙋‍♀️ HR «под ключ»</th></tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Абонемент на HR-консультации</td>
                         <td><span itemprop="price">100 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">HR реши вопрос</td>
                         <td>от <span itemprop="price">120 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Разработка HR-бренда</td>
                         <td><span itemprop="price">150 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Корпоративная подписка на рекрутинг</td>
                         <td><span itemprop="price">200 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Стратегическая сессия с собственниками</td>
                         <td><span itemprop="price">200 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">HR-стратегия + подбор ключевых людей</td>
                         <td><span itemprop="price">300 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     </tbody>
                 </table>
             </div>
@@ -3354,173 +3540,171 @@ section[id] {
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Сопроводительное письмо</td>
                         <td><span itemprop="price">3 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Экспресс-консультация (30 мин)</td>
                         <td><span itemprop="price">3 500</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Аудит резюме</td>
                         <td><span itemprop="price">4 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Профориентация для подростков</td>
                         <td><span itemprop="price">6 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Резюме специалиста</td>
                         <td><span itemprop="price">6 500</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Подготовка к собеседованию (1ч)</td>
                         <td><span itemprop="price">7 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Тренинг по переговорам</td>
                         <td><span itemprop="price">7 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Переговоры о зарплате (1ч)</td>
                         <td><span itemprop="price">7 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Индивидуальная консультация (1ч)</td>
                         <td><span itemprop="price">7 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Психологическое консультирование (1ч)</td>
                         <td><span itemprop="price">7 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Профориентация для взрослых</td>
                         <td><span itemprop="price">8 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Стратегия поиска работы</td>
                         <td><span itemprop="price">8 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Резюме руководителя</td>
                         <td><span itemprop="price">9 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">LinkedIn-профиль под ключ</td>
                         <td><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Резюме (CV) на английском</td>
                         <td><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Стратегия трудоустройства</td>
                         <td><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
-                    <!-- Дублируется в Карьерном росте и Тренингах -->
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Индивидуальный тренинг «Продай себя дорого»</td>
                         <td><span itemprop="price">14 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
 
                     <!-- КАРЬЕРНЫЙ РОСТ -->
                     <tr class="category-separator"><th colspan="2" class="category-header">📈 Карьерный рост</th></tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Подготовка к повышению</td>
                         <td><span itemprop="price">10 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Коучинг для руководителей</td>
                         <td><span itemprop="price">10 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">План развития (рост в должности)</td>
                         <td><span itemprop="price">12 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Развитие управленческих навыков</td>
                         <td><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
-                    <!-- Дублируется из Ищу работу и Тренинги -->
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Индивидуальный тренинг «Продай себя дорого»</td>
                         <td><span itemprop="price">14 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">LinkedIn-профиль под ключ</td>
                         <td><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Резюме (CV) на английском</td>
                         <td><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Стратегия трудоустройства</td>
                         <td><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Карьерная стратегия (пакет 3 консультации)</td>
                         <td><span itemprop="price">18 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Коучинг для руководителей (пакет 4 сессии)</td>
                         <td><span itemprop="price">30 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Стратегия роста</td>
                         <td><span itemprop="price">45 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
 
                     <!-- ПРЕМИУМ -->
                     <tr class="category-separator"><th colspan="2" class="category-header">👑 Премиум</th></tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">VIP-коучинг</td>
                         <td><span itemprop="price">30 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Executive-сопровождение / месяц</td>
                         <td><span itemprop="price">60 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Поиск позиции C-level</td>
                         <td><span itemprop="price">80 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Executive-коучинг / месяц</td>
                         <td><span itemprop="price">100 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Коучинг топ-менеджеров</td>
                         <td><span itemprop="price">150 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Работа «под ключ»</td>
                         <td><span itemprop="price">250 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
 
-                    <!-- ТРЕНИНГИ (с дублированием индивидуального тренинга) -->
+                    <!-- ТРЕНИНГИ (с дублированием) -->
                     <tr class="category-separator"><th colspan="2" class="category-header">🎓 Тренинги</th></tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Индивидуальный тренинг «Продай себя дорого»</td>
                         <td><span itemprop="price">14 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Групповой тренинг «Продай себя дорого»</td>
                         <td><span itemprop="price">5 500</span> ₽/чел<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Наставничество для HR</td>
                         <td><span itemprop="price">7 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
 
                     <!-- АВТОРСКИЕ КУРСЫ -->
                     <tr class="category-separator"><th colspan="2" class="category-header">📚 Авторские курсы</th></tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Авторский курс «Рекрутер для недвижимости»</td>
                         <td><span itemprop="price">25 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                         <td itemprop="name">Обучение с «0» менеджер по продажам</td>
                         <td><span itemprop="price">50 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                    </tr>
+                     </tr>
                     </tbody>
                 </table>
             </div>
@@ -3535,147 +3719,7 @@ section[id] {
             </p>
         </div>
     </div>
-</section>
-
-<!-- Дополнительные стили для аккуратного оформления прайс-листа -->
-<style>
-    .price-list-section {
-        margin: 2rem 0;
-    }
-
-    .price-details {
-        background: var(--surface-soft, #fff);
-        border-radius: 24px;
-        margin-bottom: 1.5rem;
-        box-shadow: var(--shadow-sm, 0 4px 12px rgba(0, 0, 0, 0.05));
-        transition: box-shadow 0.2s;
-        border: 1px solid var(--border, #e0e0e0);
-        overflow: hidden;
-    }
-
-    .price-details[open] {
-        box-shadow: var(--shadow-md, 0 8px 24px rgba(0, 0, 0, 0.1));
-    }
-
-    .price-summary {
-        font-size: 1.4rem;
-        font-weight: 700;
-        padding: 1rem 1.5rem;
-        background: linear-gradient(135deg, var(--primary-dark, #1F4A6E) 0%, var(--primary, #2D6A9F) 100%);
-        color: white;
-        cursor: pointer;
-        list-style: none;
-        transition: background 0.2s;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-        gap: 0.5rem;
-    }
-
-    .price-summary::-webkit-details-marker {
-        display: none;
-    }
-
-    .price-summary::before {
-        content: '▶';
-        display: inline-block;
-        margin-right: 0.75rem;
-        font-size: 1rem;
-        transition: transform 0.2s;
-    }
-
-    .price-details[open] .price-summary::before {
-        transform: rotate(90deg);
-    }
-
-    .summary-note {
-        font-size: 0.85rem;
-        font-weight: normal;
-        opacity: 0.85;
-    }
-
-    .price-summary:hover {
-        background: linear-gradient(135deg, var(--primary, #2D6A9F) 0%, var(--primary-light, #4A8BC2) 100%);
-    }
-
-    .price-table-wrapper {
-        padding: 0.5rem 0 1rem 0;
-        overflow-x: auto;
-    }
-
-    .price-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.95rem;
-    }
-
-    .price-table th,
-    .price-table td {
-        padding: 0.9rem 1rem;
-        text-align: left;
-        border-bottom: 1px solid var(--border, #e0e0e0);
-        vertical-align: top;
-    }
-
-    .price-table th {
-        background-color: var(--light-bg, #f8f9fa);
-        font-weight: 600;
-        color: var(--primary-dark, #1F4A6E);
-    }
-
-    .price-table td:first-child,
-    .price-table th:first-child {
-        padding-left: 1.5rem;
-    }
-
-    .price-table td:last-child,
-    .price-table th:last-child {
-        text-align: right;
-        padding-right: 1.5rem;
-        font-weight: 500;
-        white-space: nowrap;
-    }
-
-    .price-table tbody tr:hover {
-        background-color: rgba(45, 106, 159, 0.04);
-        transition: background 0.15s;
-    }
-
-    .category-separator th.category-header {
-        text-align: center;
-        background-color: rgba(45, 106, 159, 0.12);
-        font-size: 1.05rem;
-        letter-spacing: -0.2px;
-        border-top: 2px solid var(--primary-light, #4A8BC2);
-        border-bottom: 1px solid var(--primary-light, #4A8BC2);
-        font-weight: 700;
-    }
-
-    @media (max-width: 640px) {
-        .price-summary {
-            font-size: 1.1rem;
-            padding: 0.8rem 1rem;
-        }
-        .price-table th,
-        .price-table td {
-            padding: 0.6rem 0.8rem;
-            font-size: 0.85rem;
-        }
-        .price-table td:last-child,
-        .price-table th:last-child {
-            white-space: nowrap;
-        }
-        .category-separator th.category-header {
-            font-size: 0.9rem;
-        }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-        .price-summary::before {
-            transition: none;
-        }
-    }
-</style></main>
+</section></main>
 <footer>
     <div class="container">
         <div class="footer-content">
@@ -3684,7 +3728,7 @@ section[id] {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 27.05.2026 12:05:11
+                Версия: 27.05.2026 12:28:04
             </div>
         </div>
     </div>
@@ -4829,7 +4873,7 @@ function initCookieConsent() {
     }
 }
 window.initCookieConsent = initCookieConsent;
-// Бургер-меню для мобильных
+// Бургер-меню
 function initBurgerMenu() {
     const burger = document.getElementById('burgerMenu');
     const navBottom = document.getElementById('navBottom');
@@ -4841,9 +4885,7 @@ function initBurgerMenu() {
     function updateAria() {
         const isOpen = navBottom.classList.contains('open');
         burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        if (mainElement) {
-            mainElement.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
-        }
+        if (mainElement) mainElement.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
     }
 
     burger.addEventListener('click', function() {
@@ -4870,40 +4912,84 @@ function initBurgerMenu() {
             updateAria();
         }
     });
-
     updateAria();
 }
 
-// Плавный скролл
+// Плавный кастомный скролл с easing
+function smoothScrollTo(targetY, duration = 900) {
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const startTime = performance.now();
+
+    function easeInOutCubic(t) {
+        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    function animation(now) {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easeProgress = easeInOutCubic(progress);
+        window.scrollTo(0, startY + distance * easeProgress);
+
+        if (progress < 1) {
+            requestAnimationFrame(animation);
+        }
+    }
+
+    requestAnimationFrame(animation);
+}
+
+// Плавный скролл с автооткрытием details
 function initSmoothScroll() {
+    const navbar = document.querySelector('.navbar');
+    const navbarHeight = navbar ? navbar.offsetHeight : 80;
+    const extraOffset = 20; // комфортный отступ от шапки
+    const scrollDuration = 900; // мс
+
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
             if (targetId === '#top') {
                 e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                smoothScrollTo(0, scrollDuration);
                 return;
             }
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 e.preventDefault();
-                const navbar = document.querySelector('.navbar');
-                const navbarHeight = navbar ? navbar.offsetHeight : 80;
-                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight;
-                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+                const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight - extraOffset;
+
+                smoothScrollTo(targetPosition, scrollDuration);
+
+                // Открываем details после окончания скролла
+                setTimeout(() => {
+                    if (targetElement.tagName === 'DETAILS') {
+                        targetElement.open = true;
+                    } else {
+                        const parentDetails = targetElement.closest('details');
+                        if (parentDetails) parentDetails.open = true;
+                    }
+                }, scrollDuration + 50);
             }
         });
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function initNavigation() {
     initBurgerMenu();
     initSmoothScroll();
-});
+}
 
 window.initBurgerMenu = initBurgerMenu;
 window.initSmoothScroll = initSmoothScroll;
+window.initNavigation = initNavigation;
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNavigation);
+} else {
+    initNavigation();
+}
 function initCopyButtons() {
     document.querySelectorAll('.copyable-phone, .copyable-text').forEach(el => {
         el.addEventListener('click', function(e) {
