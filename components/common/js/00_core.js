@@ -171,6 +171,7 @@ function showToast(message, type = 'error') {
     if (type === 'error') icon = '❌';
     toast.innerHTML = `${icon} ${escapeHtml(message)}`;
     toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');   // ДОБАВЛЕНО для доступности
     if (type === 'error') {
         toast.setAttribute('aria-live', 'assertive');
     } else {
@@ -306,6 +307,70 @@ function bindLiveValidation(input, type = 'phone') {
     const validateFn = type === 'phone' ? validatePhoneField : validateEmailField;
     input.addEventListener('blur', () => validateFn(input, true));
     input.addEventListener('input', () => clearFieldError(input));
+}
+
+// ========== МАСКА ТЕЛЕФОНА (с выводом ошибок в общий блок формы) ==========
+function applyPhoneMask(inputElement) {
+    if (!inputElement) return;
+    inputElement.addEventListener('input', function(e) {
+        let raw = this.value.replace(/\D/g, '');
+        const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
+        if (raw.length > maxDigits) raw = raw.slice(0, maxDigits);
+
+        let formatted = '';
+        if (raw.length > 0) {
+            formatted = '+7';
+            if (raw.length >= 2) {
+                let part = raw.slice(1, 4);
+                formatted += ' (' + part;
+                if (part.length === 3) formatted += ')';
+                else if (raw.length >= 5) formatted += ')';
+            }
+            if (raw.length >= 5) {
+                let part = raw.slice(4, 7);
+                formatted += ' ' + part;
+            }
+            if (raw.length >= 8) {
+                let part = raw.slice(7, 9);
+                formatted += '-' + part;
+            }
+            if (raw.length >= 10) {
+                let part = raw.slice(9, 11);
+                formatted += '-' + part;
+            }
+            if (raw.length >= 2 && raw.length < 5 && !formatted.includes(')')) formatted += ')';
+        }
+        this.value = formatted;
+
+        // Находим родительскую форму и блок сообщений
+        const form = this.closest('form');
+        const messagesBlock = form ? form.querySelector('.form-messages') : null;
+
+        if (raw.length > 0 && raw.length !== maxDigits) {
+            // Показываем ошибку в общем блоке
+            if (messagesBlock) {
+                messagesBlock.textContent = `❌ Введите ${maxDigits} цифр телефона, сейчас ${raw.length}`;
+                messagesBlock.className = 'form-messages error';
+                messagesBlock.style.display = 'block';
+            }
+            this.classList.add('input-error');
+        } else {
+            // Очищаем сообщение только если оно было про телефон (чтобы не стереть другие ошибки)
+            if (messagesBlock && messagesBlock.textContent.includes('Введите') && messagesBlock.textContent.includes('цифр телефона')) {
+                messagesBlock.textContent = '';
+                messagesBlock.className = 'form-messages';
+                messagesBlock.style.display = '';
+            }
+            this.classList.remove('input-error');
+        }
+    });
+}
+
+function initPhoneMasks() {
+    const phoneInputs = document.querySelectorAll('#callbackPhone, #quickPhone');
+    phoneInputs.forEach(input => {
+        if (input) applyPhoneMask(input);
+    });
 }
 
 // ========== ОТПРАВКА ДАННЫХ В GOOGLE SHEETS ==========
@@ -627,3 +692,5 @@ window.showErrorToast = showErrorToast;
 window.showSuccessToast = showSuccessToast;
 window.showWarningToast = showWarningToast;
 window.initShareButtons = initShareButtons;
+window.applyPhoneMask = applyPhoneMask;
+window.initPhoneMasks = initPhoneMasks;

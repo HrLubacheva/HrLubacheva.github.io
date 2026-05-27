@@ -1,5 +1,5 @@
 /* ==================================================================
-   ПРОЦЕСС: заголовки, подзаголовки, фото
+   ПРОЦЕСС: заголовки, подзаголовки, фото (базовые стили)
    ================================================================== */
 .process-title {
     text-align: center;
@@ -82,6 +82,85 @@
     }
 }
 
+/* ==================================================================
+   ГРУППИРОВКА БЛОКОВ ПРОЦЕССА (дополнительные стили)
+   ================================================================== */
+.process-row {
+    display: flex;
+    gap: 40px;
+    align-items: stretch;
+}
+
+.process-col {
+    flex: 1;
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+}
+
+.process-col:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.process-col .process-title {
+    margin-top: 0;
+    text-align: center;
+}
+
+.process-col .process-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+    margin-bottom: 0;
+}
+
+/* Стили для карточек (без height:100%, так как JS берёт на себя выравнивание) */
+.process-col .process-card {
+    padding: 20px;
+    box-shadow: none;
+    border: 1px solid var(--border);
+    background: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.process-col .process-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-sm);
+}
+
+.process-col .process-step {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+}
+
+.process-col .process-card h4 {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.process-col .process-card p {
+    font-size: 0.9rem;
+    flex: 1; /* чтобы текст занимал оставшееся место, но высоту будет контролировать JS */
+}
+
+@media (max-width: 992px) {
+    .process-row {
+        flex-direction: column;
+        gap: 30px;
+    }
+    .process-col {
+        padding: 20px;
+    }
+}
+
+/* ТРЕНИНГОВАЯ СЕТКА (6 карточек) – остаётся без изменений */
 .training-grid .process-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

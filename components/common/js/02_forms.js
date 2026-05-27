@@ -29,6 +29,10 @@ function initCallbackForm() {
         const callbackConsent = document.getElementById('callbackConsent');
 
         if (callbackPhone) {
+            // ДОБАВЛЕНО: маска телефона
+            if (typeof window.applyPhoneMask === 'function') {
+                window.applyPhoneMask(callbackPhone);
+            }
             callbackPhone.addEventListener('blur', () => {
                 let digits = callbackPhone.value.replace(/\D/g, '');
                 if (digits.startsWith('8')) digits = '7' + digits.slice(1);
@@ -120,6 +124,10 @@ function initCallbackForm() {
         const quickConsent = document.getElementById('quickConsent');
 
         if (quickPhone) {
+            // ДОБАВЛЕНО: маска телефона
+            if (typeof window.applyPhoneMask === 'function') {
+                window.applyPhoneMask(quickPhone);
+            }
             quickPhone.addEventListener('blur', () => {
                 let digits = quickPhone.value.replace(/\D/g, '');
                 if (digits.startsWith('8')) digits = '7' + digits.slice(1);

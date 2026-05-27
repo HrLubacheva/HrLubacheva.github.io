@@ -233,6 +233,11 @@
 
         if (typeof initShareButtons === 'function') initShareButtons();
 
+        // ДОБАВЛЕНО: инициализация масок телефонов
+        if (typeof window.initPhoneMasks === 'function') {
+            window.initPhoneMasks();
+        }
+
         initFormValidation();
         initScrollTopButton();
         initMaterialsEmailButtons();
@@ -279,3 +284,45 @@
         }, 200);
     });
 })();
+
+// Выравнивание всех карточек процесса по максимальной высоте
+function equalizeProcessCards() {
+    const cards = document.querySelectorAll('.process-col .process-card');
+    if (!cards.length) return;
+
+    // Сбрасываем высоту, чтобы получить естественные размеры
+    cards.forEach(card => {
+        card.style.height = 'auto';
+    });
+
+    // Находим максимальную высоту
+    let maxHeight = 0;
+    cards.forEach(card => {
+        const height = card.offsetHeight;
+        if (height > maxHeight) maxHeight = height;
+    });
+
+    // Устанавливаем одинаковую высоту
+    cards.forEach(card => {
+        card.style.height = maxHeight + 'px';
+    });
+}
+
+// Запускаем после полной загрузки страницы и после возможных изменений (например, ресайз)
+window.addEventListener('load', equalizeProcessCards);
+window.addEventListener('resize', function() {
+    // Сбрасываем высоту перед пересчётом при ресайзе
+    const cards = document.querySelectorAll('.process-col .process-card');
+    cards.forEach(card => {
+        card.style.height = 'auto';
+    });
+    setTimeout(equalizeProcessCards, 50);
+});
+
+// Также запускаем, если контент меняется динамически (например, после открытия аккордеона)
+if (typeof MutationObserver !== 'undefined') {
+    const observer = new MutationObserver(function() {
+        equalizeProcessCards();
+    });
+    observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+}

@@ -95,3 +95,20 @@
     font-weight: bold;
     margin-bottom: 15px;
 }
+
+.training-grid .process-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+@media (max-width: 900px) {
+    .training-grid .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 600px) {
+    .training-grid .process-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}

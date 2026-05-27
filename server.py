@@ -43,12 +43,12 @@ def main():
         print("❌ Запустите из корневой папки проекта")
         sys.exit(1)
     port = get_free_port()
-    local_ip = get_local_ip()
+    with socketserver.TCPServer(("127.0.0.1", port), Handler) as httpd:
+        print(f"\n🚀 Сервер запущен: http://127.0.0.1:{port}")
+        print("💡 Файлы собраны один раз. При изменениях запустите сборку вручную: python build.py")
     with socketserver.TCPServer(("0.0.0.0", port), Handler) as httpd:
         print(f"\n🚀 Сервер запущен:")
         print(f"   Локально:  http://127.0.0.1:{port}")
-        if local_ip != "127.0.0.1":
-            print(f"   По сети:   http://{local_ip}:{port}")
         print("💡 После изменений в компонентах выполните python build.py и обновите страницу")
         webbrowser.open(f"http://127.0.0.1:{port}")
         try:
