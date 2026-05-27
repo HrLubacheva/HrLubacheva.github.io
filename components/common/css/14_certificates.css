@@ -2,26 +2,53 @@
     background: var(--light-bg, #f8f9fa);
     padding: 60px 0;
 }
+
+.carousel-group {
+    margin-bottom: 60px;
+}
+.carousel-group-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+    padding-left: 8px;
+    border-left: 4px solid var(--primary);
+}
+
 .carousel-wrapper {
     position: relative;
     display: flex;
     align-items: center;
-    margin: 40px 0 20px;
+    margin: 20px 0;
 }
+
 .carousel-viewport {
     overflow-x: hidden;
     width: 100%;
     border-radius: var(--radius-lg, 28px);
 }
+
 .carousel-track {
     display: flex;
     gap: 24px;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     will-change: transform;
 }
-.carousel-slide {
+
+/* Вертикальные слайды */
+#carouselTrackVert .carousel-slide {
     flex: 0 0 auto;
     width: 180px;
+    background: white;
+    border-radius: var(--radius-md, 16px);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+/* Горизонтальные слайды шире */
+#carouselTrackHoriz .carousel-slide {
+    flex: 0 0 auto;
+    width: 280px;
     background: white;
     border-radius: var(--radius-md, 16px);
     overflow: hidden;
@@ -38,6 +65,8 @@
     display: block;
     background: #eef2f5;
 }
+
+/* Кнопки */
 .carousel-btn {
     position: absolute;
     top: 50%;
@@ -63,14 +92,16 @@
     color: white;
     transform: translateY(-50%) scale(1.05);
 }
-.carousel-prev { left: -22px; }
-.carousel-next { right: -22px; }
+.carousel-prev-vert, .carousel-prev-horiz { left: -22px; }
+.carousel-next-vert, .carousel-next-horiz { right: -22px; }
+
+/* Прогресс-бар */
 .carousel-progress {
     width: 100%;
     height: 2px;
     background: #e2e8f0;
     border-radius: 2px;
-    margin: 24px 0 20px;
+    margin: 16px 0 12px;
     overflow: hidden;
 }
 .progress-bar {
@@ -80,6 +111,8 @@
     border-radius: 2px;
     transition: width 0.05s linear;
 }
+
+/* Точки */
 .carousel-dots {
     display: flex;
     justify-content: center;
@@ -102,17 +135,22 @@
     background: var(--primary-light, #4A8BC2);
     transform: scale(1.2);
 }
+
+/* Адаптив */
 @media (max-width: 992px) {
-    .carousel-slide { width: 160px; }
-    .carousel-prev { left: -16px; }
-    .carousel-next { right: -16px; }
+    #carouselTrackVert .carousel-slide { width: 160px; }
+    #carouselTrackHoriz .carousel-slide { width: 240px; }
+    .carousel-prev-vert, .carousel-prev-horiz { left: -16px; }
+    .carousel-next-vert, .carousel-next-horiz { right: -16px; }
 }
 @media (max-width: 768px) {
-    .carousel-slide { width: 140px; gap: 20px; }
+    #carouselTrackVert .carousel-slide { width: 140px; gap: 20px; }
+    #carouselTrackHoriz .carousel-slide { width: 220px; gap: 20px; }
     .carousel-btn { width: 36px; height: 36px; font-size: 20px; }
-    .carousel-prev { left: -12px; }
-    .carousel-next { right: -12px; }
+    .carousel-prev-vert, .carousel-prev-horiz { left: -12px; }
+    .carousel-next-vert, .carousel-next-horiz { right: -12px; }
 }
 @media (max-width: 576px) {
-    .carousel-slide { width: 120px; gap: 16px; }
+    #carouselTrackVert .carousel-slide { width: 120px; gap: 16px; }
+    #carouselTrackHoriz .carousel-slide { width: 200px; gap: 16px; }
 }
