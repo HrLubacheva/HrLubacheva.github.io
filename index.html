@@ -2495,6 +2495,221 @@ section[id] {
         animation: none;
     }
 }
+/* ==================================================================
+   ПРОФЕССИОНАЛЬНАЯ КАРУСЕЛЬ ДЛЯ СЕРТИФИКАТОВ
+   ================================================================== */
+.certificates-section {
+    background: var(--light-bg, #f8f9fa);
+    padding: 60px 0;
+}
+
+/* Обёртка карусели с кнопками по бокам */
+.carousel-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 40px 0 20px;
+}
+
+/* Область видимости (обрезает лишнее) */
+.carousel-viewport {
+    overflow-x: hidden;
+    width: 100%;
+    border-radius: var(--radius-lg, 28px);
+}
+
+/* Трек – горизонтальная прокрутка */
+.carousel-track {
+    display: flex;
+    gap: 24px;
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    will-change: transform;
+}
+
+/* Слайд (карточка сертификата) */
+.carousel-slide {
+    flex: 0 0 auto;
+    width: 200px;
+    background: white;
+    border-radius: var(--radius-md, 16px);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+}
+.carousel-slide:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg, 0 20px 30px -12px rgba(0,0,0,0.15));
+}
+.carousel-slide img {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    display: block;
+    background: #eef2f5;
+    transition: opacity 0.2s;
+}
+.carousel-slide img:hover {
+    opacity: 0.92;
+}
+
+/* Кнопки навигации */
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary, #2D6A9F);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 3;
+}
+.carousel-btn:hover {
+    background: var(--primary, #2D6A9F);
+    color: white;
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+.carousel-prev {
+    left: -22px;
+}
+.carousel-next {
+    right: -22px;
+}
+
+/* Точки-индикаторы */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 28px;
+}
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #cbd5e0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.dot.active {
+    background: var(--primary, #2D6A9F);
+    width: 24px;
+    border-radius: 12px;
+}
+.dot:hover {
+    background: var(--primary-light, #4A8BC2);
+    transform: scale(1.2);
+}
+
+/* Подпись под каруселью */
+.certificates-note {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: var(--text-muted, #4a5568);
+}
+.certificates-note p {
+    display: inline-block;
+    background: rgba(45,106,159,0.1);
+    padding: 6px 18px;
+    border-radius: 40px;
+}
+
+/* Адаптив */
+@media (max-width: 992px) {
+    .carousel-slide {
+        width: 170px;
+    }
+    .carousel-prev {
+        left: -16px;
+    }
+    .carousel-next {
+        right: -16px;
+    }
+}
+@media (max-width: 768px) {
+    .carousel-slide {
+        width: 140px;
+        gap: 16px;
+    }
+    .carousel-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+    }
+    .carousel-prev {
+        left: -12px;
+    }
+    .carousel-next {
+        right: -12px;
+    }
+    .carousel-dots {
+        gap: 8px;
+    }
+}
+@media (max-width: 576px) {
+    .carousel-slide {
+        width: 120px;
+    }
+    .carousel-prev {
+        left: -8px;
+    }
+    .carousel-next {
+        right: -8px;
+    }
+}
+
+/* Лайтбокс (без изменений) */
+.cert-lightbox {
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.cert-lightbox-content {
+    max-width: 90%;
+    max-height: 80%;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.cert-lightbox-caption {
+    margin-top: 20px;
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+}
+.cert-lightbox-close {
+    position: absolute;
+    top: 25px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.cert-lightbox-close:hover {
+    color: #ccc;
+}
 </style>
 </head>
 <body>
@@ -3706,7 +3921,51 @@ section[id] {
             </p>
         </div>
     </div>
-</section></main>
+</section>
+<section id="certificates" class="section certificates-section fade-up">
+    <div class="container">
+        <h2 class="section-title">📜 Мои сертификаты и дипломы</h2>
+        <p class="section-subtitle">Подтверждение квалификации: 14 программ повышения экспертизы</p>
+
+        <div class="carousel-wrapper">
+            <button class="carousel-btn carousel-prev" aria-label="Назад">❮</button>
+            <div class="carousel-viewport">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- 14 сертификатов (все вертикальные миниатюры) -->
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-01_thumb.webp" data-full="assets/images/certs/vert-01_full.webp" alt="HR-эксперт"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-02_thumb.webp" data-full="assets/images/certs/vert-02_full.webp" alt="Коуч"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-03_thumb.webp" data-full="assets/images/certs/vert-03_full.webp" alt="Бизнес-тренер"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-04_thumb.webp" data-full="assets/images/certs/vert-04_full.webp" alt="Профориентация"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-05_thumb.webp" data-full="assets/images/certs/vert-05_full.webp" alt="Психологическое консультирование"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-06_thumb.webp" data-full="assets/images/certs/vert-06_full.webp" alt="HR-аналитика"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-07_thumb.webp" data-full="assets/images/certs/vert-07_full.webp" alt="Управление персоналом"></div>
+
+                    <div class="carousel-slide"><img src="assets/images/certs/horiz-01_thumb.webp" data-full="assets/images/certs/horiz-01_full.webp" alt="Подбор персонала"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/horiz-02_thumb.webp" data-full="assets/images/certs/horiz-02_full.webp" alt="Онбординг"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/horiz-03_thumb.webp" data-full="assets/images/certs/horiz-03_full.webp" alt="Трудовое право"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/horiz-04_thumb.webp" data-full="assets/images/certs/horiz-04_full.webp" alt="Оценка персонала"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/horiz-05_thumb.webp" data-full="assets/images/certs/horiz-05_full.webp" alt="Удержание талантов"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/horiz-06_thumb.webp" data-full="assets/images/certs/horiz-06_full.webp" alt="HR-бренд"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/horiz-07_thumb.webp" data-full="assets/images/certs/horiz-07_full.webp" alt="Цифровые HR"></div>
+                </div>
+            </div>
+            <button class="carousel-btn carousel-next" aria-label="Вперёд">❯</button>
+        </div>
+
+        <div class="carousel-dots" id="carouselDots"></div>
+
+        <div class="certificates-note">
+            <p>🔍 Нажмите на сертификат, чтобы увеличить</p>
+        </div>
+    </div>
+</section>
+
+<!-- Лайтбокс -->
+<div id="certLightbox" class="cert-lightbox" style="display: none;">
+    <span class="cert-lightbox-close">&times;</span>
+    <img class="cert-lightbox-content" id="certLightboxImg" src="" alt="">
+    <div id="certLightboxCaption" class="cert-lightbox-caption"></div>
+</div></main>
 <footer>
     <div class="container">
         <div class="footer-content">
@@ -3715,7 +3974,7 @@ section[id] {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 27.05.2026 15:37:49
+                Версия: 27.05.2026 17:33:57
             </div>
         </div>
     </div>
@@ -6350,6 +6609,181 @@ async function sendMaterialsToEmail(email, materialType) {
 window.sendMaterialsEmail = sendMaterialsEmail;
 window.sendMaterialsToEmail = sendMaterialsToEmail;
 window.isValidEmail = isValidEmail;
+(function() {
+    const track = document.getElementById('carouselTrack');
+    if (!track) return;
+
+    let slides = [];
+    let currentIndex = 0;
+    let slideWidth = 0;
+    let gap = 0;
+    let autoInterval = null;
+    const autoDelay = 4000;
+
+    const dotsContainer = document.getElementById('carouselDots');
+    const prevBtn = document.querySelector('.carousel-prev');
+    const nextBtn = document.querySelector('.carousel-next');
+
+    // Функция обновления размеров и позиции
+    function updateDimensionsAndPosition() {
+        if (!slides.length) return;
+        // Получаем ширину первого слайда
+        slideWidth = slides[0].offsetWidth;
+        // Получаем gap из CSS (значение между слайдами)
+        const trackStyle = getComputedStyle(track);
+        gap = parseFloat(trackStyle.gap) || 24;
+        // Обновляем позицию
+        updateCarousel();
+    }
+
+    function updateCarousel() {
+        const shift = -currentIndex * (slideWidth + gap);
+        track.style.transform = `translateX(${shift}px)`;
+        updateDots();
+    }
+
+    function updateDots() {
+        if (!dotsContainer) return;
+        const dots = dotsContainer.querySelectorAll('.dot');
+        dots.forEach((dot, idx) => {
+            dot.classList.toggle('active', idx === currentIndex);
+        });
+    }
+
+    function createDots() {
+        if (!dotsContainer) return;
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < slides.length; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === currentIndex) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                stopAutoScroll();
+                currentIndex = i;
+                updateCarousel();
+                startAutoScroll();
+            });
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function nextSlide() {
+        if (slides.length === 0) return;
+        currentIndex = (currentIndex + 1) % slides.length;
+        updateCarousel();
+    }
+    function prevSlide() {
+        if (slides.length === 0) return;
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        updateCarousel();
+    }
+
+    function startAutoScroll() {
+        if (autoInterval) clearInterval(autoInterval);
+        autoInterval = setInterval(nextSlide, autoDelay);
+    }
+    function stopAutoScroll() {
+        if (autoInterval) {
+            clearInterval(autoInterval);
+            autoInterval = null;
+        }
+    }
+
+    // Обработчики кнопок
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            stopAutoScroll();
+            prevSlide();
+            startAutoScroll();
+        });
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            stopAutoScroll();
+            nextSlide();
+            startAutoScroll();
+        });
+    }
+
+    // Остановка автопрокрутки при наведении
+    const carouselWrapper = document.querySelector('.carousel-wrapper');
+    if (carouselWrapper) {
+        carouselWrapper.addEventListener('mouseenter', stopAutoScroll);
+        carouselWrapper.addEventListener('mouseleave', startAutoScroll);
+    }
+
+    // Пересчёт при ресайзе
+    window.addEventListener('resize', () => {
+        updateDimensionsAndPosition();
+    });
+
+    // Лайтбокс
+    function initLightbox() {
+        const lightbox = document.getElementById('certLightbox');
+        if (!lightbox) return;
+        const lightboxImg = document.getElementById('certLightboxImg');
+        const lightboxCaption = document.getElementById('certLightboxCaption');
+        const closeBtn = document.querySelector('.cert-lightbox-close');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                lightbox.style.display = 'none';
+                lightboxImg.src = '';
+                if (lightboxCaption) lightboxCaption.innerHTML = '';
+            });
+        }
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.style.display = 'none';
+                lightboxImg.src = '';
+                if (lightboxCaption) lightboxCaption.innerHTML = '';
+            }
+        });
+        slides.forEach(slide => {
+            const img = slide.querySelector('img');
+            if (!img) return;
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const fullSrc = img.getAttribute('data-full') || img.src;
+                lightboxImg.src = fullSrc;
+                const altText = img.getAttribute('alt') || '';
+                if (lightboxCaption) lightboxCaption.innerHTML = altText;
+                lightbox.style.display = 'flex';
+            });
+        });
+    }
+
+    // Ждём загрузки всех изображений, чтобы правильно вычислить ширину
+    function waitForImages() {
+        const imgs = Array.from(track.querySelectorAll('img'));
+        if (imgs.length === 0) return Promise.resolve();
+        const promises = imgs.map(img => {
+            if (img.complete) return Promise.resolve();
+            return new Promise(resolve => {
+                img.addEventListener('load', resolve);
+                img.addEventListener('error', resolve);
+            });
+        });
+        return Promise.all(promises);
+    }
+
+    // Основная инициализация
+    function init() {
+        slides = Array.from(track.children);
+        if (slides.length === 0) return;
+        waitForImages().then(() => {
+            updateDimensionsAndPosition();
+            createDots();
+            initLightbox();
+            startAutoScroll();
+        });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
+})();
 (function () {
     'use strict';
 
