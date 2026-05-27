@@ -125,10 +125,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 
+    <!-- Оптимизированные dns-prefetch (только самые необходимые) -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
     <link rel="preload" as="image" href="assets/images/01-hero.jpg">
 
@@ -161,8 +161,7 @@
                     var div = document.createElement('div');
                     var img = document.createElement('img');
                     img.src = 'https://mc.yandex.ru/watch/' + ymId;
-                    img.style.position = 'absolute';
-                    img.style.left = '-9999px';
+                    img.className = 'visually-hidden-image';
                     img.alt = '';
                     div.appendChild(img);
                     noscript.appendChild(div);
@@ -227,6 +226,7 @@ body {
     color: var(--text-dark);
     background: #ffffff;
     line-height: 1.5;
+    min-height: 100vh;
 }
 
 .container {
@@ -266,10 +266,18 @@ body {
     margin: -1px;
     padding: 0;
     overflow: hidden;
-    clip: rect(0, 0, 0, 0);
     clip-path: inset(50%);
     border: 0;
     white-space: nowrap;
+}
+
+/* Класс для скрытия изображений метрик */
+.visually-hidden-image {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
 }
 /* ==================================================================
    01_buttons.css – кнопки
@@ -299,6 +307,12 @@ body {
 .btn-primary:active {
     transform: scale(0.97);
 }
+.btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
 
 .btn-secondary {
     background: transparent;
@@ -314,6 +328,11 @@ body {
 }
 .btn-secondary:active {
     transform: translateY(1px);
+}
+.btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .btn-small {
@@ -441,6 +460,23 @@ body {
 }
 .nav-links a:hover {
     color: var(--primary);
+}
+
+/* Accessibility focus styles */
+.burger-menu:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+.nav-links a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+.social-icons a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 50%;
 }
 
 @media (max-width: 768px) {
@@ -2595,13 +2631,13 @@ a:not(.btn-primary):not(.btn-secondary):hover {
                 <span></span>
             </button>
             <div class="social-icons">
-                <a href="https://t.me/HrLubacheva" target="_blank" aria-label="Telegram">
+                <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
                     <svg viewBox="0 0 24 24" fill="none" role="img" aria-labelledby="telegramTitle">
                         <title id="telegramTitle">Telegram</title>
                         <path d="M3 12l16.5-7.5L9 13.5l-2 6 6-4 4.5 4.5L21 4.5 3 12Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </a>
-                <a href="https://wa.me/79217916655" target="_blank" aria-label="WhatsApp">
+                <a href="https://wa.me/79217916655" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
                     <svg viewBox="0 0 24 24" fill="none" role="img" aria-labelledby="whatsappTitle">
                         <title id="whatsappTitle">WhatsApp</title>
                         <path d="M17 7.5a5.5 5.5 0 1 0-10.8 2.7L5 17l4.9-1.3a5.5 5.5 0 0 0 7.1-8.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -3840,7 +3876,7 @@ a:not(.btn-primary):not(.btn-secondary):hover {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 27.05.2026 22:56:30
+                Версия: 27.05.2026 23:00:20
             </div>
         </div>
     </div>
