@@ -353,7 +353,7 @@ body {
     width: 100%;
 }
 /* ==================================================================
-   НАВИГАЦИЯ
+   НАВИГАЦИЯ (адаптивная, с бургер-меню)
    ================================================================== */
 .navbar {
     background: white;
@@ -363,13 +363,16 @@ body {
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
 }
+
 .nav-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
     flex-wrap: wrap;
+    gap: 15px;
 }
+
 .logo {
     display: flex;
     align-items: center;
@@ -378,12 +381,14 @@ body {
     font-size: 1.5rem;
     font-weight: 800;
     color: var(--primary);
+    white-space: nowrap;
 }
 .logo-sub {
     font-weight: 400;
     font-size: 0.9rem;
     color: var(--secondary);
 }
+
 .social-icons {
     display: flex;
     gap: 15px;
@@ -408,12 +413,15 @@ body {
     stroke-width: 1.8;
     fill: none;
 }
+
+/* Бургер-кнопка */
 .burger-menu {
     display: none;
     background: none;
     border: none;
     cursor: pointer;
     padding: 10px;
+    z-index: 1001;
 }
 .burger-menu span {
     display: block;
@@ -423,6 +431,17 @@ body {
     margin: 5px 0;
     transition: 0.2s;
 }
+.burger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.burger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+.burger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Нижнее меню (десктоп) */
 .nav-bottom {
     background: var(--light-bg);
     border-radius: 50px;
@@ -444,34 +463,65 @@ body {
 .nav-links a:hover {
     color: var(--primary);
 }
+
+/* Мобильная версия (≤768px) */
 @media (max-width: 768px) {
     .burger-menu {
         display: block;
     }
     .nav-bottom {
-        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         background: white;
         border-radius: 0;
-        padding: 20px;
+        padding: 80px 20px 30px;
         margin: 0;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 999;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        box-shadow: none;
     }
     .nav-bottom.open {
-        display: block;
+        transform: translateX(0);
     }
     .nav-links {
         flex-direction: column;
         align-items: center;
-        gap: 15px;
+        gap: 20px;
+    }
+    .nav-links a {
+        font-size: 1.2rem;
+        padding: 8px 0;
     }
     body.menu-open {
         overflow: hidden;
     }
+    /* Корректировка логотипа и иконок на маленьких экранах */
+    .nav-top {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+    }
+    .logo {
+        font-size: 1.2rem;
+    }
+    .logo-sub {
+        font-size: 0.75rem;
+    }
 }
-.nav-links a.active {
-    color: var(--primary);
-    font-weight: 700;
-    border-bottom: 2px solid var(--primary);
-    padding-bottom: 4px;
+
+@media (max-width: 480px) {
+    .social-icons svg {
+        width: 20px;
+        height: 20px;
+    }
+    .logo {
+        font-size: 1rem;
+    }
 }
 /* ==================================================================
    HERO СЕКЦИЯ
@@ -2806,7 +2856,6 @@ section[id] {
     <div class="container">
         <div class="nav-top">
             <a href="#home" class="logo">
-                <div class="logo-triangle"></div>
                 <span>HR <span class="logo-sub">HrLubacheva</span></span>
             </a>
             <button class="burger-menu" id="burgerMenu" aria-label="Меню" aria-expanded="false">
@@ -4057,7 +4106,7 @@ section[id] {
                 <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
             </div>
             <div class="footer-version">
-                Версия: 27.05.2026 17:00:47
+                Версия: 27.05.2026 17:03:13
             </div>
         </div>
     </div>
@@ -5202,7 +5251,7 @@ function initCookieConsent() {
     }
 }
 window.initCookieConsent = initCookieConsent;
-// Бургер-меню
+// ========== БУРГЕР-МЕНЮ (телефонная версия) ==========
 function initBurgerMenu() {
     const burger = document.getElementById('burgerMenu');
     const navBottom = document.getElementById('navBottom');
@@ -5226,14 +5275,23 @@ function initBurgerMenu() {
     }
 
     function toggleMenu() {
-        if (navBottom.classList.contains('open')) closeMenu();
-        else openMenu();
+        if (navBottom.classList.contains('open')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
     }
 
+    // Обработчики для мыши и касания
     burger.addEventListener('click', toggleMenu);
+    burger.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        toggleMenu();
+    });
 
+    // Закрытие меню при клике/касании на любую ссылку внутри
     navBottom.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', (e) => {
+        const handler = (e) => {
             e.preventDefault();
             const targetId = link.getAttribute('href');
             closeMenu();
@@ -5245,9 +5303,12 @@ function initBurgerMenu() {
                     }, 200);
                 }
             }
-        });
+        };
+        link.addEventListener('click', handler);
+        link.addEventListener('touchstart', handler);
     });
 
+    // При ресайзе, если ширина стала больше брейкпоинта, закрываем меню
     window.addEventListener('resize', () => {
         if (window.innerWidth > MOBILE_BREAKPOINT && navBottom.classList.contains('open')) {
             closeMenu();
@@ -5255,6 +5316,7 @@ function initBurgerMenu() {
     });
 }
 
+// ========== ПЛАВНЫЙ СКРОЛЛ ДЛЯ ЯКОРЕЙ (простая версия) ==========
 function initSmoothScroll() {
     document.querySelectorAll('a[href^="#"]:not(.nav-links a)').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -5274,176 +5336,18 @@ function initSmoothScroll() {
     });
 }
 
+// ========== ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ==========
 function initNavigation() {
     initBurgerMenu();
     initSmoothScroll();
 }
 
+// Экспорт для возможного использования в других скриптах
 window.initBurgerMenu = initBurgerMenu;
 window.initSmoothScroll = initSmoothScroll;
 window.initNavigation = initNavigation;
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNavigation);
-} else {
-    initNavigation();
-}
-
-function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]:not(.nav-links a)').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            if (targetId === '#top') {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                return;
-            }
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
-}
-
-function initNavigation() {
-    initBurgerMenu();
-    initSmoothScroll();
-}
-
-window.initBurgerMenu = initBurgerMenu;
-window.initSmoothScroll = initSmoothScroll;
-window.initNavigation = initNavigation;
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initNavigation);
-} else {
-    initNavigation();
-}
-
-// Плавный кастомный скролл с easing
-function smoothScrollTo(targetY, duration = 900) {
-    const startY = window.scrollY;
-    const distance = targetY - startY;
-    if (Math.abs(distance) < 5) return;
-    const startTime = performance.now();
-
-    function easeInOutCubic(t) {
-        return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    }
-
-    function animation(now) {
-        const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const easeProgress = easeInOutCubic(progress);
-        window.scrollTo(0, startY + distance * easeProgress);
-        if (progress < 1) {
-            requestAnimationFrame(animation);
-        }
-    }
-    requestAnimationFrame(animation);
-}
-
-// Вспомогательная функция: дождаться загрузки всех изображений внутри элемента
-function waitForImagesInElement(element, timeout = 2000) {
-    return new Promise((resolve) => {
-        if (!element) return resolve();
-        const images = element.querySelectorAll('img');
-        if (images.length === 0) return resolve();
-        let pending = images.length;
-        let resolved = false;
-        const timeoutId = setTimeout(() => {
-            if (!resolved) resolve();
-        }, timeout);
-        const onLoadOrError = () => {
-            pending--;
-            if (pending === 0 && !resolved) {
-                resolved = true;
-                clearTimeout(timeoutId);
-                resolve();
-            }
-        };
-        images.forEach(img => {
-            if (img.complete) {
-                onLoadOrError();
-            } else {
-                img.addEventListener('load', onLoadOrError);
-                img.addEventListener('error', onLoadOrError);
-            }
-        });
-    });
-}
-
-// Плавный скролл для всех якорей с автооткрытием details и коррекцией позиции
-function initSmoothScroll() {
-    const navbar = document.querySelector('.navbar');
-    let navbarHeight = navbar ? navbar.offsetHeight : 80;
-    const extraOffset = 20;
-    const scrollDuration = 900;
-
-    // Пересчитываем высоту навбара при ресайзе и после загрузки
-    function updateNavbarHeight() {
-        if (navbar) navbarHeight = navbar.offsetHeight;
-    }
-    window.addEventListener('resize', updateNavbarHeight);
-    window.addEventListener('load', updateNavbarHeight);
-
-    // Функция, которая вычисляет целевую позицию и выполняет скролл с ожиданием загрузки картинок
-    async function scrollToTarget(targetElement) {
-        if (!targetElement) return;
-
-        // Сначала дождаться загрузки изображений внутри целевого элемента и его родителей до ближайшего section
-        const section = targetElement.closest('section');
-        const elementToWait = section || targetElement;
-        await waitForImagesInElement(elementToWait);
-
-        // Повторно вычисляем позицию после загрузки картинок
-        const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navbarHeight - extraOffset;
-        smoothScrollTo(targetPosition, scrollDuration);
-
-        // Открываем details после окончания скролла
-        setTimeout(() => {
-            if (targetElement.tagName === 'DETAILS') {
-                targetElement.open = true;
-            } else {
-                const parentDetails = targetElement.closest('details');
-                if (parentDetails) parentDetails.open = true;
-            }
-        }, scrollDuration + 50);
-    }
-
-    // Обработчик кликов по якорям
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            if (targetId === '#top' || targetId === '#') {
-                e.preventDefault();
-                smoothScrollTo(0, scrollDuration);
-                return;
-            }
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                e.preventDefault();
-                scrollToTarget(targetElement);
-            }
-        });
-    });
-}
-
-// Экспорт
-function initNavigation() {
-    initBurgerMenu();
-    initSmoothScroll();
-}
-
-window.initBurgerMenu = initBurgerMenu;
-window.initSmoothScroll = initSmoothScroll;
-window.initNavigation = initNavigation;
-window.smoothScrollTo = smoothScrollTo;
-
+// Автозапуск
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initNavigation);
 } else {
