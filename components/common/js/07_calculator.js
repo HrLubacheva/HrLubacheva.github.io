@@ -123,12 +123,12 @@ function renderCart() {
             <div class="service-name">${escapedName}</div>
             <div class="service-price">${priceDisplay}</div>
             <div class="service-qty-control">
-                <button class="qty-btn qty-minus" data-idx="${idx}" aria-label="Уменьшить количество">−</button>
-                <span class="qty-value" aria-label="Количество">${item.qty}</span>
-                <button class="qty-btn qty-plus" data-idx="${idx}" aria-label="Увеличить количество">+</button>
+                <button class="qty-btn qty-minus" data-idx="${idx}">−</button>
+                <span class="qty-value">${item.qty}</span>
+                <button class="qty-btn qty-plus" data-idx="${idx}">+</button>
             </div>
             <div class="service-remove">
-                <button class="remove-item" data-idx="${idx}" aria-label="Удалить услугу">✖</button>
+                <button class="remove-item" data-idx="${idx}">✖</button>
             </div>
         `;
         container.appendChild(div);

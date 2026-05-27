@@ -38,7 +38,7 @@
         });
     </script>
 
-    <!-- Динамическая загрузка счётчиков с улучшенным consent -->
+    <!-- Динамическая загрузка счётчиков с улучшенным consent (исправлен try/catch) -->
     <script>
         (function () {
             var ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
@@ -88,32 +88,20 @@
                 }
             }
 
+            // Проверяем сохранённое согласие с try/catch
             try {
                 var consent = localStorage.getItem('cookie_consent');
                 if (consent === 'accepted') {
                     loadMetrics();
                 }
             } catch(e) {
+                // Если localStorage недоступен, не загружаем счётчики
                 if (window.IS_DEV) console.warn('localStorage недоступен', e);
             }
 
             window.loadMetricsOnConsent = loadMetrics;
         })();
     </script>
-
-    <!-- ПОЛИФИЛ ДЛЯ IntersectionObserver (для старых браузеров) -->
-    <script>
-        (function() {
-            if (typeof window.IntersectionObserver === 'undefined') {
-                var script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/intersection-observer@0.12.0/intersection-observer.js';
-                script.async = true;
-                document.head.appendChild(script);
-            }
-        })();
-    </script>
-
-    <!-- Остальные метатеги, schema.org и т.д. подключаются через отдельные файлы -->
 </head>
 <body>
 <a href="#main-content" class="skip-link">Перейти к содержанию</a>
