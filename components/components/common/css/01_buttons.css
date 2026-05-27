@@ -1,0 +1,45 @@
+/* ==================================================================
+   КНОПКИ
+   ================================================================== */
+.btn-primary, .btn-secondary {
+    display: inline-block;
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    font-size: 1rem;
+}
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+.btn-primary:active {
+    transform: scale(0.97);
+}
+.btn-secondary {
+    background: transparent;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+.btn-secondary:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+}
+.btn-small {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+}
+.btn-block {
+    display: block;
+    width: 100%;
+}

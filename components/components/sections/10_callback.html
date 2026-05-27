@@ -1,0 +1,65 @@
+<section id="callback-form" aria-labelledby="callback-title">
+    <div class="container">
+        <div class="calendar-card fade-up">
+            <h2 class="section-title" id="callback-title">
+                📋 Экспресс-диагностика 15 минут
+                <span class="callback-subtitle">Разберём вашу ситуацию — без обязательств</span>
+            </h2>
+
+            <div class="callback-features">
+                <p class="callback-features-text">Для соискателей, специалистов, руководителей и бизнеса.</p>
+                <p class="callback-features-note">Найдём точки роста, дадим рекомендации и предложим решение.</p>
+                <ul class="feature-badges" role="list">
+                    <li>🔒 Конфиденциально</li>
+                    <li>⏱️ 15 минут</li>
+                    <li>🤝 Без обязательств</li>
+                </ul>
+            </div>
+
+            <form id="callbackForm" class="callback-form" novalidate>
+                <fieldset>
+                    <legend class="visually-hidden">Запись на диагностику</legend>
+
+                    <div class="form-row-three">
+                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field" aria-label="Ваше имя">
+                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field" aria-label="Номер телефона">
+                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email" class="form-field" aria-label="Адрес электронной почты">
+                    </div>
+
+                    <div id="quizSelectionBlock" class="callback-quiz-selection" style="display: none;">
+                        <div class="service-name"></div>
+                        <div class="service-price"></div>
+                        <div class="service-remove">
+                            <button type="button" id="removeQuizSelection" class="remove-item" aria-label="Удалить выбранный вариант">✖</button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="chosenVariant" id="chosenVariant">
+                    <input type="hidden" name="chosenVariantPrice" id="chosenVariantPrice">
+                    <input type="hidden" name="originalChosenVariant" id="originalChosenVariant">
+                    <input type="hidden" name="originalChosenVariantPrice" id="originalChosenVariantPrice">
+                    <input type="hidden" name="recommendedVariants" id="recommendedVariants">
+                    <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
+
+                    <textarea id="callbackComment" name="comment" rows="2" placeholder="💬 Удобное время или дополнительная информация" class="form-field form-textarea" aria-label="Комментарий"></textarea>
+
+                    <div class="form-row-messages">
+                        <div class="consent-checkbox">
+                            <input type="checkbox" id="callbackConsent" name="consent" required>
+                            <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
+                        </div>
+                        <div id="callbackFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
+                    </div>
+
+                    <button type="submit" class="btn-primary btn-block callback-submit" aria-label="Записаться на диагностику">📞 Записаться →</button>
+
+                    <div class="callback-telegram-alt">
+                        ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
+                    </div>
+                </fieldset>
+            </form>
+
+            <p class="callback-note">После отправки мы свяжемся с вами для уточнения времени.</p>
+        </div>
+    </div>
+</section>
