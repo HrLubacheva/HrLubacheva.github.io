@@ -588,6 +588,83 @@ function initShareButtons() {
     });
 }
 
+// ========== НОВОЕ: автоматический сбор ошибок и режим дебага ==========
+(function() {
+    // Режим дебага (включение через ?debug=1 или localStorage)
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceDebug = urlParams.has('debug') || localStorage.getItem('hr_debug_mode') === 'true';
+    if (forceDebug && !window.IS_DEV) {
+        window.IS_DEV = true;
+        console.log('🔍 Режим отладки включён');
+        localStorage.setItem('hr_debug_mode', 'true');
+    }
+    window.toggleDebugMode = function() {
+        const isDebug = localStorage.getItem('hr_debug_mode') === 'true';
+        if (isDebug) {
+            localStorage.removeItem('hr_debug_mode');
+            console.log('🔇 Режим отладки выключен');
+        } else {
+            localStorage.setItem('hr_debug_mode', 'true');
+            console.log('🔍 Режим отладки включён');
+        }
+        location.reload();
+    };
+
+    // Отправка технической ошибки на бэкенд
+    function sendTechnicalError(errorInfo) {
+        const url = window.APP_CONFIG?.SCRIPT_URL;
+        if (!url) return;
+
+        const formData = new URLSearchParams();
+        formData.append('formType', 'Техническая ошибка');
+        formData.append('name', 'System');
+        formData.append('comment', JSON.stringify(errorInfo));
+        formData.append('consent', 'Да');
+        formData.append('userId', window.getOrCreateLocalUserId?.() || 'unknown');
+        formData.append('timeOnSite', window.getTimeOnSite?.() || '-');
+        formData.append('page', window.location.href);
+        formData.append('userAgent', navigator.userAgent);
+
+        // sendBeacon – не блокирует закрытие страницы
+        navigator.sendBeacon(url, formData);
+    }
+
+    // Перехват необработанных ошибок
+    window.addEventListener('error', function(event) {
+        sendTechnicalError({
+            type: 'runtime',
+            message: event.message,
+            filename: event.filename,
+            lineno: event.lineno,
+            colno: event.colno,
+            stack: event.error?.stack
+        });
+    });
+
+    // Перехват rejected промисов
+    window.addEventListener('unhandledrejection', function(event) {
+        sendTechnicalError({
+            type: 'promise',
+            reason: String(event.reason),
+            stack: event.reason?.stack
+        });
+    });
+
+    // Логирование консольных ошибок (переопределяем console.error)
+    const originalConsoleError = console.error;
+    console.error = function(...args) {
+        originalConsoleError.apply(console, args);
+        if (args[0] && typeof args[0] === 'string' && args[0].includes('CSP')) {
+            // Не спамим CSP ошибками
+            return;
+        }
+        sendTechnicalError({
+            type: 'console',
+            message: args.map(a => String(a)).join(' ')
+        });
+    };
+})();
+
 // ---------- Экспорт глобальных функций ----------
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;

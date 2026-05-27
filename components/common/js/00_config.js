@@ -3,7 +3,7 @@
 // ============================================================
 window.APP_CONFIG = {
     // URL Google Apps Script для отправки форм
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwHRGiHJGn0xxnvW8VnMKWYCaALuRjy9W1wpPhyYlNBw4ztskHjpcOf0JcaogZ45uC75Q/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzO7HAqcMX-t2N7O4EOhPmXvfTyyJwrzcMEpVjp_vElXcn9qLJOxciZR0sQUEJcdqLG5A/exec',
 
     // Контакты
     TELEGRAM: 'https://t.me/HrLubacheva',
@@ -49,6 +49,8 @@ window.APP_CONFIG = {
         LOCALSTORAGE_GEO_KEY: 'hr_geo',
         LOCALSTORAGE_USER_ID_KEY: 'hr_user_id',
         DEFAULT_QUANTITY: 1,
+        // НОВОЕ: режим дебага (можно включить через ?debug=1)
+        DEBUG_MODE_ENABLED: false,   // будет переопределено при наличии debug=1
     },
 
     // ID секций для якорных ссылок

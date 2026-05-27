@@ -8,10 +8,6 @@
     const STATS_ANIMATION_DURATION = C.STATS_ANIMATION_DURATION || 1500;
     const SCROLL_TOP_THRESHOLD = C.SCROLL_TOP_VISIBLE_THRESHOLD || 500;
 
-    if (typeof initAnimations === 'function') initAnimations();
-    else console.warn('initAnimations not found');
-
-
     // Повторная инициализация анимаций после динамических изменений (например, переключение вкладок)
     function reinitAnimations() {
         const elements = document.querySelectorAll('.fade-up:not(.visible)');
@@ -226,7 +222,7 @@
         sections.forEach(section => observer.observe(section));
     }
 
-    // Карусель сертификатов (вызов, чтобы не зависеть от автоинициализации)
+    // Карусель сертификатов
     function initCarousel() {
         if (typeof window.initInfiniteCarousel === 'function') {
             window.initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
@@ -234,9 +230,8 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // 1. Инициализация модулей (только функции, без авто-вызовов)
-        if (typeof initUserId === 'function') initUserId().catch(() => {
-        });
+        // 1. Инициализация модулей
+        if (typeof initUserId === 'function') initUserId().catch(() => {});
         if (typeof initModal === 'function') initModal();
         if (typeof initCopyButtons === 'function') initCopyButtons();
         if (typeof initFormEnterSubmit === 'function') initFormEnterSubmit();
@@ -261,22 +256,27 @@
             setTimeout(animateStats, 200);
         };
 
-        // 3. Запускаем их один раз
+        // 3. Запускаем основные модули
         window.initCalculator();
         window.initQuiz();
 
-        // 4. Остальные инициализации (без animateStats – он будет вызван на load)
+        // 4. Остальные инициализации
         initActiveNav();
         initFormValidation();
         initScrollTopButton();
         initMaterialsEmailButtons();
         initCarousel();
 
-        // 5. Дополнительный вызов анимаций для уже видимых элементов (резерв)
-        setTimeout(reinitAnimations, 500);
+        // 5. Явный вызов анимации для статических элементов (важно!)
+        if (typeof initAnimations === 'function') {
+            initAnimations();
+        } else {
+            console.warn('initAnimations не найдена');
+        }
+        setTimeout(reinitAnimations, 100);
     });
 
-    // 6. При полной загрузке страницы – показываем элементы, которые уже видны, и запускаем анимацию статистики
+    // При полной загрузке – ещё раз пробегаемся по fade-up
     window.addEventListener('load', function () {
         setTimeout(function () {
             document.querySelectorAll('.fade-up').forEach(el => {
