@@ -2,7 +2,6 @@
 // 01_core.js – Ядро: утилиты, тосты, fetch, валидация, отправка форм, гео, UTM и т.д.
 // ============================================================
 
-// ---------- Безопасное экранирование HTML ----------
 function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -13,7 +12,6 @@ function escapeHtml(str) {
     });
 }
 
-// ---------- Режим разработки ----------
 const IS_DEV = window.location.hostname === 'localhost' ||
                window.location.hostname === '127.0.0.1' ||
                window.location.search.includes('debug=true');
@@ -22,7 +20,6 @@ function logError(...args) { console.error(...args); }
 function logWarn(...args) { if (IS_DEV) console.warn(...args); }
 window.IS_DEV = IS_DEV;
 
-// Включение/отключение логов (больше не переопределяем console.log глобально)
 window.enableLogs = function() {
     if (typeof originalConsoleLog === 'undefined') return;
     console.log = originalConsoleLog;
@@ -35,7 +32,6 @@ window.disableLogs = function() {
     showToast('🔇 Логи отключены', 'success');
 };
 
-// ---------- Пользовательский ID (localStorage) ----------
 function getOrCreateLocalUserId() {
     const key = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_USER_ID_KEY || 'hr_user_id';
     try {
@@ -58,7 +54,6 @@ function initUserId() {
     return Promise.resolve(currentUserId);
 }
 
-// ---------- Fetch с повторными попытками ----------
 async function fetchWithRetry(url, options = {}, retries = null, timeout = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const timeoutMs = timeout !== null ? timeout : (window.APP_CONFIG?.CONSTANTS?.FETCH_TIMEOUT || 10000);
@@ -93,17 +88,14 @@ async function loadWithCache(cacheKey, fetchFn, ttl = null) {
             try {
                 const { data, timestamp } = JSON.parse(cached);
                 if (Date.now() - timestamp < cacheTtl) return data;
-            } catch(e) { if (IS_DEV) console.warn('Ошибка парсинга кэша', e); }
+            } catch(e) { if (IS_DEV) console.warn(e); }
         }
-    } catch(e) { if (IS_DEV) console.warn('Ошибка чтения localStorage', e); }
+    } catch(e) {}
     const data = await fetchFn();
-    try {
-        localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
-    } catch(e) { if (IS_DEV) console.warn('Ошибка записи в localStorage', e); }
+    try { localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() })); } catch(e) {}
     return data;
 }
 
-// ---------- Индикатор загрузки ----------
 let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
 function showLoading(message = 'Загрузка...') {
     if (isLoadingActive) return;
@@ -135,9 +127,7 @@ function showLoading(message = 'Загрузка...') {
                 border-radius: 50%;
                 animation: loading-spin 0.8s linear infinite;
             }
-            @keyframes loading-spin {
-                to { transform: rotate(360deg); }
-            }
+            @keyframes loading-spin { to { transform: rotate(360deg); } }
         `;
         document.head.appendChild(style);
         loadingStylesAdded = true;
@@ -153,7 +143,6 @@ function hideLoading() {
     if (loadingIndicator) loadingIndicator.remove();
 }
 
-// ---------- Toast-уведомления ----------
 function showToast(message, type = 'error') {
     const existingToast = document.querySelector('.custom-toast');
     if (existingToast) existingToast.remove();
@@ -167,16 +156,12 @@ function showToast(message, type = 'error') {
     toast.setAttribute('role', 'status');
     toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
     document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-    }, window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000);
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000);
 }
 function showErrorToast(message) { showToast(message, 'error'); }
 function showSuccessToast(message) { showToast(message, 'success'); }
 function showWarningToast(message) { showToast(message, 'warning'); }
 
-// ---------- POST с повторными попытками ----------
 window.postWithRetry = async function(url, data, retries = null, baseDelay = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
@@ -203,7 +188,6 @@ window.postWithRetry = async function(url, data, retries = null, baseDelay = nul
     throw lastError;
 };
 
-// ---------- Телефон: нормализация, валидация, маска ----------
 function normalizePhoneDigits(phone) {
     let digits = phone.replace(/\D/g, '');
     if (digits.length === 0) return '';
@@ -321,7 +305,6 @@ function initPhoneMasks() {
     phoneInputs.forEach(input => { if (input) applyPhoneMask(input); });
 }
 
-// ---------- Отправка данных в Google Sheets ----------
 async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
@@ -338,7 +321,6 @@ function sendDataToSheet(data) {
 window.sendDataToSheet = sendDataToSheet;
 window.sendDataToSheetWithRetry = sendDataToSheetWithRetry;
 
-// ---------- Форматирование телефона ----------
 function formatPhoneNumber(input) {
     let digits = input.replace(/\D/g, '');
     if (digits.startsWith('8')) digits = '7' + digits.slice(1);
@@ -355,7 +337,6 @@ function formatPhoneNumber(input) {
     return formatted;
 }
 
-// ---------- Время на сайте ----------
 window.sessionStartTime = Date.now();
 function getTimeOnSite() {
     if (!window.sessionStartTime) return '-';
@@ -367,7 +348,6 @@ function getTimeOnSite() {
 }
 window.getTimeOnSite = getTimeOnSite;
 
-// ---------- Статистика визитов (localStorage) ----------
 function getVisitStats() {
     const now = new Date();
     const oneDay = 24 * 60 * 60 * 1000;
@@ -382,9 +362,9 @@ function getVisitStats() {
                 visits = JSON.parse(stored);
                 const monthAgo = now.getTime() - oneMonth;
                 visits = visits.filter(v => v > monthAgo);
-            } catch(e) { if (IS_DEV) console.warn('Ошибка парсинга visits', e); visits = []; }
+            } catch(e) { if (IS_DEV) console.warn(e); visits = []; }
         }
-    } catch(e) { if (IS_DEV) console.warn('Ошибка чтения localStorage', e); }
+    } catch(e) {}
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
     if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
     try { localStorage.setItem(visitsKey, JSON.stringify(visits)); } catch(e) {}
@@ -399,7 +379,6 @@ function getVisitStatsText() {
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
 
-// ---------- UTM-метки ----------
 function getUTMParams() {
     const urlParams = new URLSearchParams(window.location.search);
     return {
@@ -417,7 +396,6 @@ function getUTMText() {
 }
 window.getUTMText = getUTMText;
 
-// ---------- Информация об устройстве ----------
 function getDeviceInfo() {
     const ua = navigator.userAgent;
     const isMobile = /Mobile|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(ua);
@@ -446,7 +424,6 @@ function getDeviceText() {
 }
 window.getDeviceText = getDeviceText;
 
-// ---------- Информация о странице ----------
 function getPageInfo() {
     return {
         page: window.location.pathname + window.location.search,
@@ -461,7 +438,6 @@ function getPageText() {
 }
 window.getPageText = getPageText;
 
-// ---------- Геолокация (через ipapi.co) ----------
 async function getGeoData() {
     const geoKey = window.APP_CONFIG?.CONSTANTS?.LOCALSTORAGE_GEO_KEY || 'hr_geo';
     const apiUrl = window.APP_CONFIG?.CONSTANTS?.GEO_API_URL || 'https://ipapi.co/json/';
@@ -489,13 +465,12 @@ async function getGeoData() {
         try { localStorage.setItem(geoKey, JSON.stringify(result)); } catch(e) {}
         return result;
     } catch(e) {
-        if (IS_DEV) console.warn('Ошибка получения геоданных:', e);
+        if (IS_DEV) console.warn(e);
         return { ip: '-', city: '-', region: '-', country: '-', geoText: '-' };
     }
 }
 window.getGeoData = getGeoData;
 
-// ---------- Единая отправка форм ----------
 window.submitForm = async function(formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
     if (!form) return false;
@@ -569,7 +544,6 @@ window.getQuizDataFromForm = function(form) {
     };
 };
 
-// ---------- Кнопки поделиться ----------
 function initShareButtons() {
     const shareButtons = document.querySelectorAll('#shareButtonContacts, .floating-share-btn button');
     const getSiteShareText = () => {
@@ -588,84 +562,63 @@ function initShareButtons() {
     });
 }
 
-// ========== НОВОЕ: автоматический сбор ошибок и режим дебага ==========
-(function() {
-    // Режим дебага (включение через ?debug=1 или localStorage)
-    const urlParams = new URLSearchParams(window.location.search);
-    const forceDebug = urlParams.has('debug') || localStorage.getItem('hr_debug_mode') === 'true';
-    if (forceDebug && !window.IS_DEV) {
-        window.IS_DEV = true;
-        console.log('🔍 Режим отладки включён');
-        localStorage.setItem('hr_debug_mode', 'true');
+// ========== ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ С УРОВНЯМИ ==========
+window.initLogs = [];
+
+let currentLogLevel = window.APP_CONFIG?.CONSTANTS?.LOG_LEVEL || 0;
+if (window.location.search.includes('debug=1') || localStorage.getItem('hr_debug_mode') === 'true') {
+    currentLogLevel = Math.max(currentLogLevel, 5);
+}
+const urlLogLevel = parseInt(new URLSearchParams(window.location.search).get('loglevel'));
+if (!isNaN(urlLogLevel) && urlLogLevel >= 0 && urlLogLevel <= 7) {
+    currentLogLevel = urlLogLevel;
+    localStorage.setItem('hr_log_level', urlLogLevel);
+}
+window.currentLogLevel = currentLogLevel;
+
+function logInit(message, level = 'INFO', context = '', requiredLevel = 3) {
+    const timestamp = new Date().toISOString();
+    const logEntry = { timestamp, level, message, context, url: window.location.href, requiredLevel };
+    window.initLogs.push(logEntry);
+    const isDebug = currentLogLevel >= requiredLevel;
+    if (isDebug) {
+        let style = '';
+        if (level === 'ERROR') style = 'color:red; font-weight:bold';
+        else if (level === 'WARN') style = 'color:orange';
+        else if (level === 'TRACE') style = 'color:gray';
+        else if (level === 'DEBUG') style = 'color:blue';
+        else style = 'color:green';
+        console.log(`%c[${timestamp}] [${level}] ${message} ${context ? '('+context+')' : ''}`, style);
     }
-    window.toggleDebugMode = function() {
-        const isDebug = localStorage.getItem('hr_debug_mode') === 'true';
-        if (isDebug) {
-            localStorage.removeItem('hr_debug_mode');
-            console.log('🔇 Режим отладки выключен');
-        } else {
-            localStorage.setItem('hr_debug_mode', 'true');
-            console.log('🔍 Режим отладки включён');
-        }
-        location.reload();
-    };
-
-    // Отправка технической ошибки на бэкенд
-    function sendTechnicalError(errorInfo) {
-        const url = window.APP_CONFIG?.SCRIPT_URL;
-        if (!url) return;
-
-        const formData = new URLSearchParams();
-        formData.append('formType', 'Техническая ошибка');
-        formData.append('name', 'System');
-        formData.append('comment', JSON.stringify(errorInfo));
-        formData.append('consent', 'Да');
-        formData.append('userId', window.getOrCreateLocalUserId?.() || 'unknown');
-        formData.append('timeOnSite', window.getTimeOnSite?.() || '-');
-        formData.append('page', window.location.href);
-        formData.append('userAgent', navigator.userAgent);
-
-        // sendBeacon – не блокирует закрытие страницы
-        navigator.sendBeacon(url, formData);
+    const forceSend = window.APP_CONFIG?.CONSTANTS?.FORCE_SEND_LOGS_TO_SERVER || false;
+    if (level === 'ERROR' || level === 'WARN' || (window.location.search.includes('debug=1') && currentLogLevel >= requiredLevel) || forceSend) {
+        sendInitLog(logEntry);
     }
+}
+function sendInitLog(logEntry) {
+    const url = window.APP_CONFIG?.SCRIPT_URL;
+    if (!url) return;
+    const formData = new URLSearchParams();
+    formData.append('formType', 'Лог инициализации');
+    formData.append('name', 'System');
+    formData.append('comment', JSON.stringify(logEntry));
+    formData.append('consent', 'Да');
+    formData.append('userId', window.getOrCreateLocalUserId?.() || 'unknown');
+    formData.append('page', window.location.href);
+    formData.append('userAgent', navigator.userAgent);
+    navigator.sendBeacon(url, formData);
+}
+const originalErrorHandler = window.onerror;
+window.onerror = function(message, source, lineno, colno, error) {
+    logInit(`Uncaught error: ${message} at ${source}:${lineno}:${colno}`, 'ERROR', error?.stack, 1);
+    if (originalErrorHandler) originalErrorHandler(message, source, lineno, colno, error);
+};
+const originalUnhandledRejection = window.onunhandledrejection;
+window.onunhandledrejection = function(event) {
+    logInit(`Unhandled rejection: ${event.reason}`, 'ERROR', event.reason?.stack, 1);
+    if (originalUnhandledRejection) originalUnhandledRejection(event);
+};
 
-    // Перехват необработанных ошибок
-    window.addEventListener('error', function(event) {
-        sendTechnicalError({
-            type: 'runtime',
-            message: event.message,
-            filename: event.filename,
-            lineno: event.lineno,
-            colno: event.colno,
-            stack: event.error?.stack
-        });
-    });
-
-    // Перехват rejected промисов
-    window.addEventListener('unhandledrejection', function(event) {
-        sendTechnicalError({
-            type: 'promise',
-            reason: String(event.reason),
-            stack: event.reason?.stack
-        });
-    });
-
-    // Логирование консольных ошибок (переопределяем console.error)
-    const originalConsoleError = console.error;
-    console.error = function(...args) {
-        originalConsoleError.apply(console, args);
-        if (args[0] && typeof args[0] === 'string' && args[0].includes('CSP')) {
-            // Не спамим CSP ошибками
-            return;
-        }
-        sendTechnicalError({
-            type: 'console',
-            message: args.map(a => String(a)).join(' ')
-        });
-    };
-})();
-
-// ---------- Экспорт глобальных функций ----------
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
@@ -693,3 +646,4 @@ window.showWarningToast = showWarningToast;
 window.initShareButtons = initShareButtons;
 window.applyPhoneMask = applyPhoneMask;
 window.initPhoneMasks = initPhoneMasks;
+window.logInit = logInit;

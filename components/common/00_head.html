@@ -7,30 +7,24 @@
     <meta name="theme-color" content="#2D6A9F">
     <title>Виктория Любачева | Карьерный консультант · HR‑эксперт · Бизнес‑тренер</title>
 
-    <!-- Безопасность -->
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <!-- CSP с поддержкой WebSocket для Яндекс.Метрики (исправлено: добавлены wss://mc.yandex.ru и ws://mc.yandex.ru) -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru;">
 
-    <!-- Preconnect и preload шрифтов -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"></noscript>
 
-    <!-- DNS Prefetch -->
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
-    <!-- Предзагрузка критических изображений -->
     <link rel="preload" as="image" href="assets/images/01-hero.jpg" imagesrcset="assets/images/01-hero.jpg 480w" imagesizes="(max-width: 768px) 280px, 480px">
 
-    <!-- Минимальный конфиг для аналитики -->
     <script>
         window.APP_CONFIG = window.APP_CONFIG || {};
         Object.assign(window.APP_CONFIG, {
@@ -38,17 +32,13 @@
             GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117'
         });
     </script>
-
-    <!-- Динамическая загрузка счётчиков с улучшенным consent -->
     <script>
         (function () {
             var ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
             var gaId = window.APP_CONFIG.GOOGLE_ANALYTICS_ID;
-
             function loadMetrics() {
                 if (window._metricsLoaded) return;
                 window._metricsLoaded = true;
-
                 if (ymId) {
                     (function (m, e, t, r, i, k, a) {
                         m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
@@ -80,24 +70,14 @@
                     function gtag() { dataLayer.push(arguments); }
                     window.gtag = gtag;
                     gtag('js', new Date());
-                    gtag('consent', 'default', {
-                        ad_storage: 'denied',
-                        analytics_storage: 'denied',
-                        wait_for_update: 500
-                    });
+                    gtag('consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied', wait_for_update: 500 });
                     gtag('config', gaId);
                 }
             }
-
             try {
                 var consent = localStorage.getItem('cookie_consent');
-                if (consent === 'accepted') {
-                    loadMetrics();
-                }
-            } catch(e) {
-                if (window.IS_DEV) console.warn('localStorage недоступен', e);
-            }
-
+                if (consent === 'accepted') loadMetrics();
+            } catch(e) { if (window.IS_DEV) console.warn(e); }
             window.loadMetricsOnConsent = loadMetrics;
         })();
     </script>

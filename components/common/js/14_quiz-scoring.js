@@ -70,9 +70,11 @@
         return true;
     }
     window.getTopTwoServices = function(answersArr) {
+        logInit(`getTopTwoServices вызван с answers: ${JSON.stringify(answersArr)}`, 'INFO', '', 4);
         let weights = window.SERVICE_WEIGHTS;
         let mapping = window.ANSWER_MAPPING;
         if (!weights || Object.keys(weights).length === 0 || !mapping) {
+            logInit('SERVICE_WEIGHTS или ANSWER_MAPPING не загружены', 'ERROR', '', 1);
             return { variantA: "Индивидуальная консультация (1ч)", variantB: "Экспресс-консультация (30мин)", variantAFormatted: "👤 B2C: Стандартные — Индивидуальная консультация (1ч)", variantBFormatted: "👤 B2C: Базовые — Экспресс-консультация (30мин)" };
         }
         const userRole = answersArr[0];
@@ -99,10 +101,12 @@
         }
         scores.sort((a, b) => b.score - a.score);
         if (scores.length === 0) {
+            logInit('Не найдено подходящих услуг', 'WARN', '', 2);
             return { variantA: "Индивидуальная консультация (1ч)", variantB: "Экспресс-консультация (30мин)", variantAFormatted: "👤 B2C: Стандартные — Индивидуальная консультация (1ч)", variantBFormatted: "👤 B2C: Базовые — Экспресс-консультация (30мин)" };
         }
         const top = scores[0];
         const second = scores[1] || scores[0];
+        logInit(`Результат: ${top.service} (${top.score}) и ${second.service} (${second.score})`, 'INFO', '', 4);
         return { variantA: top.service, variantB: second.service, variantAFormatted: formatServiceWithCategory(top.service), variantBFormatted: formatServiceWithCategory(second.service), scoreA: top.score, scoreB: second.score, priceA: top.price, priceB: second.price };
     };
 })();

@@ -1,12 +1,9 @@
-// ============================================================
-// 03_forms.js – Формы обратной связи и копирование корзины
-// ============================================================
 function initCallbackForm() {
+    logInit('initCallbackForm started', 'INFO', '', 3);
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
     const FORM_MESSAGE_HIDE_DELAY = C.FORM_MESSAGE_HIDE_DELAY || 5000;
 
-    // ----- Форма обратного звонка -----
     const callbackForm = document.getElementById('callbackForm');
     const callbackMessages = document.getElementById('callbackFormMessages');
     if (callbackForm && callbackMessages) {
@@ -40,6 +37,7 @@ function initCallbackForm() {
         }
         callbackForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            logInit('Отправка формы callbackForm', 'INFO', '', 3);
             clearCallbackMessage();
             let isValid = true;
             let phoneDigits = callbackPhone.value.replace(/\D/g, '');
@@ -56,10 +54,10 @@ function initCallbackForm() {
                 if (quizBlock) quizBlock.style.display = 'none';
                 return window.getQuizDataFromForm(form);
             });
+            logInit('Отправка формы callbackForm завершена', 'INFO', '', 3);
         });
     }
 
-    // ----- Форма быстрого заказа (в калькуляторе) -----
     const quickForm = document.getElementById('quickOrderForm');
     const quickMessages = document.getElementById('quickFormMessages');
     if (quickForm && quickMessages) {
@@ -84,6 +82,7 @@ function initCallbackForm() {
         }
         quickForm.addEventListener('submit', async function(e) {
             e.preventDefault();
+            logInit('Отправка формы quickOrderForm', 'INFO', '', 3);
             clearQuickMessage();
             let isValid = true;
             let digits = quickPhone.value.replace(/\D/g, '');
@@ -100,13 +99,14 @@ function initCallbackForm() {
                 const quizData = window.getQuizDataFromForm(form);
                 return { ...quizData, cart: cartData };
             });
+            logInit('Отправка формы quickOrderForm завершена', 'INFO', '', 3);
         });
     }
 
-    // ----- Копирование корзины -----
     const copyCartBtn = document.getElementById('copyCartBtn');
     if (copyCartBtn) {
         copyCartBtn.addEventListener('click', () => {
+            logInit('Копирование корзины', 'INFO', '', 4);
             const cartText = window.getCartData ? window.getCartData() : '';
             if (!cartText || cartText === 'Корзина пуста') { window.showWarningToast('🛒 Корзина пуста. Добавьте услуги.'); return; }
             const totalPrice = document.getElementById('totalPrice')?.innerText || '0 ₽';
@@ -115,6 +115,7 @@ function initCallbackForm() {
                 .catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
         });
     }
+    logInit('initCallbackForm finished', 'INFO', '', 3);
 }
 function initFormEnterSubmit() {
     const form = document.getElementById('callbackForm');

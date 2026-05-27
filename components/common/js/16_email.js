@@ -8,6 +8,7 @@ let lastSendTime = 0;
 const MIN_INTERVAL_MS = 5000;
 function isValidEmail(email) { return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email); }
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
+    logInit(`sendMaterialsEmail: ${email}, чек-лист=${wantChecklist}, тренинг=${wantTraining}`, 'INFO', '', 4);
     if (isSendingMaterials) throw new Error('Пожалуйста, подождите, предыдущая отправка ещё не завершена');
     const now = Date.now();
     if (now - lastSendTime < MIN_INTERVAL_MS) { const secondsLeft = Math.ceil((MIN_INTERVAL_MS - (now - lastSendTime)) / 1000); throw new Error(`Пожалуйста, подождите ${secondsLeft} секунд перед повторной отправкой`); }
@@ -20,6 +21,7 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
 }
 let isSendingEmail = false;
 async function sendMaterialsToEmail(email, materialType) {
+    logInit(`sendMaterialsToEmail: ${email}, тип=${materialType}`, 'INFO', '', 4);
     if (isSendingEmail) { window.showErrorToast('⏳ Отправка уже выполняется, подождите...'); return false; }
     if (!email || !isValidEmail(email)) { window.showErrorToast('❌ Введите корректный email'); return false; }
     let wantChecklist = false, wantTraining = false;

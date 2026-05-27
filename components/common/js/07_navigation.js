@@ -2,6 +2,7 @@
 // 07_navigation.js – Бургер-меню для мобильных устройств
 // ============================================================
 function initBurgerMenu() {
+    logInit('initBurgerMenu started', 'INFO', '', 3);
     const burger = document.getElementById('burgerMenu');
     const navBottom = document.getElementById('navBottom');
     const body = document.body;
@@ -14,6 +15,7 @@ function initBurgerMenu() {
     burger.addEventListener('touchstart', (e) => { e.preventDefault(); toggleMenu(); });
     navBottom.querySelectorAll('a').forEach(link => { link.addEventListener('click', () => closeMenu()); link.addEventListener('touchstart', () => closeMenu()); });
     window.addEventListener('resize', () => { if (window.innerWidth > MOBILE_BREAKPOINT && navBottom.classList.contains('open')) closeMenu(); });
+    logInit('initBurgerMenu finished', 'INFO', '', 3);
 }
 function initNavigation() { initBurgerMenu(); }
 window.initBurgerMenu = initBurgerMenu;

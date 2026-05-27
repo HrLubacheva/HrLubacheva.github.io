@@ -3,6 +3,7 @@
 // ============================================================
 let lastFocusedElement = null;
 function showModal(modal) {
+    logInit(`showModal вызван`, 'INFO', '', 4);
     if (!modal) return;
     lastFocusedElement = document.activeElement;
     modal.style.display = 'flex';
@@ -14,6 +15,7 @@ function showModal(modal) {
     else { modal.setAttribute('tabindex', '-1'); modal.focus(); }
 }
 function hideModal(modal) {
+    logInit(`hideModal вызван`, 'INFO', '', 4);
     if (!modal) return;
     modal.classList.remove('show');
     document.body.classList.remove('modal-open');
@@ -21,12 +23,14 @@ function hideModal(modal) {
     if (lastFocusedElement && lastFocusedElement.focus) { lastFocusedElement.focus(); lastFocusedElement = null; }
 }
 function initModal() {
+    logInit('initModal started', 'INFO', '', 3);
     const privacyModal = document.getElementById('privacyModal');
     const closePrivacyBtn = document.getElementById('closePrivacyModalBtn');
     const closePrivacy = document.getElementById('closePrivacyModal');
     if (closePrivacyBtn) closePrivacyBtn.addEventListener('click', () => hideModal(privacyModal));
     if (closePrivacy) closePrivacy.addEventListener('click', () => hideModal(privacyModal));
     window.addEventListener('click', (e) => { if (e.target === privacyModal) hideModal(privacyModal); });
+    logInit('initModal finished', 'INFO', '', 3);
 }
 window.initModal = initModal;
 window.showModal = showModal;

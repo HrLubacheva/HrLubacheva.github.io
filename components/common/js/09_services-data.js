@@ -1,6 +1,7 @@
 // ============================================================
 // 09_services-data.js – Полный перечень услуг с ценами и группировкой
 // ============================================================
+logInit('Начало загрузки SERVICES_DATA', 'INFO', '', 3);
 const SERVICES_DATA = {
     recruitment: [
         {name: "Составление вакансии (с УТП)", price: 10000},
@@ -117,3 +118,4 @@ window.PRICE_BOOK = {};
 for (const category of Object.values(window.LOCAL_SERVICES)) {
     for (const item of category) { if (!window.PRICE_BOOK[item.service]) window.PRICE_BOOK[item.service] = item.price; }
 }
+logInit(`SERVICES_DATA загружено, категорий: ${Object.keys(SERVICES_DATA).length}, локальных категорий: ${Object.keys(window.LOCAL_SERVICES).length}`, 'INFO', '', 3);

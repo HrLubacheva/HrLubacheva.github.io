@@ -2,20 +2,13 @@
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    // URL Google Apps Script для отправки форм
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzO7HAqcMX-t2N7O4EOhPmXvfTyyJwrzcMEpVjp_vElXcn9qLJOxciZR0sQUEJcdqLG5A/exec',
-
-    // Контакты
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwHRGiHJGn0xxnvW8VnMKWYCaALuRjy9W1wpPhyYlNBw4ztskHjpcOf0JcaogZ45uC75Q/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
     PHONE: '+79217916655',
-
-    // ID счётчиков аналитики
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
-
-    // Константы – всё в одном месте для удобства
     CONSTANTS: {
         TOAST_DURATION: 3000,
         TOAST_FADE_DURATION: 300,
@@ -49,11 +42,9 @@ window.APP_CONFIG = {
         LOCALSTORAGE_GEO_KEY: 'hr_geo',
         LOCALSTORAGE_USER_ID_KEY: 'hr_user_id',
         DEFAULT_QUANTITY: 1,
-        // НОВОЕ: режим дебага (можно включить через ?debug=1)
-        DEBUG_MODE_ENABLED: false,   // будет переопределено при наличии debug=1
+        LOG_LEVEL: 5,
+        FORCE_SEND_LOGS_TO_SERVER: false,
     },
-
-    // ID секций для якорных ссылок
     SECTION_IDS: {
         home: 'home',
         roles: 'roles',
