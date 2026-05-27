@@ -1,5 +1,5 @@
 /* ==================================================================
-   НАВИГАЦИЯ
+   НАВИГАЦИЯ (адаптивная, с бургер-меню)
    ================================================================== */
 .navbar {
     background: white;
@@ -9,13 +9,16 @@
     z-index: 1000;
     transition: transform 0.3s ease-in-out;
 }
+
 .nav-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 15px 0;
     flex-wrap: wrap;
+    gap: 15px;
 }
+
 .logo {
     display: flex;
     align-items: center;
@@ -24,12 +27,14 @@
     font-size: 1.5rem;
     font-weight: 800;
     color: var(--primary);
+    white-space: nowrap;
 }
 .logo-sub {
     font-weight: 400;
     font-size: 0.9rem;
     color: var(--secondary);
 }
+
 .social-icons {
     display: flex;
     gap: 15px;
@@ -54,12 +59,15 @@
     stroke-width: 1.8;
     fill: none;
 }
+
+/* Бургер-кнопка */
 .burger-menu {
     display: none;
     background: none;
     border: none;
     cursor: pointer;
     padding: 10px;
+    z-index: 1001;
 }
 .burger-menu span {
     display: block;
@@ -69,6 +77,17 @@
     margin: 5px 0;
     transition: 0.2s;
 }
+.burger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.burger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+.burger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Нижнее меню (десктоп) */
 .nav-bottom {
     background: var(--light-bg);
     border-radius: 50px;
@@ -90,32 +109,63 @@
 .nav-links a:hover {
     color: var(--primary);
 }
+
+/* Мобильная версия (≤768px) */
 @media (max-width: 768px) {
     .burger-menu {
         display: block;
     }
     .nav-bottom {
-        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         background: white;
         border-radius: 0;
-        padding: 20px;
+        padding: 80px 20px 30px;
         margin: 0;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 999;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        box-shadow: none;
     }
     .nav-bottom.open {
-        display: block;
+        transform: translateX(0);
     }
     .nav-links {
         flex-direction: column;
         align-items: center;
-        gap: 15px;
+        gap: 20px;
+    }
+    .nav-links a {
+        font-size: 1.2rem;
+        padding: 8px 0;
     }
     body.menu-open {
         overflow: hidden;
     }
+    /* Корректировка логотипа и иконок на маленьких экранах */
+    .nav-top {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+    }
+    .logo {
+        font-size: 1.2rem;
+    }
+    .logo-sub {
+        font-size: 0.75rem;
+    }
 }
-.nav-links a.active {
-    color: var(--primary);
-    font-weight: 700;
-    border-bottom: 2px solid var(--primary);
-    padding-bottom: 4px;
+
+@media (max-width: 480px) {
+    .social-icons svg {
+        width: 20px;
+        height: 20px;
+    }
+    .logo {
+        font-size: 1rem;
+    }
 }
