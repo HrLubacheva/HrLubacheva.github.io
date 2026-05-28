@@ -146,20 +146,16 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <!-- CSP: возвращён 'unsafe-inline' для совместимости с анимациями -->
+    <!-- CSP с добавленным script.googleusercontent.com для корректной работы Google Apps Script -->
     <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru https://www.google-analytics.com https://region1.google-analytics.com;">
+          content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru https://www.google-analytics.com https://region1.google-analytics.com;">
 
-    <!-- Google tag (gtag.js) – прямая загрузка (без дублей) -->
+    <!-- Google tag (gtag.js) – прямая загрузка -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZJJ2SE117"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+        function gtag() { dataLayer.push(arguments); }
         gtag('js', new Date());
-        // Для гарантированного сбора данных – разрешаем аналитику сразу
-        // (если нужен строгий режим согласия, замените 'granted' на 'denied' и донастройте баннер)
         gtag('consent', 'default', {
             'ad_storage': 'denied',
             'analytics_storage': 'granted',
@@ -168,7 +164,7 @@
         gtag('config', 'G-QZJJ2SE117');
     </script>
 
-    <!-- Яндекс.Метрика (загружается сразу, без отложки) -->
+    <!-- Яндекс.Метрика -->
     <script>
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments);};
@@ -181,14 +177,10 @@
         })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=109380497', 'ym');
         ym(109380497, 'init', {clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true});
     </script>
-    <noscript>
-        <div><img src="https://mc.yandex.ru/watch/109380497" style="position:absolute; left:-9999px;" alt=""></div>
-    </noscript>
+    <noscript><div><img src="https://mc.yandex.ru/watch/109380497" style="position:absolute; left:-9999px;" alt=""></div></noscript>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <!-- Основной CSS со шрифтом -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 
     <link rel="dns-prefetch" href="https://mc.yandex.ru">
@@ -196,10 +188,8 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
 
-    <!-- Исправлен preload: .webp вместо .jpg -->
     <link rel="preload" as="image" href="assets/images/01-hero.webp">
 
-    <!-- Конфиг приложения (оставлен, т.к. используется в других скриптах) -->
     <script>
         window.APP_CONFIG = window.APP_CONFIG || {};
         Object.assign(window.APP_CONFIG, {
@@ -207,7 +197,6 @@
             GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117'
         });
     </script>
-    <!-- Удалён старый отложенный загрузчик loadMetrics, чтобы избежать дублей GA -->
 <style>
 /* ==================================================================
    00_variables.css – переменные и сбросы
@@ -5429,7 +5418,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 28.05.2026 14:23:58</span>
+                </a> <span class="footer-version">⚡ Версия 28.05.2026 14:38:59</span>
 
             </div>
         </div>
@@ -5558,7 +5547,7 @@ const IS_DEV = window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' ||
     window.location.search.includes('debug=true');
 
-let originalConsoleLog = null;  // <-- ИСПРАВЛЕНО: добавлено недостающее объявление
+let originalConsoleLog = null;
 
 function log(...args) {
     if (IS_DEV) console.log(...args);
@@ -5582,8 +5571,7 @@ window.enableLogs = function () {
 };
 window.disableLogs = function () {
     if (originalConsoleLog === null) originalConsoleLog = console.log;
-    console.log = function () {
-    };
+    console.log = function () {};
     showToast('🔇 Логи отключены', 'success');
 };
 
@@ -5653,13 +5641,11 @@ async function loadWithCache(cacheKey, fetchFn, ttl = null) {
                 if (IS_DEV) console.warn(e);
             }
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     const data = await fetchFn();
     try {
         localStorage.setItem(cacheKey, JSON.stringify({data, timestamp: Date.now()}));
-    } catch (e) {
-    }
+    } catch (e) {}
     return data;
 }
 
@@ -5846,19 +5832,13 @@ function bindLiveValidation(input, type = 'phone') {
 
 function applyPhoneMask(inputElement) {
     if (!inputElement) return;
-
-    // Удаляем старый обработчик, если есть
     if (inputElement._phoneMaskHandler) {
         inputElement.removeEventListener('input', inputElement._phoneMaskHandler);
     }
-
     const formatPhone = (digits) => {
         if (!digits) return '';
         if (digits.length === 0) return '';
-
-        // Ограничиваем 11 цифрами
         if (digits.length > 11) digits = digits.slice(0, 11);
-
         let result = '+7';
         if (digits.length >= 2) {
             result += ' (' + digits.slice(1, 4);
@@ -5874,42 +5854,26 @@ function applyPhoneMask(inputElement) {
         if (digits.length >= 10) {
             result += '-' + digits.slice(9, 11);
         }
-        // Если есть незакрытая скобка и цифр 2-3 – закрываем
         if (digits.length >= 2 && digits.length <= 4 && !result.includes(')')) {
             result += ')';
         }
         return result;
     };
-
     const handler = function(e) {
         const oldValue = this.value;
-        // Получаем только цифры из текущего значения
         let digits = oldValue.replace(/\D/g, '');
-
-        // Если в поле нет цифр – очищаем полностью
         if (digits.length === 0) {
             if (this.value !== '') this.value = '';
             return;
         }
-
-        // Форматируем
         let formatted = formatPhone(digits);
-
-        // Если значение не изменилось – выходим
         if (formatted === oldValue) return;
-
-        // Запоминаем позицию курсора ДО изменения
         const cursorPos = this.selectionStart;
-        // Подсчитываем, сколько цифр было до курсора в старом значении
         let digitsBeforeCursor = 0;
         for (let i = 0; i < cursorPos && i < oldValue.length; i++) {
             if (/\d/.test(oldValue[i])) digitsBeforeCursor++;
         }
-
-        // Применяем новое значение
         this.value = formatted;
-
-        // Вычисляем новую позицию курсора: находим позицию, где набрано digitsBeforeCursor цифр
         let newCursorPos = 0;
         let digitsCount = 0;
         for (let i = 0; i < formatted.length; i++) {
@@ -5919,16 +5883,13 @@ function applyPhoneMask(inputElement) {
                 break;
             }
         }
-        // Если не нашли (например, курсор был в конце), ставим в конец
         if (newCursorPos === 0 && digitsBeforeCursor === digits.length) {
             newCursorPos = formatted.length;
         }
         this.setSelectionRange(newCursorPos, newCursorPos);
     };
-
     inputElement.addEventListener('input', handler);
     inputElement._phoneMaskHandler = handler;
-    // Инициализируем форматирование (если поле не пустое)
     handler.call(inputElement);
 }
 
@@ -6005,17 +5966,15 @@ function getVisitStats() {
                 visits = [];
             }
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
     if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
     try {
         localStorage.setItem(visitsKey, JSON.stringify(visits));
-    } catch (e) {
-    }
+    } catch (e) {}
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
-    return {week: visits.filter(v => v > weekAgo).length, month: visits.length, total: visits.length};
+    return {week: visits.filter(v => v > weekAgo).length, month: visits.filter(v => v > monthAgo).length, total: visits.length};
 }
 
 function getVisitStatsText() {
@@ -6104,11 +6063,9 @@ async function getGeoData() {
             try {
                 cached = JSON.parse(raw);
                 if (cached && typeof cached === 'object') return cached;
-            } catch (e) {
-            }
+            } catch (e) {}
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Ошибка геолокации');
@@ -6122,8 +6079,7 @@ async function getGeoData() {
         };
         try {
             localStorage.setItem(geoKey, JSON.stringify(result));
-        } catch (e) {
-        }
+        } catch (e) {}
         return result;
     } catch (e) {
         if (IS_DEV) console.warn(e);
@@ -6132,6 +6088,28 @@ async function getGeoData() {
 }
 
 window.getGeoData = getGeoData;
+
+// Глобальная блокировка действий (антиспам)
+window._actionLocks = window._actionLocks || {};
+
+window.isActionLocked = function(actionKey, durationMs = 60000) {
+    const lockedUntil = window._actionLocks[actionKey];
+    if (lockedUntil && Date.now() < lockedUntil) {
+        const secondsLeft = Math.ceil((lockedUntil - Date.now()) / 1000);
+        window.showWarningToast(`⏳ Подождите ${secondsLeft} сек. перед повторным действием`);
+        return true;
+    }
+    return false;
+};
+
+window.lockAction = function(actionKey, durationMs = 60000) {
+    window._actionLocks[actionKey] = Date.now() + durationMs;
+    setTimeout(() => {
+        if (window._actionLocks[actionKey] && window._actionLocks[actionKey] <= Date.now()) {
+            delete window._actionLocks[actionKey];
+        }
+    }, durationMs + 1000);
+};
 
 window.submitForm = async function (formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
@@ -6222,7 +6200,6 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
     }
 };
 
-
 window.getQuizDataFromForm = function (form) {
     return {
         chosenVariant: form.querySelector('[name="chosenVariant"]')?.value || '',
@@ -6248,16 +6225,15 @@ function initShareButtons() {
                 navigator.clipboard.writeText(text).then(() => {
                     window.showSuccessToast('✅ Ссылка на сайт скопирована');
                 })
-                    .catch(() => {
-                        window.showErrorToast('❌ Не удалось скопировать');
-                    });
+                .catch(() => {
+                    window.showErrorToast('❌ Не удалось скопировать');
+                });
             };
             btn.addEventListener('click', btn._shareHandler);
         }
     });
 }
 
-// ========== ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ С УРОВНЯМИ ==========
 window.initLogs = [];
 
 let currentLogLevel = window.APP_CONFIG?.CONSTANTS?.LOG_LEVEL || 0;
@@ -6375,7 +6351,6 @@ function initAnimations() {
 
 window.initAnimations = initAnimations;
 function initCallbackForm() {
-    // Защита от двойной инициализации
     if (window._callbackFormInitialized) return;
     window._callbackFormInitialized = true;
 
@@ -6388,7 +6363,6 @@ function initCallbackForm() {
     const callbackMessages = document.getElementById('callbackFormMessages');
 
     if (callbackForm && callbackMessages) {
-        // Удаляем старый обработчик, если он был
         if (callbackForm._submitHandler) {
             callbackForm.removeEventListener('submit', callbackForm._submitHandler);
         }
@@ -6617,7 +6591,7 @@ function initCallbackForm() {
         quickForm.addEventListener('submit', quickSubmitHandler);
     }
 
-    // ========== Копирование корзины ==========
+    // ========== Копирование корзины (с короткой блокировкой 5 секунд) ==========
     const copyCartBtn = document.getElementById('copyCartBtn');
     if (copyCartBtn) {
         if (copyCartBtn._copyHandler) {
@@ -6625,6 +6599,8 @@ function initCallbackForm() {
         }
 
         copyCartBtn._copyHandler = () => {
+            const actionKey = 'copy_cart';
+            if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
             logInit('Копирование корзины', 'INFO', '', 4);
             const cartText = window.getCartData ? window.getCartData() : '';
             if (!cartText || cartText === 'Корзина пуста') {
@@ -6635,6 +6611,7 @@ function initCallbackForm() {
             const fullText = `Корзина:\n${cartText}\n\n💰 Итого: ${totalPrice}`;
             navigator.clipboard.writeText(fullText).then(() => {
                 window.showSuccessToast('✅ Корзина скопирована в буфер обмена');
+                if (window.lockAction) window.lockAction(actionKey, 5000);
             }).catch(() => {
                 window.showErrorToast('❌ Не удалось скопировать');
             });
@@ -6647,7 +6624,6 @@ function initCallbackForm() {
 }
 
 function initFormEnterSubmit() {
-    // Защита от двойной инициализации
     if (window._formEnterSubmitInitialized) return;
     window._formEnterSubmitInitialized = true;
 
@@ -8008,8 +7984,8 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     };
 })();
 // ============================================================
-// 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов, адаптивные тексты)
-// Исправлено: добавлено предупреждение при сбросе ответов из-за смены роли
+// 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов)
+// Защита от двойной отправки через isSubmittingChoice (без временной блокировки)
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -8125,7 +8101,6 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         renderQuiz();
     }
 
-    // ИСПРАВЛЕННАЯ ФУНКЦИЯ: добавлено предупреждение при сбросе ответов
     function updateIndustryAndWorkFormatQuestions(role) {
         let wasReset = false;
         if (role === "Подбираю сотрудников") {
@@ -8528,27 +8503,11 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                     </div>
                 </div>
             `;
-
             const goToCallbackBtn = container.querySelector('.go-to-callback');
             const goToCalculatorBtn = container.querySelector('.go-to-calculator');
             const resetBtnAfter = document.getElementById('resetQuizBtnAfter');
-
-            if (goToCallbackBtn) {
-                goToCallbackBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const target = document.getElementById('callback-form');
-                    if (target) scrollToElement(target);
-                });
-            }
-
-            if (goToCalculatorBtn) {
-                goToCalculatorBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const target = document.getElementById('calculator');
-                    if (target) scrollToElement(target);
-                });
-            }
-
+            if (goToCallbackBtn) goToCallbackBtn.addEventListener('click', (e) => { e.preventDefault(); const target = document.getElementById('callback-form'); if (target) scrollToElement(target); });
+            if (goToCalculatorBtn) goToCalculatorBtn.addEventListener('click', (e) => { e.preventDefault(); const target = document.getElementById('calculator'); if (target) scrollToElement(target); });
             if (resetBtnAfter) resetBtnAfter.addEventListener('click', () => startQuiz());
         }
     }
@@ -8565,6 +8524,8 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         if (copyResultBtn) {
             copyResultBtn.removeEventListener('click', copyResultBtn._copyHandler);
             copyResultBtn._copyHandler = function () {
+                const actionKey = 'copy_quiz';
+                if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
                 const chosenVariant = document.getElementById('chosenVariant')?.value || '';
                 const chosenVariantPrice = document.getElementById('chosenVariantPrice')?.value || '';
                 const originalChosenVariant = document.getElementById('originalChosenVariant')?.value || '';
@@ -8575,7 +8536,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                 if (originalChosenVariant && originalChosenVariant !== chosenVariant) copyText += `📌 Исходный выбор: ${originalChosenVariant}\n`;
                 if (recommendedVariants) copyText += `\n📌 Рекомендации эксперта:\n${recommendedVariants}\n`;
                 copyText += `\n🔗 ${window.location.href.split('?')[0]}`;
-                navigator.clipboard.writeText(copyText).then(() => { window.showSuccessToast('✅ Рекомендации скопированы в буфер'); }).catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
+                navigator.clipboard.writeText(copyText).then(() => { window.showSuccessToast('✅ Рекомендации скопированы в буфер'); if (window.lockAction) window.lockAction(actionKey, 5000); }).catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
             };
             copyResultBtn.addEventListener('click', copyResultBtn._copyHandler);
         }
@@ -8585,21 +8546,41 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY = 2000;
 let isSendingMaterials = false;
 let lastSendTime = 0;
-const MIN_INTERVAL_MS = 5000;
+const MIN_INTERVAL_MS = 60000; // 1 минута
+
 function isValidEmail(email) { return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email); }
+
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
     logInit(`sendMaterialsEmail: ${email}, чек-лист=${wantChecklist}, тренинг=${wantTraining}`, 'INFO', '', 4);
+
+    const actionKey = 'materials_email';
+    if (window.isActionLocked && window.isActionLocked(actionKey, MIN_INTERVAL_MS)) {
+        throw new Error('Пожалуйста, подождите перед повторной отправкой');
+    }
+
     if (isSendingMaterials) throw new Error('Пожалуйста, подождите, предыдущая отправка ещё не завершена');
     const now = Date.now();
-    if (now - lastSendTime < MIN_INTERVAL_MS) { const secondsLeft = Math.ceil((MIN_INTERVAL_MS - (now - lastSendTime)) / 1000); throw new Error(`Пожалуйста, подождите ${secondsLeft} секунд перед повторной отправкой`); }
+    if (now - lastSendTime < MIN_INTERVAL_MS) {
+        const secondsLeft = Math.ceil((MIN_INTERVAL_MS - (now - lastSendTime)) / 1000);
+        throw new Error(`Пожалуйста, подождите ${secondsLeft} секунд перед повторной отправкой`);
+    }
     if (!email || !isValidEmail(email)) throw new Error('Введите корректный email');
     const url = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
     if (!url) throw new Error('URL скрипта не задан');
     const formData = { formType: 'Запрос материалов', name: email, comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`, consent: true, userId: window.getOrCreateLocalUserId() };
     isSendingMaterials = true;
-    try { const result = await window.postWithRetry(url, formData, MAX_RETRIES, RETRY_DELAY); lastSendTime = Date.now(); return result; } finally { setTimeout(() => { isSendingMaterials = false; }, 1000); }
+    try {
+        const result = await window.postWithRetry(url, formData, MAX_RETRIES, RETRY_DELAY);
+        lastSendTime = Date.now();
+        if (window.lockAction) window.lockAction(actionKey, MIN_INTERVAL_MS);
+        return result;
+    } finally {
+        setTimeout(() => { isSendingMaterials = false; }, 1000);
+    }
 }
+
 let isSendingEmail = false;
+
 async function sendMaterialsToEmail(email, materialType) {
     logInit(`sendMaterialsToEmail: ${email}, тип=${materialType}`, 'INFO', '', 4);
     if (isSendingEmail) { window.showErrorToast('⏳ Отправка уже выполняется, подождите...'); return false; }
@@ -8609,8 +8590,18 @@ async function sendMaterialsToEmail(email, materialType) {
     else if (materialType === 'training') wantTraining = true;
     else if (materialType === 'both') { wantChecklist = true; wantTraining = true; }
     isSendingEmail = true;
-    try { await sendMaterialsEmail(email, wantChecklist, wantTraining); window.showSuccessToast('✅ Материалы отправлены! Проверьте почту'); return true; } catch (err) { window.showErrorToast('❌ Ошибка: ' + err.message); return false; } finally { setTimeout(() => { isSendingEmail = false; }, 1000); }
+    try {
+        await sendMaterialsEmail(email, wantChecklist, wantTraining);
+        window.showSuccessToast('✅ Материалы отправлены! Проверьте почту');
+        return true;
+    } catch (err) {
+        window.showErrorToast('❌ Ошибка: ' + err.message);
+        return false;
+    } finally {
+        setTimeout(() => { isSendingEmail = false; }, 1000);
+    }
 }
+
 window.sendMaterialsEmail = sendMaterialsEmail;
 window.sendMaterialsToEmail = sendMaterialsToEmail;
 window.isValidEmail = isValidEmail;
