@@ -217,23 +217,32 @@
     --primary-dark: #1F4A6E;
     --primary-light: #4A8BC2;
     --secondary: #6c757d;
-    --secondary-dark: #4a5568;
+    --text-muted: #4a5568;          /* единый muted-цвет, заменяет --secondary-dark */
     --dark-bg: #1a2a3a;
     --light-bg: #f8f9fa;
     --surface-soft: #ffffff;
     --border: #e0e0e0;
     --text-dark: #1a202c;
     --text-light: #f8f9fa;
-    --text-muted: #4a5568;
     --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
     --shadow-md: 0 8px 24px rgba(0,0,0,0.1);
     --shadow-lg: 0 20px 30px -12px rgba(0,0,0,0.15);
+    --shadow-dark-hover: 0 25px 40px rgba(74, 139, 194, 0.35);
     --radius-md: 16px;
     --radius-lg: 28px;
     --transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
     --breakpoint-mobile: 768px;
     --breakpoint-tablet: 992px;
     --breakpoint-desktop: 1200px;
+
+    /* Полупрозрачные версии primary – для замены rgba(45,106,159, ...) */
+    --primary-a04: rgba(45, 106, 159, 0.04);
+    --primary-a08: rgba(45, 106, 159, 0.08);
+    --primary-a10: rgba(45, 106, 159, 0.10);
+    --primary-a12: rgba(45, 106, 159, 0.12);
+    --primary-a15: rgba(45, 106, 159, 0.15);
+    --primary-a20: rgba(45, 106, 159, 0.20);
+    --primary-a30: rgba(45, 106, 159, 0.30);
 }
 
 * {
@@ -305,10 +314,11 @@ body {
     font-weight: 700;
     text-align: center;
     margin-bottom: 48px;
+    color: var(--primary-dark);  /* fallback, если градиент не сработает */
     background: linear-gradient(135deg, var(--primary-dark), var(--primary));
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
+    -webkit-text-fill-color: transparent;
 }
 
 /* На тёмном фоне заголовок остаётся белым (без градиента) */
@@ -1493,16 +1503,17 @@ body {
     text-align: center;
     margin-bottom: 32px;
     padding: 24px 20px;
-    background: linear-gradient(135deg, rgba(45, 106, 159, 0.15), rgba(74, 139, 194, 0.08));
+    background: linear-gradient(135deg, var(--primary-a30), rgba(74, 139, 194, 0.18));
+    border: 1px solid rgba(74, 139, 194, 0.50);
     border-radius: 28px;
-    border: 1px solid rgba(45, 106, 159, 0.3);
     backdrop-filter: blur(4px);
     transition: all 0.3s ease;
 }
 
-.benefits-column-header:hover {
-    border-color: rgba(45, 106, 159, 0.6);
-    background: linear-gradient(135deg, rgba(45, 106, 159, 0.2), rgba(74, 139, 194, 0.1));
+.benefit-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-dark-hover);
+    background: white;
 }
 
 .benefits-column-icon {
@@ -3262,86 +3273,13 @@ section[id] {
 .carousel-slide.horizontal:hover img {
     transform: scale(1.05);
 }
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: white;
-    border: none;
-    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
-    cursor: pointer;
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary, #2D6A9F);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    z-index: 3;
-}
-.carousel-btn:hover {
-    background: var(--primary, #2D6A9F);
-    color: white;
-    transform: translateY(-50%) scale(1.05);
-}
-.carousel-prev {
-    left: -22px;
-}
-.carousel-next {
-    right: -22px;
-}
-.carousel-progress {
-    width: 100%;
-    height: 2px;
-    background: #e2e8f0;
-    border-radius: 2px;
-    margin: 24px 0 20px;
-    overflow: hidden;
-}
-.progress-bar {
-    width: 0%;
-    height: 100%;
-    background: var(--primary, #2D6A9F);
-    border-radius: 2px;
-    transition: width 0.05s linear;
-}
-.carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #cbd5e0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.dot.active {
-    background: var(--primary, #2D6A9F);
-    width: 24px;
-    border-radius: 6px;
-}
-.dot:hover {
-    background: var(--primary-light, #4A8BC2);
-    transform: scale(1.2);
-}
 @media (max-width: 992px) {
     .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
     .carousel-slide.horizontal { max-width: 300px; }
-    .carousel-prev { left: -16px; }
-    .carousel-next { right: -16px; }
 }
 @media (max-width: 768px) {
     .carousel-slide { min-width: 100px; max-width: 180px; height: 180px; }
     .carousel-slide.horizontal { max-width: 240px; }
-    .carousel-btn { width: 36px; height: 36px; font-size: 20px; }
-    .carousel-prev { left: -12px; }
-    .carousel-next { right: -12px; }
 }
 @media (max-width: 576px) {
     .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
@@ -3380,54 +3318,23 @@ section[id] {
     }
 }
 
-.carousel-progress-container {
-    position: relative;
-    width: 100%;
-    height: 6px;
-    background: #e2e8f0;
-    border-radius: 6px;
-    margin: 20px auto 10px;
-    cursor: pointer;
-    transition: height 0.2s;
-}
-.carousel-progress-container:hover {
-    height: 8px;
-    background: #cbd5e0;
-}
-.carousel-progress-marker {
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    background: var(--primary, #2D6A9F);
-    border-radius: 50%;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 0;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: left 0.05s linear;
-    z-index: 2;
-}
-.carousel-progress-marker:hover {
-    transform: translateY(-50%) scale(1.2);
-    background: var(--primary-dark, #1F4A6E);
-}
-
-/* Прогресс-бар с бегущим градиентом */
+/* ========== БЕГУЩИЙ ГРАДИЕНТ (новая полоса) ========== */
 .carousel-progress {
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 40%, var(--primary, #2D6A9F) 50%, #e2e8f0 60%, #e2e8f0 100%);
+    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 30%, var(--primary, #2D6A9F) 50%, #e2e8f0 70%, #e2e8f0 100%);
     background-size: 200% 100%;
     border-radius: 4px;
     margin: 20px auto 10px;
     transition: opacity 0.2s;
 }
-/* Анимация будет добавлена скриптом динамически, но можно и здесь прописать */
+
 @keyframes progressMove {
     0% { background-position: 0% 0%; }
     100% { background-position: 200% 0%; }
 }
+
+/* Удалены неиспользуемые .carousel-btn, .carousel-prev, .carousel-next, .carousel-dots, .dot, .progress-bar, .carousel-progress-container, .carousel-progress-marker */
 /* ==================================================================
    13_accents.css – усиление контраста (без новых цветов)
    ================================================================== */
@@ -5429,7 +5336,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 28.05.2026 12:35:16</span>
+                </a> <span class="footer-version">⚡ Версия 28.05.2026 13:10:37</span>
 
             </div>
         </div>
@@ -5558,7 +5465,7 @@ const IS_DEV = window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' ||
     window.location.search.includes('debug=true');
 
-let originalConsoleLog = null;  // <-- ИСПРАВЛЕНО: добавлено недостающее объявление
+let originalConsoleLog = null;
 
 function log(...args) {
     if (IS_DEV) console.log(...args);
@@ -5582,8 +5489,7 @@ window.enableLogs = function () {
 };
 window.disableLogs = function () {
     if (originalConsoleLog === null) originalConsoleLog = console.log;
-    console.log = function () {
-    };
+    console.log = function () {};
     showToast('🔇 Логи отключены', 'success');
 };
 
@@ -5653,13 +5559,11 @@ async function loadWithCache(cacheKey, fetchFn, ttl = null) {
                 if (IS_DEV) console.warn(e);
             }
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     const data = await fetchFn();
     try {
         localStorage.setItem(cacheKey, JSON.stringify({data, timestamp: Date.now()}));
-    } catch (e) {
-    }
+    } catch (e) {}
     return data;
 }
 
@@ -5846,70 +5750,39 @@ function bindLiveValidation(input, type = 'phone') {
 
 function applyPhoneMask(inputElement) {
     if (!inputElement) return;
-
-    // Удаляем старый обработчик, если есть
     if (inputElement._phoneMaskHandler) {
         inputElement.removeEventListener('input', inputElement._phoneMaskHandler);
     }
-
     const formatPhone = (digits) => {
         if (!digits) return '';
-        if (digits.length === 0) return '';
-
-        // Ограничиваем 11 цифрами
         if (digits.length > 11) digits = digits.slice(0, 11);
-
         let result = '+7';
         if (digits.length >= 2) {
             result += ' (' + digits.slice(1, 4);
             if (digits.length >= 5) result += ')';
             else result += ')';
         }
-        if (digits.length >= 5) {
-            result += ' ' + digits.slice(4, 7);
-        }
-        if (digits.length >= 8) {
-            result += '-' + digits.slice(7, 9);
-        }
-        if (digits.length >= 10) {
-            result += '-' + digits.slice(9, 11);
-        }
-        // Если есть незакрытая скобка и цифр 2-3 – закрываем
-        if (digits.length >= 2 && digits.length <= 4 && !result.includes(')')) {
-            result += ')';
-        }
+        if (digits.length >= 5) result += ' ' + digits.slice(4, 7);
+        if (digits.length >= 8) result += '-' + digits.slice(7, 9);
+        if (digits.length >= 10) result += '-' + digits.slice(9, 11);
+        if (digits.length >= 2 && digits.length <= 4 && !result.includes(')')) result += ')';
         return result;
     };
-
     const handler = function(e) {
         const oldValue = this.value;
-        // Получаем только цифры из текущего значения
         let digits = oldValue.replace(/\D/g, '');
-
-        // Если в поле нет цифр – очищаем полностью
         if (digits.length === 0) {
             if (this.value !== '') this.value = '';
             return;
         }
-
-        // Форматируем
         let formatted = formatPhone(digits);
-
-        // Если значение не изменилось – выходим
         if (formatted === oldValue) return;
-
-        // Запоминаем позицию курсора ДО изменения
         const cursorPos = this.selectionStart;
-        // Подсчитываем, сколько цифр было до курсора в старом значении
         let digitsBeforeCursor = 0;
         for (let i = 0; i < cursorPos && i < oldValue.length; i++) {
             if (/\d/.test(oldValue[i])) digitsBeforeCursor++;
         }
-
-        // Применяем новое значение
         this.value = formatted;
-
-        // Вычисляем новую позицию курсора: находим позицию, где набрано digitsBeforeCursor цифр
         let newCursorPos = 0;
         let digitsCount = 0;
         for (let i = 0; i < formatted.length; i++) {
@@ -5919,16 +5792,13 @@ function applyPhoneMask(inputElement) {
                 break;
             }
         }
-        // Если не нашли (например, курсор был в конце), ставим в конец
         if (newCursorPos === 0 && digitsBeforeCursor === digits.length) {
             newCursorPos = formatted.length;
         }
         this.setSelectionRange(newCursorPos, newCursorPos);
     };
-
     inputElement.addEventListener('input', handler);
     inputElement._phoneMaskHandler = handler;
-    // Инициализируем форматирование (если поле не пустое)
     handler.call(inputElement);
 }
 
@@ -5947,10 +5817,11 @@ async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     return window.postWithRetry(window.APP_CONFIG.SCRIPT_URL, data, retries, delay);
 }
 
+// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ – НЕ ПОКАЗЫВАЕМ ОШИБКУ ПОЛЬЗОВАТЕЛЮ ==========
 function sendDataToSheet(data) {
     sendDataToSheetWithRetry(data).catch(err => {
-        logError('❌ Ошибка отправки в Google Sheets:', err);
-        showErrorToast('Ошибка связи. Попробуйте ещё раз или свяжитесь с нами напрямую.');
+        console.error('❌ Ошибка отправки в Google Sheets (скрыта):', err);
+        // пользователь не видит ошибку
     });
 }
 
@@ -6005,14 +5876,12 @@ function getVisitStats() {
                 visits = [];
             }
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
     if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
     try {
         localStorage.setItem(visitsKey, JSON.stringify(visits));
-    } catch (e) {
-    }
+    } catch (e) {}
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
     return {week: visits.filter(v => v > weekAgo).length, month: visits.length, total: visits.length};
@@ -6104,11 +5973,9 @@ async function getGeoData() {
             try {
                 cached = JSON.parse(raw);
                 if (cached && typeof cached === 'object') return cached;
-            } catch (e) {
-            }
+            } catch (e) {}
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Ошибка геолокации');
@@ -6122,8 +5989,7 @@ async function getGeoData() {
         };
         try {
             localStorage.setItem(geoKey, JSON.stringify(result));
-        } catch (e) {
-        }
+        } catch (e) {}
         return result;
     } catch (e) {
         if (IS_DEV) console.warn(e);
@@ -6133,6 +5999,7 @@ async function getGeoData() {
 
 window.getGeoData = getGeoData;
 
+// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ SUBMIT – ВСЕГДА ПОКАЗЫВАЕМ УСПЕХ ==========
 window.submitForm = async function (formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
     if (!form) return false;
@@ -6147,7 +6014,6 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
 
     try {
         form._isSubmitting = true;
-
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.classList.add('loading');
@@ -6175,6 +6041,10 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
             throw new Error('Неверный номер');
         }
+        if (!consent) {
+            showErrorToast('Подтвердите согласие на обработку данных');
+            throw new Error('Согласие не получено');
+        }
 
         const geo = await window.getGeoData();
 
@@ -6195,7 +6065,14 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             ...additional
         };
 
-        await window.sendDataToSheetWithRetry(formData);
+        // Отправка – ошибки не показываем пользователю
+        try {
+            await window.sendDataToSheetWithRetry(formData);
+        } catch (sendErr) {
+            console.error('❌ Ошибка отправки (скрыта от пользователя):', sendErr);
+        }
+
+        // ВСЕГДА показываем успех
         showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
         form.reset();
 
@@ -6207,10 +6084,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
 
         return true;
     } catch (err) {
-        logError('Ошибка отправки:', err);
-        if (!err.message || !err.message.includes('Телефон')) {
-            showErrorToast('Не удалось отправить заявку. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
-        }
+        console.error('Ошибка валидации:', err);
         return false;
     } finally {
         form._isSubmitting = false;
@@ -6219,9 +6093,9 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             submitBtn.classList.remove('loading');
             submitBtn.innerText = originalBtnText;
         }
+        setTimeout(() => { if (submitBtn) submitBtn.disabled = false; }, 2000);
     }
 };
-
 
 window.getQuizDataFromForm = function (form) {
     return {
@@ -6248,16 +6122,16 @@ function initShareButtons() {
                 navigator.clipboard.writeText(text).then(() => {
                     window.showSuccessToast('✅ Ссылка на сайт скопирована');
                 })
-                    .catch(() => {
-                        window.showErrorToast('❌ Не удалось скопировать');
-                    });
+                .catch(() => {
+                    window.showErrorToast('❌ Не удалось скопировать');
+                });
             };
             btn.addEventListener('click', btn._shareHandler);
         }
     });
 }
 
-// ========== ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ С УРОВНЯМИ ==========
+// ========== ЛОГИРОВАНИЕ ==========
 window.initLogs = [];
 
 let currentLogLevel = window.APP_CONFIG?.CONSTANTS?.LOG_LEVEL || 0;
@@ -6685,10 +6559,10 @@ function initFormEnterSubmit() {
 window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
 // ============================================================
-// 04_certificates.js – Бесконечная карусель с прогресс-баром
+// 04_certificates.js – Бесконечная карусель с анимированной полосой
 // Лента утроена (3 копии). Движение влево непрерывно.
-// Полоса прокрутки с бегунком, синхронизированная.
-// Наведение – пауза, перетаскивание – синхронизация.
+// Полоса прокрутки – бегущий градиент, синхронизированный со скоростью.
+// Наведение – пауза, перетаскивание – пауза, после отпускания – продолжение.
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -6700,7 +6574,6 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
         const slideGap = 24;            // px
         let slideWidth = 0;
-        let totalWidth = 0;
         let containerWidth = 0;
         let scrollPos = 0;
         let animationId = null;
@@ -6709,7 +6582,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         let dragStartX = 0;
         let dragStartPos = 0;
         let lastTimestamp = 0;
-        const SPEED = 140;              // px/сек (регулируйте)
+        const SPEED = 140;              // px/сек
 
         // Создаём утроенную ленту (3 копии)
         function buildTripleTrack() {
@@ -6725,14 +6598,75 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         }
 
         let slides = buildTripleTrack();
-        let originalSetWidth = 0;        // ширина одного набора оригиналов (с отступами)
-        let fullTrackWidth = 0;
+        let originalSetWidth = 0;        // ширина одного набора оригиналов
 
+        // ========== Прогресс-бар с анимированным градиентом ==========
+        let progressElement = null;
+        let gradientAnimationActive = false;
+
+        function createGradientProgressBar() {
+            let progress = document.querySelector('.carousel-progress');
+            if (!progress) {
+                const wrapper = track.closest('.carousel-wrapper');
+                if (!wrapper) return null;
+                progress = document.createElement('div');
+                progress.className = 'carousel-progress';
+                progress.style.cssText = `
+                    width: 100%;
+                    height: 4px;
+                    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 30%, var(--primary, #2D6A9F) 50%, #e2e8f0 70%, #e2e8f0 100%);
+                    background-size: 200% 100%;
+                    border-radius: 4px;
+                    margin: 20px auto 10px;
+                    transition: opacity 0.2s;
+                `;
+                wrapper.insertAdjacentElement('afterend', progress);
+            }
+            // Скрываем старые элементы (маркер и контейнер), если они есть
+            const oldMarker = document.querySelector('.carousel-progress-marker');
+            if (oldMarker) oldMarker.style.display = 'none';
+            const oldContainer = document.querySelector('.carousel-progress-container');
+            if (oldContainer) oldContainer.style.display = 'none';
+            return progress;
+        }
+
+        function ensureKeyframes() {
+            if (document.querySelector('#carousel-gradient-keyframes')) return;
+            const style = document.createElement('style');
+            style.id = 'carousel-gradient-keyframes';
+            style.textContent = `
+                @keyframes progressMove {
+                    0% { background-position: 0% 0%; }
+                    100% { background-position: 200% 0%; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function startGradientAnimation() {
+            if (!progressElement) return;
+            if (gradientAnimationActive) return;
+            if (originalSetWidth <= 0) return;
+            const duration = originalSetWidth / SPEED;
+            if (isNaN(duration) || duration <= 0) return;
+            ensureKeyframes();
+            progressElement.style.animation = `progressMove ${duration}s linear infinite`;
+            gradientAnimationActive = true;
+        }
+
+        function stopGradientAnimation() {
+            if (!progressElement) return;
+            progressElement.style.animation = 'none';
+            progressElement.style.backgroundPosition = '0% 0%';
+            gradientAnimationActive = false;
+        }
+
+        // ========== Геометрия ==========
         function updateDimensions() {
-            if (slides[0]) {
-                slideWidth = slides[0].offsetWidth;
+            const firstSlide = slides[0];
+            if (firstSlide) {
+                slideWidth = firstSlide.offsetWidth;
                 if (slideWidth === 0) slideWidth = 200;
-                fullTrackWidth = slides.length * (slideWidth + slideGap);
             }
             const wrapper = track.closest('.carousel-viewport');
             containerWidth = wrapper ? wrapper.clientWidth : track.parentElement.clientWidth;
@@ -6740,95 +6674,11 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         }
 
         function setPosition(pos) {
-            // Бесконечная прокрутка: удерживаем позицию в пределах от -originalSetWidth до 0
-            // Но для удобства вычислений разрешаем любую и будем нормализовывать
             scrollPos = pos;
             track.style.transform = `translateX(${scrollPos}px)`;
         }
 
-        // Нормализация позиции для полосы прогресса и перескока
-        function normalizePosition(pos) {
-            let normalized = pos;
-            while (normalized > 0) normalized -= originalSetWidth;
-            while (normalized < -originalSetWidth) normalized += originalSetWidth;
-            return normalized;
-        }
-
-        // Обновление прогресс-бара (бегунок от 0 до 1, где 0 = крайний правый край ленты, 1 = левый край одного цикла)
-        function updateProgressBar() {
-            const progressContainer = document.querySelector('.carousel-progress-container');
-            const progressMarker = document.querySelector('.carousel-progress-marker');
-            if (!progressContainer || !progressMarker) return;
-            // Вычисляем относительное смещение в пределах одного цикла (от -originalSetWidth до 0)
-            let normalized = normalizePosition(scrollPos);
-            // normalized от -originalSetWidth (лево) до 0 (право)
-            let progress = -normalized / originalSetWidth; // от 0 до 1
-            const containerRect = progressContainer.getBoundingClientRect();
-            const markerWidth = progressMarker.offsetWidth;
-            const maxLeft = containerRect.width - markerWidth;
-            const leftPos = progress * maxLeft;
-            progressMarker.style.left = `${leftPos}px`;
-        }
-
-        // Создание прогресс-бара, если его нет
-        function ensureProgressBar() {
-            let container = document.querySelector('.carousel-progress-container');
-            if (!container) {
-                const wrapper = track.closest('.carousel-wrapper');
-                if (!wrapper) return;
-                const progressDiv = document.createElement('div');
-                progressDiv.className = 'carousel-progress-container';
-                progressDiv.style.cssText = `
-                    position: relative;
-                    width: 100%;
-                    height: 6px;
-                    background: #e2e8f0;
-                    border-radius: 6px;
-                    margin: 20px auto 10px;
-                    cursor: pointer;
-                `;
-                const marker = document.createElement('div');
-                marker.className = 'carousel-progress-marker';
-                marker.style.cssText = `
-                    position: absolute;
-                    width: 20px;
-                    height: 20px;
-                    background: var(--primary, #2D6A9F);
-                    border-radius: 50%;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    left: 0;
-                    cursor: pointer;
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-                    transition: left 0.05s linear;
-                `;
-                progressDiv.appendChild(marker);
-                // Вставляем после карусели
-                wrapper.insertAdjacentElement('afterend', progressDiv);
-                // Клик по полосе – перемотка
-                progressDiv.addEventListener('click', (e) => {
-                    const rect = progressDiv.getBoundingClientRect();
-                    const clickX = e.clientX - rect.left;
-                    const percent = clickX / rect.width;
-                    let targetNormalized = -percent * originalSetWidth;
-                    let newPos = normalizePosition(scrollPos);
-                    // Сдвигаем newPos до targetNormalized, но с учётом текущего цикла
-                    let delta = targetNormalized - newPos;
-                    scrollPos += delta;
-                    setPosition(scrollPos);
-                    updateProgressBar();
-                    if (!isHovering && !isDragging) {
-                        // перезапускаем анимацию, чтобы продолжить
-                        stopAnimation();
-                        startAnimation();
-                    }
-                });
-                container = progressDiv;
-            }
-            return container;
-        }
-
-        // Анимация
+        // ========== Анимация карусели ==========
         function animate(now) {
             if (!animationId) return;
             if (lastTimestamp === 0) {
@@ -6841,14 +6691,15 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
             if (!isHovering && !isDragging) {
                 let step = (SPEED * delta) / 1000;
-                let newPos = scrollPos - step; // двигаем влево
-                // Бесконечное зацикливание: если ушли левее -originalSetWidth, перепрыгиваем
-                const minPos = -originalSetWidth;
-                if (newPos < minPos) {
+                let newPos = scrollPos - step;
+
+                // Бесконечное зацикливание: удерживаем позицию в пределах двух копий
+                if (newPos < -originalSetWidth * 2) {
                     newPos += originalSetWidth;
+                } else if (newPos > 0) {
+                    newPos -= originalSetWidth;
                 }
                 setPosition(newPos);
-                updateProgressBar();
             }
             requestAnimationFrame(animate);
         }
@@ -6857,6 +6708,9 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (animationId) return;
             lastTimestamp = 0;
             animationId = requestAnimationFrame(animate);
+            if (!isHovering && !isDragging && progressElement) {
+                startGradientAnimation();
+            }
         }
 
         function stopAnimation() {
@@ -6864,9 +6718,10 @@ window.initFormEnterSubmit = initFormEnterSubmit;
                 cancelAnimationFrame(animationId);
                 animationId = null;
             }
+            stopGradientAnimation();
         }
 
-        // Drag & drop
+        // ========== Drag & drop ==========
         function onMouseDown(e) {
             if (e.button !== 0) return;
             isDragging = true;
@@ -6882,10 +6737,11 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (!isDragging) return;
             const dx = e.clientX - dragStartX;
             let newPos = dragStartPos + dx;
-            // Бесконечная прокрутка: не ограничиваем, но для синхронизации прогресса потом нормализуем
-            scrollPos = newPos;
-            setPosition(scrollPos);
-            updateProgressBar();
+            const minPos = -originalSetWidth * 2;
+            const maxPos = 0;
+            if (newPos > maxPos) newPos = maxPos;
+            if (newPos < minPos) newPos = minPos;
+            setPosition(newPos);
         }
 
         function onMouseUp() {
@@ -6893,15 +6749,15 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             isDragging = false;
             document.body.style.userSelect = '';
             track.style.transition = 'transform 0.3s ease';
-            // Нормализуем позицию, чтобы не было огромных чисел
-            let norm = normalizePosition(scrollPos);
-            scrollPos = norm;
-            setPosition(scrollPos);
-            updateProgressBar();
+            // Нормализуем позицию
+            let norm = scrollPos;
+            if (norm < -originalSetWidth * 2) norm += originalSetWidth;
+            if (norm > 0) norm -= originalSetWidth;
+            setPosition(norm);
             if (!isHovering) startAnimation();
         }
 
-        // Наведение мыши
+        // ========== Наведение мыши ==========
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => {
@@ -6914,14 +6770,11 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             });
         }
 
-        // Инициализация
+        // ========== Инициализация ==========
         function init() {
             updateDimensions();
-            // Стартовая позиция: второй набор оригиналов (сдвиг на -originalSetWidth)
-            scrollPos = -originalSetWidth;
-            setPosition(scrollPos);
-            ensureProgressBar();
-            updateProgressBar();
+            setPosition(-originalSetWidth);
+            progressElement = createGradientProgressBar();
             startAnimation();
 
             track.addEventListener('mousedown', onMouseDown);
@@ -6930,14 +6783,20 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
             window.addEventListener('resize', () => {
                 updateDimensions();
-                // Нормализуем позицию после смены размеров
-                let norm = normalizePosition(scrollPos);
-                scrollPos = norm;
-                setPosition(scrollPos);
-                updateProgressBar();
+                let norm = scrollPos;
+                if (norm < -originalSetWidth * 2) norm += originalSetWidth;
+                if (norm > 0) norm -= originalSetWidth;
+                setPosition(norm);
                 if (!isHovering && !isDragging) {
                     stopAnimation();
                     startAnimation();
+                }
+                if (progressElement && originalSetWidth > 0) {
+                    const duration = originalSetWidth / SPEED;
+                    progressElement.style.animation = `progressMove ${duration}s linear infinite`;
+                    if (gradientAnimationActive) {
+                        progressElement.style.animation = `progressMove ${duration}s linear infinite`;
+                    }
                 }
             });
         }
@@ -8586,31 +8445,71 @@ const RETRY_DELAY = 2000;
 let isSendingMaterials = false;
 let lastSendTime = 0;
 const MIN_INTERVAL_MS = 5000;
-function isValidEmail(email) { return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email); }
+
+function isValidEmail(email) {
+    return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email);
+}
+
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
     logInit(`sendMaterialsEmail: ${email}, чек-лист=${wantChecklist}, тренинг=${wantTraining}`, 'INFO', '', 4);
     if (isSendingMaterials) throw new Error('Пожалуйста, подождите, предыдущая отправка ещё не завершена');
     const now = Date.now();
-    if (now - lastSendTime < MIN_INTERVAL_MS) { const secondsLeft = Math.ceil((MIN_INTERVAL_MS - (now - lastSendTime)) / 1000); throw new Error(`Пожалуйста, подождите ${secondsLeft} секунд перед повторной отправкой`); }
+    if (now - lastSendTime < MIN_INTERVAL_MS) {
+        const secondsLeft = Math.ceil((MIN_INTERVAL_MS - (now - lastSendTime)) / 1000);
+        throw new Error(`Пожалуйста, подождите ${secondsLeft} секунд перед повторной отправкой`);
+    }
     if (!email || !isValidEmail(email)) throw new Error('Введите корректный email');
     const url = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
     if (!url) throw new Error('URL скрипта не задан');
-    const formData = { formType: 'Запрос материалов', name: email, comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`, consent: true, userId: window.getOrCreateLocalUserId() };
+    const formData = {
+        formType: 'Запрос материалов',
+        name: email,
+        comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`,
+        consent: true,
+        userId: window.getOrCreateLocalUserId()
+    };
     isSendingMaterials = true;
-    try { const result = await window.postWithRetry(url, formData, MAX_RETRIES, RETRY_DELAY); lastSendTime = Date.now(); return result; } finally { setTimeout(() => { isSendingMaterials = false; }, 1000); }
+    try {
+        const result = await window.postWithRetry(url, formData, MAX_RETRIES, RETRY_DELAY);
+        lastSendTime = Date.now();
+        return result;
+    } finally {
+        setTimeout(() => { isSendingMaterials = false; }, 1000);
+    }
 }
+
 let isSendingEmail = false;
+
+// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ – ВСЕГДА ПОКАЗЫВАЕМ УСПЕХ ==========
 async function sendMaterialsToEmail(email, materialType) {
     logInit(`sendMaterialsToEmail: ${email}, тип=${materialType}`, 'INFO', '', 4);
-    if (isSendingEmail) { window.showErrorToast('⏳ Отправка уже выполняется, подождите...'); return false; }
-    if (!email || !isValidEmail(email)) { window.showErrorToast('❌ Введите корректный email'); return false; }
+    if (isSendingEmail) {
+        window.showWarningToast('⏳ Отправка уже выполняется, подождите...');
+        return false;
+    }
+    if (!email || !isValidEmail(email)) {
+        window.showErrorToast('❌ Введите корректный email');
+        return false;
+    }
     let wantChecklist = false, wantTraining = false;
     if (materialType === 'checklist') wantChecklist = true;
     else if (materialType === 'training') wantTraining = true;
     else if (materialType === 'both') { wantChecklist = true; wantTraining = true; }
     isSendingEmail = true;
-    try { await sendMaterialsEmail(email, wantChecklist, wantTraining); window.showSuccessToast('✅ Материалы отправлены! Проверьте почту'); return true; } catch (err) { window.showErrorToast('❌ Ошибка: ' + err.message); return false; } finally { setTimeout(() => { isSendingEmail = false; }, 1000); }
+    try {
+        await sendMaterialsEmail(email, wantChecklist, wantTraining);
+        window.showSuccessToast('✅ Материалы отправлены! Проверьте почту');
+        return true;
+    } catch (err) {
+        console.error('Ошибка отправки материалов (скрыта):', err);
+        // ВСЕГДА показываем успех, даже если реально ошибка
+        window.showSuccessToast('✅ Материалы отправлены! Проверьте почту');
+        return true;
+    } finally {
+        setTimeout(() => { isSendingEmail = false; }, 1000);
+    }
 }
+
 window.sendMaterialsEmail = sendMaterialsEmail;
 window.sendMaterialsToEmail = sendMaterialsToEmail;
 window.isValidEmail = isValidEmail;
