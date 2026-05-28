@@ -37,7 +37,6 @@
     background: var(--primary);
     border-color: var(--primary);
     color: white;
-    transform: translateY(-3px);
     box-shadow: 0 8px 20px rgba(45,106,159,0.25);
 }
 .quiz-option.selected {
@@ -45,7 +44,6 @@
     border-color: var(--primary);
     color: white;
     box-shadow: 0 4px 12px rgba(45,106,159,0.3);
-    transform: scale(0.98);
 }
 .quiz-nav {
     display: flex;

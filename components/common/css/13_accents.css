@@ -28,14 +28,7 @@
 }
 .add-service-btn:hover {
     background: var(--primary-dark);
-    transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(45, 106, 159, 0.25);
-}
-a:not(.btn-primary):not(.btn-secondary) {
-    transition: all 0.2s;
-}
-a:not(.btn-primary):not(.btn-secondary):hover {
-    border-bottom: 1px solid var(--primary);
 }
 .discount-info {
     font-weight: 700;
@@ -71,22 +64,4 @@ a:not(.btn-primary):not(.btn-secondary):hover {
 }
 .social-icons a:focus-visible {
     border-radius: 50%;
-}
-
-/* ========== Активные состояния карточек ========== */
-.role-card:active,
-.service-card:active,
-.process-card:active,
-.benefit-card:active {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-md);
-}
-
-@media (max-width: 768px) {
-    .role-card:active,
-    .service-card:active,
-    .process-card:active,
-    .benefit-card:active {
-        transform: translateY(-2px);
-    }
 }

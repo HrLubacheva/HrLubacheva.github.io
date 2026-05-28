@@ -2,16 +2,18 @@
 // 14_quiz-scoring.js – Расчёт баллов и подбор двух лучших услуг
 // ============================================================
 (function() {
+    // ИСПРАВЛЕНО: понятные названия категорий для отображения в квизе
     const CATEGORY_DISPLAY_NAMES = {
-        business_recruitment: '🔍 HR: Рекрутинг и подбор',
-        business_retention: '📊 HR: Удержание и развитие',
-        individual_base: '👤 B2C: Базовые (до 10 000 ₽)',
-        individual_standard: '👔 B2C: Стандартные (10 000–50 000 ₽)',
-        individual_premium: '💎 B2C: Премиальные (от 50 000 ₽)',
-        training: '🎓 Тренинги',
+        business_recruitment: '🔍 Подбор персонала',
+        business_retention: '📊 Удержание и развитие',
+        individual_base: '👤 Базовые услуги',
+        individual_standard: '👔 Карьерный консалтинг',
+        individual_premium: '💎 Премиум сопровождение',
+        training: '🎓 Обучение и тренинги',
         corporate: '🏢 Корпоративным клиентам',
-        author_courses: '📚 Авторские курсы'
+        author_courses: '📚 Авторские программы'
     };
+
     function buildServiceCategoryMap() {
         const map = {};
         if (!window.LOCAL_SERVICES) return map;
@@ -21,12 +23,21 @@
         }
         return map;
     }
+
     function getServiceCategory(serviceName) {
         if (!window.SERVICE_CATEGORY_MAP) window.SERVICE_CATEGORY_MAP = buildServiceCategoryMap();
-        return window.SERVICE_CATEGORY_MAP[serviceName] || '📌 Другое';
+        return window.SERVICE_CATEGORY_MAP[serviceName] || '📌 Рекомендация';
     }
-    function formatServiceWithCategory(serviceName) { return `${getServiceCategory(serviceName)} — ${serviceName}`; }
-    function getNumericPrice(serviceName) { if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) return window.PRICE_BOOK[serviceName]; return null; }
+
+    function formatServiceWithCategory(serviceName) {
+        return `${getServiceCategory(serviceName)} — ${serviceName}`;
+    }
+
+    function getNumericPrice(serviceName) {
+        if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) return window.PRICE_BOOK[serviceName];
+        return null;
+    }
+
     function getUserPriceSegment(answersArr) {
         const level = answersArr[1];
         const budget = answersArr[4];
@@ -42,6 +53,7 @@
         if (isCheapByLevel && isCheapByBudget) return "cheap";
         return "middle";
     }
+
     function isServiceAllowed(service, userRole, userSegment) {
         const isBusinessService = (service.includes("подбор") || service.includes("рекрутинг") ||
             service.includes("хэдхантинг") || service.includes("аутсорсинг") ||
@@ -69,13 +81,19 @@
         }
         return true;
     }
+
     window.getTopTwoServices = function(answersArr) {
         logInit(`getTopTwoServices вызван с answers: ${JSON.stringify(answersArr)}`, 'INFO', '', 4);
         let weights = window.SERVICE_WEIGHTS;
         let mapping = window.ANSWER_MAPPING;
         if (!weights || Object.keys(weights).length === 0 || !mapping) {
             logInit('SERVICE_WEIGHTS или ANSWER_MAPPING не загружены', 'ERROR', '', 1);
-            return { variantA: "Индивидуальная консультация (1ч)", variantB: "Экспресс-консультация (30мин)", variantAFormatted: "👤 B2C: Стандартные — Индивидуальная консультация (1ч)", variantBFormatted: "👤 B2C: Базовые — Экспресс-консультация (30мин)" };
+            return {
+                variantA: "Индивидуальная консультация (1ч)",
+                variantB: "Экспресс-консультация (30мин)",
+                variantAFormatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)",
+                variantBFormatted: "👤 Базовые услуги — Экспресс-консультация (30мин)"
+            };
         }
         const userRole = answersArr[0];
         const userSegment = getUserPriceSegment(answersArr);
@@ -88,6 +106,7 @@
         else if (userRole === "Рост в текущей компании") userKeys.push("role_growth");
         else if (userRole === "Хочу сменить профессию") userKeys.push("role_career_change");
         else if (userRole === "Ищу работу") userKeys.push("role_job_seeker");
+
         const scores = [];
         for (const [service, weightObj] of Object.entries(weights)) {
             if (!isServiceAllowed(service, userRole, userSegment)) continue;
@@ -100,13 +119,30 @@
             }
         }
         scores.sort((a, b) => b.score - a.score);
+
         if (scores.length === 0) {
             logInit('Не найдено подходящих услуг', 'WARN', '', 2);
-            return { variantA: "Индивидуальная консультация (1ч)", variantB: "Экспресс-консультация (30мин)", variantAFormatted: "👤 B2C: Стандартные — Индивидуальная консультация (1ч)", variantBFormatted: "👤 B2C: Базовые — Экспресс-консультация (30мин)" };
+            return {
+                variantA: "Индивидуальная консультация (1ч)",
+                variantB: "Экспресс-консультация (30мин)",
+                variantAFormatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)",
+                variantBFormatted: "👤 Базовые услуги — Экспресс-консультация (30мин)"
+            };
         }
+
         const top = scores[0];
         const second = scores[1] || scores[0];
         logInit(`Результат: ${top.service} (${top.score}) и ${second.service} (${second.score})`, 'INFO', '', 4);
-        return { variantA: top.service, variantB: second.service, variantAFormatted: formatServiceWithCategory(top.service), variantBFormatted: formatServiceWithCategory(second.service), scoreA: top.score, scoreB: second.score, priceA: top.price, priceB: second.price };
+
+        return {
+            variantA: top.service,
+            variantB: second.service,
+            variantAFormatted: formatServiceWithCategory(top.service),
+            variantBFormatted: formatServiceWithCategory(second.service),
+            scoreA: top.score,
+            scoreB: second.score,
+            priceA: top.price,
+            priceB: second.price
+        };
     };
 })();

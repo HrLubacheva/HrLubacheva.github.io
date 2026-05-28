@@ -1,42 +1,59 @@
 // ============================================================
-// 13_smooth-scroll.js – Плавный скролл по якорям
+// 13_smooth-scroll.js – Плавный скролл по якорям (собственная анимация)
+// Работает во всех браузерах, включая Safari
 // ============================================================
 (function() {
     'use strict';
 
-    // Добавляем CSS-правило, чтобы браузер точно использовал smooth scroll
-    const style = document.createElement('style');
-    style.textContent = `html { scroll-behavior: smooth; }`;
-    document.head.appendChild(style);
-
+    // Получаем высоту фиксированной навигации (если есть)
     function getNavbarHeight() {
         const navbar = document.querySelector('.navbar');
         return navbar ? navbar.offsetHeight : 0;
     }
 
-    window.smoothScrollTo = function(targetElement) {
-        if (!targetElement) return;
-        const navbarHeight = getNavbarHeight();
-        const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
-        const offsetPosition = elementPosition - navbarHeight - 15;
-        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
-    };
-
-    function closeMenu() {
-        if (typeof window.closeBurgerMenu === 'function') {
-            window.closeBurgerMenu();
-        } else {
-            const burger = document.getElementById('burgerMenu');
-            const navBottom = document.getElementById('navBottom');
-            if (burger && navBottom && navBottom.classList.contains('open')) {
-                burger.classList.remove('active');
-                navBottom.classList.remove('open');
-                document.body.classList.remove('menu-open');
-                burger.setAttribute('aria-expanded', 'false');
-            }
+    // Закрываем бургер-меню, если оно открыто
+    function closeBurgerMenu() {
+        const burger = document.getElementById('burgerMenu');
+        const navBottom = document.getElementById('navBottom');
+        if (burger && navBottom && navBottom.classList.contains('open')) {
+            burger.classList.remove('active');
+            navBottom.classList.remove('open');
+            document.body.classList.remove('menu-open');
+            burger.setAttribute('aria-expanded', 'false');
         }
     }
 
+    // Плавная прокрутка с кастомной анимацией (работает в Safari)
+    function smoothScrollTo(targetElement, offset = 0) {
+        if (!targetElement) return;
+
+        const startPosition = window.pageYOffset;
+        const targetPosition = targetElement.getBoundingClientRect().top + startPosition - offset;
+        const distance = targetPosition - startPosition;
+        const duration = 600; // миллисекунд
+        let startTime = null;
+
+        function animation(currentTime) {
+            if (startTime === null) startTime = currentTime;
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // easeInOutCubic для плавности
+            const ease = progress < 0.5
+                ? 4 * progress * progress * progress
+                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+            window.scrollTo(0, startPosition + distance * ease);
+            if (elapsed < duration) {
+                requestAnimationFrame(animation);
+            }
+        }
+
+        requestAnimationFrame(animation);
+    }
+
+    // Делаем функцию глобальной для использования в других скриптах (например, кнопка "Наверх")
+    window.smoothScrollTo = smoothScrollTo;
+
+    // Обработчик кликов по якорным ссылкам
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a[href^="#"]');
         if (!link) return;
@@ -44,18 +61,20 @@
         const href = link.getAttribute('href');
         if (href === '#' || href === '#top') {
             e.preventDefault();
-            closeMenu();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            closeBurgerMenu();
+            smoothScrollTo(document.body, 0);
             return;
         }
 
-        const targetElement = document.querySelector(href);
-        if (targetElement) {
-            e.preventDefault();
-            closeMenu();
-            setTimeout(() => {
-                window.smoothScrollTo(targetElement);
-            }, 0);
-        }
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (!targetElement) return;
+
+        e.preventDefault();
+        closeBurgerMenu();
+
+        const navbarHeight = getNavbarHeight();
+        const offset = navbarHeight + 15; // +15 для отступа
+        smoothScrollTo(targetElement, offset);
     });
 })();

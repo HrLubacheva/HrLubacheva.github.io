@@ -1,5 +1,5 @@
 /* ==================================================================
-   03_hero.css – главный экран
+   06_hero.css – главный экран
    ================================================================== */
 .hero-grid {
     display: flex;
@@ -10,29 +10,14 @@
 }
 
 .hero-content { flex: 1.2; }
-.hero-title {
-    font-size: 2.8rem;
-    font-weight: 800;
-    color: var(--primary-dark);
-    margin-bottom: 20px;
-}
-.hero-subtitle {
-    font-size: 1.2rem;
-    color: var(--primary);
-    margin-bottom: 20px;
-    font-weight: 600;
-}
+
 .hero-text {
     font-size: 1rem;
     margin-bottom: 30px;
     line-height: 1.7;
     color: var(--text-dark);
 }
-.small-note {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 15px;
-}
+
 .hero-image {
     flex: 1;
     text-align: center;
@@ -46,15 +31,18 @@
     background: transparent;
     object-fit: contain;
 }
+
 .hero-buttons {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
     margin-top: 28px;
 }
+
 .hero-quiz-link {
     margin-top: 20px;
 }
+
 .quiz-link {
     color: var(--primary);
     text-decoration: none;
@@ -66,9 +54,11 @@
 .quiz-link:hover {
     text-decoration: underline;
 }
+
 .hero-note {
     margin-top: 32px;
 }
+
 .hero-tv-badge {
     display: inline-flex;
     align-items: center;
@@ -83,14 +73,12 @@
     box-shadow: var(--shadow-sm);
     text-decoration: none;
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: box-shadow 0.2s ease;
 }
 .hero-tv-badge:hover {
-    transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
 
-/* Специфичный цвет outline для TV бейджа (белый) */
 .hero-tv-badge:focus-visible {
     outline-color: white;
 }
@@ -114,9 +102,6 @@
     .hero-image img {
         max-width: 280px;
         margin: 0 auto;
-    }
-    .hero-title {
-        font-size: 2rem;
     }
     .hero-buttons {
         flex-direction: column;

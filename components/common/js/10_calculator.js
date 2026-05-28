@@ -38,6 +38,7 @@ function renderCart() {
         if (item.price === null) priceDisplay = 'по запросу';
         else if (item.price === 0) priceDisplay = '0 ₽';
         else priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
+        // ИСПРАВЛЕНО: добавлен escapeHtml для защиты от XSS
         const escapedName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
         div.innerHTML = `<div class="service-name">${escapedName}</div><div class="service-price">${priceDisplay}</div><div class="service-qty-control"><button class="qty-btn qty-minus" data-idx="${idx}">−</button><span class="qty-value">${item.qty}</span><button class="qty-btn qty-plus" data-idx="${idx}">+</button></div><div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>`;
         container.appendChild(div);

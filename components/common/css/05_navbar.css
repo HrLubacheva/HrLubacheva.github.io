@@ -1,5 +1,5 @@
 /* ==================================================================
-   02_navbar.css – навигационная панель
+   05_navbar.css – навигационная панель
    ================================================================== */
 .navbar {
     background: white;
@@ -48,7 +48,6 @@
     transition: var(--transition);
 }
 .social-icons a:hover {
-    transform: translateY(-2px);
     opacity: 0.8;
 }
 .social-icons svg {
@@ -98,12 +97,13 @@
     color: var(--text-dark);
     font-weight: 500;
     transition: var(--transition);
+    border-bottom: 1px solid transparent;
 }
 .nav-links a:hover {
     color: var(--primary);
+    border-bottom-color: var(--primary);
 }
 
-/* Accessibility focus styles */
 .burger-menu:focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;

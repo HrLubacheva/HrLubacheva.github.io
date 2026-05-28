@@ -116,7 +116,7 @@
     text-decoration: none;
 }
 .contact-line a:hover {
-    text-decoration: underline;
+    text-decoration: none;
     color: white;
 }
 .copyable-phone, .copyable-text {
@@ -165,6 +165,7 @@ footer a {
 }
 footer a:hover {
     color: white;
+    text-decoration: underline;
 }
 .footer-content {
     display: flex;
@@ -346,7 +347,45 @@ footer a:hover {
     color: white;
 }
 
-/* focus-visible стили уже заданы в 13_accents.css, здесь оставляем только fallback */
+/* ========== Глобальные правила для ссылок (без прыжков) ========== */
+/* Обычные ссылки (не кнопки, не иконки соцсетей) получают прозрачную границу снизу */
+a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-bottom-color 0.2s ease, color 0.2s ease;
+}
+a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
+    border-bottom-color: var(--primary);
+}
+
+/* Ссылки в контактах (особый цвет) */
+.contact-line a {
+    color: #90cdf4;
+    border-bottom: 1px solid transparent;
+}
+.contact-line a:hover {
+    color: white;
+    border-bottom-color: white;
+}
+
+/* Ссылки в футере (оставляем стандартное подчёркивание) */
+footer a {
+    text-decoration: underline;
+    border-bottom: none;
+}
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Иконки соцсетей — без border-bottom */
+.social-icons a {
+    border-bottom: none;
+}
+.social-icons a:hover {
+    border-bottom: none;
+}
+
+/* focus-visible стили */
 a:focus-visible,
 button:focus-visible,
 .quiz-option:focus-visible,
@@ -362,7 +401,6 @@ button:focus-visible,
     border-radius: 4px;
 }
 
-/* Более мягкий fallback для старых браузеров (без !important) */
 :focus {
     outline: 2px solid var(--primary);
     outline-offset: 2px;

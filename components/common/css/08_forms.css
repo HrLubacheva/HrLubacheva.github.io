@@ -132,7 +132,6 @@
 }
 .callback-submit:hover {
     background: var(--primary-dark);
-    transform: translateY(-2px);
 }
 .callback-subtitle {
     font-size: 0.8rem;

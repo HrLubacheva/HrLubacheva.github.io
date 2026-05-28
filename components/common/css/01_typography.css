@@ -1,0 +1,105 @@
+/* ==================================================================
+   01_typography.css – типографика
+   ================================================================== */
+
+/* Заголовки секций — градиентный текст на светлом фоне */
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 48px;
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* На тёмном фоне заголовок остаётся белым (без градиента) */
+.section-dark .section-title {
+    background: none;
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    color: white;
+}
+
+.section-subtitle {
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 30px;
+    color: var(--text-muted);
+}
+
+.process-title {
+    text-align: center;
+    margin: 40px 0 20px;
+    font-size: 1.8rem;
+    color: var(--primary-dark);
+    word-break: break-word;
+}
+
+.process-subtitle {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: normal;
+    color: var(--text-muted);
+    margin-top: 8px;
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: var(--primary-dark);
+    margin-bottom: 20px;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--primary-dark);
+    transition: color 0.2s;
+}
+
+.card-title-small {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: var(--primary-dark);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: var(--text-muted);
+}
+
+.small-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 15px;
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 32px;
+    }
+    .hero-title {
+        font-size: 2rem;
+    }
+    .process-title {
+        font-size: 1.5rem;
+    }
+    .card-title {
+        font-size: 1.3rem;
+    }
+}

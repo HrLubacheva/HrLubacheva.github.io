@@ -4,7 +4,7 @@
 
 function escapeHtml(str) {
     if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
+    return str.replace(/[&<>]/g, function (m) {
         if (m === '&') return '&amp;';
         if (m === '<') return '&lt;';
         if (m === '>') return '&gt;';
@@ -13,22 +13,33 @@ function escapeHtml(str) {
 }
 
 const IS_DEV = window.location.hostname === 'localhost' ||
-               window.location.hostname === '127.0.0.1' ||
-               window.location.search.includes('debug=true');
-function log(...args) { if (IS_DEV) console.log(...args); }
-function logError(...args) { console.error(...args); }
-function logWarn(...args) { if (IS_DEV) console.warn(...args); }
+    window.location.hostname === '127.0.0.1' ||
+    window.location.search.includes('debug=true');
+
+function log(...args) {
+    if (IS_DEV) console.log(...args);
+}
+
+function logError(...args) {
+    console.error(...args);
+}
+
+function logWarn(...args) {
+    if (IS_DEV) console.warn(...args);
+}
+
 window.IS_DEV = IS_DEV;
 
-window.enableLogs = function() {
+window.enableLogs = function () {
     if (typeof originalConsoleLog === 'undefined') return;
     console.log = originalConsoleLog;
     originalConsoleLog = null;
     showToast('🔍 Логи включены', 'success');
 };
-window.disableLogs = function() {
+window.disableLogs = function () {
     if (originalConsoleLog === null) originalConsoleLog = console.log;
-    console.log = function() {};
+    console.log = function () {
+    };
     showToast('🔇 Логи отключены', 'success');
 };
 
@@ -41,17 +52,20 @@ function getOrCreateLocalUserId() {
             localStorage.setItem(key, userId);
         }
         return userId;
-    } catch(e) {
+    } catch (e) {
         if (!window._tempUserId) {
             window._tempUserId = 'temp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
         }
         return window._tempUserId;
     }
 }
+
 let currentUserId = null;
-function initUserId() {
+
+// ИСПРАВЛЕНО: функция теперь async и возвращает Promise
+async function initUserId() {
     currentUserId = getOrCreateLocalUserId();
-    return Promise.resolve(currentUserId);
+    return currentUserId;
 }
 
 async function fetchWithRetry(url, options = {}, retries = null, timeout = null) {
@@ -64,11 +78,13 @@ async function fetchWithRetry(url, options = {}, retries = null, timeout = null)
         try {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-            const response = await fetch(url, { ...options, signal: controller.signal });
+            const response = await fetch(url, {...options, signal: controller.signal});
             clearTimeout(timeoutId);
             if (response.ok) return response;
             lastError = new Error(`HTTP ${response.status}`);
-        } catch (err) { lastError = err; }
+        } catch (err) {
+            lastError = err;
+        }
         if (attempt < maxRetries) {
             const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), maxDelay);
             await new Promise(resolve => setTimeout(resolve, delay));
@@ -76,27 +92,36 @@ async function fetchWithRetry(url, options = {}, retries = null, timeout = null)
     }
     throw lastError;
 }
+
 async function fetchTextWithRetry(url, retries = 3, timeout = 10000) {
     const response = await fetchWithRetry(url, {}, retries, timeout);
     return response.text();
 }
+
 async function loadWithCache(cacheKey, fetchFn, ttl = null) {
     const cacheTtl = ttl !== null ? ttl : (window.APP_CONFIG?.CONSTANTS?.CACHE_TTL || 10 * 60 * 1000);
     try {
         const cached = localStorage.getItem(cacheKey);
         if (cached) {
             try {
-                const { data, timestamp } = JSON.parse(cached);
+                const {data, timestamp} = JSON.parse(cached);
                 if (Date.now() - timestamp < cacheTtl) return data;
-            } catch(e) { if (IS_DEV) console.warn(e); }
+            } catch (e) {
+                if (IS_DEV) console.warn(e);
+            }
         }
-    } catch(e) {}
+    } catch (e) {
+    }
     const data = await fetchFn();
-    try { localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() })); } catch(e) {}
+    try {
+        localStorage.setItem(cacheKey, JSON.stringify({data, timestamp: Date.now()}));
+    } catch (e) {
+    }
     return data;
 }
 
 let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
+
 function showLoading(message = 'Загрузка...') {
     if (isLoadingActive) return;
     isLoadingActive = true;
@@ -137,6 +162,7 @@ function showLoading(message = 'Загрузка...') {
     loadingIndicator.innerHTML = `<div class="loading-spinner"></div><div class="loading-text">${escapeHtml(message)}</div>`;
     document.body.appendChild(loadingIndicator);
 }
+
 function hideLoading() {
     if (!isLoadingActive) return;
     isLoadingActive = false;
@@ -156,13 +182,25 @@ function showToast(message, type = 'error') {
     toast.setAttribute('role', 'status');
     toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
     document.body.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000);
 }
-function showErrorToast(message) { showToast(message, 'error'); }
-function showSuccessToast(message) { showToast(message, 'success'); }
-function showWarningToast(message) { showToast(message, 'warning'); }
 
-window.postWithRetry = async function(url, data, retries = null, baseDelay = null) {
+function showErrorToast(message) {
+    showToast(message, 'error');
+}
+
+function showSuccessToast(message) {
+    showToast(message, 'success');
+}
+
+function showWarningToast(message) {
+    showToast(message, 'warning');
+}
+
+window.postWithRetry = async function (url, data, retries = null, baseDelay = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
     let lastError = null;
@@ -171,12 +209,16 @@ window.postWithRetry = async function(url, data, retries = null, baseDelay = nul
             const body = new URLSearchParams(data);
             const response = await fetch(url, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: body
             });
             if (response.ok) {
                 let result;
-                try { result = await response.json(); } catch(e) { throw new Error('Не удалось разобрать ответ сервера'); }
+                try {
+                    result = await response.json();
+                } catch (e) {
+                    throw new Error('Не удалось разобрать ответ сервера');
+                }
                 if (result && result.result === 'ok') return true;
                 else throw new Error(result?.message || 'Сервер вернул ошибку');
             } else throw new Error(`HTTP ${response.status}`);
@@ -197,16 +239,19 @@ function normalizePhoneDigits(phone) {
     if (digits.length > maxDigits) digits = digits.slice(0, maxDigits);
     return digits;
 }
+
 function validatePhoneDigits(phone) {
     const digits = normalizePhoneDigits(phone);
     const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
     return digits.length === maxDigits && /^7\d{10}$/.test(digits);
 }
+
 function validateEmailFormat(email) {
     if (!email) return true;
     const re = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
     return re.test(email);
 }
+
 function showFieldError(input, message) {
     if (input._errorElement) input._errorElement.remove();
     const errorSpan = document.createElement('span');
@@ -216,6 +261,7 @@ function showFieldError(input, message) {
     input._errorElement = errorSpan;
     input.classList.add('input-error');
 }
+
 function clearFieldError(input) {
     if (input._errorElement) {
         input._errorElement.remove();
@@ -223,6 +269,7 @@ function clearFieldError(input) {
     }
     input.classList.remove('input-error');
 }
+
 function validatePhoneField(input, showImmediate = true) {
     const phone = input.value.trim();
     if (!phone) {
@@ -234,6 +281,7 @@ function validatePhoneField(input, showImmediate = true) {
     else clearFieldError(input);
     return isValid;
 }
+
 function validateEmailField(input, showImmediate = true) {
     const email = input.value.trim();
     if (!email) {
@@ -245,15 +293,17 @@ function validateEmailField(input, showImmediate = true) {
     else clearFieldError(input);
     return isValid;
 }
+
 function bindLiveValidation(input, type = 'phone') {
     if (!input) return;
     const validateFn = type === 'phone' ? validatePhoneField : validateEmailField;
     input.addEventListener('blur', () => validateFn(input, true));
     input.addEventListener('input', () => clearFieldError(input));
 }
+
 function applyPhoneMask(inputElement) {
     if (!inputElement) return;
-    inputElement.addEventListener('input', function(e) {
+    inputElement.addEventListener('input', function (e) {
         let raw = this.value.replace(/\D/g, '');
         const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
         if (raw.length > maxDigits) raw = raw.slice(0, maxDigits);
@@ -300,9 +350,12 @@ function applyPhoneMask(inputElement) {
         }
     });
 }
+
 function initPhoneMasks() {
     const phoneInputs = document.querySelectorAll('#callbackPhone, #quickPhone');
-    phoneInputs.forEach(input => { if (input) applyPhoneMask(input); });
+    phoneInputs.forEach(input => {
+        if (input) applyPhoneMask(input);
+    });
 }
 
 async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
@@ -312,12 +365,14 @@ async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     else data.cart = '';
     return window.postWithRetry(window.APP_CONFIG.SCRIPT_URL, data, retries, delay);
 }
+
 function sendDataToSheet(data) {
     sendDataToSheetWithRetry(data).catch(err => {
         logError('❌ Ошибка отправки в Google Sheets:', err);
         showErrorToast('Ошибка связи. Попробуйте ещё раз или свяжитесь с нами напрямую.');
     });
 }
+
 window.sendDataToSheet = sendDataToSheet;
 window.sendDataToSheetWithRetry = sendDataToSheetWithRetry;
 
@@ -338,6 +393,7 @@ function formatPhoneNumber(input) {
 }
 
 window.sessionStartTime = Date.now();
+
 function getTimeOnSite() {
     if (!window.sessionStartTime) return '-';
     const seconds = Math.floor((Date.now() - window.sessionStartTime) / 1000);
@@ -346,6 +402,7 @@ function getTimeOnSite() {
     const secs = seconds % 60;
     return `${minutes} мин ${secs} сек`;
 }
+
 window.getTimeOnSite = getTimeOnSite;
 
 function getVisitStats() {
@@ -362,20 +419,29 @@ function getVisitStats() {
                 visits = JSON.parse(stored);
                 const monthAgo = now.getTime() - oneMonth;
                 visits = visits.filter(v => v > monthAgo);
-            } catch(e) { if (IS_DEV) console.warn(e); visits = []; }
+            } catch (e) {
+                if (IS_DEV) console.warn(e);
+                visits = [];
+            }
         }
-    } catch(e) {}
+    } catch (e) {
+    }
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
     if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
-    try { localStorage.setItem(visitsKey, JSON.stringify(visits)); } catch(e) {}
+    try {
+        localStorage.setItem(visitsKey, JSON.stringify(visits));
+    } catch (e) {
+    }
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
-    return { week: visits.filter(v => v > weekAgo).length, month: visits.length, total: visits.length };
+    return {week: visits.filter(v => v > weekAgo).length, month: visits.length, total: visits.length};
 }
+
 function getVisitStatsText() {
     const stats = getVisitStats();
     return `📊 Визиты: ${stats.week} за неделю, ${stats.month} за месяц`;
 }
+
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
 
@@ -389,11 +455,14 @@ function getUTMParams() {
         term: urlParams.get('utm_term') || '-'
     };
 }
+
 window.getUTMParams = getUTMParams;
+
 function getUTMText() {
     const u = getUTMParams();
     return `📊 UTM: source=${u.source}, medium=${u.medium}, campaign=${u.campaign}, content=${u.content}, term=${u.term}`;
 }
+
 window.getUTMText = getUTMText;
 
 function getDeviceInfo() {
@@ -415,13 +484,16 @@ function getDeviceInfo() {
     else if (ua.includes('Linux')) os = 'Linux';
     else if (ua.includes('Android')) os = 'Android';
     else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
-    return { device, browser, os };
+    return {device, browser, os};
 }
+
 window.getDeviceInfo = getDeviceInfo;
+
 function getDeviceText() {
     const d = getDeviceInfo();
     return `📱 Устройство: ${d.device}, браузер: ${d.browser}, ОС: ${d.os}`;
 }
+
 window.getDeviceText = getDeviceText;
 
 function getPageInfo() {
@@ -431,11 +503,14 @@ function getPageInfo() {
         fullUrl: window.location.href
     };
 }
+
 window.getPageInfo = getPageInfo;
+
 function getPageText() {
     const p = getPageInfo();
     return `📄 Страница: ${p.page}\n🔗 Referrer: ${p.referrer || '-'}`;
 }
+
 window.getPageText = getPageText;
 
 async function getGeoData() {
@@ -448,9 +523,11 @@ async function getGeoData() {
             try {
                 cached = JSON.parse(raw);
                 if (cached && typeof cached === 'object') return cached;
-            } catch(e) {}
+            } catch (e) {
+            }
         }
-    } catch(e) {}
+    } catch (e) {
+    }
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Ошибка геолокации');
@@ -462,44 +539,64 @@ async function getGeoData() {
             country: data.country_name || '-',
             geoText: `${data.city || ''} ${data.region || ''} ${data.country_name || ''} (${data.ip || ''})`.trim().replace(/  +/g, ' ') || '-'
         };
-        try { localStorage.setItem(geoKey, JSON.stringify(result)); } catch(e) {}
+        try {
+            localStorage.setItem(geoKey, JSON.stringify(result));
+        } catch (e) {
+        }
         return result;
-    } catch(e) {
+    } catch (e) {
         if (IS_DEV) console.warn(e);
-        return { ip: '-', city: '-', region: '-', country: '-', geoText: '-' };
+        return {ip: '-', city: '-', region: '-', country: '-', geoText: '-'};
     }
 }
+
 window.getGeoData = getGeoData;
 
-window.submitForm = async function(formId, formType, getAdditionalData = null) {
+window.submitForm = async function (formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
     if (!form) return false;
+
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.innerText : 'Отправить';
+
+    if (form._isSubmitting) {
+        showWarningToast('⏳ Отправка уже выполняется, подождите...');
+        return false;
+    }
+
     try {
+        form._isSubmitting = true;
+
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.classList.add('loading');
             submitBtn.innerText = 'Отправка...';
         }
+
         const name = form.querySelector('[name="name"]')?.value.trim() || '';
         let phone = form.querySelector('[name="phone"]')?.value.trim() || '';
         const email = form.querySelector('[name="email"]')?.value.trim() || '';
         const comment = form.querySelector('[name="comment"]')?.value.trim() || '';
         const consent = form.querySelector('[name="consent"]')?.checked || false;
+
         let additional = {};
         if (getAdditionalData) additional = await getAdditionalData(form);
+
         if (phone) phone = normalizePhoneDigits(phone);
+
         if (!phone && formType !== 'Запрос материалов') {
             showErrorToast('Введите номер телефона');
             throw new Error('Телефон обязателен');
         }
+
         const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
         if (phone && phone.length !== maxDigits) {
             showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
             throw new Error('Неверный номер');
         }
+
         const geo = await window.getGeoData();
+
         const formData = {
             formType: formType,
             name: name || ' ',
@@ -516,15 +613,26 @@ window.submitForm = async function(formId, formType, getAdditionalData = null) {
             userId: window.getOrCreateLocalUserId(),
             ...additional
         };
+
         await window.sendDataToSheetWithRetry(formData);
         showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
         form.reset();
+
+        const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
+        hiddenFields.forEach(field => {
+            const input = form.querySelector(`[name="${field}"]`);
+            if (input) input.value = '';
+        });
+
         return true;
     } catch (err) {
         logError('Ошибка отправки:', err);
-        showErrorToast('Не удалось отправить заявку. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
+        if (!err.message || !err.message.includes('Телефон')) {
+            showErrorToast('Не удалось отправить заявку. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
+        }
         return false;
     } finally {
+        form._isSubmitting = false;
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.classList.remove('loading');
@@ -532,7 +640,9 @@ window.submitForm = async function(formId, formType, getAdditionalData = null) {
         }
     }
 };
-window.getQuizDataFromForm = function(form) {
+
+
+window.getQuizDataFromForm = function (form) {
     return {
         chosenVariant: form.querySelector('[name="chosenVariant"]')?.value || '',
         chosenVariantPrice: form.querySelector('[name="chosenVariantPrice"]')?.value || '',
@@ -554,8 +664,12 @@ function initShareButtons() {
             btn.removeEventListener('click', btn._shareHandler);
             btn._shareHandler = () => {
                 const text = getSiteShareText();
-                navigator.clipboard.writeText(text).then(() => { window.showSuccessToast('✅ Ссылка на сайт скопирована'); })
-                    .catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
+                navigator.clipboard.writeText(text).then(() => {
+                    window.showSuccessToast('✅ Ссылка на сайт скопирована');
+                })
+                    .catch(() => {
+                        window.showErrorToast('❌ Не удалось скопировать');
+                    });
             };
             btn.addEventListener('click', btn._shareHandler);
         }
@@ -578,7 +692,7 @@ window.currentLogLevel = currentLogLevel;
 
 function logInit(message, level = 'INFO', context = '', requiredLevel = 3) {
     const timestamp = new Date().toISOString();
-    const logEntry = { timestamp, level, message, context, url: window.location.href, requiredLevel };
+    const logEntry = {timestamp, level, message, context, url: window.location.href, requiredLevel};
     window.initLogs.push(logEntry);
     const isDebug = currentLogLevel >= requiredLevel;
     if (isDebug) {
@@ -588,13 +702,14 @@ function logInit(message, level = 'INFO', context = '', requiredLevel = 3) {
         else if (level === 'TRACE') style = 'color:gray';
         else if (level === 'DEBUG') style = 'color:blue';
         else style = 'color:green';
-        console.log(`%c[${timestamp}] [${level}] ${message} ${context ? '('+context+')' : ''}`, style);
+        console.log(`%c[${timestamp}] [${level}] ${message} ${context ? '(' + context + ')' : ''}`, style);
     }
     const forceSend = window.APP_CONFIG?.CONSTANTS?.FORCE_SEND_LOGS_TO_SERVER || false;
     if (level === 'ERROR' || level === 'WARN' || (window.location.search.includes('debug=1') && currentLogLevel >= requiredLevel) || forceSend) {
         sendInitLog(logEntry);
     }
 }
+
 function sendInitLog(logEntry) {
     const url = window.APP_CONFIG?.SCRIPT_URL;
     if (!url) return;
@@ -608,13 +723,14 @@ function sendInitLog(logEntry) {
     formData.append('userAgent', navigator.userAgent);
     navigator.sendBeacon(url, formData);
 }
+
 const originalErrorHandler = window.onerror;
-window.onerror = function(message, source, lineno, colno, error) {
+window.onerror = function (message, source, lineno, colno, error) {
     logInit(`Uncaught error: ${message} at ${source}:${lineno}:${colno}`, 'ERROR', error?.stack, 1);
     if (originalErrorHandler) originalErrorHandler(message, source, lineno, colno, error);
 };
 const originalUnhandledRejection = window.onunhandledrejection;
-window.onunhandledrejection = function(event) {
+window.onunhandledrejection = function (event) {
     logInit(`Unhandled rejection: ${event.reason}`, 'ERROR', event.reason?.stack, 1);
     if (originalUnhandledRejection) originalUnhandledRejection(event);
 };

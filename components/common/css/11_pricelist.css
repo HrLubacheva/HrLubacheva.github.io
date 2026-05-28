@@ -106,10 +106,6 @@
 .price-anchors .btn-secondary {
     transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
 }
-.price-anchors .btn-secondary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 14px rgba(45,106,159,0.2);
-}
 @media (max-width: 640px) {
     .price-summary {
         font-size: 1.1rem;

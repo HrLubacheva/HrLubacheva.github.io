@@ -7,7 +7,7 @@ function initAnimations() {
         return;
     }
 
-    // Гарантируем, что изначально класс visible не стоит (если вдруг кто-то добавил)
+    // Убедимся, что изначально класс visible не стоит
     elements.forEach(el => el.classList.remove('visible'));
 
     const observer = new IntersectionObserver((entries) => {
@@ -20,10 +20,11 @@ function initAnimations() {
         });
     }, {
         threshold: 0.1,
-        rootMargin: '0px 0px 0px 0px'   // ← больше никаких отрицательных отступов
+        rootMargin: '0px 0px 0px 0px'
     });
 
     elements.forEach(el => observer.observe(el));
     logInit('initAnimations finished', 'INFO', '', 3);
 }
+
 window.initAnimations = initAnimations;
