@@ -6,32 +6,23 @@
     --primary-dark: #1F4A6E;
     --primary-light: #4A8BC2;
     --secondary: #6c757d;
-    --text-muted: #4a5568;          /* единый muted-цвет, заменяет --secondary-dark */
+    --secondary-dark: #4a5568;
     --dark-bg: #1a2a3a;
     --light-bg: #f8f9fa;
     --surface-soft: #ffffff;
     --border: #e0e0e0;
     --text-dark: #1a202c;
     --text-light: #f8f9fa;
+    --text-muted: #4a5568;
     --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
     --shadow-md: 0 8px 24px rgba(0,0,0,0.1);
     --shadow-lg: 0 20px 30px -12px rgba(0,0,0,0.15);
-    --shadow-dark-hover: 0 25px 40px rgba(74, 139, 194, 0.35);
     --radius-md: 16px;
     --radius-lg: 28px;
     --transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
     --breakpoint-mobile: 768px;
     --breakpoint-tablet: 992px;
     --breakpoint-desktop: 1200px;
-
-    /* Полупрозрачные версии primary – для замены rgba(45,106,159, ...) */
-    --primary-a04: rgba(45, 106, 159, 0.04);
-    --primary-a08: rgba(45, 106, 159, 0.08);
-    --primary-a10: rgba(45, 106, 159, 0.10);
-    --primary-a12: rgba(45, 106, 159, 0.12);
-    --primary-a15: rgba(45, 106, 159, 0.15);
-    --primary-a20: rgba(45, 106, 159, 0.20);
-    --primary-a30: rgba(45, 106, 159, 0.30);
 }
 
 * {

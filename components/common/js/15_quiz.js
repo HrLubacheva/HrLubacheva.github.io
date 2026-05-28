@@ -143,18 +143,12 @@
     }
 
     function updateSecondQuestion(role) {
-        let oldAnswers = answers[1];
         if (role === "Подбираю сотрудников") {
             quizQuestions[1] = {...LEVEL_RECRUITER};
         } else {
             quizQuestions[1] = {...LEVEL_JOBSEEKER};
         }
-        if (answers[1] && !quizQuestions[1].options.includes(answers[1])) {
-            answers[1] = null;
-            if (oldAnswers !== null) {
-                window.showWarningToast('⚠️ Вы сменили роль. Ответ на вопрос об уровне сброшен.');
-            }
-        }
+        if (answers[1] && !quizQuestions[1].options.includes(answers[1])) answers[1] = null;
         if (currentQuestionIndex === 1 && quizState === 'questions') renderQuiz();
         updateIndustryAndWorkFormatQuestions(role);
     }

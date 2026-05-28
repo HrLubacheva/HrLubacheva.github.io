@@ -133,17 +133,16 @@
     text-align: center;
     margin-bottom: 32px;
     padding: 24px 20px;
-    background: linear-gradient(135deg, var(--primary-a30), rgba(74, 139, 194, 0.18));
-    border: 1px solid rgba(74, 139, 194, 0.50);
+    background: linear-gradient(135deg, rgba(45, 106, 159, 0.15), rgba(74, 139, 194, 0.08));
     border-radius: 28px;
+    border: 1px solid rgba(45, 106, 159, 0.3);
     backdrop-filter: blur(4px);
     transition: all 0.3s ease;
 }
 
-.benefit-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-dark-hover);
-    background: white;
+.benefits-column-header:hover {
+    border-color: rgba(45, 106, 159, 0.6);
+    background: linear-gradient(135deg, rgba(45, 106, 159, 0.2), rgba(74, 139, 194, 0.1));
 }
 
 .benefits-column-icon {
@@ -316,47 +315,5 @@
         line-height: 1.4;
         word-break: break-word;
         overflow-wrap: break-word;
-    }
-}
-
-/* ========== УМЕНЬШАЕМ СТАТИСТИКУ НА ТЕЛЕФОНАХ ========== */
-@media (max-width: 640px) {
-    .stats-grid {
-        gap: 16px; /* уменьшаем расстояние между карточками */
-        margin: 20px 0;
-    }
-    .card-stat {
-        padding: 16px 8px; /* убираем лишние отступы внутри */
-    }
-    .stat-number {
-        font-size: 1.8rem;   /* вместо 2.8rem */
-    }
-    .stat-plus {
-        font-size: 1.4rem;   /* вместо 2rem */
-    }
-    .stat-label {
-        font-size: 0.75rem;  /* вместо 1rem */
-    }
-    .stat-number-wrapper {
-        gap: 2px;
-        margin-bottom: 6px;
-    }
-}
-
-@media (max-width: 480px) {
-    .stats-grid {
-        gap: 12px;
-    }
-    .card-stat {
-        padding: 12px 6px;
-    }
-    .stat-number {
-        font-size: 1.4rem;
-    }
-    .stat-plus {
-        font-size: 1.1rem;
-    }
-    .stat-label {
-        font-size: 0.65rem;
     }
 }
