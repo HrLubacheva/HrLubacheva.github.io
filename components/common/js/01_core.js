@@ -198,18 +198,27 @@ function showWarningToast(message) {
     showToast(message, 'warning');
 }
 
+// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ postWithRetry (CORS fix) ==========
 window.postWithRetry = async function (url, data, retries = null, baseDelay = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
     let lastError = null;
+
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const mode = isLocal ? 'no-cors' : 'cors';
+
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             const body = new URLSearchParams(data);
             const response = await fetch(url, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: body
+                body: body,
+                mode: mode,
+                credentials: 'omit'
             });
+            if (mode === 'no-cors') {
+                return true;
+            }
             if (response.ok) {
                 let result;
                 try {
@@ -558,7 +567,6 @@ async function getGeoData() {
 
 window.getGeoData = getGeoData;
 
-// Глобальная блокировка действий (антиспам)
 window._actionLocks = window._actionLocks || {};
 
 window.isActionLocked = function(actionKey, durationMs = 60000) {

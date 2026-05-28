@@ -146,11 +146,11 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <!-- CSP с добавленным script.googleusercontent.com для корректной работы Google Apps Script -->
+    <!-- CSP: добавлен frame-src для Яндекс.Метрики -->
     <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru https://www.google-analytics.com https://region1.google-analytics.com;">
+          content="default-src 'self'; frame-src https://mc.yandex.com https://mc.yandex.ru; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru https://www.google-analytics.com https://region1.google-analytics.com;">
 
-    <!-- Google tag (gtag.js) – прямая загрузка -->
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZJJ2SE117"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -197,6 +197,9 @@
             GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117'
         });
     </script>
+
+    <!-- Подключаем трекинг ошибок (опционально) -->
+    <script src="assets/js/error_tracking.js" defer></script>
 <style>
 /* ==================================================================
    00_variables.css – переменные и сбросы
@@ -5418,7 +5421,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 28.05.2026 23:40:04</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 00:28:47</span>
 
             </div>
         </div>
@@ -5473,7 +5476,7 @@ select:focus-visible {
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw6M9P-7QvCxaHuIJci53ajn-l8pJkFQ-Ra2rIzi7oz-Ov31QbB-4rPciAO_-roHzbbyw/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbznCkIVFWT-YcP8YDQA3HAMHDC0g8jx3o_AmwzBQEoxKl2Prxw7PRhni98F303ZxwPXpA/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
@@ -5729,18 +5732,27 @@ function showWarningToast(message) {
     showToast(message, 'warning');
 }
 
+// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ postWithRetry (CORS fix) ==========
 window.postWithRetry = async function (url, data, retries = null, baseDelay = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
     let lastError = null;
+
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const mode = isLocal ? 'no-cors' : 'cors';
+
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
         try {
             const body = new URLSearchParams(data);
             const response = await fetch(url, {
                 method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: body
+                body: body,
+                mode: mode,
+                credentials: 'omit'
             });
+            if (mode === 'no-cors') {
+                return true;
+            }
             if (response.ok) {
                 let result;
                 try {
@@ -6089,7 +6101,6 @@ async function getGeoData() {
 
 window.getGeoData = getGeoData;
 
-// Глобальная блокировка действий (антиспам)
 window._actionLocks = window._actionLocks || {};
 
 window.isActionLocked = function(actionKey, durationMs = 60000) {
@@ -8725,7 +8736,6 @@ window.isValidEmail = isValidEmail;
             if (typeof window.smoothScrollTo === 'function') {
                 window.smoothScrollTo(document.body, 0);
             } else {
-                // fallback на случай, если smoothScrollTo не определена
                 window.scrollTo({top: 0, behavior: 'smooth'});
             }
         });
@@ -8846,6 +8856,25 @@ window.isValidEmail = isValidEmail;
         }
     }
 
+    // НОВАЯ ФУНКЦИЯ для инициализации отслеживания ошибок, если файл error_tracking.js уже загружен
+    function initErrorTrackingIfAvailable() {
+        if (typeof window.initErrorTracking === 'function') {
+            window.initErrorTracking();
+            logInit('ErrorTracking инициализирован через глобальную функцию', 'INFO', '', 3);
+        } else if (window.ErrorTracking && typeof window.ErrorTracking.init === 'function') {
+            window.ErrorTracking.init();
+            logInit('ErrorTracking инициализирован через модуль', 'INFO', '', 3);
+        } else {
+            // Если скрипт ещё не загружен, подождём событие load
+            window.addEventListener('load', function() {
+                if (typeof window.initErrorTracking === 'function') {
+                    window.initErrorTracking();
+                    logInit('ErrorTracking инициализирован после загрузки страницы', 'INFO', '', 3);
+                }
+            });
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         logInit('DOMContentLoaded событие', 'INFO', '', 3);
         if (typeof initUserId === 'function') {
@@ -8912,6 +8941,7 @@ window.isValidEmail = isValidEmail;
         initScrollTopButton();
         initMaterialsEmailButtons();
         initCarousel();
+        initErrorTrackingIfAvailable(); // <--- ДОБАВЛЕНА ИНИЦИАЛИЗАЦИЯ ТРЕКИНГА ОШИБОК
 
         if (typeof initAnimations === 'function') {
             logInit('Вызов initAnimations', 'INFO', '', 3);

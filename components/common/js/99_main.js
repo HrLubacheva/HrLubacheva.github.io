@@ -118,7 +118,6 @@
             if (typeof window.smoothScrollTo === 'function') {
                 window.smoothScrollTo(document.body, 0);
             } else {
-                // fallback на случай, если smoothScrollTo не определена
                 window.scrollTo({top: 0, behavior: 'smooth'});
             }
         });
@@ -239,6 +238,25 @@
         }
     }
 
+    // НОВАЯ ФУНКЦИЯ для инициализации отслеживания ошибок, если файл error_tracking.js уже загружен
+    function initErrorTrackingIfAvailable() {
+        if (typeof window.initErrorTracking === 'function') {
+            window.initErrorTracking();
+            logInit('ErrorTracking инициализирован через глобальную функцию', 'INFO', '', 3);
+        } else if (window.ErrorTracking && typeof window.ErrorTracking.init === 'function') {
+            window.ErrorTracking.init();
+            logInit('ErrorTracking инициализирован через модуль', 'INFO', '', 3);
+        } else {
+            // Если скрипт ещё не загружен, подождём событие load
+            window.addEventListener('load', function() {
+                if (typeof window.initErrorTracking === 'function') {
+                    window.initErrorTracking();
+                    logInit('ErrorTracking инициализирован после загрузки страницы', 'INFO', '', 3);
+                }
+            });
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         logInit('DOMContentLoaded событие', 'INFO', '', 3);
         if (typeof initUserId === 'function') {
@@ -305,6 +323,7 @@
         initScrollTopButton();
         initMaterialsEmailButtons();
         initCarousel();
+        initErrorTrackingIfAvailable(); // <--- ДОБАВЛЕНА ИНИЦИАЛИЗАЦИЯ ТРЕКИНГА ОШИБОК
 
         if (typeof initAnimations === 'function') {
             logInit('Вызов initAnimations', 'INFO', '', 3);
