@@ -317,3 +317,45 @@
         overflow-wrap: break-word;
     }
 }
+
+/* ========== УМЕНЬШАЕМ СТАТИСТИКУ НА ТЕЛЕФОНАХ ========== */
+@media (max-width: 640px) {
+    .stats-grid {
+        gap: 16px; /* уменьшаем расстояние между карточками */
+        margin: 20px 0;
+    }
+    .card-stat {
+        padding: 16px 8px; /* убираем лишние отступы внутри */
+    }
+    .stat-number {
+        font-size: 1.8rem;   /* вместо 2.8rem */
+    }
+    .stat-plus {
+        font-size: 1.4rem;   /* вместо 2rem */
+    }
+    .stat-label {
+        font-size: 0.75rem;  /* вместо 1rem */
+    }
+    .stat-number-wrapper {
+        gap: 2px;
+        margin-bottom: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        gap: 12px;
+    }
+    .card-stat {
+        padding: 12px 6px;
+    }
+    .stat-number {
+        font-size: 1.4rem;
+    }
+    .stat-plus {
+        font-size: 1.1rem;
+    }
+    .stat-label {
+        font-size: 0.65rem;
+    }
+}
