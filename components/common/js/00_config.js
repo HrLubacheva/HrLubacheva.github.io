@@ -2,7 +2,7 @@
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwHRGiHJGn0xxnvW8VnMKWYCaALuRjy9W1wpPhyYlNBw4ztskHjpcOf0JcaogZ45uC75Q/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbx7B3eZ8_14q3XjDgYGLjrVgXmbFSe_z1rb8xWbE-4SY20eNiN8Ql4_PLuPhJOFlBDVRA/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
@@ -42,7 +42,7 @@ window.APP_CONFIG = {
         LOCALSTORAGE_GEO_KEY: 'hr_geo',
         LOCALSTORAGE_USER_ID_KEY: 'hr_user_id',
         DEFAULT_QUANTITY: 1,
-        LOG_LEVEL: 5,
+        LOG_LEVEL: 0,
         FORCE_SEND_LOGS_TO_SERVER: false,
     },
     SECTION_IDS: {

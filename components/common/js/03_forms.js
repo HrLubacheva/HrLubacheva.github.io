@@ -1,4 +1,8 @@
 function initCallbackForm() {
+    // Защита от двойной инициализации
+    if (window._callbackFormInitialized) return;
+    window._callbackFormInitialized = true;
+
     logInit('initCallbackForm started', 'INFO', '', 3);
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
@@ -62,13 +66,11 @@ function initCallbackForm() {
             });
         }
 
-        // Флаг для предотвращения повторной отправки
         let isSubmitting = false;
 
         const submitHandler = async function(e) {
             e.preventDefault();
 
-            // Блокируем повторную отправку
             if (isSubmitting) {
                 logInit('Отправка уже выполняется, игнорируем', 'WARN', '', 3);
                 showCallbackMessage('⏳ Отправка уже выполняется, подождите...', true);
@@ -100,7 +102,6 @@ function initCallbackForm() {
 
             if (!isValid) return;
 
-            // Нормализуем телефон
             if (window.normalizePhoneDigits) {
                 callbackPhone.value = window.normalizePhoneDigits(callbackPhone.value);
             } else {
@@ -270,6 +271,10 @@ function initCallbackForm() {
 }
 
 function initFormEnterSubmit() {
+    // Защита от двойной инициализации
+    if (window._formEnterSubmitInitialized) return;
+    window._formEnterSubmitInitialized = true;
+
     const form = document.getElementById('callbackForm');
     if (form && !form._enterHandler) {
         form._enterHandler = (e) => {

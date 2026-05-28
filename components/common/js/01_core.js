@@ -304,52 +304,75 @@ function bindLiveValidation(input, type = 'phone') {
 
 function applyPhoneMask(inputElement) {
     if (!inputElement) return;
-    inputElement.addEventListener('input', function (e) {
-        let raw = this.value.replace(/\D/g, '');
-        const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
-        if (raw.length > maxDigits) raw = raw.slice(0, maxDigits);
-        let formatted = '';
-        if (raw.length > 0) {
-            formatted = '+7';
-            if (raw.length >= 2) {
-                let part = raw.slice(1, 4);
-                formatted += ' (' + part;
-                if (part.length === 3) formatted += ')';
-                else if (raw.length >= 5) formatted += ')';
-            }
-            if (raw.length >= 5) {
-                let part = raw.slice(4, 7);
-                formatted += ' ' + part;
-            }
-            if (raw.length >= 8) {
-                let part = raw.slice(7, 9);
-                formatted += '-' + part;
-            }
-            if (raw.length >= 10) {
-                let part = raw.slice(9, 11);
-                formatted += '-' + part;
-            }
-            if (raw.length >= 2 && raw.length < 5 && !formatted.includes(')')) formatted += ')';
+    // Удаляем предыдущий обработчик, если есть
+    if (inputElement._phoneMaskHandler) {
+        inputElement.removeEventListener('input', inputElement._phoneMaskHandler);
+    }
+
+    const formatPhone = function(rawDigits) {
+        let digits = rawDigits.replace(/\D/g, '');
+        if (digits.length === 0) return '';
+        // Ограничиваем 11 цифрами
+        if (digits.length > 11) digits = digits.slice(0, 11);
+        let formatted = '+7';
+        if (digits.length >= 2) {
+            formatted += ' (' + digits.slice(1, 4);
+            if (digits.length >= 4) formatted += ')';
+            else formatted += ')';
         }
-        this.value = formatted;
-        const form = this.closest('form');
-        const messagesBlock = form ? form.querySelector('.form-messages') : null;
-        if (raw.length > 0 && raw.length !== maxDigits) {
-            if (messagesBlock) {
-                messagesBlock.textContent = `❌ Введите ${maxDigits} цифр телефона, сейчас ${raw.length}`;
-                messagesBlock.className = 'form-messages error';
-                messagesBlock.style.display = 'block';
-            }
-            this.classList.add('input-error');
-        } else {
-            if (messagesBlock && messagesBlock.textContent.includes('Введите') && messagesBlock.textContent.includes('цифр телефона')) {
-                messagesBlock.textContent = '';
-                messagesBlock.className = 'form-messages';
-                messagesBlock.style.display = '';
-            }
-            this.classList.remove('input-error');
+        if (digits.length >= 5) {
+            formatted += ' ' + digits.slice(4, 7);
         }
-    });
+        if (digits.length >= 8) {
+            formatted += '-' + digits.slice(7, 9);
+        }
+        if (digits.length >= 10) {
+            formatted += '-' + digits.slice(9, 11);
+        }
+        // Если цифр 2-3 и нет закрывающей скобки – добавим её
+        if (digits.length >= 2 && digits.length < 4 && !formatted.includes(')')) {
+            formatted += ')';
+        }
+        return formatted;
+    };
+
+    const handler = function(e) {
+        let start = this.selectionStart;
+        let end = this.selectionEnd;
+        let oldLength = this.value.length;
+
+        // Получаем только цифры
+        let digits = this.value.replace(/\D/g, '');
+        let formatted = formatPhone(digits);
+
+        if (this.value !== formatted) {
+            this.value = formatted;
+            // Корректируем позицию курсора
+            let newLength = this.value.length;
+            // Если курсор был в конце, оставляем в конце
+            if (start === oldLength) {
+                this.setSelectionRange(newLength, newLength);
+            } else {
+                // Пытаемся восстановить позицию относительно количества введённых цифр
+                let digitsBeforeCursor = (this.value.slice(0, start).replace(/\D/g, '')).length;
+                let newPos = 0;
+                let digitsCount = 0;
+                for (let i = 0; i < this.value.length; i++) {
+                    if (/\d/.test(this.value[i])) digitsCount++;
+                    if (digitsCount === digitsBeforeCursor) {
+                        newPos = i + 1;
+                        break;
+                    }
+                }
+                this.setSelectionRange(newPos, newPos);
+            }
+        }
+    };
+
+    inputElement.addEventListener('input', handler);
+    inputElement._phoneMaskHandler = handler;
+    // Вызываем сразу, чтобы привести значение к формату (если уже что-то введено)
+    handler.call(inputElement);
 }
 
 function initPhoneMasks() {
