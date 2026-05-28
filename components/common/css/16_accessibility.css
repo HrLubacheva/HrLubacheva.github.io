@@ -111,3 +111,9 @@ select:focus-visible {
     z-index: 10000;
     outline: none;
 }
+
+/* Эмодзи не должны наследовать цвет текста */
+.emoji {
+    color: initial !important;
+    display: inline-block;
+}

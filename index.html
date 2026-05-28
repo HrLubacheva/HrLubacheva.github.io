@@ -3805,6 +3805,12 @@ select:focus-visible {
     z-index: 10000;
     outline: none;
 }
+
+/* Эмодзи не должны наследовать цвет текста */
+.emoji {
+    color: initial !important;
+    display: inline-block;
+}
 </style>
 </head>
 <body>
@@ -3946,7 +3952,7 @@ select:focus-visible {
 </section>
 <section id="certificates" class="section certificates-section fade-up">
     <div class="container">
-        <h2 class="section-title">📜 Мои сертификаты и дипломы</h2>
+        <h2 class="section-title"><span class="emoji">📜</span> Мои сертификаты и дипломы</h2>
         <div class="carousel-wrapper">
             <button class="carousel-btn carousel-prev" aria-label="Назад">❮</button>
             <div class="carousel-viewport">
@@ -4003,7 +4009,7 @@ select:focus-visible {
         </div>
         <ul class="grid-2 cells-grid" data-grid-type="cards" role="list">
             <li class="card card-service fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service1-title">
-                <h3 id="service1-title" itemprop="serviceType">🏢 HR для бизнеса</h3>
+                <h3 id="service1-title" itemprop="serviceType"><span class="emoji">🏢</span> HR для бизнеса</h3>
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Подбор персонала (Junior → C-level)</li>
@@ -4017,7 +4023,7 @@ select:focus-visible {
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
             <li class="card card-service fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service2-title">
-                <h3 id="service2-title" itemprop="serviceType">🧑 Карьерный консалтинг</h3>
+                <h3 id="service2-title" itemprop="serviceType"><span class="emoji">🧑</span> Карьерный консалтинг</h3>
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Карьерная стратегия</li>
@@ -4030,7 +4036,7 @@ select:focus-visible {
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
             <li class="card card-service fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service3-title">
-                <h3 id="service3-title" itemprop="serviceType">🎓 Бизнес‑тренинги и коучинг</h3>
+                <h3 id="service3-title" itemprop="serviceType"><span class="emoji">🎓</span> Бизнес‑тренинги и коучинг</h3>
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Корпоративные тренинги (офлайн | онлайн)</li>
@@ -4199,7 +4205,7 @@ select:focus-visible {
             <!-- Карьерная консультация -->
             <div class="process-block">
                 <div class="process-block-header">
-                    <h3 class="process-block-title">📌&nbsp;Карьерная&nbsp;консультация</h3>
+                    <h3 class="process-block-title"><span class="emoji">📌</span>&nbsp;Карьерная&nbsp;консультация</h3>
                     <span class="process-block-subtitle">Средний рост дохода +35%</span>
                 </div>
                 <div class="process-block-inner">
@@ -4231,7 +4237,7 @@ select:focus-visible {
             <!-- Подбор персонала -->
             <div class="process-block">
                 <div class="process-block-header">
-                    <h3 class="process-block-title">🏢&nbsp;Подбор&nbsp;персонала</h3>
+                    <h3 class="process-block-title"><span class="emoji">🏢</span>&nbsp;Подбор&nbsp;персонала</h3>
                     <span class="process-block-subtitle">Гарантия 3 месяца — бесплатная замена</span>
                 </div>
                 <div class="process-block-inner">
@@ -4264,7 +4270,7 @@ select:focus-visible {
         <!-- Тренинг «Продай себя дорого» (6 карточек) -->
         <div class="process-block-full">
             <div class="process-block-header">
-                <h3 class="process-block-title">🎓 Тренинг «Продай себя дорого»</h3>
+                <h3 class="process-block-title"><span class="emoji">🎓</span> Тренинг «Продай себя дорого»</h3>
             </div>
             <div class="grid-training-3">
                 <div class="card card-process card-compact fade-up">
@@ -4316,7 +4322,7 @@ select:focus-visible {
 <section id="calculator" class="calculator-section">
     <div class="container">
         <div class="calculator-card">
-            <h2 class="section-title">💰 Калькулятор стоимости услуг</h2>
+            <h2 class="section-title"><span class="emoji">💰</span> Калькулятор стоимости услуг</h2>
 
             <div class="calculator-tabs">
                 <button class="btn tab-btn" data-tab="recruitment">🎯 Подбор персонала</button>
@@ -4495,7 +4501,7 @@ select:focus-visible {
 <section id="quiz">
     <div class="container">
         <div class="quiz-card fade-up">
-            <h2 class="section-title">🧠 Квиз: «Ваш следующий карьерный шаг»</h2>
+            <h2 class="section-title"><span class="emoji">🧠</span> Квиз: «Ваш следующий карьерный шаг»</h2>
             <div id="quizContainer"></div>
             <div id="quizResult" class="quiz-result"></div>
             <div style="display: flex; justify-content: center; margin-top: 30px;">
@@ -4509,7 +4515,7 @@ select:focus-visible {
 <section aria-labelledby="freebies-title">
     <div class="container">
         <div class="checklist-card fade-up">
-            <h2 class="section-title" id="freebies-title">📥 Бесплатный набор для уверенного старта</h2>
+            <h2 class="section-title" id="freebies-title"><span class="emoji">📥</span> Бесплатный набор для уверенного старта</h2>
             <ul class="freebies-grid" role="list">
                 <li class="freebie-item" role="listitem" itemscope itemtype="https://schema.org/CreativeWork">
                     <div class="freebie-icon">
@@ -4567,7 +4573,7 @@ select:focus-visible {
     <div class="container">
         <div class="calendar-card fade-up">
             <h2 class="section-title" id="callback-title">
-                📋 Экспресс-диагностика 15 минут
+                <span class="emoji">📋</span> Экспресс-диагностика 15 минут
                 <span class="callback-subtitle">Разберём вашу ситуацию — без обязательств</span>
             </h2>
 
@@ -4631,7 +4637,7 @@ select:focus-visible {
 <section id="media" class="section section-light" aria-labelledby="media-title">
     <div class="container">
         <div class="section-header cell-text" data-cell-type="text">
-            <h2 class="section-title fade-up" id="media-title">📺 Тот самый HR из телевизора</h2>
+            <h2 class="section-title fade-up" id="media-title"><span class="emoji">📺</span> Тот самый HR из телевизора</h2>
             <p class="section-subtitle fade-up">Меня знают в лицо, видят по ТВ и доверяют в работе</p>
         </div>
 
@@ -5257,7 +5263,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 28.05.2026 12:14:05</span>
+                </a> <span class="footer-version">⚡ Версия 28.05.2026 14:26:05</span>
 
             </div>
         </div>
