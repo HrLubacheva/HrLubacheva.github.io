@@ -304,7 +304,7 @@ body {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
-}
+}ы
 /* ==================================================================
    01_typography.css – типографика
    ================================================================== */
@@ -2503,7 +2503,7 @@ body {
     .freebie-item { min-width: 140px; }
 }
 /* ==================================================================
-   10_media_contacts.css – медиа, контакты, футер, общие компоненты
+   10_media_contacts.css – медиа, контакты, общие компоненты
    ================================================================== */
 .media-grid {
     display: grid;
@@ -2655,47 +2655,7 @@ body {
     }
 }
 
-footer {
-    background: var(--dark-bg);
-    color: #cbd5e0;
-    padding: 20px 0;
-    text-align: center;
-    margin-top: 40px;
-}
-footer a {
-    color: #90cdf4;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-}
-footer a:hover {
-    color: white;
-    text-decoration: underline;
-}
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-.footer-copyright {
-    font-size: 0.9rem;
-}
-.footer-version {
-    font-size: 0.7rem;
-    opacity: 0.6;
-}
-@media (max-width: 768px) {
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-@media (max-width: 480px) {
-    .footer-version { font-size: 0.75rem; }
-    .footer-copyright { font-size: 0.8rem; }
-}
-
+/* Глобальные правила для ссылок, анимации, тостов, дропдаунов и т.д. (без дублирования футера) */
 .fade-up {
     opacity: 0;
     transform: translateY(30px);
@@ -2851,8 +2811,7 @@ footer a:hover {
     color: white;
 }
 
-/* ========== Глобальные правила для ссылок (без прыжков) ========== */
-/* Обычные ссылки (не кнопки, не иконки соцсетей) получают прозрачную границу снизу */
+/* Глобальные правила для ссылок (без прыжков) */
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
     text-decoration: none;
     border-bottom: 1px solid transparent;
@@ -2861,8 +2820,6 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     border-bottom-color: var(--primary);
 }
-
-/* Ссылки в контактах (особый цвет) */
 .contact-line a {
     color: #90cdf4;
     border-bottom: 1px solid transparent;
@@ -2871,17 +2828,7 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     color: white;
     border-bottom-color: white;
 }
-
-/* Ссылки в футере (оставляем стандартное подчёркивание) */
-footer a {
-    text-decoration: underline;
-    border-bottom: none;
-}
-footer a:hover {
-    text-decoration: underline;
-}
-
-/* Иконки соцсетей — без border-bottom */
+/* Ссылки в футере обрабатываются в 04_footer.css, здесь не дублируем */
 .social-icons a {
     border-bottom: none;
 }
@@ -2904,12 +2851,10 @@ button:focus-visible,
     outline-offset: 3px;
     border-radius: 4px;
 }
-
 :focus {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
-
 input:focus,
 textarea:focus,
 select:focus,
@@ -2919,7 +2864,6 @@ button:focus {
     outline-width: 2px;
     outline-style: solid;
 }
-
 fieldset {
     border: none;
     padding: 0;
@@ -3231,93 +3175,20 @@ section[id] {
 .carousel-slide.horizontal:hover img {
     transform: scale(1.05);
 }
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: white;
-    border: none;
-    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
-    cursor: pointer;
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary, #2D6A9F);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    z-index: 3;
-}
-.carousel-btn:hover {
-    background: var(--primary, #2D6A9F);
-    color: white;
-    transform: translateY(-50%) scale(1.05);
-}
-.carousel-prev {
-    left: -22px;
-}
-.carousel-next {
-    right: -22px;
-}
-.carousel-progress {
-    width: 100%;
-    height: 2px;
-    background: #e2e8f0;
-    border-radius: 2px;
-    margin: 24px 0 20px;
-    overflow: hidden;
-}
-.progress-bar {
-    width: 0%;
-    height: 100%;
-    background: var(--primary, #2D6A9F);
-    border-radius: 2px;
-    transition: width 0.05s linear;
-}
-.carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #cbd5e0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.dot.active {
-    background: var(--primary, #2D6A9F);
-    width: 24px;
-    border-radius: 6px;
-}
-.dot:hover {
-    background: var(--primary-light, #4A8BC2);
-    transform: scale(1.2);
-}
 @media (max-width: 992px) {
     .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
     .carousel-slide.horizontal { max-width: 300px; }
-    .carousel-prev { left: -16px; }
-    .carousel-next { right: -16px; }
 }
 @media (max-width: 768px) {
     .carousel-slide { min-width: 100px; max-width: 180px; height: 180px; }
     .carousel-slide.horizontal { max-width: 240px; }
-    .carousel-btn { width: 36px; height: 36px; font-size: 20px; }
-    .carousel-prev { left: -12px; }
-    .carousel-next { right: -12px; }
 }
 @media (max-width: 576px) {
     .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
     .carousel-slide.horizontal { max-width: 200px; }
 }
 
-/* ========== ИНСТРУКЦИЯ ПОД КАРУСЕЛЬЮ (единый блок) ========== */
+/* Инструкция под каруселью */
 .carousel-instruction {
     text-align: center;
     font-size: 0.85rem;
@@ -3347,6 +3218,21 @@ section[id] {
     .instruction-icon {
         margin: 0 4px;
     }
+}
+
+/* Прогресс-бар с бегущим градиентом (используется новым скриптом) */
+.carousel-progress {
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 30%, var(--primary, #2D6A9F) 50%, #e2e8f0 70%, #e2e8f0 100%);
+    background-size: 200% 100%;
+    border-radius: 4px;
+    margin: 20px auto 10px;
+    transition: opacity 0.2s;
+}
+@keyframes progressMove {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
 }
 /* ==================================================================
    13_accents.css – усиление контраста (без новых цветов)
@@ -3942,14 +3828,6 @@ select:focus-visible {
             </div>
             <button class="carousel-btn carousel-next" aria-label="Вперёд">❯</button>
         </div>
-
-        <!-- Новая подпись под каруселью -->
-        <div class="carousel-instruction">
-            <span class="instruction-icon">🖱️</span>
-            <span>Наведите мышь, чтобы остановить автопрокрутку, и листайте вручную: тяните мышкой или крутите колёсико</span>
-            <span class="instruction-icon">↔️</span>
-        </div>
-
         <div class="carousel-progress" id="progressBar"></div>
         <div class="carousel-dots" id="carouselDots"></div>
     </div>
@@ -5216,7 +5094,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 28.05.2026 08:40:23</span>
+                </a> <span class="footer-version">⚡ Версия 28.05.2026 09:10:29</span>
 
             </div>
         </div>
@@ -6472,9 +6350,10 @@ function initFormEnterSubmit() {
 window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
 // ============================================================
-// 04_certificates.js – Бесконечная плавная карусель (лента)
-// Режим: непрерывное вращение, остановка при наведении,
-//        перетаскивание мышью. Без дискретных переключений.
+// 04_certificates.js – Бесконечная карусель с анимированной полосой
+// Три копии слайдов, плавное движение влево.
+// Вместо бегунка – бегущий градиент, синхронизированный со скоростью.
+// Наведение – пауза, перетаскивание – пауза, после отпускания – продолжение.
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -6486,43 +6365,103 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
         const slideGap = 24;            // px (из CSS)
         let slideWidth = 0;
-        let totalWidth = 0;
-        let scrollPos = 0;              // текущее смещение в px
+        let containerWidth = 0;
+        let scrollPos = 0;
         let animationId = null;
         let isHovering = false;
         let isDragging = false;
         let dragStartX = 0;
         let dragStartPos = 0;
         let lastTimestamp = 0;
+        const SPEED = 140;              // px/сек (можно изменить)
 
-        const SCROLL_SPEED = 100;       // пикселей в секунду (настройте при необходимости)
-
-        // Клонирование слайдов для бесконечного эффекта
-        function cloneSlides() {
-            const clonesBefore = [];
-            const clonesAfter = [];
-            const cloneCount = 6;
-            for (let i = 0; i < cloneCount; i++) {
-                clonesAfter.push(originalSlides[i].cloneNode(true));
-                clonesBefore.push(originalSlides[originalSlides.length - 1 - i].cloneNode(true));
+        // ---------- 1. Утроенная лента (3 копии) ----------
+        function buildTripleTrack() {
+            const triple = [];
+            for (let i = 0; i < 3; i++) {
+                originalSlides.forEach(slide => {
+                    triple.push(slide.cloneNode(true));
+                });
             }
             track.innerHTML = '';
-            clonesBefore.reverse().forEach(clone => track.appendChild(clone));
-            originalSlides.forEach(slide => track.appendChild(slide.cloneNode(true)));
-            clonesAfter.forEach(clone => track.appendChild(clone));
+            triple.forEach(clone => track.appendChild(clone));
             return Array.from(track.children);
         }
 
-        let slides = cloneSlides();
-        const originalStartIndex = 6;   // позиция, с которой начинается первый оригинальный слайд
+        let slides = buildTripleTrack();
+        let originalSetWidth = 0;        // ширина одного набора оригиналов (с отступами)
 
-        function updateDimensions() {
-            const firstSlide = slides[0];
-            if (firstSlide) {
-                slideWidth = firstSlide.offsetWidth;
-                if (slideWidth === 0) slideWidth = 200;
-                totalWidth = slides.length * (slideWidth + slideGap);
+        // ---------- 2. Прогресс-бар с анимированным градиентом ----------
+        let progressElement = null;
+        let gradientAnimationActive = false;
+
+        function createGradientProgressBar() {
+            // Ищем уже существующий элемент .carousel-progress
+            let progress = document.querySelector('.carousel-progress');
+            if (!progress) {
+                const wrapper = track.closest('.carousel-wrapper');
+                if (!wrapper) return null;
+                progress = document.createElement('div');
+                progress.className = 'carousel-progress';
+                progress.style.cssText = `
+                    width: 100%;
+                    height: 4px;
+                    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 30%, var(--primary, #2D6A9F) 50%, #e2e8f0 70%, #e2e8f0 100%);
+                    background-size: 200% 100%;
+                    border-radius: 4px;
+                    margin: 20px auto 10px;
+                    transition: opacity 0.2s;
+                `;
+                wrapper.insertAdjacentElement('afterend', progress);
             }
+            // Скрываем старые элементы (маркер и контейнер), если они есть
+            const oldMarker = document.querySelector('.carousel-progress-marker');
+            if (oldMarker) oldMarker.style.display = 'none';
+            const oldContainer = document.querySelector('.carousel-progress-container');
+            if (oldContainer) oldContainer.style.display = 'none';
+            return progress;
+        }
+
+        function ensureKeyframes() {
+            if (document.querySelector('#carousel-gradient-keyframes')) return;
+            const style = document.createElement('style');
+            style.id = 'carousel-gradient-keyframes';
+            style.textContent = `
+                @keyframes progressMove {
+                    0% { background-position: 0% 0%; }
+                    100% { background-position: 200% 0%; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function startGradientAnimation() {
+            if (!progressElement) return;
+            if (gradientAnimationActive) return;
+            if (originalSetWidth <= 0) return;
+            const duration = originalSetWidth / SPEED; // секунд
+            if (isNaN(duration) || duration <= 0) return;
+            ensureKeyframes();
+            progressElement.style.animation = `progressMove ${duration}s linear infinite`;
+            gradientAnimationActive = true;
+        }
+
+        function stopGradientAnimation() {
+            if (!progressElement) return;
+            progressElement.style.animation = 'none';
+            progressElement.style.backgroundPosition = '0% 0%';
+            gradientAnimationActive = false;
+        }
+
+        // ---------- 3. Геометрия ----------
+        function updateDimensions() {
+            if (slides[0]) {
+                slideWidth = slides[0].offsetWidth;
+                if (slideWidth === 0) slideWidth = 200;
+            }
+            const wrapper = track.closest('.carousel-viewport');
+            containerWidth = wrapper ? wrapper.clientWidth : track.parentElement.clientWidth;
+            originalSetWidth = originalSlides.length * (slideWidth + slideGap);
         }
 
         function setPosition(pos) {
@@ -6530,6 +6469,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             track.style.transform = `translateX(${scrollPos}px)`;
         }
 
+        // ---------- 4. Анимация карусели (requestAnimationFrame) ----------
         function animate(now) {
             if (!animationId) return;
             if (lastTimestamp === 0) {
@@ -6541,17 +6481,17 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             lastTimestamp = now;
 
             if (!isHovering && !isDragging) {
-                // Движение влево
-                scrollPos -= (SCROLL_SPEED * delta) / 1000;
-                // Бесконечное зацикливание
-                const minLimit = -(totalWidth - (slideWidth + slideGap) * originalSlides.length);
-                const maxLimit = 0;
-                if (scrollPos <= minLimit) {
-                    scrollPos += (slideWidth + slideGap) * originalSlides.length;
-                } else if (scrollPos >= maxLimit) {
-                    scrollPos -= (slideWidth + slideGap) * originalSlides.length;
+                let step = (SPEED * delta) / 1000;
+                let newPos = scrollPos - step; // движение влево
+
+                // Бесконечное зацикливание: удерживаем позицию в пределах двух копий
+                // (от -originalSetWidth*2 до 0), перескок на одну копию при выходе
+                if (newPos < -originalSetWidth * 2) {
+                    newPos += originalSetWidth;
+                } else if (newPos > 0) {
+                    newPos -= originalSetWidth;
                 }
-                setPosition(scrollPos);
+                setPosition(newPos);
             }
             requestAnimationFrame(animate);
         }
@@ -6560,6 +6500,9 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (animationId) return;
             lastTimestamp = 0;
             animationId = requestAnimationFrame(animate);
+            if (!isHovering && !isDragging && progressElement) {
+                startGradientAnimation();
+            }
         }
 
         function stopAnimation() {
@@ -6567,9 +6510,10 @@ window.initFormEnterSubmit = initFormEnterSubmit;
                 cancelAnimationFrame(animationId);
                 animationId = null;
             }
+            stopGradientAnimation();
         }
 
-        // Drag & drop
+        // ---------- 5. Drag & drop (перетаскивание мышью) ----------
         function onMouseDown(e) {
             if (e.button !== 0) return;
             isDragging = true;
@@ -6585,12 +6529,11 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (!isDragging) return;
             const dx = e.clientX - dragStartX;
             let newPos = dragStartPos + dx;
-            const minPos = -(totalWidth - (slideWidth + slideGap) * originalSlides.length);
+            const minPos = -originalSetWidth * 2;
             const maxPos = 0;
             if (newPos > maxPos) newPos = maxPos;
             if (newPos < minPos) newPos = minPos;
-            scrollPos = newPos;
-            setPosition(scrollPos);
+            setPosition(newPos);
         }
 
         function onMouseUp() {
@@ -6598,10 +6541,15 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             isDragging = false;
             document.body.style.userSelect = '';
             track.style.transition = 'transform 0.3s ease';
+            // Нормализуем позицию, чтобы не было выхода за пределы
+            let norm = scrollPos;
+            if (norm < -originalSetWidth * 2) norm += originalSetWidth;
+            if (norm > 0) norm -= originalSetWidth;
+            setPosition(norm);
             if (!isHovering) startAnimation();
         }
 
-        // Наведение мыши
+        // ---------- 6. Наведение мыши ----------
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => {
@@ -6614,11 +6562,12 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             });
         }
 
-        // Инициализация после загрузки изображений
+        // ---------- 7. Инициализация ----------
         function init() {
             updateDimensions();
-            scrollPos = -originalStartIndex * (slideWidth + slideGap);
-            setPosition(scrollPos);
+            // Стартовая позиция: вторая копия (сдвиг на -originalSetWidth)
+            setPosition(-originalSetWidth);
+            progressElement = createGradientProgressBar();
             startAnimation();
 
             track.addEventListener('mousedown', onMouseDown);
@@ -6627,8 +6576,22 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
             window.addEventListener('resize', () => {
                 updateDimensions();
-                scrollPos = -originalStartIndex * (slideWidth + slideGap);
-                setPosition(scrollPos);
+                let norm = scrollPos;
+                if (norm < -originalSetWidth * 2) norm += originalSetWidth;
+                if (norm > 0) norm -= originalSetWidth;
+                setPosition(norm);
+                if (!isHovering && !isDragging) {
+                    stopAnimation();
+                    startAnimation();
+                }
+                // Пересчитываем длительность анимации градиента
+                if (progressElement && originalSetWidth > 0) {
+                    const duration = originalSetWidth / SPEED;
+                    progressElement.style.animation = `progressMove ${duration}s linear infinite`;
+                    if (gradientAnimationActive) {
+                        progressElement.style.animation = `progressMove ${duration}s linear infinite`;
+                    }
+                }
             });
         }
 
