@@ -1,17 +1,21 @@
 /* ==================================================================
-   15_cookie.css – стили для куки-баннера
+   15_cookie.css – стили для куки-баннера (улучшенная версия)
    ================================================================== */
 .cookie-consent {
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: var(--dark-bg);
+    background: rgba(26, 42, 58, 0.95);
+    backdrop-filter: blur(10px);
     color: var(--text-light);
-    padding: 16px 20px;
+    padding: 16px 24px;
     z-index: 1000;
-    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Inter', sans-serif;
 }
+
 .cookie-consent__inner {
     max-width: 1200px;
     margin: 0 auto;
@@ -19,18 +23,110 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: 20px;
 }
-.cookie-consent__inner p {
+
+.cookie-consent__text {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 2;
+    min-width: 240px;
+}
+
+.cookie-icon {
+    font-size: 1.8rem;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+.cookie-consent__text p {
     margin: 0;
     font-size: 0.9rem;
+    line-height: 1.4;
+    color: #e2e8f0;
 }
+
 .cookie-consent a {
     color: var(--primary-light);
+    text-decoration: underline;
+    transition: color 0.2s ease;
 }
+
+.cookie-consent a:hover {
+    color: white;
+}
+
+.cookie-consent__buttons {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.cookie-consent__buttons .btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    border: none;
+    padding: 8px 20px;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.cookie-consent__buttons .btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    box-shadow: 0 4px 12px rgba(45,106,159,0.4);
+}
+
+.cookie-consent__buttons .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--primary-light);
+    color: var(--primary-light);
+    padding: 8px 20px;
+    font-weight: 600;
+}
+
+.cookie-consent__buttons .btn-secondary:hover {
+    background: rgba(74, 139, 194, 0.15);
+    border-color: white;
+    color: white;
+}
+
+/* Анимация появления */
+@keyframes cookieSlideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.cookie-consent {
+    animation: cookieSlideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+/* Адаптив для мобильных */
 @media (max-width: 640px) {
+    .cookie-consent {
+        padding: 16px;
+    }
     .cookie-consent__inner {
         flex-direction: column;
-        text-align: center;
+        align-items: stretch;
+        gap: 16px;
+    }
+    .cookie-consent__text {
+        gap: 10px;
+    }
+    .cookie-icon {
+        font-size: 1.5rem;
+    }
+    .cookie-consent__buttons {
+        justify-content: flex-end;
+    }
+    .cookie-consent__buttons .btn-primary,
+    .cookie-consent__buttons .btn-secondary {
+        padding: 8px 16px;
+        font-size: 0.8rem;
     }
 }

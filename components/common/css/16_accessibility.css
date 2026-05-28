@@ -1,0 +1,113 @@
+/* ==================================================================
+   16_accessibility.css – Улучшенная навигация с клавиатуры (Tab)
+   ================================================================== */
+
+/* Базовое выделение для всех интерактивных элементов */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 3px;
+    border-radius: 6px;
+    transition: outline 0.1s ease;
+}
+
+/* Для кнопок с круглой формой (иконки соцсетей, бургер) */
+.social-icons a:focus-visible,
+.burger-menu:focus-visible,
+.carousel-btn:focus-visible,
+.qty-btn:focus-visible,
+.remove-item:focus-visible,
+.scroll-top:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+
+/* Для полей форм */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
+}
+
+/* Для ссылок в навигации */
+.nav-links a:focus-visible {
+    outline: none;
+    border-bottom: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+/* Для карточек (если на них кликабельные элементы) */
+.card:focus-visible,
+.quiz-result-card:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Для кнопок квиза */
+.quiz-option:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+    background: var(--primary);
+    color: white;
+}
+
+/* Для табов калькулятора */
+.tab-btn:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+    background: var(--primary-light);
+    color: white;
+}
+
+/* Для выпадающих списков (select) */
+.service-select:focus-visible {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
+}
+
+/* Скрытие outline для мыши, но не для клавиатуры */
+:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Дополнительно: улучшенный контраст для фокуса на тёмном фоне */
+.section-dark button:focus-visible,
+.section-dark a:focus-visible,
+.section-dark input:focus-visible,
+.section-dark .btn:focus-visible {
+    outline-color: var(--primary-light);
+    outline-offset: 3px;
+}
+
+/* Для модальных окон: при открытии первый элемент получает фокус */
+.modal:not(.show) button,
+.modal:not(.show) a,
+.modal:not(.show) input {
+    tabindex: -1;
+}
+
+.modal.show button,
+.modal.show a,
+.modal.show input {
+    tabindex: 0;
+}
+
+/* Ссылка "Перейти к содержанию" (skip-link) — остаётся видимой при фокусе */
+.skip-link:focus-visible {
+    top: 10px;
+    background: var(--primary);
+    color: white;
+    padding: 8px 16px;
+    z-index: 10000;
+    outline: none;
+}

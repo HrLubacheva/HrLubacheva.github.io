@@ -1,11 +1,11 @@
 /* ==================================================================
-   07_calculator.css – калькулятор, корзина, вкладки
+   07_calculator.css – калькулятор, корзина, вкладки (плавные эффекты)
    ================================================================== */
 .calculator-section {
     padding: 60px 0;
     background: var(--light-bg, #f8f9fa);
 }
-.quiz-card {
+.calculator-card {
     max-width: 900px;
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -29,14 +29,16 @@
     font-weight: 600;
     color: var(--text-dark);
     font-size: 0.9rem;
+    transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
 }
 .tab-btn:hover {
-    background: #e9ecef;
+    background: #e2e8f0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 .tab-btn.active {
     background: var(--primary);
     color: white;
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 4px 12px rgba(45,106,159,0.2);
 }
 .tab-pane {
     display: none;
@@ -49,8 +51,8 @@
     animation: fadeIn 0.25s;
 }
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .service-group {
@@ -87,12 +89,8 @@
     font-family: 'Inter', sans-serif;
     font-size: 0.9rem;
     font-weight: 500;
-    color: var(--text-dark);
     cursor: pointer;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236c757d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 20px center;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .service-select:focus {
     outline: none;
@@ -108,7 +106,6 @@
     border-radius: 50px;
     font-size: 0.95rem;
     font-weight: 500;
-    color: var(--text-dark);
 }
 .calc-qty:focus {
     outline: none;
@@ -123,7 +120,7 @@
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
     color: white;
     display: inline-flex;
     align-items: center;
@@ -132,7 +129,11 @@
 }
 .add-service-btn:hover {
     background: var(--primary-dark);
-    box-shadow: 0 6px 14px rgba(45,106,159,0.25);
+    box-shadow: 0 0 10px rgba(45,106,159,0.4);
+}
+.add-service-btn:active {
+    transform: scale(0.98);
+    transition: transform 0.05s;
 }
 .total-block {
     margin-top: 24px;
@@ -150,9 +151,6 @@
     font-size: 0.75rem;
     margin-top: 5px;
     font-weight: 500;
-}
-@media (max-width: 768px) {
-    .total-block { text-align: center; }
 }
 .cart-section {
     margin-top: 30px;
@@ -188,11 +186,11 @@
     align-items: center;
     padding: 14px 12px;
     border-bottom: 1px solid var(--border);
-    transition: background 0.2s;
+    transition: background 0.2s ease;
     animation: slideIn 0.3s ease;
 }
 @keyframes slideIn {
-    from { opacity: 0; transform: translateX(-20px); }
+    from { opacity: 0; transform: translateX(-10px); }
     to { opacity: 1; transform: translateX(0); }
 }
 .calc-item:hover {
@@ -205,7 +203,7 @@
     word-break: break-word;
     font-size: 0.95rem;
 }
-.calc-item .service-price {
+.service-price {
     text-align: center;
     font-weight: 700;
     color: var(--primary);
@@ -225,7 +223,7 @@
     font-size: 1.2rem;
     font-weight: bold;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s ease, box-shadow 0.2s ease;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -235,12 +233,16 @@
     background: var(--primary);
     color: white;
     border-color: var(--primary);
+    box-shadow: 0 0 6px rgba(45,106,159,0.3);
+}
+.qty-btn:active {
+    transform: scale(0.95);
+    transition: transform 0.05s;
 }
 .qty-value {
     min-width: 28px;
     text-align: center;
     font-weight: 600;
-    color: var(--text-dark);
 }
 .remove-item {
     background: none;
@@ -248,7 +250,7 @@
     color: #dc3545;
     cursor: pointer;
     font-size: 1.2rem;
-    transition: all 0.2s;
+    transition: background 0.2s ease, color 0.2s ease;
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -258,6 +260,7 @@
 }
 .remove-item:hover {
     background: #fee2e2;
+    color: #b91c1c;
 }
 .share-btn {
     display: inline-flex;
@@ -268,9 +271,4 @@
     display: flex;
     justify-content: flex-end;
     margin-top: 15px;
-}
-
-.add-service-btn:active,
-.tab-btn:active {
-    transform: translateY(0px);
 }

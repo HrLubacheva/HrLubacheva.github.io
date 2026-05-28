@@ -1,5 +1,6 @@
 // ============================================================
 // 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов, адаптивные тексты)
+// Исправлено: добавлено предупреждение при сбросе ответов из-за смены роли
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -80,7 +81,6 @@
         else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
 
-    // Базовые вопросы (не зависят от роли)
     const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] };
     const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
     const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
@@ -88,10 +88,8 @@
     const IMPORTANCE_QUESTION = { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"] };
     const BUDGET_QUESTION = { text: "5. Бюджет на консультацию/подбор?", options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"] };
 
-    // Вопросы, текст которых зависит от роли
     const INDUSTRY_FOR_JOBSEEKER = { text: "6. Ваша сфера деятельности?", options: ["IT / Технологии", "Продажи / Маркетинг", "HR / Управление персоналом", "Другое"] };
     const INDUSTRY_FOR_BUSINESS = { text: "6. В какой сфере работает ваша компания?", options: ["IT / Технологии", "Продажи / Маркетинг", "HR / Управление персоналом", "Другое"] };
-
     const WORK_FORMAT_FOR_JOBSEEKER = { text: "7. Предпочитаемый формат работы?", options: ["Офлайн / В офисе", "Онлайн / Удалённо", "Гибридный (смешанный)"] };
     const WORK_FORMAT_FOR_BUSINESS = { text: "7. Какой формат работы предпочтительнее для сотрудников?", options: ["Офлайн / В офисе", "Онлайн / Удалённо", "Гибридный (смешанный)"] };
 
@@ -103,14 +101,13 @@
         currentQuestionIndex = 0;
         quizState = 'questions';
         currentRole = null;
-        // Начальные вопросы (первые 5 фиксированы, последние 2 будут подставлены позже в зависимости от роли)
         quizQuestions = [
             FIRST_QUESTION,
             LEVEL_JOBSEEKER,
             URGENCY_QUESTION,
             IMPORTANCE_QUESTION,
             BUDGET_QUESTION,
-            INDUSTRY_FOR_JOBSEEKER,   // временно, позже обновится при выборе роли
+            INDUSTRY_FOR_JOBSEEKER,
             WORK_FORMAT_FOR_JOBSEEKER
         ];
         selectedVariantText = ''; selectedVariantPrice = ''; selectedOriginalText = ''; selectedOriginalPrice = '';
@@ -119,8 +116,9 @@
         renderQuiz();
     }
 
+    // ИСПРАВЛЕННАЯ ФУНКЦИЯ: добавлено предупреждение при сбросе ответов
     function updateIndustryAndWorkFormatQuestions(role) {
-        // Обновляем 6-й и 7-й вопросы в зависимости от роли
+        let wasReset = false;
         if (role === "Подбираю сотрудников") {
             quizQuestions[5] = INDUSTRY_FOR_BUSINESS;
             quizQuestions[6] = WORK_FORMAT_FOR_BUSINESS;
@@ -128,18 +126,19 @@
             quizQuestions[5] = INDUSTRY_FOR_JOBSEEKER;
             quizQuestions[6] = WORK_FORMAT_FOR_JOBSEEKER;
         }
-        // Если пользователь уже ответил на эти вопросы, нужно проверить, что ответы остались валидными
-        // (опции разные, поэтому сбросим их, чтобы избежать несоответствия)
         if (answers[5] && !quizQuestions[5].options.includes(answers[5])) {
             answers[5] = null;
-            // Если мы сейчас на 6-м или 7-м вопросе, перерисуем квиз
-            if (currentQuestionIndex === 5 || currentQuestionIndex === 6) {
-                renderQuiz();
-            }
+            wasReset = true;
         }
         if (answers[6] && !quizQuestions[6].options.includes(answers[6])) {
             answers[6] = null;
-            if (currentQuestionIndex === 6) renderQuiz();
+            wasReset = true;
+        }
+        if (wasReset) {
+            window.showWarningToast('⚠️ Вы сменили роль. Ответы на вопросы о сфере деятельности и формате работы сброшены.');
+            if (currentQuestionIndex === 5 || currentQuestionIndex === 6) {
+                renderQuiz();
+            }
         }
     }
 
@@ -151,7 +150,6 @@
         }
         if (answers[1] && !quizQuestions[1].options.includes(answers[1])) answers[1] = null;
         if (currentQuestionIndex === 1 && quizState === 'questions') renderQuiz();
-        // Также обновляем вопросы об отрасли и формате работы
         updateIndustryAndWorkFormatQuestions(role);
     }
 

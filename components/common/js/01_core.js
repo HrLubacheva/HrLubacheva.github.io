@@ -16,6 +16,8 @@ const IS_DEV = window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' ||
     window.location.search.includes('debug=true');
 
+let originalConsoleLog = null;  // <-- ИСПРАВЛЕНО: добавлено недостающее объявление
+
 function log(...args) {
     if (IS_DEV) console.log(...args);
 }
@@ -62,7 +64,6 @@ function getOrCreateLocalUserId() {
 
 let currentUserId = null;
 
-// ИСПРАВЛЕНО: функция теперь async и возвращает Promise
 async function initUserId() {
     currentUserId = getOrCreateLocalUserId();
     return currentUserId;

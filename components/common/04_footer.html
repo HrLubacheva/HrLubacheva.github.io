@@ -1,12 +1,46 @@
-<footer>
+<footer class="site-footer">
     <div class="container">
-        <div class="footer-content">
-            <div class="footer-copyright">
-                © 2026 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер, Психолог.
-                <a href="privacy.html" target="_blank">Политика конфиденциальности</a>
+        <div class="footer-inner">
+            <!-- Левый блок: иконки соцсетей -->
+            <div class="footer-social">
+                <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M3 12l16.5-7.5L9 13.5l-2 6 6-4 4.5 4.5L21 4.5 3 12Z" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <a href="https://wa.me/79217916655" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M17 7.5a5.5 5.5 0 1 0-10.8 2.7L5 17l4.9-1.3a5.5 5.5 0 0 0 7.1-8.2Z" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M11.2 11.2c.5.7 1.5 1.2 2.3 1.4.5.1.8.1 1.2 0 .3-.1.6-.2.8-.3.2-.1.4-.1.5.1.1.2.1.4.1.6v.8c0 .2-.1.4-.3.6-.2.2-.7.7-1.4 1-.7.3-1.4.4-2.5.2-1.1-.2-2.8-1.1-4.2-2.9-1.5-1.8-1.3-3.7-.8-4.2.5-.5 1.1-.6 1.5-.6.3 0 .7 0 1 .1.3.1.8.3 1.1.5.3.2.5.4.7.6Z"/>
+                    </svg>
+                </a>
             </div>
-            <div class="footer-version">
-                Версия: {{VERSION}}
+
+            <!-- Центральный блок: навигация -->
+            <div class="footer-links">
+                <a href="#home" class="footer-link">Главная</a>
+                <a href="#services" class="footer-link">Услуги</a>
+                <a href="#process" class="footer-link">Процесс</a>
+                <a href="#quiz" class="footer-link">Квиз</a>
+                <a href="#callback-form" class="footer-link">Связаться</a>
+            </div>
+
+            <!-- Правый блок: версия + политика -->
+            <div class="footer-meta">
+                <span class="footer-version">⚡ Версия {{VERSION}}</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Нижняя строка: копирайт + дубль политики (опционально) -->
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                © 2026 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер
+            </div>
+            <div class="footer-policy-full">
+                <a href="privacy.html" target="_blank">
+                    <span class="policy-icon">📄</span> Политика конфиденциальности
+                </a>
             </div>
         </div>
     </div>

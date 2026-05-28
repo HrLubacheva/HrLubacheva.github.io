@@ -103,3 +103,26 @@
         font-size: 1.3rem;
     }
 }
+
+/* ========== ДОПОЛНИТЕЛЬНО: экраны ≤360px (очень узкие) ========== */
+@media (max-width: 360px) {
+    .section-title {
+        font-size: 1.5rem;
+        margin-bottom: 24px;
+    }
+    .hero-title {
+        font-size: 1.6rem;
+    }
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    .process-title {
+        font-size: 1.3rem;
+    }
+    .card-title {
+        font-size: 1.1rem;
+    }
+    .small-note {
+        font-size: 0.75rem;
+    }
+}
