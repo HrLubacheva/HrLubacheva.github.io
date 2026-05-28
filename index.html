@@ -4162,6 +4162,102 @@ select:focus-visible {
         </ul>
     </div>
 </section>
+
+<style>
+    /* ========== АДАПТАЦИЯ БЛОКА "ЭКСПЕРТИЗА В ДЕТАЛЯХ" ========== */
+
+    /* По умолчанию: 3 колонки (уже есть в grid-3, но переопределим на всякий случай) */
+    .cells-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 30px;
+        list-style: none;
+        padding: 0;
+        margin: 40px 0;
+    }
+
+    /* Планшеты и мобильные: 2 колонки */
+    @media (max-width: 992px) {
+        .cells-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+    }
+
+    /* Маленькие мобильные (до 576px): оставляем 2 колонки, но уменьшаем отступы */
+    @media (max-width: 576px) {
+        .cells-grid {
+            gap: 16px;
+        }
+    }
+
+    /* Стили карточек (если не заданы глобально) */
+    .card-role {
+        background: white;
+        border-radius: 20px;
+        padding: 28px 24px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-role:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(45,106,159,0.15);
+    }
+
+    .card-role h3 {
+        font-size: 1.4rem;
+        margin-bottom: 16px;
+        color: var(--primary-dark, #1F4A6E);
+    }
+
+    .card-role strong {
+        font-size: 1rem;
+        color: var(--primary, #2D6A9F);
+    }
+
+    .card-role p {
+        margin-top: 12px;
+        font-size: 0.95rem;
+        color: var(--text-muted, #4a5568);
+    }
+
+    /* Адаптация текста на мобильных (до 992px) */
+    @media (max-width: 992px) {
+        .card-role {
+            padding: 20px 18px;
+        }
+        .card-role h3 {
+            font-size: 1.2rem;
+        }
+        .card-role strong {
+            font-size: 0.9rem;
+        }
+        .card-role p {
+            font-size: 0.85rem;
+        }
+    }
+
+    /* Очень маленькие экраны (до 480px) – дополнительно уменьшаем шрифты */
+    @media (max-width: 480px) {
+        .card-role {
+            padding: 16px 14px;
+        }
+        .card-role h3 {
+            font-size: 1rem;
+        }
+        .card-role strong {
+            font-size: 0.8rem;
+        }
+        .card-role p {
+            font-size: 0.75rem;
+            margin-top: 8px;
+        }
+    }
+</style>
 <section id="certificates" class="section certificates-section fade-up">
     <div class="container">
         <h2 class="section-title"><span class="emoji">📜</span> Мои сертификаты и дипломы</h2>
@@ -5499,7 +5595,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 01:46:03</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 01:48:44</span>
 
             </div>
         </div>
