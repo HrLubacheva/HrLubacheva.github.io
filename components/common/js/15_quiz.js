@@ -1,6 +1,6 @@
 // ============================================================
 // 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов)
-// Защита от двойной отправки через isSubmittingChoice (без временной блокировки)
+// + явное заполнение скрытых полей форм
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -39,18 +39,44 @@
         }
     }
 
-    function updateFormHiddenFields(chosenText, chosenPrice, originalText, originalPrice, recommendedStr, answersStr) {
+    function updateFormHiddenFields(chosenText, chosenPrice, originalText, originalPrice, recommendedStr, answersArr) {
         const forms = ['callbackForm', 'quickOrderForm'];
         forms.forEach(formId => {
             const form = document.getElementById(formId);
             if (!form) return;
-            const fields = { chosenVariant: chosenText, chosenVariantPrice: chosenPrice, originalChosenVariant: originalText, originalChosenVariantPrice: originalPrice, recommendedVariants: recommendedStr, quizAnswersRaw: answersStr };
-            for (const [name, value] of Object.entries(fields)) {
-                let input = form.querySelector(`[name="${name}"]`);
-                if (!input) { input = document.createElement('input'); input.type = 'hidden'; input.name = name; input.id = name; form.appendChild(input); }
-                input.value = value;
+
+            // --- ОБЩИЕ ПОЛЯ ---
+            setField(form, 'chosenVariant', chosenText);
+            setField(form, 'chosenVariantPrice', chosenPrice);
+            setField(form, 'originalChosenVariant', originalText);
+            setField(form, 'originalChosenVariantPrice', originalPrice);
+            setField(form, 'recommendedVariants', recommendedStr);
+            setField(form, 'quizAnswersRaw', answersArr.join('\n'));
+
+            // --- ПОЛЯ ПО КАЖДОМУ ВОПРОСУ ---
+            const qLabels = ['role', 'level', 'urgency', 'importance', 'budget', 'industry', 'work_format'];
+            for (let i = 0; i < qLabels.length; i++) {
+                const fieldName = `quiz_q${i+1}_${qLabels[i]}`;
+                setField(form, fieldName, answersArr[i] || '');
             }
+
+            // --- РЕКОМЕНДАЦИИ И ВЫБРАННЫЙ ВАРИАНТ (дублирующие поля) ---
+            setField(form, 'quiz_recommendations', recommendedStr);
+            setField(form, 'quiz_chosen_variant', chosenText);
+            setField(form, 'quiz_chosen_price', chosenPrice);
         });
+    }
+
+    function setField(form, name, value) {
+        let input = form.querySelector(`[name="${name}"]`);
+        if (!input) {
+            input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.id = name;
+            form.appendChild(input);
+        }
+        input.value = value;
     }
 
     function updateSelectionBlock(variantText, variantPrice) {
@@ -111,7 +137,7 @@
             WORK_FORMAT_FOR_JOBSEEKER
         ];
         selectedVariantText = ''; selectedVariantPrice = ''; selectedOriginalText = ''; selectedOriginalPrice = '';
-        updateFormHiddenFields('', '', '', '', '', '');
+        updateFormHiddenFields('', '', '', '', '', answers);
         updateSelectionBlock('', '');
         renderQuiz();
     }
@@ -399,11 +425,12 @@
                 selectedVariantPrice = variantPrice;
                 selectedOriginalText = variantText;
                 selectedOriginalPrice = variantPrice;
-                const answersStr = answers.map((a, idx) => {
+                const answersArr = answers.slice(); // копия массива
+                const answersStr = answersArr.map((a, idx) => {
                     const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет', 'Сфера', 'Формат работы'][idx];
                     return `${qText}: ${a || 'не выбран'}`;
                 }).join('\n');
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersArr);
                 updateSelectionBlock(selectedVariantText, selectedVariantPrice);
                 sendQuizStats(answersStr, recommendations, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
                 window.showSuccessToast('✅ Выбор сохранён!');
@@ -423,11 +450,12 @@
                 selectedVariantPrice = '';
                 selectedOriginalText = 'Помогите выбрать (бесплатная консультация)';
                 selectedOriginalPrice = '';
-                const answersStr = answers.map((a, idx) => {
+                const answersArr = answers.slice();
+                const answersStr = answersArr.map((a, idx) => {
                     const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет', 'Сфера', 'Формат работы'][idx];
                     return `${qText}: ${a || 'не выбран'}`;
                 }).join('\n');
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersArr);
                 updateSelectionBlock(selectedOriginalText, selectedOriginalPrice);
                 sendQuizStats(answersStr, recommendations, '', '', selectedOriginalText, selectedOriginalPrice);
                 window.showSuccessToast('🙏 Спасибо! Я свяжусь с вами.');
@@ -508,7 +536,7 @@
                 <div class="quiz-final-screen">
                     <div class="quiz-final-icon">✨</div>
                     <div class="quiz-final-title">Спасибо за прохождение квиза!</div>
-                    <div class="quiz-final-text">📋 Заполните форму ниже, и я свяжусь с вами, чтобы обсудить детали.</div>
+                    <div class="quiz-final-text">📋 Выбранная услуга сохранена. Заполните форму ниже, и я свяжусь с вами, чтобы обсудить детали.</div>
                     <div class="quiz-final-buttons">
                         <button class="quiz-final-btn-primary go-to-callback">📝 Перейти к форме заявки</button>
                         <button class="quiz-final-btn-secondary go-to-calculator">🔍 Посмотреть все услуги</button>
@@ -532,7 +560,7 @@
         const removeBtn = document.getElementById('removeQuizSelection');
         if (removeBtn) {
             removeBtn.removeEventListener('click', removeBtn._removeHandler);
-            removeBtn._removeHandler = function () { selectedVariantText = ''; selectedVariantPrice = ''; updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', ''); updateSelectionBlock('', ''); window.showSuccessToast('🗑️ Выбранный вариант удалён'); };
+            removeBtn._removeHandler = function () { selectedVariantText = ''; selectedVariantPrice = ''; updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', answers); updateSelectionBlock('', ''); window.showSuccessToast('🗑️ Выбранный вариант удалён'); };
             removeBtn.addEventListener('click', removeBtn._removeHandler);
         }
         const copyResultBtn = document.getElementById('copyQuizResultBtn');

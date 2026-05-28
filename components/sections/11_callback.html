@@ -21,9 +21,9 @@
                     <legend class="visually-hidden">Запись на диагностику</legend>
 
                     <div class="form-row-three">
-                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field" aria-label="Ваше имя">
-                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field" aria-label="Номер телефона">
-                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email" class="form-field" aria-label="Адрес электронной почты">
+                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
+                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
+                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email" class="form-field">
                     </div>
 
                     <div id="quizSelectionBlock" class="callback-quiz-selection" style="display: none;">
@@ -34,6 +34,19 @@
                         </div>
                     </div>
 
+                    <!-- ЯВНЫЕ СКРЫТЫЕ ПОЛЯ ДЛЯ КВИЗА -->
+                    <input type="hidden" name="quiz_q1_role" id="quiz_q1_role">
+                    <input type="hidden" name="quiz_q2_level" id="quiz_q2_level">
+                    <input type="hidden" name="quiz_q3_urgency" id="quiz_q3_urgency">
+                    <input type="hidden" name="quiz_q4_importance" id="quiz_q4_importance">
+                    <input type="hidden" name="quiz_q5_budget" id="quiz_q5_budget">
+                    <input type="hidden" name="quiz_q6_industry" id="quiz_q6_industry">
+                    <input type="hidden" name="quiz_q7_work_format" id="quiz_q7_work_format">
+                    <input type="hidden" name="quiz_recommendations" id="quiz_recommendations">
+                    <input type="hidden" name="quiz_chosen_variant" id="quiz_chosen_variant">
+                    <input type="hidden" name="quiz_chosen_price" id="quiz_chosen_price">
+
+                    <!-- СТАРЫЕ ПОЛЯ (для совместимости) -->
                     <input type="hidden" name="chosenVariant" id="chosenVariant">
                     <input type="hidden" name="chosenVariantPrice" id="chosenVariantPrice">
                     <input type="hidden" name="originalChosenVariant" id="originalChosenVariant">
@@ -41,7 +54,7 @@
                     <input type="hidden" name="recommendedVariants" id="recommendedVariants">
                     <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
 
-                    <textarea id="callbackComment" name="comment" rows="2" placeholder="💬 Удобное время или дополнительная информация" class="form-field form-textarea" aria-label="Комментарий"></textarea>
+                    <textarea id="callbackComment" name="comment" rows="2" placeholder="💬 Удобное время или дополнительная информация" class="form-field form-textarea"></textarea>
 
                     <div class="form-row-messages">
                         <div class="consent-checkbox">
@@ -51,7 +64,7 @@
                         <div id="callbackFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block callback-submit" aria-label="Записаться на диагностику">📞 Записаться →</button>
+                    <button type="submit" class="btn btn-primary btn-block callback-submit">📞 Записаться →</button>
 
                     <div class="callback-telegram-alt">
                         ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
