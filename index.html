@@ -147,44 +147,7 @@
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
     <!-- CSP: возвращён 'unsafe-inline' для совместимости с анимациями -->
-    <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru https://www.google-analytics.com https://region1.google-analytics.com;">
-
-    <!-- Google tag (gtag.js) – прямая загрузка (без дублей) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZJJ2SE117"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-        // Для гарантированного сбора данных – разрешаем аналитику сразу
-        // (если нужен строгий режим согласия, замените 'granted' на 'denied' и донастройте баннер)
-        gtag('consent', 'default', {
-            'ad_storage': 'denied',
-            'analytics_storage': 'granted',
-            'wait_for_update': 500
-        });
-        gtag('config', 'G-QZJJ2SE117');
-    </script>
-
-    <!-- Яндекс.Метрика (загружается сразу, без отложки) -->
-    <script>
-        (function(m,e,t,r,i,k,a){
-            m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments);};
-            m[i].l=1*new Date();
-            k=e.createElement(t);
-            a=e.getElementsByTagName(t)[0];
-            k.async=1;
-            k.src=r;
-            a.parentNode.insertBefore(k,a);
-        })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=109380497', 'ym');
-        ym(109380497, 'init', {clickmap:true, trackLinks:true, accurateTrackBounce:true, webvisor:true});
-    </script>
-    <noscript>
-        <div><img src="https://mc.yandex.ru/watch/109380497" style="position:absolute; left:-9999px;" alt=""></div>
-    </noscript>
-
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru https://www.google-analytics.com https://region1.google-analytics.com;">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -199,7 +162,6 @@
     <!-- Исправлен preload: .webp вместо .jpg -->
     <link rel="preload" as="image" href="assets/images/01-hero.webp">
 
-    <!-- Конфиг приложения (оставлен, т.к. используется в других скриптах) -->
     <script>
         window.APP_CONFIG = window.APP_CONFIG || {};
         Object.assign(window.APP_CONFIG, {
@@ -207,7 +169,55 @@
             GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117'
         });
     </script>
-    <!-- Удалён старый отложенный загрузчик loadMetrics, чтобы избежать дублей GA -->
+    <script>
+        (function () {
+            var ymId = window.APP_CONFIG.YANDEX_METRIKA_ID;
+            var gaId = window.APP_CONFIG.GOOGLE_ANALYTICS_ID;
+            function loadMetrics() {
+                if (window._metricsLoaded) return;
+                window._metricsLoaded = true;
+                if (ymId) {
+                    (function (m, e, t, r, i, k, a) {
+                        m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments); };
+                        m[i].l = 1 * new Date();
+                        k = e.createElement(t);
+                        a = e.getElementsByTagName(t)[0];
+                        k.async = 1;
+                        k.src = r;
+                        a.parentNode.insertBefore(k, a);
+                    })(window, document, 'script', 'https://mc.yandex.ru/metrika/tag.js?id=' + ymId, 'ym');
+                    ym(ymId, 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true });
+                    var noscript = document.createElement('noscript');
+                    var div = document.createElement('div');
+                    var img = document.createElement('img');
+                    img.src = 'https://mc.yandex.ru/watch/' + ymId;
+                    img.style.position = 'absolute';
+                    img.style.left = '-9999px';
+                    img.alt = '';
+                    div.appendChild(img);
+                    noscript.appendChild(div);
+                    document.body.appendChild(noscript);
+                }
+                if (gaId) {
+                    var gtagScript = document.createElement('script');
+                    gtagScript.async = true;
+                    gtagScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
+                    document.head.appendChild(gtagScript);
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag() { dataLayer.push(arguments); }
+                    window.gtag = gtag;
+                    gtag('js', new Date());
+                    gtag('consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied', wait_for_update: 500 });
+                    gtag('config', gaId);
+                }
+            }
+            try {
+                var consent = localStorage.getItem('cookie_consent');
+                if (consent === 'accepted') loadMetrics();
+            } catch(e) { if (window.IS_DEV) console.warn(e); }
+            window.loadMetricsOnConsent = loadMetrics;
+        })();
+    </script>
 <style>
 /* ==================================================================
    00_variables.css – переменные и сбросы
@@ -217,32 +227,23 @@
     --primary-dark: #1F4A6E;
     --primary-light: #4A8BC2;
     --secondary: #6c757d;
-    --text-muted: #4a5568;          /* единый muted-цвет, заменяет --secondary-dark */
+    --secondary-dark: #4a5568;
     --dark-bg: #1a2a3a;
     --light-bg: #f8f9fa;
     --surface-soft: #ffffff;
     --border: #e0e0e0;
     --text-dark: #1a202c;
     --text-light: #f8f9fa;
+    --text-muted: #4a5568;
     --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
     --shadow-md: 0 8px 24px rgba(0,0,0,0.1);
     --shadow-lg: 0 20px 30px -12px rgba(0,0,0,0.15);
-    --shadow-dark-hover: 0 25px 40px rgba(74, 139, 194, 0.35);
     --radius-md: 16px;
     --radius-lg: 28px;
     --transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
     --breakpoint-mobile: 768px;
     --breakpoint-tablet: 992px;
     --breakpoint-desktop: 1200px;
-
-    /* Полупрозрачные версии primary – для замены rgba(45,106,159, ...) */
-    --primary-a04: rgba(45, 106, 159, 0.04);
-    --primary-a08: rgba(45, 106, 159, 0.08);
-    --primary-a10: rgba(45, 106, 159, 0.10);
-    --primary-a12: rgba(45, 106, 159, 0.12);
-    --primary-a15: rgba(45, 106, 159, 0.15);
-    --primary-a20: rgba(45, 106, 159, 0.20);
-    --primary-a30: rgba(45, 106, 159, 0.30);
 }
 
 * {
@@ -314,11 +315,10 @@ body {
     font-weight: 700;
     text-align: center;
     margin-bottom: 48px;
-    color: var(--primary-dark);  /* fallback, если градиент не сработает */
     background: linear-gradient(135deg, var(--primary-dark), var(--primary));
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: transparent;
 }
 
 /* На тёмном фоне заголовок остаётся белым (без градиента) */
@@ -1503,17 +1503,16 @@ body {
     text-align: center;
     margin-bottom: 32px;
     padding: 24px 20px;
-    background: linear-gradient(135deg, var(--primary-a30), rgba(74, 139, 194, 0.18));
-    border: 1px solid rgba(74, 139, 194, 0.50);
+    background: linear-gradient(135deg, rgba(45, 106, 159, 0.15), rgba(74, 139, 194, 0.08));
     border-radius: 28px;
+    border: 1px solid rgba(45, 106, 159, 0.3);
     backdrop-filter: blur(4px);
     transition: all 0.3s ease;
 }
 
-.benefit-card:hover {
-    transform: translateY(-8px);
-    box-shadow: var(--shadow-dark-hover);
-    background: white;
+.benefits-column-header:hover {
+    border-color: rgba(45, 106, 159, 0.6);
+    background: linear-gradient(135deg, rgba(45, 106, 159, 0.2), rgba(74, 139, 194, 0.1));
 }
 
 .benefits-column-icon {
@@ -1689,47 +1688,6 @@ body {
     }
 }
 
-/* ========== УМЕНЬШАЕМ СТАТИСТИКУ НА ТЕЛЕФОНАХ ========== */
-@media (max-width: 640px) {
-    .stats-grid {
-        gap: 16px; /* уменьшаем расстояние между карточками */
-        margin: 20px 0;
-    }
-    .card-stat {
-        padding: 16px 8px; /* убираем лишние отступы внутри */
-    }
-    .stat-number {
-        font-size: 1.8rem;   /* вместо 2.8rem */
-    }
-    .stat-plus {
-        font-size: 1.4rem;   /* вместо 2rem */
-    }
-    .stat-label {
-        font-size: 0.75rem;  /* вместо 1rem */
-    }
-    .stat-number-wrapper {
-        gap: 2px;
-        margin-bottom: 6px;
-    }
-}
-
-@media (max-width: 480px) {
-    .stats-grid {
-        gap: 12px;
-    }
-    .card-stat {
-        padding: 12px 6px;
-    }
-    .stat-number {
-        font-size: 1.4rem;
-    }
-    .stat-plus {
-        font-size: 1.1rem;
-    }
-    .stat-label {
-        font-size: 0.65rem;
-    }
-}
 /* ==================================================================
    06_hero.css – главный экран
    ================================================================== */
@@ -3273,13 +3231,86 @@ section[id] {
 .carousel-slide.horizontal:hover img {
     transform: scale(1.05);
 }
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: white;
+    border: none;
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary, #2D6A9F);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 3;
+}
+.carousel-btn:hover {
+    background: var(--primary, #2D6A9F);
+    color: white;
+    transform: translateY(-50%) scale(1.05);
+}
+.carousel-prev {
+    left: -22px;
+}
+.carousel-next {
+    right: -22px;
+}
+.carousel-progress {
+    width: 100%;
+    height: 2px;
+    background: #e2e8f0;
+    border-radius: 2px;
+    margin: 24px 0 20px;
+    overflow: hidden;
+}
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--primary, #2D6A9F);
+    border-radius: 2px;
+    transition: width 0.05s linear;
+}
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #cbd5e0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.dot.active {
+    background: var(--primary, #2D6A9F);
+    width: 24px;
+    border-radius: 6px;
+}
+.dot:hover {
+    background: var(--primary-light, #4A8BC2);
+    transform: scale(1.2);
+}
 @media (max-width: 992px) {
     .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
     .carousel-slide.horizontal { max-width: 300px; }
+    .carousel-prev { left: -16px; }
+    .carousel-next { right: -16px; }
 }
 @media (max-width: 768px) {
     .carousel-slide { min-width: 100px; max-width: 180px; height: 180px; }
     .carousel-slide.horizontal { max-width: 240px; }
+    .carousel-btn { width: 36px; height: 36px; font-size: 20px; }
+    .carousel-prev { left: -12px; }
+    .carousel-next { right: -12px; }
 }
 @media (max-width: 576px) {
     .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
@@ -3318,23 +3349,54 @@ section[id] {
     }
 }
 
-/* ========== БЕГУЩИЙ ГРАДИЕНТ (новая полоса) ========== */
+.carousel-progress-container {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 6px;
+    margin: 20px auto 10px;
+    cursor: pointer;
+    transition: height 0.2s;
+}
+.carousel-progress-container:hover {
+    height: 8px;
+    background: #cbd5e0;
+}
+.carousel-progress-marker {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: var(--primary, #2D6A9F);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    transition: left 0.05s linear;
+    z-index: 2;
+}
+.carousel-progress-marker:hover {
+    transform: translateY(-50%) scale(1.2);
+    background: var(--primary-dark, #1F4A6E);
+}
+
+/* Прогресс-бар с бегущим градиентом */
 .carousel-progress {
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 30%, var(--primary, #2D6A9F) 50%, #e2e8f0 70%, #e2e8f0 100%);
+    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 40%, var(--primary, #2D6A9F) 50%, #e2e8f0 60%, #e2e8f0 100%);
     background-size: 200% 100%;
     border-radius: 4px;
     margin: 20px auto 10px;
     transition: opacity 0.2s;
 }
-
+/* Анимация будет добавлена скриптом динамически, но можно и здесь прописать */
 @keyframes progressMove {
     0% { background-position: 0% 0%; }
     100% { background-position: 200% 0%; }
 }
-
-/* Удалены неиспользуемые .carousel-btn, .carousel-prev, .carousel-next, .carousel-dots, .dot, .progress-bar, .carousel-progress-container, .carousel-progress-marker */
 /* ==================================================================
    13_accents.css – усиление контраста (без новых цветов)
    ================================================================== */
@@ -3746,6 +3808,7 @@ select:focus-visible {
 
 /* Эмодзи не должны наследовать цвет текста */
 .emoji {
+    color: initial !important;
     display: inline-block;
 }
 </style>
@@ -3804,7 +3867,7 @@ select:focus-visible {
 
                 <!-- ТВ-бейдж со ссылкой на медиа -->
                 <a href="#media" class="hero-tv-badge">
-                    <span class="tv-icon"><span class="emoji">📺</span></span>
+                    <span class="tv-icon">📺</span>
                     <span class="tv-text">Тот самый HR из телевизора</span>
                 </a>
 
@@ -3823,7 +3886,7 @@ select:focus-visible {
                 </div>
 
                 <div class="hero-quiz-link">
-                    <a href="#quiz" class="quiz-link"><span class="emoji">🤔</span> Не знаете, с чего начать? → Квиз за 1 минуту</a>
+                    <a href="#quiz" class="quiz-link">🤔 Не знаете, с чего начать? → Квиз за 1 минуту</a>
                 </div>
 
                 <div class="small-note hero-note">Мои клиенты — люди различных профессий и разных сфер бизнеса: специалисты, руководители и собственники бизнеса.</div>
@@ -3843,42 +3906,42 @@ select:focus-visible {
         </div>
         <ul class="grid-3 cells-grid" data-grid-type="cards" role="list">
             <li class="card card-role fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="serviceType"><span class="emoji">🧑</span> Карьерный консультант</h3>
+                <h3 itemprop="serviceType">🧑 Карьерный консультант</h3>
                 <div itemprop="description">
                     <strong>Стратегия · Резюме · Интервью</strong>
                     <p>Продайте себя дорого.</p>
                 </div>
             </li>
             <li class="card card-role fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="serviceType"><span class="emoji">🏢</span> HR‑эксперт для бизнеса</h3>
+                <h3 itemprop="serviceType">🏢 HR‑эксперт для бизнеса</h3>
                 <div itemprop="description">
                     <strong>Подбор · Онбординг · Аудит</strong>
                     <p>Закрываю вакансии с гарантией.</p>
                 </div>
             </li>
             <li class="card card-role fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="serviceType"><span class="emoji">💬</span> HR‑эксперт для людей</h3>
+                <h3 itemprop="serviceType">💬 HR‑эксперт для людей</h3>
                 <div itemprop="description">
                     <strong>Трудовые споры · Карьерные планы · Переговоры</strong>
                     <p>Защищаю ваши интересы.</p>
                 </div>
             </li>
             <li class="card card-role fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="serviceType"><span class="emoji">🎓</span> Бизнес‑тренер</h3>
+                <h3 itemprop="serviceType">🎓 Бизнес‑тренер</h3>
                 <div itemprop="description">
                     <strong>Тренинги для команд · Коучинг руководителей</strong>
                     <p>Навыки, которые приносят прибыль.</p>
                 </div>
             </li>
             <li class="card card-role fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="serviceType"><span class="emoji">🧠</span> Психолог</h3>
+                <h3 itemprop="serviceType">🧠 Психолог</h3>
                 <div itemprop="description">
                     <strong>Самоопределение · Цели · Ценности</strong>
                     <p>Помогаю найти себя.</p>
                 </div>
             </li>
             <li class="card card-role fade-up" role="listitem" itemscope itemtype="https://schema.org/ProfessionalService">
-                <h3 itemprop="serviceType"><span class="emoji">🗣️</span> Коуч (бизнес и личный)</h3>
+                <h3 itemprop="serviceType">🗣️ Коуч (бизнес и личный)</h3>
                 <div itemprop="description">
                     <strong>Амбициозные цели · Эффективность · Баланс</strong>
                     <p>Помогаю достигать большего.</p>
@@ -3891,34 +3954,48 @@ select:focus-visible {
     <div class="container">
         <h2 class="section-title"><span class="emoji">📜</span> Мои сертификаты и дипломы</h2>
         <div class="carousel-wrapper">
-            <button class="carousel-btn carousel-prev" aria-label="Назад"><span class="emoji">❮</span></button>
+            <button class="carousel-btn carousel-prev" aria-label="Назад">❮</button>
             <div class="carousel-viewport">
                 <div class="carousel-track" id="carouselTrack">
                     <!-- 1. Вертикальный -->
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-01_thumb.webp" alt="HR-эксперт" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-01_thumb.webp" alt="HR-эксперт"
+                                                     loading="lazy"></div>
                     <!-- 2. Горизонтальный -->
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-01_thumb.webp" alt="Подбор персонала" loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-01_thumb.webp"
+                                                                alt="Подбор персонала" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-02_thumb.webp" alt="Коуч" loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-02_thumb.webp" alt="Онбординг" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-02_thumb.webp" alt="Коуч"
+                                                     loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-02_thumb.webp"
+                                                                alt="Онбординг" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-03_thumb.webp" alt="Бизнес-тренер" loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-03_thumb.webp" alt="Трудовое право" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-03_thumb.webp" alt="Бизнес-тренер"
+                                                     loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-03_thumb.webp"
+                                                                alt="Трудовое право" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-04_thumb.webp" alt="Профориентация" loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-04_thumb.webp" alt="Оценка персонала" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-04_thumb.webp" alt="Профориентация"
+                                                     loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-04_thumb.webp"
+                                                                alt="Оценка персонала" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-05_thumb.webp" alt="Психологическое консультирование" loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-05_thumb.webp" alt="Удержание талантов" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-05_thumb.webp"
+                                                     alt="Психологическое консультирование" loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-05_thumb.webp"
+                                                                alt="Удержание талантов" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-06_thumb.webp" alt="HR-аналитика" loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-06_thumb.webp" alt="HR-бренд" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-06_thumb.webp" alt="HR-аналитика"
+                                                     loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-06_thumb.webp"
+                                                                alt="HR-бренд" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-07_thumb.webp" alt="Управление персоналом" loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-07_thumb.webp" alt="Цифровые HR" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-07_thumb.webp"
+                                                     alt="Управление персоналом" loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-07_thumb.webp"
+                                                                alt="Цифровые HR" loading="lazy"></div>
                 </div>
             </div>
-            <button class="carousel-btn carousel-next" aria-label="Вперёд"><span class="emoji">❯</span></button>
+            <button class="carousel-btn carousel-next" aria-label="Вперёд">❯</button>
         </div>
         <div class="carousel-progress" id="progressBar"></div>
         <div class="carousel-dots" id="carouselDots"></div>
@@ -3972,7 +4049,7 @@ select:focus-visible {
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
             <li class="card card-service fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service4-title">
-                <h3 id="service4-title" itemprop="serviceType"><span class="emoji">🎯</span> Профориентация</h3>
+                <h3 id="service4-title" itemprop="serviceType">🎯 Профориентация</h3>
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Для взрослых и подростков</li>
@@ -3984,7 +4061,7 @@ select:focus-visible {
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
             <li class="card card-service fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service5-title">
-                <h3 id="service5-title" itemprop="serviceType"><span class="emoji">👔</span> Сопровождение руководителей</h3>
+                <h3 id="service5-title" itemprop="serviceType">👔 Сопровождение руководителей</h3>
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Executive-коучинг</li>
@@ -3996,7 +4073,7 @@ select:focus-visible {
                 <meta itemprop="provider" content="Виктория Любачева">
             </li>
             <li class="card card-service fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service6-title">
-                <h3 id="service6-title" itemprop="serviceType"><span class="emoji">📊</span> Оценка персонала</h3>
+                <h3 id="service6-title" itemprop="serviceType">📊 Оценка персонала</h3>
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Ассессмент</li>
@@ -4014,41 +4091,53 @@ select:focus-visible {
     <div class="container">
         <h2 class="section-title fade-up" id="stats-title">Результаты в цифрах</h2>
         <dl class="stats-grid" role="list">
-            <div class="card card-stat fade-up" role="listitem">
+            <div class="card card-stat fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
-                    <span class="stat-number" data-target="24">0</span>
+                    <span class="stat-number" data-target="24" aria-hidden="true">0</span>
+                    <span class="visually-hidden">24</span>
                 </dt>
-                <dd class="stat-label">года в HR</dd>
+                <dd class="stat-label" itemprop="name">года в HR</dd>
+                <meta itemprop="value" content="24">
             </div>
-            <div class="card card-stat fade-up" role="listitem">
+            <div class="card card-stat fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
-                    <span class="stat-number" data-target="1000">0</span><span class="stat-plus">+</span>
+                    <span class="stat-number" data-target="1000" aria-hidden="true">0</span><span class="stat-plus" aria-hidden="true">+</span>
+                    <span class="visually-hidden">более 1000</span>
                 </dt>
-                <dd class="stat-label">вакансий закрыто</dd>
+                <dd class="stat-label" itemprop="name">вакансий закрыто</dd>
+                <meta itemprop="value" content="1000">
             </div>
-            <div class="card card-stat fade-up" role="listitem">
+            <div class="card card-stat fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
-                    <span class="stat-number" data-target="1500">0</span><span class="stat-plus">+</span>
+                    <span class="stat-number" data-target="1500" aria-hidden="true">0</span><span class="stat-plus" aria-hidden="true">+</span>
+                    <span class="visually-hidden">более 1500</span>
                 </dt>
-                <dd class="stat-label">кандидатов трудоустроено</dd>
+                <dd class="stat-label" itemprop="name">кандидатов трудоустроено</dd>
+                <meta itemprop="value" content="1500">
             </div>
-            <div class="card card-stat fade-up" role="listitem">
+            <div class="card card-stat fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
-                    <span class="stat-number" data-target="10000">0</span><span class="stat-plus">+</span>
+                    <span class="stat-number" data-target="10000" aria-hidden="true">0</span><span class="stat-plus" aria-hidden="true">+</span>
+                    <span class="visually-hidden">более 10000</span>
                 </dt>
-                <dd class="stat-label">интервью</dd>
+                <dd class="stat-label" itemprop="name">интервью</dd>
+                <meta itemprop="value" content="10000">
             </div>
-            <div class="card card-stat fade-up" role="listitem">
+            <div class="card card-stat fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
-                    <span class="stat-number" data-target="500">0</span><span class="stat-plus">+</span>
+                    <span class="stat-number" data-target="500" aria-hidden="true">0</span><span class="stat-plus" aria-hidden="true">+</span>
+                    <span class="visually-hidden">более 500</span>
                 </dt>
-                <dd class="stat-label">карьерных консультаций</dd>
+                <dd class="stat-label" itemprop="name">карьерных консультаций</dd>
+                <meta itemprop="value" content="500">
             </div>
-            <div class="card card-stat fade-up" role="listitem">
+            <div class="card card-stat fade-up" role="listitem" itemscope itemtype="https://schema.org/QuantitativeValue">
                 <dt class="stat-number-wrapper">
-                    <span class="stat-number" data-target="35">0</span><span class="stat-plus">+</span>
+                    <span class="stat-number" data-target="35" aria-hidden="true">0</span><span class="stat-plus" aria-hidden="true">+</span>
+                    <span class="visually-hidden">более 35</span>
                 </dt>
-                <dd class="stat-label">тренингов проведено</dd>
+                <dd class="stat-label" itemprop="name">тренингов проведено</dd>
+                <meta itemprop="value" content="35">
             </div>
         </dl>
     </div>
@@ -4061,21 +4150,21 @@ select:focus-visible {
             <!-- ЛЕВАЯ КОЛОНКА: Для соискателей -->
             <div class="benefits-column">
                 <div class="benefits-column-header">
-                    <div class="benefits-column-icon"><span class="emoji">🎯</span></div>
+                    <div class="benefits-column-icon">🎯</div>
                     <h3 class="benefits-column-title">Соискателям</h3>
                     <p class="benefits-column-desc">Путь к карьерному росту</p>
                 </div>
                 <div class="benefits-stack">
                     <div class="benefit-card fade-up">
-                        <h4><span class="emoji">🌱</span> Начинающий<br>→ Опытный специалист</h4>
+                        <h4>🌱 Начинающий<br>→ Опытный специалист</h4>
                         <p>Помогаю начинающим найти первую работу<br>и построить стратегию роста и развития</p>
                     </div>
                     <div class="benefit-card fade-up">
-                        <h4><span class="emoji">📈</span> Опытный специалист<br>→ Ведущий специалист</h4>
+                        <h4>📈 Опытный специалист<br>→ Ведущий специалист</h4>
                         <p>Ваш опыт уже стоит дороже.<br>Просто он плохо упакован.<br>Исправляю за 3 дня.</p>
                     </div>
                     <div class="benefit-card fade-up">
-                        <h4><span class="emoji">🏆</span> Ведущий специалист<br>→ Руководитель</h4>
+                        <h4>🏆 Ведущий специалист<br>→ Руководитель</h4>
                         <p>Оцифровка результатов.<br>Превращаю «был там-то, делал то-то»<br>в «вот что я приношу деньгами».</p>
                     </div>
                 </div>
@@ -4084,21 +4173,21 @@ select:focus-visible {
             <!-- ПРАВАЯ КОЛОНКА: Для бизнеса -->
             <div class="benefits-column">
                 <div class="benefits-column-header">
-                    <div class="benefits-column-icon"><span class="emoji">🏢</span></div>
+                    <div class="benefits-column-icon">🏢</div>
                     <h3 class="benefits-column-title">Бизнесу</h3>
                     <p class="benefits-column-desc">Системность и результат</p>
                 </div>
                 <div class="benefits-stack">
                     <div class="benefit-card fade-up">
-                        <h4><span class="emoji">⚡</span> Системность и скорость</h4>
+                        <h4>⚡ Системность и скорость</h4>
                         <p>Сокращаю Ваш путь от вакансии до оффера в 2 раза.<br>Отбираю лично топ-3 кандидатов под ваши деньги и ценности.</p>
                     </div>
                     <div class="benefit-card fade-up">
-                        <h4><span class="emoji">🎯</span> Подход без шаблонов</h4>
+                        <h4>🎯 Подход без шаблонов</h4>
                         <p>Создаю решение<br>именно под Ваш запрос.</p>
                     </div>
                     <div class="benefit-card fade-up">
-                        <h4><span class="emoji">⏱️</span> Работа на результат</h4>
+                        <h4>⏱️ Работа на результат</h4>
                         <p>Беру оплату за результат,<br>а не за часы.</p>
                     </div>
                 </div>
@@ -4236,29 +4325,29 @@ select:focus-visible {
             <h2 class="section-title"><span class="emoji">💰</span> Калькулятор стоимости услуг</h2>
 
             <div class="calculator-tabs">
-                <button class="btn tab-btn" data-tab="recruitment"><span class="emoji">🎯</span> Подбор персонала</button>
-                <button class="btn tab-btn" data-tab="retention"><span class="emoji">💎</span> Удержание и развитие</button>
-                <button class="btn tab-btn" data-tab="business-training"><span class="emoji">🎓</span> Бизнес-тренинги</button>
-                <button class="btn tab-btn" data-tab="corporate"><span class="emoji">🙋‍♀️</span> HR «под ключ»</button>
+                <button class="btn tab-btn" data-tab="recruitment">🎯 Подбор персонала</button>
+                <button class="btn tab-btn" data-tab="retention">💎 Удержание и развитие</button>
+                <button class="btn tab-btn" data-tab="business-training">🎓 Бизнес-тренинги</button>
+                <button class="btn tab-btn" data-tab="corporate">🙋‍♀️ HR «под ключ»</button>
             </div>
 
             <div class="calculator-tabs">
-                <button class="btn tab-btn active" data-tab="start"><span class="emoji">🎯</span> Ищу работу</button>
-                <button class="btn tab-btn" data-tab="growth"><span class="emoji">📈</span> Карьерный рост</button>
-                <button class="btn tab-btn" data-tab="executive"><span class="emoji">👑</span> Премиум</button>
-                <button class="btn tab-btn" data-tab="training"><span class="emoji">🎓</span> Тренинги</button>
-                <button class="btn tab-btn" data-tab="courses"><span class="emoji">📚</span> Авторские курсы</button>
+                <button class="btn tab-btn active" data-tab="start">🎯 Ищу работу</button>
+                <button class="btn tab-btn" data-tab="growth">📈 Карьерный рост</button>
+                <button class="btn tab-btn" data-tab="executive">👑 Премиум</button>
+                <button class="btn tab-btn" data-tab="training">🎓 Тренинги</button>
+                <button class="btn tab-btn" data-tab="courses">📚 Авторские курсы</button>
             </div>
 
             <!-- Подбор персонала -->
             <div id="tab-recruitment" class="tab-pane">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name"><span class="emoji">🎯</span> Подбор персонала</h3>
+                    <h3 itemprop="name">🎯 Подбор персонала</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
                     <div class="add-service">
                         <select id="recruitment-select" class="service-select"></select>
                         <input type="number" id="recruitment-qty" min="1" value="1" class="calc-qty">
-                        <button id="recruitment-add" class="btn btn-primary add-service-btn" data-category="recruitment"><span class="emoji">➕</span> Добавить</button>
+                        <button id="recruitment-add" class="btn btn-primary add-service-btn" data-category="recruitment">➕ Добавить</button>
                     </div>
                 </div>
             </div>
@@ -4266,12 +4355,12 @@ select:focus-visible {
             <!-- Удержание и развитие -->
             <div id="tab-retention" class="tab-pane">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name"><span class="emoji">💎</span> Удержание и развитие</h3>
+                    <h3 itemprop="name">💎 Удержание и развитие</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
                     <div class="add-service">
                         <select id="retention-select" class="service-select"></select>
                         <input type="number" id="retention-qty" min="1" value="1" class="calc-qty">
-                        <button id="retention-add" class="btn btn-primary add-service-btn" data-category="retention"><span class="emoji">➕</span> Добавить</button>
+                        <button id="retention-add" class="btn btn-primary add-service-btn" data-category="retention">➕ Добавить</button>
                     </div>
                 </div>
             </div>
@@ -4279,12 +4368,12 @@ select:focus-visible {
             <!-- Бизнес-тренинги -->
             <div id="tab-business-training" class="tab-pane">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name"><span class="emoji">🎓</span> Бизнес-тренинги</h3>
+                    <h3 itemprop="name">🎓 Бизнес-тренинги</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
                     <div class="add-service">
                         <select id="business-training-select" class="service-select"></select>
                         <input type="number" id="business-training-qty" min="1" value="1" class="calc-qty">
-                        <button id="business-training-add" class="btn btn-primary add-service-btn" data-category="business-training"><span class="emoji">➕</span> Добавить</button>
+                        <button id="business-training-add" class="btn btn-primary add-service-btn" data-category="business-training">➕ Добавить</button>
                     </div>
                 </div>
             </div>
@@ -4292,12 +4381,12 @@ select:focus-visible {
             <!-- HR под ключ -->
             <div id="tab-corporate" class="tab-pane">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name"><span class="emoji">🙋‍♀️</span> HR «под ключ»</h3>
+                    <h3 itemprop="name">🙋‍♀️ HR «под ключ»</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
                     <div class="add-service">
                         <select id="corporate-select" class="service-select"></select>
                         <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty">
-                        <button id="corporate-add" class="btn btn-primary add-service-btn" data-category="corporate"><span class="emoji">➕</span> Добавить</button>
+                        <button id="corporate-add" class="btn btn-primary add-service-btn" data-category="corporate">➕ Добавить</button>
                     </div>
                 </div>
             </div>
@@ -4305,13 +4394,13 @@ select:focus-visible {
             <!-- Ищу работу (B2C базовые) -->
             <div id="tab-start" class="tab-pane active">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name"><span class="emoji">🎯</span> Ищу работу</h3>
+                    <h3 itemprop="name">🎯 Ищу работу</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
                     <meta itemprop="description" content="Помощь в поиске работы: резюме, подготовка к собеседованию, стратегия трудоустройства, профориентация">
                     <div class="add-service">
                         <select id="start-select" class="service-select"></select>
                         <input type="number" id="start-qty" min="1" value="1" class="calc-qty">
-                        <button id="start-add" class="btn btn-primary add-service-btn" data-category="start"><span class="emoji">➕</span> Добавить</button>
+                        <button id="start-add" class="btn btn-primary add-service-btn" data-category="start">➕ Добавить</button>
                     </div>
                 </div>
             </div>
@@ -4319,12 +4408,12 @@ select:focus-visible {
             <!-- Карьерный рост -->
             <div id="tab-growth" class="tab-pane">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name"><span class="emoji">📈</span> Карьерный рост</h3>
+                    <h3 itemprop="name">📈 Карьерный рост</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
                     <div class="add-service">
                         <select id="growth-select" class="service-select"></select>
                         <input type="number" id="growth-qty" min="1" value="1" class="calc-qty">
-                        <button id="growth-add" class="btn btn-primary add-service-btn" data-category="growth"><span class="emoji">➕</span> Добавить</button>
+                        <button id="growth-add" class="btn btn-primary add-service-btn" data-category="growth">➕ Добавить</button>
                     </div>
                 </div>
             </div>
@@ -4332,12 +4421,12 @@ select:focus-visible {
             <!-- Премиум -->
             <div id="tab-executive" class="tab-pane">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name"><span class="emoji">👑</span> Премиум</h3>
+                    <h3 itemprop="name">👑 Премиум</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
                     <div class="add-service">
                         <select id="executive-select" class="service-select"></select>
                         <input type="number" id="executive-qty" min="1" value="1" class="calc-qty">
-                        <button id="executive-add" class="btn btn-primary add-service-btn" data-category="executive"><span class="emoji">➕</span> Добавить</button>
+                        <button id="executive-add" class="btn btn-primary add-service-btn" data-category="executive">➕ Добавить</button>
                     </div>
                 </div>
             </div>
@@ -4345,12 +4434,12 @@ select:focus-visible {
             <!-- Тренинги для соискателей -->
             <div id="tab-training" class="tab-pane">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name"><span class="emoji">🎓</span> Тренинги</h3>
+                    <h3 itemprop="name">🎓 Тренинги</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
                     <div class="add-service">
                         <select id="training-select" class="service-select"></select>
                         <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
-                        <button id="training-add" class="btn btn-primary add-service-btn" data-category="training"><span class="emoji">➕</span> Добавить</button>
+                        <button id="training-add" class="btn btn-primary add-service-btn" data-category="training">➕ Добавить</button>
                     </div>
                 </div>
             </div>
@@ -4358,31 +4447,31 @@ select:focus-visible {
             <!-- Авторские курсы -->
             <div id="tab-courses" class="tab-pane">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name"><span class="emoji">📚</span> Авторские курсы</h3>
+                    <h3 itemprop="name">📚 Авторские курсы</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
                     <div class="add-service">
                         <select id="courses-select" class="service-select"></select>
                         <input type="number" id="courses-qty" min="1" value="1" class="calc-qty">
-                        <button id="courses-add" class="btn btn-primary add-service-btn" data-category="courses"><span class="emoji">➕</span> Добавить</button>
+                        <button id="courses-add" class="btn btn-primary add-service-btn" data-category="courses">➕ Добавить</button>
                     </div>
                 </div>
             </div>
 
             <div class="total-block compact">
-                <div><span class="emoji">💰</span> Итого: <span id="totalPrice">0 ₽</span></div>
+                <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
                 <div id="discountInfo" class="discount-info"></div>
             </div>
 
             <div class="cart-section">
-                <h3><span class="emoji">🛒</span> Выбранные услуги</h3>
+                <h3>🛒 Выбранные услуги</h3>
                 <div id="servicesList" class="services-list"></div>
                 <div class="share-cart-container">
-                    <button id="copyCartBtn" class="btn btn-secondary share-btn"><span class="emoji">📋</span> Скопировать корзину</button>
+                    <button id="copyCartBtn" class="btn btn-secondary share-btn">📋 Скопировать корзину</button>
                 </div>
             </div>
 
             <div class="calendar-card">
-                <h3 class="text-center"><span class="emoji">📞</span> Быстрый заказ</h3>
+                <h3 class="text-center">📞 Быстрый заказ</h3>
                 <p class="text-center text-muted-light">Оставьте телефон, и я перезвоню, чтобы обсудить выбранные услуги.</p>
                 <form id="quickOrderForm" class="callback-form" novalidate>
                     <fieldset>
@@ -4398,15 +4487,15 @@ select:focus-visible {
                             </div>
                             <div id="quickFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block callback-submit" aria-label="Заказать звонок"><span class="emoji">📞</span> Заказать звонок</button>
+                        <button type="submit" class="btn btn-primary btn-block callback-submit" aria-label="Заказать звонок">📞 Заказать звонок</button>
                         <div class="callback-telegram-alt">
-                            <span class="emoji">✨</span> Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
+                            ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
                         </div>
                     </fieldset>
                 </form>
                 <p class="callback-note">После отправки мы свяжемся с вами.</p>
             </div>
-        </div>
+        </div>  <!-- ← ЭТОТ ЗАКРЫВАЮЩИЙ ТЕГ БЫЛ ОТСУТСТВУЕТ! -->
     </div>
 </section>
 <section id="quiz">
@@ -4417,7 +4506,7 @@ select:focus-visible {
             <div id="quizResult" class="quiz-result"></div>
             <div style="display: flex; justify-content: center; margin-top: 30px;">
                 <button id="copyQuizResultBtn" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 8px;">
-                    <span class="emoji">📋</span> Скопировать рекомендации
+                    📋 Скопировать рекомендации
                 </button>
             </div>
         </div>
@@ -4476,7 +4565,7 @@ select:focus-visible {
                     </div>
                 </li>
             </ul>
-            <p class="freebie-footer"><span class="emoji">🔐</span> Без спама. Отправляю на почту за 1 минуту.</p>
+            <p class="freebie-footer">🔐 Без спама. Отправляю на почту за 1 минуту.</p>
         </div>
     </div>
 </section>
@@ -4492,9 +4581,9 @@ select:focus-visible {
                 <p class="callback-features-text">Для соискателей, специалистов, руководителей и бизнеса.</p>
                 <p class="callback-features-note">Найдём точки роста, дадим рекомендации и предложим решение.</p>
                 <ul class="feature-badges" role="list">
-                    <li><span class="emoji">🔒</span> Конфиденциально</li>
-                    <li><span class="emoji">⏱️</span> 15 минут</li>
-                    <li><span class="emoji">🤝</span> Без обязательств</li>
+                    <li>🔒 Конфиденциально</li>
+                    <li>⏱️ 15 минут</li>
+                    <li>🤝 Без обязательств</li>
                 </ul>
             </div>
 
@@ -4512,7 +4601,7 @@ select:focus-visible {
                         <div class="service-name"></div>
                         <div class="service-price"></div>
                         <div class="service-remove">
-                            <button type="button" id="removeQuizSelection" class="btn btn-icon remove-item" aria-label="Удалить выбранный вариант"><span class="emoji">✖</span></button>
+                            <button type="button" id="removeQuizSelection" class="btn btn-icon remove-item" aria-label="Удалить выбранный вариант">✖</button>
                         </div>
                     </div>
 
@@ -4533,10 +4622,10 @@ select:focus-visible {
                         <div id="callbackFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block callback-submit" aria-label="Записаться на диагностику"><span class="emoji">📞</span> Записаться →</button>
+                    <button type="submit" class="btn btn-primary btn-block callback-submit" aria-label="Записаться на диагностику">📞 Записаться →</button>
 
                     <div class="callback-telegram-alt">
-                        <span class="emoji">✨</span> Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
+                        ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
                     </div>
                 </fieldset>
             </form>
@@ -4553,7 +4642,7 @@ select:focus-visible {
         </div>
 
         <div class="media-description" itemscope itemtype="https://schema.org/Person">
-            <div class="media-description-icon"><span class="emoji">🎙️</span></div>
+            <div class="media-description-icon">🎙️</div>
             <h3 itemprop="name">Я тот самый HR из телевизора</h3>
             <p itemprop="description">
                 И да, я действительно <strong>продаю людей дорого</strong>!<br><br>
@@ -4563,14 +4652,13 @@ select:focus-visible {
                 которого знают в лицо, видят по ТВ и доверяют в работе!
             </p>
             <div class="media-stats">
-                <span><span class="emoji">📺</span> Более 50 эфиров</span>
-                <span><span class="emoji">📰</span> 150+ публикаций</span>
-                <span><span class="emoji">🎤</span> Эксперт СМИ</span>
+                <span>📺 Более 50 эфиров</span>
+                <span>📰 150+ публикаций</span>
+                <span>🎤 Эксперт СМИ</span>
             </div>
         </div>
 
         <div class="media-grid fade-up">
-            <!-- все медиа-элементы без изменений, но смайлики в captions не нуждаются в обёртке (это текст) -->
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-1.webp" alt="Виктория Любачева в программе «Карьерный навигатор»" width="320" height="180" loading="lazy" itemprop="contentUrl">
@@ -4662,14 +4750,18 @@ select:focus-visible {
         <h2 class="section-title fade-up" id="contacts-title">Остались вопросы? Напишите или позвоните</h2>
 
         <ul class="contacts-list" role="list">
-            <li class="contact-line" role="listitem"><span class="emoji">📧</span> <a href="mailto:hrlubacheva@yandex.ru" itemprop="email">hrlubacheva@yandex.ru</a></li>
-            <li class="contact-line" role="listitem"><span class="emoji">📱</span> <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer" itemprop="sameAs">Telegram: @HrLubacheva</a></li>
-            <li class="contact-line" role="listitem"><span class="emoji">💬</span> <a href="https://wa.me/79217916655" target="_blank" rel="noopener noreferrer" itemprop="sameAs">WhatsApp: +7 921 791-66-55</a></li>
-            <li class="contact-line" role="listitem"><span class="emoji">📞</span> <span class="copyable-phone" data-copy="+79217916655" role="button" tabindex="0" aria-label="Скопировать номер телефона +7 921 791-66-55">+7 921 791-66-55</span></li>
-            <li class="contact-line contact-search" role="listitem"><span class="emoji">🔍</span> <span class="copyable-text" data-copy="@HrLubacheva" role="button" tabindex="0" aria-label="Скопировать никнейм @HrLubacheva">Ищите @HrLubacheva</span></li>
+            <li class="contact-line" role="listitem">📧 <a href="mailto:hrlubacheva@yandex.ru" itemprop="email">hrlubacheva@yandex.ru</a></li>
+            <li class="contact-line" role="listitem">📱 <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer" itemprop="sameAs">Telegram: @HrLubacheva</a></li>
+            <li class="contact-line" role="listitem">💬 <a href="https://wa.me/79217916655" target="_blank" rel="noopener noreferrer" itemprop="sameAs">WhatsApp: +7 921 791-66-55</a></li>
+            <li class="contact-line" role="listitem">📞 <span class="copyable-phone" data-copy="+79217916655" role="button" tabindex="0" aria-label="Скопировать номер телефона +7 921 791-66-55">+7 921 791-66-55</span></li>
+            <li class="contact-line contact-search" role="listitem"><span class="copyable-text" data-copy="@HrLubacheva" role="button" tabindex="0" aria-label="Скопировать никнейм @HrLubacheva">🔍 Ищите @HrLubacheva</span></li>
         </ul>
 
-        <div class="custom-offer"><span class="emoji">💡</span> Не нашли подходящую услугу? Напишите — подберём индивидуально</div>
+        <div class="share-button-container">
+            <button id="shareButtonContacts" class="btn btn-secondary share-site-btn" aria-label="Поделиться сайтом в соцсетях">📤 Поделиться сайтом</button>
+        </div>
+
+        <div class="custom-offer">💡 Не нашли подходящую услугу? Напишите — подберём индивидуально</div>
 
         <div class="telegram-button-container">
             <a href="https://t.me/HrLubacheva" class="btn btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram">Написать в Telegram</a>
@@ -4677,12 +4769,13 @@ select:focus-visible {
     </div>
 </section>
 <!-- ========== ПОЛНЫЙ ПРАЙС-ЛИСТ (ДВА АККОРДЕОНА) ========== -->
+<!-- Группировка соответствует калькулятору: для бизнеса и для соискателей -->
 <section class="price-list-section fade-up">
     <div class="container">
         <!-- ЯКОРНАЯ НАВИГАЦИЯ -->
         <div class="price-anchors" style="display: flex; justify-content: center; gap: 20px; margin-bottom: 40px; flex-wrap: wrap;">
-            <a href="#price-b2b" class="btn btn-secondary btn-small" style="transition: all 0.3s ease;"><span class="emoji">🏢</span> Прайс для бизнеса</a>
-            <a href="#price-b2c" class="btn btn-secondary btn-small" style="transition: all 0.3s ease;"><span class="emoji">👤</span> Прайс для соискателей</a>
+            <a href="#price-b2b" class="btn btn-secondary btn-small" style="transition: all 0.3s ease;">🏢 Прайс для бизнеса</a>
+            <a href="#price-b2c" class="btn btn-secondary btn-small" style="transition: all 0.3s ease;">👤 Прайс для соискателей</a>
         </div>
 
         <!-- ВВОДНЫЙ ТЕКСТ (SEO) -->
@@ -4701,7 +4794,7 @@ select:focus-visible {
         <!-- АККОРДЕОН 1: ДЛЯ БИЗНЕСА (B2B) -->
         <details class="price-details" id="price-b2b" itemscope itemtype="https://schema.org/ItemList" style="margin-bottom: 24px;">
             <summary class="price-summary" style="cursor: pointer; list-style: none; transition: all 0.3s ease;">
-                <span class="emoji">🏢</span> Прайс-лист для бизнеса
+                🏢 Прайс-лист для бизнеса
                 <span class="summary-note">(подбор, HR, тренинги)</span>
             </summary>
             <h2 class="visually-hidden">Цены на услуги для бизнеса: подбор персонала, HR-консалтинг, тренинги</h2>
@@ -4717,27 +4810,27 @@ select:focus-visible {
                     </thead>
                     <tbody>
                     <!-- ПОДБОР ПЕРСОНАЛА -->
-                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;"><span class="emoji">🎯</span> Подбор персонала</th> </tr>
+                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;">🎯 Подбор персонала</th></tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">HR на час</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">8 500</span> ₽<meta itemprop="priceCurrency" content="RUB"><link itemprop="url" href="#price-b2b"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Составление вакансии (с УТП)</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">10 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Консультация по внедрению гибких форматов</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">10 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Стратегическая сессия в компании</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">13 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Подбор резюме под вакансию</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">База кандидатов + тестирование</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">20 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
@@ -4796,7 +4889,7 @@ select:focus-visible {
                      </tr>
 
                     <!-- УДЕРЖАНИЕ И РАЗВИТИЕ -->
-                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;"><span class="emoji">💎</span> Удержание и развитие</th> </tr>
+                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;">💎 Удержание и развитие</th> </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Оценка компетенций</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">25 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
@@ -4815,7 +4908,7 @@ select:focus-visible {
                      </tr>
 
                     <!-- БИЗНЕС-ТРЕНИНГИ -->
-                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;"><span class="emoji">🎓</span> Бизнес-тренинги</th> </tr>
+                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;">🎓 Бизнес-тренинги</th> </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Тренинг под запрос (1ч, до 25 чел.)</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">12 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
@@ -4834,7 +4927,7 @@ select:focus-visible {
                      </tr>
 
                     <!-- HR «ПОД КЛЮЧ» -->
-                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;"><span class="emoji">🙋‍♀️</span> HR «под ключ»</th> </tr>
+                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;">🙋‍♀️ HR «под ключ»</th> </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Абонемент на HR-консультации</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">100 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
@@ -4867,7 +4960,7 @@ select:focus-visible {
         <!-- АККОРДЕОН 2: ДЛЯ СОИСКАТЕЛЕЙ (B2C) -->
         <details class="price-details" id="price-b2c" itemscope itemtype="https://schema.org/ItemList" style="margin-bottom: 24px;">
             <summary class="price-summary" style="cursor: pointer; list-style: none; transition: all 0.3s ease;">
-                <span class="emoji">👤</span> Прайс-лист для соискателей и специалистов
+                👤 Прайс-лист для соискателей и специалистов
                 <span class="summary-note">(карьера, резюме, коучинг)</span>
             </summary>
             <h2 class="visually-hidden">Цены на карьерные консультации, резюме, подготовку к собеседованию, коучинг и тренинги</h2>
@@ -4883,7 +4976,7 @@ select:focus-visible {
                     </thead>
                     <tbody>
                     <!-- ИЩУ РАБОТУ -->
-                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;"><span class="emoji">🎯</span> Ищу работу</th> </tr>
+                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;">🎯 Ищу работу</th> </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Сопроводительное письмо</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">3 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
@@ -4927,7 +5020,7 @@ select:focus-visible {
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Профориентация для взрослых</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">8 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                     </td>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Стратегия поиска работы</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">8 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
@@ -4954,70 +5047,70 @@ select:focus-visible {
                      </tr>
 
                     <!-- КАРЬЕРНЫЙ РОСТ -->
-                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;"><span class="emoji">📈</span> Карьерный рост</th> </tr>
+                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;">📈 Карьерный рост</th> </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Подготовка к повышению</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">10 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Коучинг для руководителей</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">10 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">План развития (рост в должности)</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">12 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Развитие управленческих навыков</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Индивидуальный тренинг «Продай себя дорого»</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">14 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">LinkedIn-профиль под ключ</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Резюме (CV) на английском</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Стратегия трудоустройства</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">15 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Карьерная стратегия (пакет 3 консультации)</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">18 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Коучинг для руководителей (пакет 4 сессии)</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">30 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Стратегия роста</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">45 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
 
                     <!-- ПРЕМИУМ -->
-                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;"><span class="emoji">👑</span> Премиум</th> </tr>
+                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;">👑 Премиум</th> </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">VIP-коучинг</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">30 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Executive-сопровождение / месяц</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">60 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Поиск позиции C-level</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">80 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Executive-коучинг / месяц</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">100 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
-                     </tr>
+                    </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Коучинг топ-менеджеров</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">150 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
@@ -5028,7 +5121,7 @@ select:focus-visible {
                      </tr>
 
                     <!-- ТРЕНИНГИ -->
-                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;"><span class="emoji">🎓</span> Тренинги</th> </tr>
+                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;">🎓 Тренинги</th> </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Индивидуальный тренинг «Продай себя дорого»</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">14 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
@@ -5043,7 +5136,7 @@ select:focus-visible {
                      </tr>
 
                     <!-- АВТОРСКИЕ КУРСЫ -->
-                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;"><span class="emoji">📚</span> Авторские курсы</th> </tr>
+                    <tr class="category-separator"><th colspan="2" class="category-header" style="text-align: center; background: rgba(45,106,159,0.1); padding: 12px; font-size: 1.1rem;">📚 Авторские курсы</th> </tr>
                     <tr itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem" style="transition: background 0.2s ease;">
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0;" itemprop="name">Авторский курс «Рекрутер для недвижимости»</td>
                         <td style="padding: 12px 16px; border-bottom: 1px solid #e0e0e0; text-align: right; font-weight: 500;"><span itemprop="price">25 000</span> ₽<meta itemprop="priceCurrency" content="RUB"></td>
@@ -5059,8 +5152,8 @@ select:focus-visible {
 
         <!-- ДОПОЛНИТЕЛЬНЫЙ ТЕКСТ ДЛЯ SEO И КОНВЕРСИИ -->
         <div class="price-footer fade-up" style="margin-top: 40px; text-align: center; padding: 24px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 28px; transition: transform 0.3s ease;">
-            <p style="margin-bottom: 16px; font-size: 1.1rem;"><strong><span class="emoji">💡</span> Не нашли нужную услугу или хотите индивидуальное предложение?</strong></p>
-            <a href="#callback-form" class="btn btn-primary" style="transition: all 0.3s ease;"><span class="emoji">📞</span> Записаться на бесплатную диагностику</a>
+            <p style="margin-bottom: 16px; font-size: 1.1rem;"><strong>💡 Не нашли нужную услугу или хотите индивидуальное предложение?</strong></p>
+            <a href="#callback-form" class="btn btn-primary" style="transition: all 0.3s ease;">📞 Записаться на бесплатную диагностику</a>
             <p style="margin-top: 16px; font-size: 0.85rem; color: var(--text-muted);">
                 * Все цены указаны в рублях. Для юридических лиц предоставляются закрывающие документы.
             </p>
@@ -5137,21 +5230,6 @@ select:focus-visible {
     .price-details[open] {
         box-shadow: 0 8px 24px rgba(0,0,0,0.12);
     }
-
-    /* Уважение к настройкам reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-        .price-details[open] .price-table-wrapper {
-            animation: none !important;
-        }
-        .carousel-progress {
-            animation: none !important;
-        }
-        .fade-up, .fade-up.visible {
-            transition: none !important;
-            opacity: 1 !important;
-            transform: none !important;
-        }
-    }
 </style><footer class="site-footer">
     <div class="container">
         <div class="footer-inner">
@@ -5185,7 +5263,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 28.05.2026 17:14:26</span>
+                </a> <span class="footer-version">⚡ Версия 28.05.2026 14:26:05</span>
 
             </div>
         </div>
@@ -5240,7 +5318,7 @@ select:focus-visible {
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwfGpTP8i48zEtZIVQ11HWCduaCqhxdttkYzsgk5mm00ce5sYVo0libRgvqsd82lgLOMQ/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbx7B3eZ8_14q3XjDgYGLjrVgXmbFSe_z1rb8xWbE-4SY20eNiN8Ql4_PLuPhJOFlBDVRA/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
@@ -5314,7 +5392,7 @@ const IS_DEV = window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' ||
     window.location.search.includes('debug=true');
 
-let originalConsoleLog = null;
+let originalConsoleLog = null;  // <-- ИСПРАВЛЕНО: добавлено недостающее объявление
 
 function log(...args) {
     if (IS_DEV) console.log(...args);
@@ -5338,7 +5416,8 @@ window.enableLogs = function () {
 };
 window.disableLogs = function () {
     if (originalConsoleLog === null) originalConsoleLog = console.log;
-    console.log = function () {};
+    console.log = function () {
+    };
     showToast('🔇 Логи отключены', 'success');
 };
 
@@ -5379,10 +5458,6 @@ async function fetchWithRetry(url, options = {}, retries = null, timeout = null)
             const response = await fetch(url, {...options, signal: controller.signal});
             clearTimeout(timeoutId);
             if (response.ok) return response;
-            // Специальная обработка HTTP 429 (Too Many Requests)
-            if (response.status === 429) {
-                throw new Error('Слишком много запросов. Попробуйте через час.');
-            }
             lastError = new Error(`HTTP ${response.status}`);
         } catch (err) {
             lastError = err;
@@ -5412,11 +5487,13 @@ async function loadWithCache(cacheKey, fetchFn, ttl = null) {
                 if (IS_DEV) console.warn(e);
             }
         }
-    } catch (e) {}
+    } catch (e) {
+    }
     const data = await fetchFn();
     try {
         localStorage.setItem(cacheKey, JSON.stringify({data, timestamp: Date.now()}));
-    } catch (e) {}
+    } catch (e) {
+    }
     return data;
 }
 
@@ -5500,7 +5577,6 @@ function showWarningToast(message) {
     showToast(message, 'warning');
 }
 
-// ========== postWithRetry с распознаванием квотных ошибок ==========
 window.postWithRetry = async function (url, data, retries = null, baseDelay = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
@@ -5522,21 +5598,10 @@ window.postWithRetry = async function (url, data, retries = null, baseDelay = nu
                 }
                 if (result && result.result === 'ok') return true;
                 else throw new Error(result?.message || 'Сервер вернул ошибку');
-            } else if (response.status === 429) {
-                throw new Error('Слишком много запросов. Попробуйте через час.');
-            } else {
-                throw new Error(`HTTP ${response.status}`);
-            }
+            } else throw new Error(`HTTP ${response.status}`);
         } catch (err) {
             lastError = err;
-            // Если ошибка связана с квотой или слишком частыми запросами – не ретраим, выбрасываем сразу
-            const errMsg = err.message.toLowerCase();
-            if (errMsg.includes('подождите') || errMsg.includes('слишком много запросов') || errMsg.includes('too many requests') || errMsg.includes('429')) {
-                throw err;
-            }
-            if (attempt < maxRetries) {
-                await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt - 1)));
-            }
+            if (attempt < maxRetries) await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt - 1)));
         }
     }
     throw lastError;
@@ -5615,39 +5680,70 @@ function bindLiveValidation(input, type = 'phone') {
 
 function applyPhoneMask(inputElement) {
     if (!inputElement) return;
+
+    // Удаляем старый обработчик, если есть
     if (inputElement._phoneMaskHandler) {
         inputElement.removeEventListener('input', inputElement._phoneMaskHandler);
     }
+
     const formatPhone = (digits) => {
         if (!digits) return '';
+        if (digits.length === 0) return '';
+
+        // Ограничиваем 11 цифрами
         if (digits.length > 11) digits = digits.slice(0, 11);
+
         let result = '+7';
         if (digits.length >= 2) {
             result += ' (' + digits.slice(1, 4);
             if (digits.length >= 5) result += ')';
             else result += ')';
         }
-        if (digits.length >= 5) result += ' ' + digits.slice(4, 7);
-        if (digits.length >= 8) result += '-' + digits.slice(7, 9);
-        if (digits.length >= 10) result += '-' + digits.slice(9, 11);
-        if (digits.length >= 2 && digits.length <= 4 && !result.includes(')')) result += ')';
+        if (digits.length >= 5) {
+            result += ' ' + digits.slice(4, 7);
+        }
+        if (digits.length >= 8) {
+            result += '-' + digits.slice(7, 9);
+        }
+        if (digits.length >= 10) {
+            result += '-' + digits.slice(9, 11);
+        }
+        // Если есть незакрытая скобка и цифр 2-3 – закрываем
+        if (digits.length >= 2 && digits.length <= 4 && !result.includes(')')) {
+            result += ')';
+        }
         return result;
     };
+
     const handler = function(e) {
         const oldValue = this.value;
+        // Получаем только цифры из текущего значения
         let digits = oldValue.replace(/\D/g, '');
+
+        // Если в поле нет цифр – очищаем полностью
         if (digits.length === 0) {
             if (this.value !== '') this.value = '';
             return;
         }
+
+        // Форматируем
         let formatted = formatPhone(digits);
+
+        // Если значение не изменилось – выходим
         if (formatted === oldValue) return;
+
+        // Запоминаем позицию курсора ДО изменения
         const cursorPos = this.selectionStart;
+        // Подсчитываем, сколько цифр было до курсора в старом значении
         let digitsBeforeCursor = 0;
         for (let i = 0; i < cursorPos && i < oldValue.length; i++) {
             if (/\d/.test(oldValue[i])) digitsBeforeCursor++;
         }
+
+        // Применяем новое значение
         this.value = formatted;
+
+        // Вычисляем новую позицию курсора: находим позицию, где набрано digitsBeforeCursor цифр
         let newCursorPos = 0;
         let digitsCount = 0;
         for (let i = 0; i < formatted.length; i++) {
@@ -5657,13 +5753,16 @@ function applyPhoneMask(inputElement) {
                 break;
             }
         }
+        // Если не нашли (например, курсор был в конце), ставим в конец
         if (newCursorPos === 0 && digitsBeforeCursor === digits.length) {
             newCursorPos = formatted.length;
         }
         this.setSelectionRange(newCursorPos, newCursorPos);
     };
+
     inputElement.addEventListener('input', handler);
     inputElement._phoneMaskHandler = handler;
+    // Инициализируем форматирование (если поле не пустое)
     handler.call(inputElement);
 }
 
@@ -5684,8 +5783,8 @@ async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
 
 function sendDataToSheet(data) {
     sendDataToSheetWithRetry(data).catch(err => {
-        console.error('❌ Ошибка отправки в Google Sheets:', err);
-        // Ошибки квоты будут обработаны выше и показаны пользователю, а здесь просто логируем
+        logError('❌ Ошибка отправки в Google Sheets:', err);
+        showErrorToast('Ошибка связи. Попробуйте ещё раз или свяжитесь с нами напрямую.');
     });
 }
 
@@ -5740,12 +5839,14 @@ function getVisitStats() {
                 visits = [];
             }
         }
-    } catch (e) {}
+    } catch (e) {
+    }
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
     if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
     try {
         localStorage.setItem(visitsKey, JSON.stringify(visits));
-    } catch (e) {}
+    } catch (e) {
+    }
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
     return {week: visits.filter(v => v > weekAgo).length, month: visits.length, total: visits.length};
@@ -5837,9 +5938,11 @@ async function getGeoData() {
             try {
                 cached = JSON.parse(raw);
                 if (cached && typeof cached === 'object') return cached;
-            } catch (e) {}
+            } catch (e) {
+            }
         }
-    } catch (e) {}
+    } catch (e) {
+    }
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Ошибка геолокации');
@@ -5853,7 +5956,8 @@ async function getGeoData() {
         };
         try {
             localStorage.setItem(geoKey, JSON.stringify(result));
-        } catch (e) {}
+        } catch (e) {
+        }
         return result;
     } catch (e) {
         if (IS_DEV) console.warn(e);
@@ -5863,7 +5967,6 @@ async function getGeoData() {
 
 window.getGeoData = getGeoData;
 
-// ========== ОСНОВНАЯ ФУНКЦИЯ ОТПРАВКИ – показывает ошибки квоты, остальные скрывает ==========
 window.submitForm = async function (formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
     if (!form) return false;
@@ -5878,6 +5981,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
 
     try {
         form._isSubmitting = true;
+
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.classList.add('loading');
@@ -5895,16 +5999,15 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
 
         if (phone) phone = normalizePhoneDigits(phone);
 
-        // Валидация – мягкие предупреждения, но не блокируем
         if (!phone && formType !== 'Запрос материалов') {
-            showWarningToast('📞 Укажите номер телефона для связи');
+            showErrorToast('Введите номер телефона');
+            throw new Error('Телефон обязателен');
         }
+
         const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
         if (phone && phone.length !== maxDigits) {
-            showWarningToast('📞 Некорректный номер, но заявка будет отправлена');
-        }
-        if (!consent) {
-            showWarningToast('🔒 Пожалуйста, подтвердите согласие на обработку данных');
+            showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
+            throw new Error('Неверный номер');
         }
 
         const geo = await window.getGeoData();
@@ -5912,7 +6015,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
         const formData = {
             formType: formType,
             name: name || ' ',
-            phone: phone || 'не указан',
+            phone: phone || ' ',
             email: email || ' ',
             comment: comment || 'Не указано',
             consent: consent ? 'Да' : 'Нет',
@@ -5926,45 +6029,21 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             ...additional
         };
 
-        // Отправка – ловим квотные ошибки, остальные скрываем
-        try {
-            await window.sendDataToSheetWithRetry(formData);
-            // Если успешно – зелёное сообщение
-            showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
-            form.reset();
-            const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
-            hiddenFields.forEach(field => {
-                const input = form.querySelector(`[name="${field}"]`);
-                if (input) input.value = '';
-            });
-            return true;
-        } catch (sendErr) {
-            // Проверяем, является ли ошибка квотной / слишком частой
-            const errMsg = sendErr.message.toLowerCase();
-            if (errMsg.includes('подождите') || errMsg.includes('слишком много запросов') || errMsg.includes('too many requests') || errMsg.includes('429')) {
-                // Показываем красную ошибку пользователю
-                showErrorToast(sendErr.message);
-                return false;
-            } else {
-                // Все остальные ошибки скрываем, показываем зелёное уведомление
-                console.error('❌ Ошибка отправки (скрыта):', sendErr);
-                showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
-                form.reset();
-                const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
-                hiddenFields.forEach(field => {
-                    const input = form.querySelector(`[name="${field}"]`);
-                    if (input) input.value = '';
-                });
-                return true;
-            }
-        }
+        await window.sendDataToSheetWithRetry(formData);
+        showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
+        form.reset();
+
+        const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
+        hiddenFields.forEach(field => {
+            const input = form.querySelector(`[name="${field}"]`);
+            if (input) input.value = '';
+        });
+
+        return true;
     } catch (err) {
-        console.error('Ошибка в submitForm:', err);
-        // Если ошибка пришла сюда (например, валидация), показываем красное
-        if (err.message && (err.message.includes('Телефон') || err.message.includes('Согласие'))) {
-            showErrorToast(err.message);
-        } else {
-            showSuccessToast(`Спасибо! Заявка принята.`);
+        logError('Ошибка отправки:', err);
+        if (!err.message || !err.message.includes('Телефон')) {
+            showErrorToast('Не удалось отправить заявку. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
         }
         return false;
     } finally {
@@ -5974,9 +6053,9 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             submitBtn.classList.remove('loading');
             submitBtn.innerText = originalBtnText;
         }
-        setTimeout(() => { if (submitBtn) submitBtn.disabled = false; }, 2000);
     }
 };
+
 
 window.getQuizDataFromForm = function (form) {
     return {
@@ -6003,16 +6082,16 @@ function initShareButtons() {
                 navigator.clipboard.writeText(text).then(() => {
                     window.showSuccessToast('✅ Ссылка на сайт скопирована');
                 })
-                .catch(() => {
-                    window.showSuccessToast('✅ Ссылка скопирована вручную');
-                });
+                    .catch(() => {
+                        window.showErrorToast('❌ Не удалось скопировать');
+                    });
             };
             btn.addEventListener('click', btn._shareHandler);
         }
     });
 }
 
-// ========== ЛОГИРОВАНИЕ ==========
+// ========== ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ С УРОВНЯМИ ==========
 window.initLogs = [];
 
 let currentLogLevel = window.APP_CONFIG?.CONSTANTS?.LOG_LEVEL || 0;
@@ -6130,6 +6209,7 @@ function initAnimations() {
 
 window.initAnimations = initAnimations;
 function initCallbackForm() {
+    // Защита от двойной инициализации
     if (window._callbackFormInitialized) return;
     window._callbackFormInitialized = true;
 
@@ -6142,11 +6222,12 @@ function initCallbackForm() {
     const callbackMessages = document.getElementById('callbackFormMessages');
 
     if (callbackForm && callbackMessages) {
+        // Удаляем старый обработчик, если он был
         if (callbackForm._submitHandler) {
             callbackForm.removeEventListener('submit', callbackForm._submitHandler);
         }
 
-        function showCallbackMessage(message, isError = false) {
+        function showCallbackMessage(message, isError = true) {
             callbackMessages.textContent = message;
             callbackMessages.className = 'form-messages ' + (isError ? 'error' : 'success');
             if (!isError) {
@@ -6173,7 +6254,7 @@ function initCallbackForm() {
                 if (!digits.startsWith('7')) digits = '7' + digits;
                 const isValid = digits.length === MAX_PHONE_DIGITS;
                 if (!isValid && callbackPhone.value.trim() !== '') {
-                    showCallbackMessage('⚠️ Номер телефона должен содержать 11 цифр', false);
+                    showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
                 } else {
                     clearCallbackMessage();
                 }
@@ -6185,13 +6266,13 @@ function initCallbackForm() {
             callbackEmail.addEventListener('blur', () => {
                 const email = callbackEmail.value.trim();
                 if (email && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email)) {
-                    showCallbackMessage('⚠️ Введите корректный email', false);
+                    showCallbackMessage('❌ Введите корректный email');
                 } else {
                     clearCallbackMessage();
                 }
             });
             callbackEmail.addEventListener('input', () => {
-                if (callbackMessages.textContent === '⚠️ Введите корректный email') clearCallbackMessage();
+                if (callbackMessages.textContent === '❌ Введите корректный email') clearCallbackMessage();
             });
         }
 
@@ -6199,31 +6280,37 @@ function initCallbackForm() {
 
         const submitHandler = async function(e) {
             e.preventDefault();
+
             if (isSubmitting) {
                 logInit('Отправка уже выполняется, игнорируем', 'WARN', '', 3);
-                showCallbackMessage('⏳ Отправка уже выполняется, подождите...', false);
+                showCallbackMessage('⏳ Отправка уже выполняется, подождите...', true);
                 return;
             }
 
             logInit('Отправка формы callbackForm', 'INFO', '', 3);
             clearCallbackMessage();
 
+            let isValid = true;
             let phoneDigits = callbackPhone.value.replace(/\D/g, '');
             if (phoneDigits.startsWith('8')) phoneDigits = '7' + phoneDigits.slice(1);
             if (!phoneDigits.startsWith('7')) phoneDigits = '7' + phoneDigits;
 
-            if (phoneDigits.length !== MAX_PHONE_DIGITS && callbackPhone.value.trim() !== '') {
-                showCallbackMessage('⚠️ Номер будет сохранён как есть', false);
+            if (phoneDigits.length !== MAX_PHONE_DIGITS) {
+                showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                isValid = false;
             }
 
             if (callbackEmail && callbackEmail.value.trim() && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(callbackEmail.value.trim())) {
-                showCallbackMessage('⚠️ Email указан с ошибкой', false);
+                showCallbackMessage('❌ Введите корректный email');
+                isValid = false;
             }
 
             if (!callbackConsent.checked) {
-                showCallbackMessage('⚠️ Для отправки необходимо согласие', false);
-                return;
+                showCallbackMessage('❌ Необходимо согласие на обработку данных');
+                isValid = false;
             }
+
+            if (!isValid) return;
 
             if (window.normalizePhoneDigits) {
                 callbackPhone.value = window.normalizePhoneDigits(callbackPhone.value);
@@ -6235,6 +6322,7 @@ function initCallbackForm() {
             }
 
             isSubmitting = true;
+
             try {
                 await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
                     const quizBlock = document.getElementById('quizSelectionBlock');
@@ -6244,6 +6332,7 @@ function initCallbackForm() {
                 logInit('Отправка формы callbackForm завершена успешно', 'INFO', '', 3);
             } catch (err) {
                 logInit('Ошибка отправки формы callbackForm', 'ERROR', err, 2);
+                showCallbackMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
             } finally {
                 isSubmitting = false;
             }
@@ -6262,7 +6351,7 @@ function initCallbackForm() {
             quickForm.removeEventListener('submit', quickForm._submitHandler);
         }
 
-        function showQuickMessage(message, isError = false) {
+        function showQuickMessage(message, isError = true) {
             quickMessages.textContent = message;
             quickMessages.className = 'form-messages ' + (isError ? 'error' : 'success');
             if (!isError) {
@@ -6288,7 +6377,7 @@ function initCallbackForm() {
                 if (!digits.startsWith('7')) digits = '7' + digits;
                 const isValid = digits.length === MAX_PHONE_DIGITS;
                 if (!isValid && quickPhone.value.trim() !== '') {
-                    showQuickMessage('⚠️ Номер должен содержать 11 цифр', false);
+                    showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
                 } else {
                     clearQuickMessage();
                 }
@@ -6300,33 +6389,38 @@ function initCallbackForm() {
 
         const quickSubmitHandler = async function(e) {
             e.preventDefault();
+
             if (isQuickSubmitting) {
                 logInit('Быстрый заказ уже выполняется, игнорируем', 'WARN', '', 3);
-                showQuickMessage('⏳ Отправка уже выполняется, подождите...', false);
+                showQuickMessage('⏳ Отправка уже выполняется, подождите...', true);
                 return;
             }
 
             logInit('Отправка формы quickOrderForm', 'INFO', '', 3);
             clearQuickMessage();
 
+            let isValid = true;
             let digits = quickPhone.value.replace(/\D/g, '');
             if (digits.startsWith('8')) digits = '7' + digits.slice(1);
             if (!digits.startsWith('7')) digits = '7' + digits;
 
-            if (digits.length !== MAX_PHONE_DIGITS && quickPhone.value.trim() !== '') {
-                showQuickMessage('⚠️ Номер будет сохранён как есть', false);
+            if (digits.length !== MAX_PHONE_DIGITS) {
+                showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                isValid = false;
             }
 
             if (!quickConsent.checked) {
-                showQuickMessage('⚠️ Для отправки необходимо согласие', false);
-                return;
+                showQuickMessage('❌ Необходимо согласие на обработку данных');
+                isValid = false;
             }
 
             const cartData = window.getCartData ? window.getCartData() : '';
             if (!cartData || cartData === 'Корзина пуста') {
-                showQuickMessage('🛒 Добавьте хотя бы одну услугу в корзину', false);
-                return;
+                showQuickMessage('🛒 Добавьте хотя бы одну услугу в корзину');
+                isValid = false;
             }
+
+            if (!isValid) return;
 
             if (window.normalizePhoneDigits) {
                 quickPhone.value = window.normalizePhoneDigits(quickPhone.value);
@@ -6338,6 +6432,7 @@ function initCallbackForm() {
             }
 
             isQuickSubmitting = true;
+
             try {
                 await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
                     const quizData = window.getQuizDataFromForm(form);
@@ -6346,6 +6441,7 @@ function initCallbackForm() {
                 logInit('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
             } catch (err) {
                 logInit('Ошибка отправки формы quickOrderForm', 'ERROR', err, 2);
+                showQuickMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
             } finally {
                 isQuickSubmitting = false;
             }
@@ -6372,9 +6468,9 @@ function initCallbackForm() {
             const totalPrice = document.getElementById('totalPrice')?.innerText || '0 ₽';
             const fullText = `Корзина:\n${cartText}\n\n💰 Итого: ${totalPrice}`;
             navigator.clipboard.writeText(fullText).then(() => {
-                window.showSuccessToast('✅ Корзина скопирована');
+                window.showSuccessToast('✅ Корзина скопирована в буфер обмена');
             }).catch(() => {
-                window.showSuccessToast('✅ Корзина скопирована вручную');
+                window.showErrorToast('❌ Не удалось скопировать');
             });
         };
 
@@ -6385,6 +6481,7 @@ function initCallbackForm() {
 }
 
 function initFormEnterSubmit() {
+    // Защита от двойной инициализации
     if (window._formEnterSubmitInitialized) return;
     window._formEnterSubmitInitialized = true;
 
@@ -6422,18 +6519,22 @@ function initFormEnterSubmit() {
 window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
 // ============================================================
-// 04_certificates.js – Бесконечная карусель с кнопками и прогрессом
+// 04_certificates.js – Бесконечная карусель с прогресс-баром
+// Лента утроена (3 копии). Движение влево непрерывно.
+// Полоса прокрутки с бегунком, синхронизированная.
+// Наведение – пауза, перетаскивание – синхронизация.
 // ============================================================
 (function () {
-    function initInfiniteCarousel(trackId, prevBtnSelector = null, nextBtnSelector = null) {
+    function initInfiniteCarousel(trackId) {
         const track = document.getElementById(trackId);
         if (!track) return;
 
         let originalSlides = Array.from(track.children);
         if (originalSlides.length === 0) return;
 
-        const slideGap = 24;
+        const slideGap = 24;            // px
         let slideWidth = 0;
+        let totalWidth = 0;
         let containerWidth = 0;
         let scrollPos = 0;
         let animationId = null;
@@ -6442,72 +6543,126 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         let dragStartX = 0;
         let dragStartPos = 0;
         let lastTimestamp = 0;
-        const SPEED = 140;
+        const SPEED = 140;              // px/сек (регулируйте)
 
+        // Создаём утроенную ленту (3 копии)
         function buildTripleTrack() {
             const triple = [];
             for (let i = 0; i < 3; i++) {
-                originalSlides.forEach(slide => triple.push(slide.cloneNode(true)));
+                originalSlides.forEach(slide => {
+                    triple.push(slide.cloneNode(true));
+                });
             }
             track.innerHTML = '';
             triple.forEach(clone => track.appendChild(clone));
-            track.style.willChange = 'transform';
             return Array.from(track.children);
         }
 
         let slides = buildTripleTrack();
-        let originalSetWidth = 0;
-        let progressElement = null;
-        let gradientAnimationActive = false;
-
-        function createGradientProgressBar() {
-            let progress = document.querySelector('.carousel-progress');
-            if (!progress) {
-                const wrapper = track.closest('.carousel-wrapper');
-                if (!wrapper) return null;
-                progress = document.createElement('div');
-                progress.className = 'carousel-progress';
-                progress.style.cssText = `
-                    width: 100%;
-                    height: 4px;
-                    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 30%, var(--primary, #2D6A9F) 50%, #e2e8f0 70%, #e2e8f0 100%);
-                    background-size: 200% 100%;
-                    border-radius: 4px;
-                    margin: 20px auto 10px;
-                `;
-                wrapper.insertAdjacentElement('afterend', progress);
-            }
-            return progress;
-        }
-
-        function startGradientAnimation() {
-            if (!progressElement || gradientAnimationActive) return;
-            if (originalSetWidth <= 0) return;
-            const duration = originalSetWidth / SPEED;
-            if (isNaN(duration) || duration <= 0) return;
-            progressElement.style.animation = `progressMove ${duration}s linear infinite`;
-            gradientAnimationActive = true;
-        }
-
-        function stopGradientAnimation() {
-            if (!progressElement) return;
-            progressElement.style.animation = 'none';
-            gradientAnimationActive = false;
-        }
+        let originalSetWidth = 0;        // ширина одного набора оригиналов (с отступами)
+        let fullTrackWidth = 0;
 
         function updateDimensions() {
-            const firstSlide = slides[0];
-            slideWidth = firstSlide ? firstSlide.offsetWidth : 200;
+            if (slides[0]) {
+                slideWidth = slides[0].offsetWidth;
+                if (slideWidth === 0) slideWidth = 200;
+                fullTrackWidth = slides.length * (slideWidth + slideGap);
+            }
             const wrapper = track.closest('.carousel-viewport');
             containerWidth = wrapper ? wrapper.clientWidth : track.parentElement.clientWidth;
             originalSetWidth = originalSlides.length * (slideWidth + slideGap);
         }
 
         function setPosition(pos) {
+            // Бесконечная прокрутка: удерживаем позицию в пределах от -originalSetWidth до 0
+            // Но для удобства вычислений разрешаем любую и будем нормализовывать
             scrollPos = pos;
             track.style.transform = `translateX(${scrollPos}px)`;
         }
 
+        // Нормализация позиции для полосы прогресса и перескока
+        function normalizePosition(pos) {
+            let normalized = pos;
+            while (normalized > 0) normalized -= originalSetWidth;
+            while (normalized < -originalSetWidth) normalized += originalSetWidth;
+            return normalized;
+        }
+
+        // Обновление прогресс-бара (бегунок от 0 до 1, где 0 = крайний правый край ленты, 1 = левый край одного цикла)
+        function updateProgressBar() {
+            const progressContainer = document.querySelector('.carousel-progress-container');
+            const progressMarker = document.querySelector('.carousel-progress-marker');
+            if (!progressContainer || !progressMarker) return;
+            // Вычисляем относительное смещение в пределах одного цикла (от -originalSetWidth до 0)
+            let normalized = normalizePosition(scrollPos);
+            // normalized от -originalSetWidth (лево) до 0 (право)
+            let progress = -normalized / originalSetWidth; // от 0 до 1
+            const containerRect = progressContainer.getBoundingClientRect();
+            const markerWidth = progressMarker.offsetWidth;
+            const maxLeft = containerRect.width - markerWidth;
+            const leftPos = progress * maxLeft;
+            progressMarker.style.left = `${leftPos}px`;
+        }
+
+        // Создание прогресс-бара, если его нет
+        function ensureProgressBar() {
+            let container = document.querySelector('.carousel-progress-container');
+            if (!container) {
+                const wrapper = track.closest('.carousel-wrapper');
+                if (!wrapper) return;
+                const progressDiv = document.createElement('div');
+                progressDiv.className = 'carousel-progress-container';
+                progressDiv.style.cssText = `
+                    position: relative;
+                    width: 100%;
+                    height: 6px;
+                    background: #e2e8f0;
+                    border-radius: 6px;
+                    margin: 20px auto 10px;
+                    cursor: pointer;
+                `;
+                const marker = document.createElement('div');
+                marker.className = 'carousel-progress-marker';
+                marker.style.cssText = `
+                    position: absolute;
+                    width: 20px;
+                    height: 20px;
+                    background: var(--primary, #2D6A9F);
+                    border-radius: 50%;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    left: 0;
+                    cursor: pointer;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+                    transition: left 0.05s linear;
+                `;
+                progressDiv.appendChild(marker);
+                // Вставляем после карусели
+                wrapper.insertAdjacentElement('afterend', progressDiv);
+                // Клик по полосе – перемотка
+                progressDiv.addEventListener('click', (e) => {
+                    const rect = progressDiv.getBoundingClientRect();
+                    const clickX = e.clientX - rect.left;
+                    const percent = clickX / rect.width;
+                    let targetNormalized = -percent * originalSetWidth;
+                    let newPos = normalizePosition(scrollPos);
+                    // Сдвигаем newPos до targetNormalized, но с учётом текущего цикла
+                    let delta = targetNormalized - newPos;
+                    scrollPos += delta;
+                    setPosition(scrollPos);
+                    updateProgressBar();
+                    if (!isHovering && !isDragging) {
+                        // перезапускаем анимацию, чтобы продолжить
+                        stopAnimation();
+                        startAnimation();
+                    }
+                });
+                container = progressDiv;
+            }
+            return container;
+        }
+
+        // Анимация
         function animate(now) {
             if (!animationId) return;
             if (lastTimestamp === 0) {
@@ -6520,10 +6675,14 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
             if (!isHovering && !isDragging) {
                 let step = (SPEED * delta) / 1000;
-                let newPos = scrollPos - step;
-                if (newPos < -originalSetWidth * 2) newPos += originalSetWidth;
-                else if (newPos > 0) newPos -= originalSetWidth;
+                let newPos = scrollPos - step; // двигаем влево
+                // Бесконечное зацикливание: если ушли левее -originalSetWidth, перепрыгиваем
+                const minPos = -originalSetWidth;
+                if (newPos < minPos) {
+                    newPos += originalSetWidth;
+                }
                 setPosition(newPos);
+                updateProgressBar();
             }
             requestAnimationFrame(animate);
         }
@@ -6532,7 +6691,6 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (animationId) return;
             lastTimestamp = 0;
             animationId = requestAnimationFrame(animate);
-            if (!isHovering && !isDragging) startGradientAnimation();
         }
 
         function stopAnimation() {
@@ -6540,9 +6698,9 @@ window.initFormEnterSubmit = initFormEnterSubmit;
                 cancelAnimationFrame(animationId);
                 animationId = null;
             }
-            stopGradientAnimation();
         }
 
+        // Drag & drop
         function onMouseDown(e) {
             if (e.button !== 0) return;
             isDragging = true;
@@ -6558,11 +6716,10 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (!isDragging) return;
             const dx = e.clientX - dragStartX;
             let newPos = dragStartPos + dx;
-            const minPos = -originalSetWidth * 2;
-            const maxPos = 0;
-            if (newPos > maxPos) newPos = maxPos;
-            if (newPos < minPos) newPos = minPos;
-            setPosition(newPos);
+            // Бесконечная прокрутка: не ограничиваем, но для синхронизации прогресса потом нормализуем
+            scrollPos = newPos;
+            setPosition(scrollPos);
+            updateProgressBar();
         }
 
         function onMouseUp() {
@@ -6570,34 +6727,15 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             isDragging = false;
             document.body.style.userSelect = '';
             track.style.transition = 'transform 0.3s ease';
-            let norm = scrollPos;
-            if (norm < -originalSetWidth * 2) norm += originalSetWidth;
-            if (norm > 0) norm -= originalSetWidth;
-            setPosition(norm);
+            // Нормализуем позицию, чтобы не было огромных чисел
+            let norm = normalizePosition(scrollPos);
+            scrollPos = norm;
+            setPosition(scrollPos);
+            updateProgressBar();
             if (!isHovering) startAnimation();
         }
 
-        function setupButtons() {
-            const prevBtn = prevBtnSelector ? document.querySelector(prevBtnSelector) : null;
-            const nextBtn = nextBtnSelector ? document.querySelector(nextBtnSelector) : null;
-            if (prevBtn) {
-                prevBtn.addEventListener('click', () => {
-                    let newPos = scrollPos + originalSetWidth;
-                    if (newPos > 0) newPos -= originalSetWidth;
-                    setPosition(newPos);
-                    if (!isHovering && !isDragging) startAnimation();
-                });
-            }
-            if (nextBtn) {
-                nextBtn.addEventListener('click', () => {
-                    let newPos = scrollPos - originalSetWidth;
-                    if (newPos < -originalSetWidth * 2) newPos += originalSetWidth;
-                    setPosition(newPos);
-                    if (!isHovering && !isDragging) startAnimation();
-                });
-            }
-        }
-
+        // Наведение мыши
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => {
@@ -6610,22 +6748,27 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             });
         }
 
+        // Инициализация
         function init() {
             updateDimensions();
-            setPosition(-originalSetWidth);
-            progressElement = createGradientProgressBar();
-            setupButtons();
+            // Стартовая позиция: второй набор оригиналов (сдвиг на -originalSetWidth)
+            scrollPos = -originalSetWidth;
+            setPosition(scrollPos);
+            ensureProgressBar();
+            updateProgressBar();
             startAnimation();
 
             track.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
+
             window.addEventListener('resize', () => {
                 updateDimensions();
-                let norm = scrollPos;
-                if (norm < -originalSetWidth * 2) norm += originalSetWidth;
-                if (norm > 0) norm -= originalSetWidth;
-                setPosition(norm);
+                // Нормализуем позицию после смены размеров
+                let norm = normalizePosition(scrollPos);
+                scrollPos = norm;
+                setPosition(scrollPos);
+                updateProgressBar();
                 if (!isHovering && !isDragging) {
                     stopAnimation();
                     startAnimation();
@@ -6636,16 +6779,19 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         function waitForImages() {
             const imgs = slides.map(s => s.querySelector('img')).filter(Boolean);
             if (imgs.length === 0) return Promise.resolve();
-            return Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(resolve => { img.onload = resolve; img.onerror = resolve; })));
+            return Promise.all(imgs.map(img =>
+                img.complete ? Promise.resolve() : new Promise(resolve => {
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                })
+            ));
         }
 
         waitForImages().then(init);
     }
 
-    window.initInfiniteCarousel = initInfiniteCarousel;
-
     if (document.getElementById('carouselTrack')) {
-        initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next');
+        initInfiniteCarousel('carouselTrack');
     }
 })();
 // ============================================================
@@ -7840,18 +7986,12 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     }
 
     function updateSecondQuestion(role) {
-        let oldAnswers = answers[1];
         if (role === "Подбираю сотрудников") {
             quizQuestions[1] = {...LEVEL_RECRUITER};
         } else {
             quizQuestions[1] = {...LEVEL_JOBSEEKER};
         }
-        if (answers[1] && !quizQuestions[1].options.includes(answers[1])) {
-            answers[1] = null;
-            if (oldAnswers !== null) {
-                window.showWarningToast('⚠️ Вы сменили роль. Ответ на вопрос об уровне сброшен.');
-            }
-        }
+        if (answers[1] && !quizQuestions[1].options.includes(answers[1])) answers[1] = null;
         if (currentQuestionIndex === 1 && quizState === 'questions') renderQuiz();
         updateIndustryAndWorkFormatQuestions(role);
     }
@@ -8280,75 +8420,31 @@ const RETRY_DELAY = 2000;
 let isSendingMaterials = false;
 let lastSendTime = 0;
 const MIN_INTERVAL_MS = 5000;
-
-function isValidEmail(email) {
-    return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email);
-}
-
+function isValidEmail(email) { return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email); }
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
     logInit(`sendMaterialsEmail: ${email}, чек-лист=${wantChecklist}, тренинг=${wantTraining}`, 'INFO', '', 4);
     if (isSendingMaterials) throw new Error('Пожалуйста, подождите, предыдущая отправка ещё не завершена');
     const now = Date.now();
-    if (now - lastSendTime < MIN_INTERVAL_MS) {
-        const secondsLeft = Math.ceil((MIN_INTERVAL_MS - (now - lastSendTime)) / 1000);
-        throw new Error(`Пожалуйста, подождите ${secondsLeft} секунд перед повторной отправкой`);
-    }
+    if (now - lastSendTime < MIN_INTERVAL_MS) { const secondsLeft = Math.ceil((MIN_INTERVAL_MS - (now - lastSendTime)) / 1000); throw new Error(`Пожалуйста, подождите ${secondsLeft} секунд перед повторной отправкой`); }
     if (!email || !isValidEmail(email)) throw new Error('Введите корректный email');
     const url = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
     if (!url) throw new Error('URL скрипта не задан');
-    const formData = {
-        formType: 'Запрос материалов',
-        name: email,
-        comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`,
-        consent: true,
-        userId: window.getOrCreateLocalUserId()
-    };
+    const formData = { formType: 'Запрос материалов', name: email, comment: `чек-лист=${wantChecklist}, тренинг=${wantTraining}`, consent: true, userId: window.getOrCreateLocalUserId() };
     isSendingMaterials = true;
-    try {
-        const result = await window.postWithRetry(url, formData, MAX_RETRIES, RETRY_DELAY);
-        lastSendTime = Date.now();
-        return result;
-    } finally {
-        setTimeout(() => { isSendingMaterials = false; }, 1000);
-    }
+    try { const result = await window.postWithRetry(url, formData, MAX_RETRIES, RETRY_DELAY); lastSendTime = Date.now(); return result; } finally { setTimeout(() => { isSendingMaterials = false; }, 1000); }
 }
-
 let isSendingEmail = false;
-
 async function sendMaterialsToEmail(email, materialType) {
     logInit(`sendMaterialsToEmail: ${email}, тип=${materialType}`, 'INFO', '', 4);
-    if (isSendingEmail) {
-        window.showWarningToast('⏳ Отправка уже выполняется, подождите...');
-        return false;
-    }
-    if (!email || !isValidEmail(email)) {
-        window.showWarningToast('⚠️ Введите корректный email');
-        return false;
-    }
+    if (isSendingEmail) { window.showErrorToast('⏳ Отправка уже выполняется, подождите...'); return false; }
+    if (!email || !isValidEmail(email)) { window.showErrorToast('❌ Введите корректный email'); return false; }
     let wantChecklist = false, wantTraining = false;
     if (materialType === 'checklist') wantChecklist = true;
     else if (materialType === 'training') wantTraining = true;
     else if (materialType === 'both') { wantChecklist = true; wantTraining = true; }
     isSendingEmail = true;
-    try {
-        await sendMaterialsEmail(email, wantChecklist, wantTraining);
-        window.showSuccessToast('✅ Материалы отправлены! Проверьте почту');
-        return true;
-    } catch (err) {
-        console.error('Ошибка отправки материалов:', err);
-        const errMsg = err.message.toLowerCase();
-        if (errMsg.includes('подождите') || errMsg.includes('слишком много запросов') || errMsg.includes('too many requests')) {
-            window.showErrorToast(err.message);
-        } else {
-            // Для остальных ошибок всё равно показываем успех (пользователь не должен знать)
-            window.showSuccessToast('✅ Материалы отправлены! Проверьте почту');
-        }
-        return false;
-    } finally {
-        setTimeout(() => { isSendingEmail = false; }, 1000);
-    }
+    try { await sendMaterialsEmail(email, wantChecklist, wantTraining); window.showSuccessToast('✅ Материалы отправлены! Проверьте почту'); return true; } catch (err) { window.showErrorToast('❌ Ошибка: ' + err.message); return false; } finally { setTimeout(() => { isSendingEmail = false; }, 1000); }
 }
-
 window.sendMaterialsEmail = sendMaterialsEmail;
 window.sendMaterialsToEmail = sendMaterialsToEmail;
 window.isValidEmail = isValidEmail;
@@ -8472,6 +8568,7 @@ window.isValidEmail = isValidEmail;
             if (typeof window.smoothScrollTo === 'function') {
                 window.smoothScrollTo(document.body, 0);
             } else {
+                // fallback на случай, если smoothScrollTo не определена
                 window.scrollTo({top: 0, behavior: 'smooth'});
             }
         });
@@ -8587,8 +8684,7 @@ window.isValidEmail = isValidEmail;
 
     function initCarousel() {
         if (typeof window.initInfiniteCarousel === 'function') {
-            // Теперь функция принимает trackId и селекторы кнопок
-            window.initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next');
+            window.initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
             logInit('Карусель сертификатов инициализирована', 'INFO', '', 4);
         }
     }
