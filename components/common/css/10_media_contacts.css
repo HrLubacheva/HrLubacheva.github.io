@@ -1,5 +1,5 @@
 /* ==================================================================
-   10_media_contacts.css – медиа, контакты, футер, общие компоненты
+   10_media_contacts.css – медиа, контакты, общие компоненты
    ================================================================== */
 .media-grid {
     display: grid;
@@ -151,47 +151,7 @@
     }
 }
 
-footer {
-    background: var(--dark-bg);
-    color: #cbd5e0;
-    padding: 20px 0;
-    text-align: center;
-    margin-top: 40px;
-}
-footer a {
-    color: #90cdf4;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-}
-footer a:hover {
-    color: white;
-    text-decoration: underline;
-}
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 15px;
-}
-.footer-copyright {
-    font-size: 0.9rem;
-}
-.footer-version {
-    font-size: 0.7rem;
-    opacity: 0.6;
-}
-@media (max-width: 768px) {
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-    }
-}
-@media (max-width: 480px) {
-    .footer-version { font-size: 0.75rem; }
-    .footer-copyright { font-size: 0.8rem; }
-}
-
+/* Глобальные правила для ссылок, анимации, тостов, дропдаунов и т.д. (без дублирования футера) */
 .fade-up {
     opacity: 0;
     transform: translateY(30px);
@@ -347,8 +307,7 @@ footer a:hover {
     color: white;
 }
 
-/* ========== Глобальные правила для ссылок (без прыжков) ========== */
-/* Обычные ссылки (не кнопки, не иконки соцсетей) получают прозрачную границу снизу */
+/* Глобальные правила для ссылок (без прыжков) */
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
     text-decoration: none;
     border-bottom: 1px solid transparent;
@@ -357,8 +316,6 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     border-bottom-color: var(--primary);
 }
-
-/* Ссылки в контактах (особый цвет) */
 .contact-line a {
     color: #90cdf4;
     border-bottom: 1px solid transparent;
@@ -367,17 +324,7 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     color: white;
     border-bottom-color: white;
 }
-
-/* Ссылки в футере (оставляем стандартное подчёркивание) */
-footer a {
-    text-decoration: underline;
-    border-bottom: none;
-}
-footer a:hover {
-    text-decoration: underline;
-}
-
-/* Иконки соцсетей — без border-bottom */
+/* Ссылки в футере обрабатываются в 04_footer.css, здесь не дублируем */
 .social-icons a {
     border-bottom: none;
 }
@@ -400,12 +347,10 @@ button:focus-visible,
     outline-offset: 3px;
     border-radius: 4px;
 }
-
 :focus {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
-
 input:focus,
 textarea:focus,
 select:focus,
@@ -415,7 +360,6 @@ button:focus {
     outline-width: 2px;
     outline-style: solid;
 }
-
 fieldset {
     border: none;
     padding: 0;
