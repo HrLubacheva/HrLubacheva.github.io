@@ -5216,7 +5216,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 28.05.2026 11:02:22</span>
+                </a> <span class="footer-version">⚡ Версия 28.05.2026 11:40:05</span>
 
             </div>
         </div>
@@ -6472,291 +6472,184 @@ function initFormEnterSubmit() {
 window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
 // ============================================================
-// 04_certificates.js – Карусель сертификатов
-// Режим:
-// - Мышь НЕ на карусели: автопрокрутка (1 слайд / 5 сек), прогресс-бар.
-// - Мышь НА карусели: автопрокрутка ОСТАНАВЛИВАЕТСЯ, можно перетаскивать мышью (drag to scroll),
-//   или листать колёсиком, или нажимать на стрелки/точки.
-// - Бесконечная (циклическая) прокрутка.
-// - Плавный snap после драга.
+// 04_certificates.js – Бесконечная плавная карусель (лента)
+// Режим: непрерывное вращение, остановка при наведении,
+//        перетаскивание мышью. Без дискретных переключений.
 // ============================================================
 (function () {
-    function initInfiniteCarousel(trackId, prevBtnClass, nextBtnClass, progressId, dotsId) {
+    function initInfiniteCarousel(trackId) {
         const track = document.getElementById(trackId);
         if (!track) return;
 
-        let slides = Array.from(track.children);
-        if (slides.length === 0) return;
+        let originalSlides = Array.from(track.children);
+        if (originalSlides.length === 0) return;
 
-        let currentIndex = 0;
+        const slideGap = 24;            // px (из CSS)
         let slideWidth = 0;
-        let autoTimer = null;
-        let progressInterval = null;
+        let totalWidth = 0;
+        let scrollPos = 0;              // текущее смещение в px
+        let animationId = null;
         let isHovering = false;
         let isDragging = false;
-        let startDragX = 0;
-        let startScrollLeft = 0;
         let dragStartX = 0;
-        let dragStartTime = 0;
+        let dragStartPos = 0;
+        let lastTimestamp = 0;
 
-        const autoDelay = 5000;        // 5 секунд между слайдами
+        const SCROLL_SPEED = 100;       // пикселей в секунду (настройте при необходимости)
 
-        // Обновляем ширину слайда
-        function updateSlideWidth() {
-            slideWidth = slides[0]?.offsetWidth;
-            if (slideWidth === 0) slideWidth = 200;
-            track.style.transition = 'transform 0.3s ease';
+        // Клонирование слайдов для бесконечного эффекта
+        function cloneSlides() {
+            const clonesBefore = [];
+            const clonesAfter = [];
+            const cloneCount = 6;
+            for (let i = 0; i < cloneCount; i++) {
+                clonesAfter.push(originalSlides[i].cloneNode(true));
+                clonesBefore.push(originalSlides[originalSlides.length - 1 - i].cloneNode(true));
+            }
+            track.innerHTML = '';
+            clonesBefore.reverse().forEach(clone => track.appendChild(clone));
+            originalSlides.forEach(slide => track.appendChild(slide.cloneNode(true)));
+            clonesAfter.forEach(clone => track.appendChild(clone));
+            return Array.from(track.children);
         }
 
-        // Устанавливаем позицию трека по индексу
-        function updateCarousel() {
-            const shift = -currentIndex * (slideWidth + 24);
-            track.style.transform = `translateX(${shift}px)`;
-            updateDots();
-        }
+        let slides = cloneSlides();
+        const originalStartIndex = 6;   // позиция, с которой начинается первый оригинальный слайд
 
-        // Переключение на следующий/предыдущий слайд
-        function nextSlide() {
-            currentIndex = (currentIndex + 1) % slides.length;
-            updateCarousel();
-        }
-
-        function prevSlide() {
-            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-            updateCarousel();
-        }
-
-        // Обновление активной точки
-        function updateDots() {
-            const dotsContainer = document.getElementById(dotsId);
-            if (!dotsContainer) return;
-            const dots = dotsContainer.querySelectorAll('.dot');
-            dots.forEach((dot, idx) => dot.classList.toggle('active', idx === currentIndex));
-        }
-
-        // Создание точек навигации
-        function createDots() {
-            const container = document.getElementById(dotsId);
-            if (!container) return;
-            container.innerHTML = '';
-            for (let i = 0; i < slides.length; i++) {
-                const dot = document.createElement('button');
-                dot.className = 'dot';
-                if (i === 0) dot.classList.add('active');
-                dot.setAttribute('aria-label', `Перейти к слайду ${i + 1}`);
-                dot.setAttribute('type', 'button');
-                dot.addEventListener('click', () => {
-                    stopAutoScroll(true);
-                    currentIndex = i;
-                    updateCarousel();
-                    // Если мышь не на карусели – возобновляем автопрокрутку
-                    if (!isHovering) startAutoScroll();
-                });
-                container.appendChild(dot);
+        function updateDimensions() {
+            const firstSlide = slides[0];
+            if (firstSlide) {
+                slideWidth = firstSlide.offsetWidth;
+                if (slideWidth === 0) slideWidth = 200;
+                totalWidth = slides.length * (slideWidth + slideGap);
             }
         }
 
-        // Управление прогресс-баром
-        function resetProgressBar() {
-            const progressBar = document.getElementById(progressId);
-            if (progressBar) progressBar.style.width = '0%';
+        function setPosition(pos) {
+            scrollPos = pos;
+            track.style.transform = `translateX(${scrollPos}px)`;
         }
 
-        function stopProgressAnimation() {
-            if (progressInterval) {
-                clearInterval(progressInterval);
-                progressInterval = null;
+        function animate(now) {
+            if (!animationId) return;
+            if (lastTimestamp === 0) {
+                lastTimestamp = now;
+                requestAnimationFrame(animate);
+                return;
+            }
+            const delta = Math.min(100, now - lastTimestamp);
+            lastTimestamp = now;
+
+            if (!isHovering && !isDragging) {
+                // Движение влево
+                scrollPos -= (SCROLL_SPEED * delta) / 1000;
+                // Бесконечное зацикливание
+                const minLimit = -(totalWidth - (slideWidth + slideGap) * originalSlides.length);
+                const maxLimit = 0;
+                if (scrollPos <= minLimit) {
+                    scrollPos += (slideWidth + slideGap) * originalSlides.length;
+                } else if (scrollPos >= maxLimit) {
+                    scrollPos -= (slideWidth + slideGap) * originalSlides.length;
+                }
+                setPosition(scrollPos);
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function startAnimation() {
+            if (animationId) return;
+            lastTimestamp = 0;
+            animationId = requestAnimationFrame(animate);
+        }
+
+        function stopAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
             }
         }
 
-        function startProgressAnimation() {
-            if (!isHovering) {
-                if (progressInterval) stopProgressAnimation();
-                const progressBar = document.getElementById(progressId);
-                if (!progressBar) return;
-                resetProgressBar();
-                const startTime = Date.now();
-                progressInterval = setInterval(() => {
-                    if (isHovering) {
-                        // если мышь наехала – сбрасываем прогресс
-                        resetProgressBar();
-                        return;
-                    }
-                    const elapsed = Date.now() - startTime;
-                    let percent = (elapsed / autoDelay) * 100;
-                    if (percent >= 100) {
-                        percent = 100;
-                        stopProgressAnimation();
-                    }
-                    progressBar.style.width = `${percent}%`;
-                }, 30);
-            } else {
-                resetProgressBar();
-            }
-        }
-
-        // Остановка автопрокрутки
-        function stopAutoScroll(resetProgress = true) {
-            if (autoTimer) {
-                clearTimeout(autoTimer);
-                autoTimer = null;
-            }
-            stopProgressAnimation();
-            if (resetProgress) resetProgressBar();
-        }
-
-        // Запуск автопрокрутки
-        function startAutoScroll() {
-            if (isHovering) return; // не запускаем, если мышь на карусели
-            stopAutoScroll(true);
-            autoTimer = setTimeout(() => {
-                nextSlide();
-                startProgressAnimation();
-                autoTimer = null;
-                startAutoScroll();
-            }, autoDelay);
-            startProgressAnimation();
-        }
-
-        // ========== Перетаскивание мышью (drag) ==========
+        // Drag & drop
         function onMouseDown(e) {
             if (e.button !== 0) return;
             isDragging = true;
-            startDragX = e.clientX;
             dragStartX = e.clientX;
-            dragStartTime = Date.now();
-            track.style.transition = 'none'; // отключаем анимацию во время драга
-            // Получаем текущее смещение из transform
-            const transform = track.style.transform;
-            const match = transform.match(/translateX\(([-\d.]+)px\)/);
-            startScrollLeft = match ? parseFloat(match[1]) : 0;
+            dragStartPos = scrollPos;
+            track.style.transition = 'none';
             e.preventDefault();
             document.body.style.userSelect = 'none';
-            // Останавливаем автопрокрутку, если она была
-            if (!isHovering) stopAutoScroll(true);
+            stopAnimation();
         }
 
         function onMouseMove(e) {
             if (!isDragging) return;
-            const dx = e.clientX - startDragX;
-            let newScroll = startScrollLeft + dx;
-            // Ограничения: нельзя уйти дальше первого и последнего слайда (для реалистичности)
-            const maxScroll = 0;
-            const minScroll = -(slides.length * (slideWidth + 24) - track.parentElement.clientWidth);
-            newScroll = Math.min(maxScroll, Math.max(minScroll, newScroll));
-            track.style.transform = `translateX(${newScroll}px)`;
-            // Приблизительный индекс для динамического обновления точек
-            const approxIndex = Math.round(-newScroll / (slideWidth + 24));
-            currentIndex = Math.min(slides.length - 1, Math.max(0, approxIndex));
-            updateDots();
+            const dx = e.clientX - dragStartX;
+            let newPos = dragStartPos + dx;
+            const minPos = -(totalWidth - (slideWidth + slideGap) * originalSlides.length);
+            const maxPos = 0;
+            if (newPos > maxPos) newPos = maxPos;
+            if (newPos < minPos) newPos = minPos;
+            scrollPos = newPos;
+            setPosition(scrollPos);
         }
 
-        function onMouseUp(e) {
+        function onMouseUp() {
             if (!isDragging) return;
             isDragging = false;
             document.body.style.userSelect = '';
             track.style.transition = 'transform 0.3s ease';
-            // Снап к ближайшему слайду
-            const finalScroll = -currentIndex * (slideWidth + 24);
-            track.style.transform = `translateX(${finalScroll}px)`;
-            // Если мышь не на карусели и автопрокрутка была остановлена – возобновляем
-            if (!isHovering) {
-                startAutoScroll();
-            }
+            if (!isHovering) startAnimation();
         }
 
-        // ========== Колёсико мыши ==========
-        function onWheel(e) {
-            if (!isHovering) return;
-            e.preventDefault();
-            const delta = e.deltaY > 0 ? 1 : -1;
-            if (delta > 0) nextSlide();
-            else prevSlide();
-            // Останавливаем автопрокрутку при ручном взаимодействии
-            if (!isHovering) stopAutoScroll(true);
-            else stopAutoScroll(true);
-            // Возобновляем автопрокрутку, если мышь НЕ на карусели
-            if (!isHovering) startAutoScroll();
-        }
-
-        // ========== Обработчики кнопок ==========
-        const prevBtn = document.querySelector(prevBtnClass);
-        const nextBtn = document.querySelector(nextBtnClass);
-        if (prevBtn) {
-            prevBtn.addEventListener('click', () => {
-                stopAutoScroll(true);
-                prevSlide();
-                if (!isHovering) startAutoScroll();
-            });
-        }
-        if (nextBtn) {
-            nextBtn.addEventListener('click', () => {
-                stopAutoScroll(true);
-                nextSlide();
-                if (!isHovering) startAutoScroll();
-            });
-        }
-
-        // ========== Наведение мыши ==========
+        // Наведение мыши
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => {
                 isHovering = true;
-                stopAutoScroll(true);   // останавливаем автопрокрутку
+                stopAnimation();
             });
             wrapper.addEventListener('mouseleave', () => {
                 isHovering = false;
-                startAutoScroll();      // возобновляем автопрокрутку
+                if (!isDragging) startAnimation();
             });
         }
 
-        // ========== Инициализация ==========
+        // Инициализация после загрузки изображений
+        function init() {
+            updateDimensions();
+            scrollPos = -originalStartIndex * (slideWidth + slideGap);
+            setPosition(scrollPos);
+            startAnimation();
+
+            track.addEventListener('mousedown', onMouseDown);
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+
+            window.addEventListener('resize', () => {
+                updateDimensions();
+                scrollPos = -originalStartIndex * (slideWidth + slideGap);
+                setPosition(scrollPos);
+            });
+        }
+
         function waitForImages() {
             const imgs = slides.map(s => s.querySelector('img')).filter(Boolean);
             if (imgs.length === 0) return Promise.resolve();
-            return Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(resolve => {
-                img.onload = resolve;
-                img.onerror = resolve;
-            })));
+            return Promise.all(imgs.map(img =>
+                img.complete ? Promise.resolve() : new Promise(resolve => {
+                    img.onload = resolve;
+                    img.onerror = resolve;
+                })
+            ));
         }
 
-        waitForImages().then(() => {
-            updateSlideWidth();
-            createDots();
-            updateCarousel();
-            // Запускаем автопрокрутку только если не наведено (изначально не наведено)
-            if (!isHovering) startAutoScroll();
-        });
-
-        window.addEventListener('resize', () => {
-            updateSlideWidth();
-            updateCarousel();
-            if (!isHovering) {
-                stopAutoScroll(true);
-                startAutoScroll();
-            } else {
-                stopAutoScroll(true);
-            }
-        });
-
-        // Добавляем слушатели для драга
-        track.addEventListener('mousedown', onMouseDown);
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('mouseup', onMouseUp);
-        track.addEventListener('wheel', onWheel, { passive: false });
-
-        // Cleanup (опционально)
-        window._cleanupCarousel = function () {
-            track.removeEventListener('mousedown', onMouseDown);
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('mouseup', onMouseUp);
-            track.removeEventListener('wheel', onWheel);
-            if (autoTimer) clearTimeout(autoTimer);
-            if (progressInterval) clearInterval(progressInterval);
-        };
+        waitForImages().then(init);
     }
 
-    window.initInfiniteCarousel = initInfiniteCarousel;
+    // Запуск, если элемент существует
+    if (document.getElementById('carouselTrack')) {
+        initInfiniteCarousel('carouselTrack');
+    }
 })();
 // ============================================================
 // 05_modal.js – Модальные окна (политика конфиденциальности)
