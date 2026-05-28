@@ -1379,7 +1379,6 @@ body {
     margin: 40px 0;
 }
 
-/* Планшеты (576-991px) — 2 колонки */
 @media (min-width: 576px) and (max-width: 991px) {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1387,7 +1386,6 @@ body {
     }
 }
 
-/* Десктоп (≥992px) — 3 колонки */
 @media (min-width: 992px) {
     .stats-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -1395,7 +1393,6 @@ body {
     }
 }
 
-/* Телефоны (до 575px) — 2 колонки, шрифт уменьшается */
 @media (max-width: 575px) {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1421,7 +1418,6 @@ body {
     }
 }
 
-/* Карточка статистики */
 .card-stat {
     text-align: center;
     padding: 28px 20px;
@@ -1457,7 +1453,6 @@ body {
     font-weight: 500;
 }
 
-/* Для очень узких экранов — перенос плюса */
 @media (max-width: 360px) {
     .stat-number-wrapper {
         white-space: normal;
@@ -1634,6 +1629,7 @@ body {
     color: var(--primary);
 }
 
+/* ========== Адаптив для преимуществ (мобильные) ========== */
 @media (max-width: 768px) {
     .benefits-two-columns {
         flex-direction: column;
@@ -1662,14 +1658,36 @@ body {
     .benefit-card h4 {
         font-size: 1.2rem;
         line-height: 1.3;
-        min-height: 2.6em;
+        min-height: auto; /* убираем принудительную высоту */
+        -webkit-line-clamp: unset;
+        overflow: visible;
     }
     .benefit-card p {
         font-size: 0.9rem;
         line-height: 1.4;
-        min-height: 4.2em;
+        min-height: auto;
+        -webkit-line-clamp: unset;
+        overflow: visible;
     }
 }
+
+/* ========== Для очень узких телефонов (до 480px) ========== */
+@media (max-width: 480px) {
+    .benefit-card {
+        padding: 16px 12px;
+    }
+    .benefit-card h4 {
+        font-size: 1rem;
+        line-height: 1.3;
+    }
+    .benefit-card p {
+        font-size: 0.8rem;
+        line-height: 1.4;
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+}
+
 /* ==================================================================
    06_hero.css – главный экран
    ================================================================== */
@@ -5198,7 +5216,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 28.05.2026 07:09:53</span>
+                </a> <span class="footer-version">⚡ Версия 28.05.2026 07:34:22</span>
 
             </div>
         </div>
@@ -5615,74 +5633,89 @@ function bindLiveValidation(input, type = 'phone') {
 
 function applyPhoneMask(inputElement) {
     if (!inputElement) return;
-    // Удаляем предыдущий обработчик, если есть
+
+    // Удаляем старый обработчик, если есть
     if (inputElement._phoneMaskHandler) {
         inputElement.removeEventListener('input', inputElement._phoneMaskHandler);
     }
 
-    const formatPhone = function(rawDigits) {
-        let digits = rawDigits.replace(/\D/g, '');
+    const formatPhone = (digits) => {
+        if (!digits) return '';
         if (digits.length === 0) return '';
+
         // Ограничиваем 11 цифрами
         if (digits.length > 11) digits = digits.slice(0, 11);
-        let formatted = '+7';
+
+        let result = '+7';
         if (digits.length >= 2) {
-            formatted += ' (' + digits.slice(1, 4);
-            if (digits.length >= 4) formatted += ')';
-            else formatted += ')';
+            result += ' (' + digits.slice(1, 4);
+            if (digits.length >= 5) result += ')';
+            else result += ')';
         }
         if (digits.length >= 5) {
-            formatted += ' ' + digits.slice(4, 7);
+            result += ' ' + digits.slice(4, 7);
         }
         if (digits.length >= 8) {
-            formatted += '-' + digits.slice(7, 9);
+            result += '-' + digits.slice(7, 9);
         }
         if (digits.length >= 10) {
-            formatted += '-' + digits.slice(9, 11);
+            result += '-' + digits.slice(9, 11);
         }
-        // Если цифр 2-3 и нет закрывающей скобки – добавим её
-        if (digits.length >= 2 && digits.length < 4 && !formatted.includes(')')) {
-            formatted += ')';
+        // Если есть незакрытая скобка и цифр 2-3 – закрываем
+        if (digits.length >= 2 && digits.length <= 4 && !result.includes(')')) {
+            result += ')';
         }
-        return formatted;
+        return result;
     };
 
     const handler = function(e) {
-        let start = this.selectionStart;
-        let end = this.selectionEnd;
-        let oldLength = this.value.length;
+        const oldValue = this.value;
+        // Получаем только цифры из текущего значения
+        let digits = oldValue.replace(/\D/g, '');
 
-        // Получаем только цифры
-        let digits = this.value.replace(/\D/g, '');
+        // Если в поле нет цифр – очищаем полностью
+        if (digits.length === 0) {
+            if (this.value !== '') this.value = '';
+            return;
+        }
+
+        // Форматируем
         let formatted = formatPhone(digits);
 
-        if (this.value !== formatted) {
-            this.value = formatted;
-            // Корректируем позицию курсора
-            let newLength = this.value.length;
-            // Если курсор был в конце, оставляем в конце
-            if (start === oldLength) {
-                this.setSelectionRange(newLength, newLength);
-            } else {
-                // Пытаемся восстановить позицию относительно количества введённых цифр
-                let digitsBeforeCursor = (this.value.slice(0, start).replace(/\D/g, '')).length;
-                let newPos = 0;
-                let digitsCount = 0;
-                for (let i = 0; i < this.value.length; i++) {
-                    if (/\d/.test(this.value[i])) digitsCount++;
-                    if (digitsCount === digitsBeforeCursor) {
-                        newPos = i + 1;
-                        break;
-                    }
-                }
-                this.setSelectionRange(newPos, newPos);
+        // Если значение не изменилось – выходим
+        if (formatted === oldValue) return;
+
+        // Запоминаем позицию курсора ДО изменения
+        const cursorPos = this.selectionStart;
+        // Подсчитываем, сколько цифр было до курсора в старом значении
+        let digitsBeforeCursor = 0;
+        for (let i = 0; i < cursorPos && i < oldValue.length; i++) {
+            if (/\d/.test(oldValue[i])) digitsBeforeCursor++;
+        }
+
+        // Применяем новое значение
+        this.value = formatted;
+
+        // Вычисляем новую позицию курсора: находим позицию, где набрано digitsBeforeCursor цифр
+        let newCursorPos = 0;
+        let digitsCount = 0;
+        for (let i = 0; i < formatted.length; i++) {
+            if (/\d/.test(formatted[i])) digitsCount++;
+            if (digitsCount === digitsBeforeCursor) {
+                newCursorPos = i + 1;
+                break;
             }
         }
+        // Если не нашли (например, курсор был в конце), ставим в конец
+        if (newCursorPos === 0 && digitsBeforeCursor === digits.length) {
+            newCursorPos = formatted.length;
+        }
+        this.setSelectionRange(newCursorPos, newCursorPos);
     };
 
     inputElement.addEventListener('input', handler);
     inputElement._phoneMaskHandler = handler;
-    // Вызываем сразу, чтобы привести значение к формату (если уже что-то введено)
+    // Инициализируем форматирование (если поле не пустое)
     handler.call(inputElement);
 }
 
