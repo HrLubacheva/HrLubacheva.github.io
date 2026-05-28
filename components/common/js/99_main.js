@@ -118,7 +118,6 @@
             if (typeof window.smoothScrollTo === 'function') {
                 window.smoothScrollTo(document.body, 0);
             } else {
-                // fallback на случай, если smoothScrollTo не определена
                 window.scrollTo({top: 0, behavior: 'smooth'});
             }
         });
@@ -234,7 +233,8 @@
 
     function initCarousel() {
         if (typeof window.initInfiniteCarousel === 'function') {
-            window.initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
+            // Теперь функция принимает trackId и селекторы кнопок
+            window.initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next');
             logInit('Карусель сертификатов инициализирована', 'INFO', '', 4);
         }
     }

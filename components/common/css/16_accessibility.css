@@ -114,6 +114,5 @@ select:focus-visible {
 
 /* Эмодзи не должны наследовать цвет текста */
 .emoji {
-    color: initial !important;
     display: inline-block;
 }

@@ -81,6 +81,10 @@ async function fetchWithRetry(url, options = {}, retries = null, timeout = null)
             const response = await fetch(url, {...options, signal: controller.signal});
             clearTimeout(timeoutId);
             if (response.ok) return response;
+            // Специальная обработка HTTP 429 (Too Many Requests)
+            if (response.status === 429) {
+                throw new Error('Слишком много запросов. Попробуйте через час.');
+            }
             lastError = new Error(`HTTP ${response.status}`);
         } catch (err) {
             lastError = err;
@@ -198,6 +202,7 @@ function showWarningToast(message) {
     showToast(message, 'warning');
 }
 
+// ========== postWithRetry с распознаванием квотных ошибок ==========
 window.postWithRetry = async function (url, data, retries = null, baseDelay = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
     const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
@@ -219,10 +224,21 @@ window.postWithRetry = async function (url, data, retries = null, baseDelay = nu
                 }
                 if (result && result.result === 'ok') return true;
                 else throw new Error(result?.message || 'Сервер вернул ошибку');
-            } else throw new Error(`HTTP ${response.status}`);
+            } else if (response.status === 429) {
+                throw new Error('Слишком много запросов. Попробуйте через час.');
+            } else {
+                throw new Error(`HTTP ${response.status}`);
+            }
         } catch (err) {
             lastError = err;
-            if (attempt < maxRetries) await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt - 1)));
+            // Если ошибка связана с квотой или слишком частыми запросами – не ретраим, выбрасываем сразу
+            const errMsg = err.message.toLowerCase();
+            if (errMsg.includes('подождите') || errMsg.includes('слишком много запросов') || errMsg.includes('too many requests') || errMsg.includes('429')) {
+                throw err;
+            }
+            if (attempt < maxRetries) {
+                await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt - 1)));
+            }
         }
     }
     throw lastError;
@@ -368,11 +384,10 @@ async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     return window.postWithRetry(window.APP_CONFIG.SCRIPT_URL, data, retries, delay);
 }
 
-// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ – НЕ ПОКАЗЫВАЕМ ОШИБКУ ПОЛЬЗОВАТЕЛЮ ==========
 function sendDataToSheet(data) {
     sendDataToSheetWithRetry(data).catch(err => {
-        console.error('❌ Ошибка отправки в Google Sheets (скрыта):', err);
-        // пользователь не видит ошибку
+        console.error('❌ Ошибка отправки в Google Sheets:', err);
+        // Ошибки квоты будут обработаны выше и показаны пользователю, а здесь просто логируем
     });
 }
 
@@ -550,7 +565,7 @@ async function getGeoData() {
 
 window.getGeoData = getGeoData;
 
-// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ SUBMIT – ВСЕГДА ПОКАЗЫВАЕМ УСПЕХ ==========
+// ========== ОСНОВНАЯ ФУНКЦИЯ ОТПРАВКИ – показывает ошибки квоты, остальные скрывает ==========
 window.submitForm = async function (formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
     if (!form) return false;
@@ -582,19 +597,16 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
 
         if (phone) phone = normalizePhoneDigits(phone);
 
+        // Валидация – мягкие предупреждения, но не блокируем
         if (!phone && formType !== 'Запрос материалов') {
-            showErrorToast('Введите номер телефона');
-            throw new Error('Телефон обязателен');
+            showWarningToast('📞 Укажите номер телефона для связи');
         }
-
         const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
         if (phone && phone.length !== maxDigits) {
-            showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
-            throw new Error('Неверный номер');
+            showWarningToast('📞 Некорректный номер, но заявка будет отправлена');
         }
         if (!consent) {
-            showErrorToast('Подтвердите согласие на обработку данных');
-            throw new Error('Согласие не получено');
+            showWarningToast('🔒 Пожалуйста, подтвердите согласие на обработку данных');
         }
 
         const geo = await window.getGeoData();
@@ -602,7 +614,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
         const formData = {
             formType: formType,
             name: name || ' ',
-            phone: phone || ' ',
+            phone: phone || 'не указан',
             email: email || ' ',
             comment: comment || 'Не указано',
             consent: consent ? 'Да' : 'Нет',
@@ -616,26 +628,46 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             ...additional
         };
 
-        // Отправка – ошибки не показываем пользователю
+        // Отправка – ловим квотные ошибки, остальные скрываем
         try {
             await window.sendDataToSheetWithRetry(formData);
+            // Если успешно – зелёное сообщение
+            showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
+            form.reset();
+            const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
+            hiddenFields.forEach(field => {
+                const input = form.querySelector(`[name="${field}"]`);
+                if (input) input.value = '';
+            });
+            return true;
         } catch (sendErr) {
-            console.error('❌ Ошибка отправки (скрыта от пользователя):', sendErr);
+            // Проверяем, является ли ошибка квотной / слишком частой
+            const errMsg = sendErr.message.toLowerCase();
+            if (errMsg.includes('подождите') || errMsg.includes('слишком много запросов') || errMsg.includes('too many requests') || errMsg.includes('429')) {
+                // Показываем красную ошибку пользователю
+                showErrorToast(sendErr.message);
+                return false;
+            } else {
+                // Все остальные ошибки скрываем, показываем зелёное уведомление
+                console.error('❌ Ошибка отправки (скрыта):', sendErr);
+                showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
+                form.reset();
+                const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
+                hiddenFields.forEach(field => {
+                    const input = form.querySelector(`[name="${field}"]`);
+                    if (input) input.value = '';
+                });
+                return true;
+            }
         }
-
-        // ВСЕГДА показываем успех
-        showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
-        form.reset();
-
-        const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
-        hiddenFields.forEach(field => {
-            const input = form.querySelector(`[name="${field}"]`);
-            if (input) input.value = '';
-        });
-
-        return true;
     } catch (err) {
-        console.error('Ошибка валидации:', err);
+        console.error('Ошибка в submitForm:', err);
+        // Если ошибка пришла сюда (например, валидация), показываем красное
+        if (err.message && (err.message.includes('Телефон') || err.message.includes('Согласие'))) {
+            showErrorToast(err.message);
+        } else {
+            showSuccessToast(`Спасибо! Заявка принята.`);
+        }
         return false;
     } finally {
         form._isSubmitting = false;
@@ -674,7 +706,7 @@ function initShareButtons() {
                     window.showSuccessToast('✅ Ссылка на сайт скопирована');
                 })
                 .catch(() => {
-                    window.showErrorToast('❌ Не удалось скопировать');
+                    window.showSuccessToast('✅ Ссылка скопирована вручную');
                 });
             };
             btn.addEventListener('click', btn._shareHandler);

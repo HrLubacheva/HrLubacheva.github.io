@@ -1,18 +1,15 @@
 // ============================================================
-// 04_certificates.js – Бесконечная карусель с анимированной полосой
-// Лента утроена (3 копии). Движение влево непрерывно.
-// Полоса прокрутки – бегущий градиент, синхронизированный со скоростью.
-// Наведение – пауза, перетаскивание – пауза, после отпускания – продолжение.
+// 04_certificates.js – Бесконечная карусель с кнопками и прогрессом
 // ============================================================
 (function () {
-    function initInfiniteCarousel(trackId) {
+    function initInfiniteCarousel(trackId, prevBtnSelector = null, nextBtnSelector = null) {
         const track = document.getElementById(trackId);
         if (!track) return;
 
         let originalSlides = Array.from(track.children);
         if (originalSlides.length === 0) return;
 
-        const slideGap = 24;            // px
+        const slideGap = 24;
         let slideWidth = 0;
         let containerWidth = 0;
         let scrollPos = 0;
@@ -22,25 +19,21 @@
         let dragStartX = 0;
         let dragStartPos = 0;
         let lastTimestamp = 0;
-        const SPEED = 140;              // px/сек
+        const SPEED = 140;
 
-        // Создаём утроенную ленту (3 копии)
         function buildTripleTrack() {
             const triple = [];
             for (let i = 0; i < 3; i++) {
-                originalSlides.forEach(slide => {
-                    triple.push(slide.cloneNode(true));
-                });
+                originalSlides.forEach(slide => triple.push(slide.cloneNode(true)));
             }
             track.innerHTML = '';
             triple.forEach(clone => track.appendChild(clone));
+            track.style.willChange = 'transform';
             return Array.from(track.children);
         }
 
         let slides = buildTripleTrack();
-        let originalSetWidth = 0;        // ширина одного набора оригиналов
-
-        // ========== Прогресс-бар с анимированным градиентом ==========
+        let originalSetWidth = 0;
         let progressElement = null;
         let gradientAnimationActive = false;
 
@@ -58,38 +51,17 @@
                     background-size: 200% 100%;
                     border-radius: 4px;
                     margin: 20px auto 10px;
-                    transition: opacity 0.2s;
                 `;
                 wrapper.insertAdjacentElement('afterend', progress);
             }
-            // Скрываем старые элементы (маркер и контейнер), если они есть
-            const oldMarker = document.querySelector('.carousel-progress-marker');
-            if (oldMarker) oldMarker.style.display = 'none';
-            const oldContainer = document.querySelector('.carousel-progress-container');
-            if (oldContainer) oldContainer.style.display = 'none';
             return progress;
         }
 
-        function ensureKeyframes() {
-            if (document.querySelector('#carousel-gradient-keyframes')) return;
-            const style = document.createElement('style');
-            style.id = 'carousel-gradient-keyframes';
-            style.textContent = `
-                @keyframes progressMove {
-                    0% { background-position: 0% 0%; }
-                    100% { background-position: 200% 0%; }
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
         function startGradientAnimation() {
-            if (!progressElement) return;
-            if (gradientAnimationActive) return;
+            if (!progressElement || gradientAnimationActive) return;
             if (originalSetWidth <= 0) return;
             const duration = originalSetWidth / SPEED;
             if (isNaN(duration) || duration <= 0) return;
-            ensureKeyframes();
             progressElement.style.animation = `progressMove ${duration}s linear infinite`;
             gradientAnimationActive = true;
         }
@@ -97,17 +69,12 @@
         function stopGradientAnimation() {
             if (!progressElement) return;
             progressElement.style.animation = 'none';
-            progressElement.style.backgroundPosition = '0% 0%';
             gradientAnimationActive = false;
         }
 
-        // ========== Геометрия ==========
         function updateDimensions() {
             const firstSlide = slides[0];
-            if (firstSlide) {
-                slideWidth = firstSlide.offsetWidth;
-                if (slideWidth === 0) slideWidth = 200;
-            }
+            slideWidth = firstSlide ? firstSlide.offsetWidth : 200;
             const wrapper = track.closest('.carousel-viewport');
             containerWidth = wrapper ? wrapper.clientWidth : track.parentElement.clientWidth;
             originalSetWidth = originalSlides.length * (slideWidth + slideGap);
@@ -118,7 +85,6 @@
             track.style.transform = `translateX(${scrollPos}px)`;
         }
 
-        // ========== Анимация карусели ==========
         function animate(now) {
             if (!animationId) return;
             if (lastTimestamp === 0) {
@@ -132,13 +98,8 @@
             if (!isHovering && !isDragging) {
                 let step = (SPEED * delta) / 1000;
                 let newPos = scrollPos - step;
-
-                // Бесконечное зацикливание: удерживаем позицию в пределах двух копий
-                if (newPos < -originalSetWidth * 2) {
-                    newPos += originalSetWidth;
-                } else if (newPos > 0) {
-                    newPos -= originalSetWidth;
-                }
+                if (newPos < -originalSetWidth * 2) newPos += originalSetWidth;
+                else if (newPos > 0) newPos -= originalSetWidth;
                 setPosition(newPos);
             }
             requestAnimationFrame(animate);
@@ -148,9 +109,7 @@
             if (animationId) return;
             lastTimestamp = 0;
             animationId = requestAnimationFrame(animate);
-            if (!isHovering && !isDragging && progressElement) {
-                startGradientAnimation();
-            }
+            if (!isHovering && !isDragging) startGradientAnimation();
         }
 
         function stopAnimation() {
@@ -161,7 +120,6 @@
             stopGradientAnimation();
         }
 
-        // ========== Drag & drop ==========
         function onMouseDown(e) {
             if (e.button !== 0) return;
             isDragging = true;
@@ -189,7 +147,6 @@
             isDragging = false;
             document.body.style.userSelect = '';
             track.style.transition = 'transform 0.3s ease';
-            // Нормализуем позицию
             let norm = scrollPos;
             if (norm < -originalSetWidth * 2) norm += originalSetWidth;
             if (norm > 0) norm -= originalSetWidth;
@@ -197,7 +154,27 @@
             if (!isHovering) startAnimation();
         }
 
-        // ========== Наведение мыши ==========
+        function setupButtons() {
+            const prevBtn = prevBtnSelector ? document.querySelector(prevBtnSelector) : null;
+            const nextBtn = nextBtnSelector ? document.querySelector(nextBtnSelector) : null;
+            if (prevBtn) {
+                prevBtn.addEventListener('click', () => {
+                    let newPos = scrollPos + originalSetWidth;
+                    if (newPos > 0) newPos -= originalSetWidth;
+                    setPosition(newPos);
+                    if (!isHovering && !isDragging) startAnimation();
+                });
+            }
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    let newPos = scrollPos - originalSetWidth;
+                    if (newPos < -originalSetWidth * 2) newPos += originalSetWidth;
+                    setPosition(newPos);
+                    if (!isHovering && !isDragging) startAnimation();
+                });
+            }
+        }
+
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => {
@@ -210,17 +187,16 @@
             });
         }
 
-        // ========== Инициализация ==========
         function init() {
             updateDimensions();
             setPosition(-originalSetWidth);
             progressElement = createGradientProgressBar();
+            setupButtons();
             startAnimation();
 
             track.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
-
             window.addEventListener('resize', () => {
                 updateDimensions();
                 let norm = scrollPos;
@@ -231,31 +207,21 @@
                     stopAnimation();
                     startAnimation();
                 }
-                if (progressElement && originalSetWidth > 0) {
-                    const duration = originalSetWidth / SPEED;
-                    progressElement.style.animation = `progressMove ${duration}s linear infinite`;
-                    if (gradientAnimationActive) {
-                        progressElement.style.animation = `progressMove ${duration}s linear infinite`;
-                    }
-                }
             });
         }
 
         function waitForImages() {
             const imgs = slides.map(s => s.querySelector('img')).filter(Boolean);
             if (imgs.length === 0) return Promise.resolve();
-            return Promise.all(imgs.map(img =>
-                img.complete ? Promise.resolve() : new Promise(resolve => {
-                    img.onload = resolve;
-                    img.onerror = resolve;
-                })
-            ));
+            return Promise.all(imgs.map(img => img.complete ? Promise.resolve() : new Promise(resolve => { img.onload = resolve; img.onerror = resolve; })));
         }
 
         waitForImages().then(init);
     }
 
+    window.initInfiniteCarousel = initInfiniteCarousel;
+
     if (document.getElementById('carouselTrack')) {
-        initInfiniteCarousel('carouselTrack');
+        initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next');
     }
 })();

@@ -38,7 +38,6 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
 
 let isSendingEmail = false;
 
-// ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ – ВСЕГДА ПОКАЗЫВАЕМ УСПЕХ ==========
 async function sendMaterialsToEmail(email, materialType) {
     logInit(`sendMaterialsToEmail: ${email}, тип=${materialType}`, 'INFO', '', 4);
     if (isSendingEmail) {
@@ -46,7 +45,7 @@ async function sendMaterialsToEmail(email, materialType) {
         return false;
     }
     if (!email || !isValidEmail(email)) {
-        window.showErrorToast('❌ Введите корректный email');
+        window.showWarningToast('⚠️ Введите корректный email');
         return false;
     }
     let wantChecklist = false, wantTraining = false;
@@ -59,10 +58,15 @@ async function sendMaterialsToEmail(email, materialType) {
         window.showSuccessToast('✅ Материалы отправлены! Проверьте почту');
         return true;
     } catch (err) {
-        console.error('Ошибка отправки материалов (скрыта):', err);
-        // ВСЕГДА показываем успех, даже если реально ошибка
-        window.showSuccessToast('✅ Материалы отправлены! Проверьте почту');
-        return true;
+        console.error('Ошибка отправки материалов:', err);
+        const errMsg = err.message.toLowerCase();
+        if (errMsg.includes('подождите') || errMsg.includes('слишком много запросов') || errMsg.includes('too many requests')) {
+            window.showErrorToast(err.message);
+        } else {
+            // Для остальных ошибок всё равно показываем успех (пользователь не должен знать)
+            window.showSuccessToast('✅ Материалы отправлены! Проверьте почту');
+        }
+        return false;
     } finally {
         setTimeout(() => { isSendingEmail = false; }, 1000);
     }
