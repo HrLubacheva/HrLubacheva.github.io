@@ -1,5 +1,4 @@
 function initCallbackForm() {
-    // Защита от двойной инициализации
     if (window._callbackFormInitialized) return;
     window._callbackFormInitialized = true;
 
@@ -12,7 +11,6 @@ function initCallbackForm() {
     const callbackMessages = document.getElementById('callbackFormMessages');
 
     if (callbackForm && callbackMessages) {
-        // Удаляем старый обработчик, если он был
         if (callbackForm._submitHandler) {
             callbackForm.removeEventListener('submit', callbackForm._submitHandler);
         }
@@ -241,7 +239,7 @@ function initCallbackForm() {
         quickForm.addEventListener('submit', quickSubmitHandler);
     }
 
-    // ========== Копирование корзины ==========
+    // ========== Копирование корзины (с короткой блокировкой 5 секунд) ==========
     const copyCartBtn = document.getElementById('copyCartBtn');
     if (copyCartBtn) {
         if (copyCartBtn._copyHandler) {
@@ -249,6 +247,8 @@ function initCallbackForm() {
         }
 
         copyCartBtn._copyHandler = () => {
+            const actionKey = 'copy_cart';
+            if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
             logInit('Копирование корзины', 'INFO', '', 4);
             const cartText = window.getCartData ? window.getCartData() : '';
             if (!cartText || cartText === 'Корзина пуста') {
@@ -259,6 +259,7 @@ function initCallbackForm() {
             const fullText = `Корзина:\n${cartText}\n\n💰 Итого: ${totalPrice}`;
             navigator.clipboard.writeText(fullText).then(() => {
                 window.showSuccessToast('✅ Корзина скопирована в буфер обмена');
+                if (window.lockAction) window.lockAction(actionKey, 5000);
             }).catch(() => {
                 window.showErrorToast('❌ Не удалось скопировать');
             });
@@ -271,7 +272,6 @@ function initCallbackForm() {
 }
 
 function initFormEnterSubmit() {
-    // Защита от двойной инициализации
     if (window._formEnterSubmitInitialized) return;
     window._formEnterSubmitInitialized = true;
 

@@ -16,7 +16,7 @@ const IS_DEV = window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' ||
     window.location.search.includes('debug=true');
 
-let originalConsoleLog = null;  // <-- ИСПРАВЛЕНО: добавлено недостающее объявление
+let originalConsoleLog = null;
 
 function log(...args) {
     if (IS_DEV) console.log(...args);
@@ -40,8 +40,7 @@ window.enableLogs = function () {
 };
 window.disableLogs = function () {
     if (originalConsoleLog === null) originalConsoleLog = console.log;
-    console.log = function () {
-    };
+    console.log = function () {};
     showToast('🔇 Логи отключены', 'success');
 };
 
@@ -111,13 +110,11 @@ async function loadWithCache(cacheKey, fetchFn, ttl = null) {
                 if (IS_DEV) console.warn(e);
             }
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     const data = await fetchFn();
     try {
         localStorage.setItem(cacheKey, JSON.stringify({data, timestamp: Date.now()}));
-    } catch (e) {
-    }
+    } catch (e) {}
     return data;
 }
 
@@ -304,19 +301,13 @@ function bindLiveValidation(input, type = 'phone') {
 
 function applyPhoneMask(inputElement) {
     if (!inputElement) return;
-
-    // Удаляем старый обработчик, если есть
     if (inputElement._phoneMaskHandler) {
         inputElement.removeEventListener('input', inputElement._phoneMaskHandler);
     }
-
     const formatPhone = (digits) => {
         if (!digits) return '';
         if (digits.length === 0) return '';
-
-        // Ограничиваем 11 цифрами
         if (digits.length > 11) digits = digits.slice(0, 11);
-
         let result = '+7';
         if (digits.length >= 2) {
             result += ' (' + digits.slice(1, 4);
@@ -332,42 +323,26 @@ function applyPhoneMask(inputElement) {
         if (digits.length >= 10) {
             result += '-' + digits.slice(9, 11);
         }
-        // Если есть незакрытая скобка и цифр 2-3 – закрываем
         if (digits.length >= 2 && digits.length <= 4 && !result.includes(')')) {
             result += ')';
         }
         return result;
     };
-
     const handler = function(e) {
         const oldValue = this.value;
-        // Получаем только цифры из текущего значения
         let digits = oldValue.replace(/\D/g, '');
-
-        // Если в поле нет цифр – очищаем полностью
         if (digits.length === 0) {
             if (this.value !== '') this.value = '';
             return;
         }
-
-        // Форматируем
         let formatted = formatPhone(digits);
-
-        // Если значение не изменилось – выходим
         if (formatted === oldValue) return;
-
-        // Запоминаем позицию курсора ДО изменения
         const cursorPos = this.selectionStart;
-        // Подсчитываем, сколько цифр было до курсора в старом значении
         let digitsBeforeCursor = 0;
         for (let i = 0; i < cursorPos && i < oldValue.length; i++) {
             if (/\d/.test(oldValue[i])) digitsBeforeCursor++;
         }
-
-        // Применяем новое значение
         this.value = formatted;
-
-        // Вычисляем новую позицию курсора: находим позицию, где набрано digitsBeforeCursor цифр
         let newCursorPos = 0;
         let digitsCount = 0;
         for (let i = 0; i < formatted.length; i++) {
@@ -377,16 +352,13 @@ function applyPhoneMask(inputElement) {
                 break;
             }
         }
-        // Если не нашли (например, курсор был в конце), ставим в конец
         if (newCursorPos === 0 && digitsBeforeCursor === digits.length) {
             newCursorPos = formatted.length;
         }
         this.setSelectionRange(newCursorPos, newCursorPos);
     };
-
     inputElement.addEventListener('input', handler);
     inputElement._phoneMaskHandler = handler;
-    // Инициализируем форматирование (если поле не пустое)
     handler.call(inputElement);
 }
 
@@ -463,17 +435,15 @@ function getVisitStats() {
                 visits = [];
             }
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
     if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
     try {
         localStorage.setItem(visitsKey, JSON.stringify(visits));
-    } catch (e) {
-    }
+    } catch (e) {}
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
-    return {week: visits.filter(v => v > weekAgo).length, month: visits.length, total: visits.length};
+    return {week: visits.filter(v => v > weekAgo).length, month: visits.filter(v => v > monthAgo).length, total: visits.length};
 }
 
 function getVisitStatsText() {
@@ -562,11 +532,9 @@ async function getGeoData() {
             try {
                 cached = JSON.parse(raw);
                 if (cached && typeof cached === 'object') return cached;
-            } catch (e) {
-            }
+            } catch (e) {}
         }
-    } catch (e) {
-    }
+    } catch (e) {}
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Ошибка геолокации');
@@ -580,8 +548,7 @@ async function getGeoData() {
         };
         try {
             localStorage.setItem(geoKey, JSON.stringify(result));
-        } catch (e) {
-        }
+        } catch (e) {}
         return result;
     } catch (e) {
         if (IS_DEV) console.warn(e);
@@ -590,6 +557,28 @@ async function getGeoData() {
 }
 
 window.getGeoData = getGeoData;
+
+// Глобальная блокировка действий (антиспам)
+window._actionLocks = window._actionLocks || {};
+
+window.isActionLocked = function(actionKey, durationMs = 60000) {
+    const lockedUntil = window._actionLocks[actionKey];
+    if (lockedUntil && Date.now() < lockedUntil) {
+        const secondsLeft = Math.ceil((lockedUntil - Date.now()) / 1000);
+        window.showWarningToast(`⏳ Подождите ${secondsLeft} сек. перед повторным действием`);
+        return true;
+    }
+    return false;
+};
+
+window.lockAction = function(actionKey, durationMs = 60000) {
+    window._actionLocks[actionKey] = Date.now() + durationMs;
+    setTimeout(() => {
+        if (window._actionLocks[actionKey] && window._actionLocks[actionKey] <= Date.now()) {
+            delete window._actionLocks[actionKey];
+        }
+    }, durationMs + 1000);
+};
 
 window.submitForm = async function (formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
@@ -680,7 +669,6 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
     }
 };
 
-
 window.getQuizDataFromForm = function (form) {
     return {
         chosenVariant: form.querySelector('[name="chosenVariant"]')?.value || '',
@@ -706,16 +694,15 @@ function initShareButtons() {
                 navigator.clipboard.writeText(text).then(() => {
                     window.showSuccessToast('✅ Ссылка на сайт скопирована');
                 })
-                    .catch(() => {
-                        window.showErrorToast('❌ Не удалось скопировать');
-                    });
+                .catch(() => {
+                    window.showErrorToast('❌ Не удалось скопировать');
+                });
             };
             btn.addEventListener('click', btn._shareHandler);
         }
     });
 }
 
-// ========== ДЕТАЛЬНОЕ ЛОГИРОВАНИЕ С УРОВНЯМИ ==========
 window.initLogs = [];
 
 let currentLogLevel = window.APP_CONFIG?.CONSTANTS?.LOG_LEVEL || 0;

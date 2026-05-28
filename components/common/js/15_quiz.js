@@ -1,6 +1,6 @@
 // ============================================================
-// 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов, адаптивные тексты)
-// Исправлено: добавлено предупреждение при сбросе ответов из-за смены роли
+// 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов)
+// Защита от двойной отправки через isSubmittingChoice (без временной блокировки)
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -116,7 +116,6 @@
         renderQuiz();
     }
 
-    // ИСПРАВЛЕННАЯ ФУНКЦИЯ: добавлено предупреждение при сбросе ответов
     function updateIndustryAndWorkFormatQuestions(role) {
         let wasReset = false;
         if (role === "Подбираю сотрудников") {
@@ -519,27 +518,11 @@
                     </div>
                 </div>
             `;
-
             const goToCallbackBtn = container.querySelector('.go-to-callback');
             const goToCalculatorBtn = container.querySelector('.go-to-calculator');
             const resetBtnAfter = document.getElementById('resetQuizBtnAfter');
-
-            if (goToCallbackBtn) {
-                goToCallbackBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const target = document.getElementById('callback-form');
-                    if (target) scrollToElement(target);
-                });
-            }
-
-            if (goToCalculatorBtn) {
-                goToCalculatorBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const target = document.getElementById('calculator');
-                    if (target) scrollToElement(target);
-                });
-            }
-
+            if (goToCallbackBtn) goToCallbackBtn.addEventListener('click', (e) => { e.preventDefault(); const target = document.getElementById('callback-form'); if (target) scrollToElement(target); });
+            if (goToCalculatorBtn) goToCalculatorBtn.addEventListener('click', (e) => { e.preventDefault(); const target = document.getElementById('calculator'); if (target) scrollToElement(target); });
             if (resetBtnAfter) resetBtnAfter.addEventListener('click', () => startQuiz());
         }
     }
@@ -556,6 +539,8 @@
         if (copyResultBtn) {
             copyResultBtn.removeEventListener('click', copyResultBtn._copyHandler);
             copyResultBtn._copyHandler = function () {
+                const actionKey = 'copy_quiz';
+                if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
                 const chosenVariant = document.getElementById('chosenVariant')?.value || '';
                 const chosenVariantPrice = document.getElementById('chosenVariantPrice')?.value || '';
                 const originalChosenVariant = document.getElementById('originalChosenVariant')?.value || '';
@@ -566,7 +551,7 @@
                 if (originalChosenVariant && originalChosenVariant !== chosenVariant) copyText += `📌 Исходный выбор: ${originalChosenVariant}\n`;
                 if (recommendedVariants) copyText += `\n📌 Рекомендации эксперта:\n${recommendedVariants}\n`;
                 copyText += `\n🔗 ${window.location.href.split('?')[0]}`;
-                navigator.clipboard.writeText(copyText).then(() => { window.showSuccessToast('✅ Рекомендации скопированы в буфер'); }).catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
+                navigator.clipboard.writeText(copyText).then(() => { window.showSuccessToast('✅ Рекомендации скопированы в буфер'); if (window.lockAction) window.lockAction(actionKey, 5000); }).catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
             };
             copyResultBtn.addEventListener('click', copyResultBtn._copyHandler);
         }
