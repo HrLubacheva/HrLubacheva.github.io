@@ -8,10 +8,11 @@
     font-weight: 700;
     text-align: center;
     margin-bottom: 48px;
+    color: var(--primary-dark);  /* fallback, если градиент не сработает */
     background: linear-gradient(135deg, var(--primary-dark), var(--primary));
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
+    -webkit-text-fill-color: transparent;
 }
 
 /* На тёмном фоне заголовок остаётся белым (без градиента) */

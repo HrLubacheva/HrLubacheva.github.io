@@ -1,8 +1,8 @@
 // ============================================================
-// 04_certificates.js – Бесконечная карусель с прогресс-баром
+// 04_certificates.js – Бесконечная карусель с анимированной полосой
 // Лента утроена (3 копии). Движение влево непрерывно.
-// Полоса прокрутки с бегунком, синхронизированная.
-// Наведение – пауза, перетаскивание – синхронизация.
+// Полоса прокрутки – бегущий градиент, синхронизированный со скоростью.
+// Наведение – пауза, перетаскивание – пауза, после отпускания – продолжение.
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -14,7 +14,6 @@
 
         const slideGap = 24;            // px
         let slideWidth = 0;
-        let totalWidth = 0;
         let containerWidth = 0;
         let scrollPos = 0;
         let animationId = null;
@@ -23,7 +22,7 @@
         let dragStartX = 0;
         let dragStartPos = 0;
         let lastTimestamp = 0;
-        const SPEED = 140;              // px/сек (регулируйте)
+        const SPEED = 140;              // px/сек
 
         // Создаём утроенную ленту (3 копии)
         function buildTripleTrack() {
@@ -39,14 +38,75 @@
         }
 
         let slides = buildTripleTrack();
-        let originalSetWidth = 0;        // ширина одного набора оригиналов (с отступами)
-        let fullTrackWidth = 0;
+        let originalSetWidth = 0;        // ширина одного набора оригиналов
 
+        // ========== Прогресс-бар с анимированным градиентом ==========
+        let progressElement = null;
+        let gradientAnimationActive = false;
+
+        function createGradientProgressBar() {
+            let progress = document.querySelector('.carousel-progress');
+            if (!progress) {
+                const wrapper = track.closest('.carousel-wrapper');
+                if (!wrapper) return null;
+                progress = document.createElement('div');
+                progress.className = 'carousel-progress';
+                progress.style.cssText = `
+                    width: 100%;
+                    height: 4px;
+                    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 30%, var(--primary, #2D6A9F) 50%, #e2e8f0 70%, #e2e8f0 100%);
+                    background-size: 200% 100%;
+                    border-radius: 4px;
+                    margin: 20px auto 10px;
+                    transition: opacity 0.2s;
+                `;
+                wrapper.insertAdjacentElement('afterend', progress);
+            }
+            // Скрываем старые элементы (маркер и контейнер), если они есть
+            const oldMarker = document.querySelector('.carousel-progress-marker');
+            if (oldMarker) oldMarker.style.display = 'none';
+            const oldContainer = document.querySelector('.carousel-progress-container');
+            if (oldContainer) oldContainer.style.display = 'none';
+            return progress;
+        }
+
+        function ensureKeyframes() {
+            if (document.querySelector('#carousel-gradient-keyframes')) return;
+            const style = document.createElement('style');
+            style.id = 'carousel-gradient-keyframes';
+            style.textContent = `
+                @keyframes progressMove {
+                    0% { background-position: 0% 0%; }
+                    100% { background-position: 200% 0%; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function startGradientAnimation() {
+            if (!progressElement) return;
+            if (gradientAnimationActive) return;
+            if (originalSetWidth <= 0) return;
+            const duration = originalSetWidth / SPEED;
+            if (isNaN(duration) || duration <= 0) return;
+            ensureKeyframes();
+            progressElement.style.animation = `progressMove ${duration}s linear infinite`;
+            gradientAnimationActive = true;
+        }
+
+        function stopGradientAnimation() {
+            if (!progressElement) return;
+            progressElement.style.animation = 'none';
+            progressElement.style.backgroundPosition = '0% 0%';
+            gradientAnimationActive = false;
+        }
+
+        // ========== Геометрия ==========
         function updateDimensions() {
-            if (slides[0]) {
-                slideWidth = slides[0].offsetWidth;
+            const firstSlide = slides[0];
+            if (firstSlide) {
+                slideWidth = firstSlide.offsetWidth;
                 if (slideWidth === 0) slideWidth = 200;
-                fullTrackWidth = slides.length * (slideWidth + slideGap);
             }
             const wrapper = track.closest('.carousel-viewport');
             containerWidth = wrapper ? wrapper.clientWidth : track.parentElement.clientWidth;
@@ -54,95 +114,11 @@
         }
 
         function setPosition(pos) {
-            // Бесконечная прокрутка: удерживаем позицию в пределах от -originalSetWidth до 0
-            // Но для удобства вычислений разрешаем любую и будем нормализовывать
             scrollPos = pos;
             track.style.transform = `translateX(${scrollPos}px)`;
         }
 
-        // Нормализация позиции для полосы прогресса и перескока
-        function normalizePosition(pos) {
-            let normalized = pos;
-            while (normalized > 0) normalized -= originalSetWidth;
-            while (normalized < -originalSetWidth) normalized += originalSetWidth;
-            return normalized;
-        }
-
-        // Обновление прогресс-бара (бегунок от 0 до 1, где 0 = крайний правый край ленты, 1 = левый край одного цикла)
-        function updateProgressBar() {
-            const progressContainer = document.querySelector('.carousel-progress-container');
-            const progressMarker = document.querySelector('.carousel-progress-marker');
-            if (!progressContainer || !progressMarker) return;
-            // Вычисляем относительное смещение в пределах одного цикла (от -originalSetWidth до 0)
-            let normalized = normalizePosition(scrollPos);
-            // normalized от -originalSetWidth (лево) до 0 (право)
-            let progress = -normalized / originalSetWidth; // от 0 до 1
-            const containerRect = progressContainer.getBoundingClientRect();
-            const markerWidth = progressMarker.offsetWidth;
-            const maxLeft = containerRect.width - markerWidth;
-            const leftPos = progress * maxLeft;
-            progressMarker.style.left = `${leftPos}px`;
-        }
-
-        // Создание прогресс-бара, если его нет
-        function ensureProgressBar() {
-            let container = document.querySelector('.carousel-progress-container');
-            if (!container) {
-                const wrapper = track.closest('.carousel-wrapper');
-                if (!wrapper) return;
-                const progressDiv = document.createElement('div');
-                progressDiv.className = 'carousel-progress-container';
-                progressDiv.style.cssText = `
-                    position: relative;
-                    width: 100%;
-                    height: 6px;
-                    background: #e2e8f0;
-                    border-radius: 6px;
-                    margin: 20px auto 10px;
-                    cursor: pointer;
-                `;
-                const marker = document.createElement('div');
-                marker.className = 'carousel-progress-marker';
-                marker.style.cssText = `
-                    position: absolute;
-                    width: 20px;
-                    height: 20px;
-                    background: var(--primary, #2D6A9F);
-                    border-radius: 50%;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    left: 0;
-                    cursor: pointer;
-                    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-                    transition: left 0.05s linear;
-                `;
-                progressDiv.appendChild(marker);
-                // Вставляем после карусели
-                wrapper.insertAdjacentElement('afterend', progressDiv);
-                // Клик по полосе – перемотка
-                progressDiv.addEventListener('click', (e) => {
-                    const rect = progressDiv.getBoundingClientRect();
-                    const clickX = e.clientX - rect.left;
-                    const percent = clickX / rect.width;
-                    let targetNormalized = -percent * originalSetWidth;
-                    let newPos = normalizePosition(scrollPos);
-                    // Сдвигаем newPos до targetNormalized, но с учётом текущего цикла
-                    let delta = targetNormalized - newPos;
-                    scrollPos += delta;
-                    setPosition(scrollPos);
-                    updateProgressBar();
-                    if (!isHovering && !isDragging) {
-                        // перезапускаем анимацию, чтобы продолжить
-                        stopAnimation();
-                        startAnimation();
-                    }
-                });
-                container = progressDiv;
-            }
-            return container;
-        }
-
-        // Анимация
+        // ========== Анимация карусели ==========
         function animate(now) {
             if (!animationId) return;
             if (lastTimestamp === 0) {
@@ -155,14 +131,15 @@
 
             if (!isHovering && !isDragging) {
                 let step = (SPEED * delta) / 1000;
-                let newPos = scrollPos - step; // двигаем влево
-                // Бесконечное зацикливание: если ушли левее -originalSetWidth, перепрыгиваем
-                const minPos = -originalSetWidth;
-                if (newPos < minPos) {
+                let newPos = scrollPos - step;
+
+                // Бесконечное зацикливание: удерживаем позицию в пределах двух копий
+                if (newPos < -originalSetWidth * 2) {
                     newPos += originalSetWidth;
+                } else if (newPos > 0) {
+                    newPos -= originalSetWidth;
                 }
                 setPosition(newPos);
-                updateProgressBar();
             }
             requestAnimationFrame(animate);
         }
@@ -171,6 +148,9 @@
             if (animationId) return;
             lastTimestamp = 0;
             animationId = requestAnimationFrame(animate);
+            if (!isHovering && !isDragging && progressElement) {
+                startGradientAnimation();
+            }
         }
 
         function stopAnimation() {
@@ -178,9 +158,10 @@
                 cancelAnimationFrame(animationId);
                 animationId = null;
             }
+            stopGradientAnimation();
         }
 
-        // Drag & drop
+        // ========== Drag & drop ==========
         function onMouseDown(e) {
             if (e.button !== 0) return;
             isDragging = true;
@@ -196,10 +177,11 @@
             if (!isDragging) return;
             const dx = e.clientX - dragStartX;
             let newPos = dragStartPos + dx;
-            // Бесконечная прокрутка: не ограничиваем, но для синхронизации прогресса потом нормализуем
-            scrollPos = newPos;
-            setPosition(scrollPos);
-            updateProgressBar();
+            const minPos = -originalSetWidth * 2;
+            const maxPos = 0;
+            if (newPos > maxPos) newPos = maxPos;
+            if (newPos < minPos) newPos = minPos;
+            setPosition(newPos);
         }
 
         function onMouseUp() {
@@ -207,15 +189,15 @@
             isDragging = false;
             document.body.style.userSelect = '';
             track.style.transition = 'transform 0.3s ease';
-            // Нормализуем позицию, чтобы не было огромных чисел
-            let norm = normalizePosition(scrollPos);
-            scrollPos = norm;
-            setPosition(scrollPos);
-            updateProgressBar();
+            // Нормализуем позицию
+            let norm = scrollPos;
+            if (norm < -originalSetWidth * 2) norm += originalSetWidth;
+            if (norm > 0) norm -= originalSetWidth;
+            setPosition(norm);
             if (!isHovering) startAnimation();
         }
 
-        // Наведение мыши
+        // ========== Наведение мыши ==========
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => {
@@ -228,14 +210,11 @@
             });
         }
 
-        // Инициализация
+        // ========== Инициализация ==========
         function init() {
             updateDimensions();
-            // Стартовая позиция: второй набор оригиналов (сдвиг на -originalSetWidth)
-            scrollPos = -originalSetWidth;
-            setPosition(scrollPos);
-            ensureProgressBar();
-            updateProgressBar();
+            setPosition(-originalSetWidth);
+            progressElement = createGradientProgressBar();
             startAnimation();
 
             track.addEventListener('mousedown', onMouseDown);
@@ -244,14 +223,20 @@
 
             window.addEventListener('resize', () => {
                 updateDimensions();
-                // Нормализуем позицию после смены размеров
-                let norm = normalizePosition(scrollPos);
-                scrollPos = norm;
-                setPosition(scrollPos);
-                updateProgressBar();
+                let norm = scrollPos;
+                if (norm < -originalSetWidth * 2) norm += originalSetWidth;
+                if (norm > 0) norm -= originalSetWidth;
+                setPosition(norm);
                 if (!isHovering && !isDragging) {
                     stopAnimation();
                     startAnimation();
+                }
+                if (progressElement && originalSetWidth > 0) {
+                    const duration = originalSetWidth / SPEED;
+                    progressElement.style.animation = `progressMove ${duration}s linear infinite`;
+                    if (gradientAnimationActive) {
+                        progressElement.style.animation = `progressMove ${duration}s linear infinite`;
+                    }
                 }
             });
         }
