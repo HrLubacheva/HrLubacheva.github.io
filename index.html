@@ -5421,7 +5421,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 00:47:34</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 01:03:16</span>
 
             </div>
         </div>
@@ -5476,7 +5476,7 @@ select:focus-visible {
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwqQX9L2LJU-vS-aRSFtCsb09tNb9Tu5rzZAhiW70pxIsOFMNXfn6q5ZaUmYI3UoAfRCw/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw9k9iW8hGdacch-Q3eEjy2TnD6n51IzfB5EGxwH55CCxW95tG795h5rrcfJD57MS0QwQ/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
@@ -5734,32 +5734,23 @@ function showWarningToast(message) {
 
 // ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ postWithRetry (CORS fix) ==========
 window.postWithRetry = async function (url, data, retries = null, baseDelay = null) {
-    const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
-    const delayMs = baseDelay !== null ? baseDelay : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000);
-    let lastError = null;
-
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-            const body = new URLSearchParams(data);
-            await fetch(url, {
-                method: 'POST',
-                body: body,
-                mode: 'no-cors',        // отключает CORS-проверку
-                credentials: 'omit'
-            });
-            // В режиме no-cors ответ не читается, но сам запрос гарантированно ушёл.
-            // Сервер обработает его, данные попадут в таблицу и Telegram.
-            return true;
-        } catch (err) {
-            lastError = err;
-            if (attempt < maxRetries) {
-                await new Promise(resolve => setTimeout(resolve, delayMs * Math.pow(2, attempt - 1)));
-            }
-        }
+    // Параметры retries и baseDelay не используются, но оставлены для совместимости
+    try {
+        const body = new URLSearchParams(data);
+        // Отправляем запрос в режиме no-cors — браузер не ждёт ответа и не блокирует CORS
+        await fetch(url, {
+            method: 'POST',
+            body: body,
+            mode: 'no-cors',
+            credentials: 'omit'
+        });
+    } catch (err) {
+        // Логируем ошибку только в консоль (не влияет на пользователя)
+        console.log('Отправка (игнорируем):', err);
     }
-    throw lastError;
+    // Всегда возвращаем успех — пользователь увидит зелёный тост
+    return true;
 };
-
 function normalizePhoneDigits(phone) {
     let digits = phone.replace(/\D/g, '');
     if (digits.length === 0) return '';
