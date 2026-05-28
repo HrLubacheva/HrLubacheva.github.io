@@ -4438,320 +4438,52 @@ select:focus-visible {
         </div>
     </div>
 </section>
-<section id="calculator" class="calculator-section">
-    <div class="container">
-        <div class="calculator-card">
-            <h2 class="section-title"><span class="emoji">💰</span> Калькулятор стоимости услуг</h2>
-
-            <div class="calculator-tabs">
-                <button class="btn tab-btn" data-tab="recruitment">🎯 Подбор персонала</button>
-                <button class="btn tab-btn" data-tab="retention">💎 Удержание и развитие</button>
-                <button class="btn tab-btn" data-tab="business-training">🎓 Бизнес-тренинги</button>
-                <button class="btn tab-btn" data-tab="corporate">🙋‍♀️ HR «под ключ»</button>
+<div class="calendar-card">
+    <h3 class="text-center">📞 Быстрый заказ</h3>
+    <p class="text-center text-muted-light">Оставьте телефон, и я перезвоню, чтобы обсудить выбранные услуги.</p>
+    <form id="quickOrderForm" class="callback-form" novalidate>
+        <fieldset>
+            <legend class="visually-hidden">Быстрый заказ</legend>
+            <div class="form-row-two">
+                <input type="text" id="quickName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
+                <input type="tel" id="quickPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
             </div>
 
-            <div class="calculator-tabs">
-                <button class="btn tab-btn active" data-tab="start">🎯 Ищу работу</button>
-                <button class="btn tab-btn" data-tab="growth">📈 Карьерный рост</button>
-                <button class="btn tab-btn" data-tab="executive">👑 Премиум</button>
-                <button class="btn tab-btn" data-tab="training">🎓 Тренинги</button>
-                <button class="btn tab-btn" data-tab="courses">📚 Авторские курсы</button>
-            </div>
+            <!-- ЯВНЫЕ СКРЫТЫЕ ПОЛЯ ДЛЯ КВИЗА (те же, что и в обратной связи) -->
+            <input type="hidden" name="quiz_q1_role" id="quiz_q1_role_quick">
+            <input type="hidden" name="quiz_q2_level" id="quiz_q2_level_quick">
+            <input type="hidden" name="quiz_q3_urgency" id="quiz_q3_urgency_quick">
+            <input type="hidden" name="quiz_q4_importance" id="quiz_q4_importance_quick">
+            <input type="hidden" name="quiz_q5_budget" id="quiz_q5_budget_quick">
+            <input type="hidden" name="quiz_q6_industry" id="quiz_q6_industry_quick">
+            <input type="hidden" name="quiz_q7_work_format" id="quiz_q7_work_format_quick">
+            <input type="hidden" name="quiz_recommendations" id="quiz_recommendations_quick">
+            <input type="hidden" name="quiz_chosen_variant" id="quiz_chosen_variant_quick">
+            <input type="hidden" name="quiz_chosen_price" id="quiz_chosen_price_quick">
 
-            <!-- Подбор персонала -->
-            <div id="tab-recruitment" class="tab-pane">
-                <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name">🎯 Подбор персонала</h3>
-                    <meta itemprop="provider" content="Виктория Любачева">
-                    <div class="add-service">
-                        <select id="recruitment-select" class="service-select"></select>
-                        <input type="number" id="recruitment-qty" min="1" value="1" class="calc-qty">
-                        <button id="recruitment-add" class="btn btn-primary add-service-btn" data-category="recruitment">➕ Добавить</button>
-                    </div>
+            <!-- СТАРЫЕ ПОЛЯ ДЛЯ СОВМЕСТИМОСТИ -->
+            <input type="hidden" name="chosenVariant" id="chosenVariantQuick">
+            <input type="hidden" name="chosenVariantPrice" id="chosenVariantPriceQuick">
+            <input type="hidden" name="originalChosenVariant" id="originalChosenVariantQuick">
+            <input type="hidden" name="originalChosenVariantPrice" id="originalChosenVariantPriceQuick">
+            <input type="hidden" name="recommendedVariants" id="recommendedVariantsQuick">
+            <input type="hidden" name="quizAnswersRaw" id="quizAnswersRawQuick">
+
+            <div class="form-row-messages">
+                <div class="consent-checkbox">
+                    <input type="checkbox" id="quickConsent" name="consent" required>
+                    <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                 </div>
+                <div id="quickFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
             </div>
-
-            <!-- Удержание и развитие -->
-            <div id="tab-retention" class="tab-pane">
-                <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name">💎 Удержание и развитие</h3>
-                    <meta itemprop="provider" content="Виктория Любачева">
-                    <div class="add-service">
-                        <select id="retention-select" class="service-select"></select>
-                        <input type="number" id="retention-qty" min="1" value="1" class="calc-qty">
-                        <button id="retention-add" class="btn btn-primary add-service-btn" data-category="retention">➕ Добавить</button>
-                    </div>
-                </div>
+            <button type="submit" class="btn btn-primary btn-block callback-submit" aria-label="Заказать звонок">📞 Заказать звонок</button>
+            <div class="callback-telegram-alt">
+                ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
             </div>
-
-            <!-- Бизнес-тренинги -->
-            <div id="tab-business-training" class="tab-pane">
-                <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name">🎓 Бизнес-тренинги</h3>
-                    <meta itemprop="provider" content="Виктория Любачева">
-                    <div class="add-service">
-                        <select id="business-training-select" class="service-select"></select>
-                        <input type="number" id="business-training-qty" min="1" value="1" class="calc-qty">
-                        <button id="business-training-add" class="btn btn-primary add-service-btn" data-category="business-training">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- HR под ключ -->
-            <div id="tab-corporate" class="tab-pane">
-                <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name">🙋‍♀️ HR «под ключ»</h3>
-                    <meta itemprop="provider" content="Виктория Любачева">
-                    <div class="add-service">
-                        <select id="corporate-select" class="service-select"></select>
-                        <input type="number" id="corporate-qty" min="1" value="1" class="calc-qty">
-                        <button id="corporate-add" class="btn btn-primary add-service-btn" data-category="corporate">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Ищу работу (B2C базовые) -->
-            <div id="tab-start" class="tab-pane active">
-                <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name">🎯 Ищу работу</h3>
-                    <meta itemprop="provider" content="Виктория Любачева">
-                    <meta itemprop="description" content="Помощь в поиске работы: резюме, подготовка к собеседованию, стратегия трудоустройства, профориентация">
-                    <div class="add-service">
-                        <select id="start-select" class="service-select"></select>
-                        <input type="number" id="start-qty" min="1" value="1" class="calc-qty">
-                        <button id="start-add" class="btn btn-primary add-service-btn" data-category="start">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Карьерный рост -->
-            <div id="tab-growth" class="tab-pane">
-                <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name">📈 Карьерный рост</h3>
-                    <meta itemprop="provider" content="Виктория Любачева">
-                    <div class="add-service">
-                        <select id="growth-select" class="service-select"></select>
-                        <input type="number" id="growth-qty" min="1" value="1" class="calc-qty">
-                        <button id="growth-add" class="btn btn-primary add-service-btn" data-category="growth">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Премиум -->
-            <div id="tab-executive" class="tab-pane">
-                <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name">👑 Премиум</h3>
-                    <meta itemprop="provider" content="Виктория Любачева">
-                    <div class="add-service">
-                        <select id="executive-select" class="service-select"></select>
-                        <input type="number" id="executive-qty" min="1" value="1" class="calc-qty">
-                        <button id="executive-add" class="btn btn-primary add-service-btn" data-category="executive">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Тренинги для соискателей -->
-            <div id="tab-training" class="tab-pane">
-                <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name">🎓 Тренинги</h3>
-                    <meta itemprop="provider" content="Виктория Любачева">
-                    <div class="add-service">
-                        <select id="training-select" class="service-select"></select>
-                        <input type="number" id="training-qty" min="1" value="1" class="calc-qty">
-                        <button id="training-add" class="btn btn-primary add-service-btn" data-category="training">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Авторские курсы -->
-            <div id="tab-courses" class="tab-pane">
-                <div class="service-group" itemscope itemtype="https://schema.org/Service">
-                    <h3 itemprop="name">📚 Авторские курсы</h3>
-                    <meta itemprop="provider" content="Виктория Любачева">
-                    <div class="add-service">
-                        <select id="courses-select" class="service-select"></select>
-                        <input type="number" id="courses-qty" min="1" value="1" class="calc-qty">
-                        <button id="courses-add" class="btn btn-primary add-service-btn" data-category="courses">➕ Добавить</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="total-block compact">
-                <div>💰 Итого: <span id="totalPrice">0 ₽</span></div>
-                <div id="discountInfo" class="discount-info"></div>
-            </div>
-
-            <div class="cart-section">
-                <h3>🛒 Выбранные услуги</h3>
-                <div id="servicesList" class="services-list"></div>
-                <div class="share-cart-container">
-                    <button id="copyCartBtn" class="btn btn-secondary share-btn">📋 Скопировать корзину</button>
-                </div>
-            </div>
-
-            <div class="calendar-card">
-                <h3 class="text-center">📞 Быстрый заказ</h3>
-                <p class="text-center text-muted-light">Оставьте телефон, и я перезвоню, чтобы обсудить выбранные услуги.</p>
-                <form id="quickOrderForm" class="callback-form" novalidate>
-                    <fieldset>
-                        <legend class="visually-hidden">Быстрый заказ</legend>
-                        <div class="form-row-two">
-                            <input type="text" id="quickName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
-                            <input type="tel" id="quickPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
-                        </div>
-                        <div class="form-row-messages">
-                            <div class="consent-checkbox">
-                                <input type="checkbox" id="quickConsent" name="consent" required>
-                                <label for="quickConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
-                            </div>
-                            <div id="quickFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block callback-submit" aria-label="Заказать звонок">📞 Заказать звонок</button>
-                        <div class="callback-telegram-alt">
-                            ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
-                        </div>
-                    </fieldset>
-                </form>
-                <p class="callback-note">После отправки мы свяжемся с вами.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<style>
-    /* Компактная корзина для мобильных устройств */
-    @media (max-width: 640px) {
-        .calc-item {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            margin-bottom: 8px;
-            background: #fff;
-            border-radius: 12px;
-            border-bottom: 1px solid var(--border, #e0e0e0);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .calc-item .service-name {
-            flex: 1 1 100%;
-            font-weight: 600;
-            font-size: 0.85rem;
-            margin-bottom: 6px;
-            color: var(--text-dark);
-        }
-        .calc-item .service-price {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .service-qty-control {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .service-qty-control .qty-btn {
-            width: 28px;
-            height: 28px;
-            font-size: 1rem;
-            background: #f5f5f5;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-        }
-        .service-qty-control .qty-value {
-            font-size: 0.85rem;
-            min-width: 24px;
-            text-align: center;
-        }
-        .remove-item {
-            background: none;
-            border: none;
-            font-size: 1rem;
-            padding: 4px;
-            margin-left: auto;
-            color: #dc3545;
-        }
-        .cart-section .services-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-    }
-    @media (max-width: 480px) {
-        .calc-item {
-            padding: 6px 10px;
-        }
-        .calc-item .service-name {
-            font-size: 0.8rem;
-        }
-        .calc-item .service-price {
-            font-size: 0.8rem;
-        }
-        .service-qty-control .qty-btn {
-            width: 26px;
-            height: 26px;
-            font-size: 0.9rem;
-        }
-    }
-    /* ========== КАСТОМНЫЕ ВЫПАДАЮЩИЕ СПИСКИ ========== */
-.service-select {
-    appearance: none;
-    -webkit-appearance: none;
-    background-color: #fff;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232D6A9F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 18px;
-    padding: 14px 40px 14px 18px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    border-radius: 60px;
-    border: 1px solid var(--border, #e0e0e0);
-    transition: all 0.2s ease;
-    cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-}
-
-.service-select:hover {
-    border-color: var(--primary-light, #4A8BC2);
-}
-
-.service-select:focus {
-    outline: none;
-    border-color: var(--primary, #2D6A9F);
-    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
-}
-
-/* Стили для опций (базовые, но поддерживаются не всеми браузерами) */
-.service-select option {
-    padding: 12px;
-    font-size: 0.9rem;
-    background-color: #fff;
-    color: var(--text-dark);
-}
-
-/* Группы внутри select */
-.service-select optgroup {
-    font-weight: 700;
-    color: var(--primary-dark, #1F4A6E);
-    background-color: #f8f9fa;
-    padding: 8px 0 4px 0;
-}
-
-.service-select optgroup option {
-    padding-left: 24px;
-    font-weight: normal;
-}
-
-/* Адаптив для мобильных: ещё крупнее */
-@media (max-width: 640px) {
-    .service-select {
-        padding: 16px 40px 16px 18px;
-        font-size: 1rem;
-        background-position: right 14px center;
-    }
-}
-
-</style>
+        </fieldset>
+    </form>
+    <p class="callback-note">После отправки мы свяжемся с вами.</p>
+</div>
 <section id="quiz">
     <div class="container">
         <div class="quiz-card fade-up">
@@ -4846,9 +4578,9 @@ select:focus-visible {
                     <legend class="visually-hidden">Запись на диагностику</legend>
 
                     <div class="form-row-three">
-                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field" aria-label="Ваше имя">
-                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field" aria-label="Номер телефона">
-                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email" class="form-field" aria-label="Адрес электронной почты">
+                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
+                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
+                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email" class="form-field">
                     </div>
 
                     <div id="quizSelectionBlock" class="callback-quiz-selection" style="display: none;">
@@ -4859,6 +4591,19 @@ select:focus-visible {
                         </div>
                     </div>
 
+                    <!-- ЯВНЫЕ СКРЫТЫЕ ПОЛЯ ДЛЯ КВИЗА -->
+                    <input type="hidden" name="quiz_q1_role" id="quiz_q1_role">
+                    <input type="hidden" name="quiz_q2_level" id="quiz_q2_level">
+                    <input type="hidden" name="quiz_q3_urgency" id="quiz_q3_urgency">
+                    <input type="hidden" name="quiz_q4_importance" id="quiz_q4_importance">
+                    <input type="hidden" name="quiz_q5_budget" id="quiz_q5_budget">
+                    <input type="hidden" name="quiz_q6_industry" id="quiz_q6_industry">
+                    <input type="hidden" name="quiz_q7_work_format" id="quiz_q7_work_format">
+                    <input type="hidden" name="quiz_recommendations" id="quiz_recommendations">
+                    <input type="hidden" name="quiz_chosen_variant" id="quiz_chosen_variant">
+                    <input type="hidden" name="quiz_chosen_price" id="quiz_chosen_price">
+
+                    <!-- СТАРЫЕ ПОЛЯ (для совместимости) -->
                     <input type="hidden" name="chosenVariant" id="chosenVariant">
                     <input type="hidden" name="chosenVariantPrice" id="chosenVariantPrice">
                     <input type="hidden" name="originalChosenVariant" id="originalChosenVariant">
@@ -4866,7 +4611,7 @@ select:focus-visible {
                     <input type="hidden" name="recommendedVariants" id="recommendedVariants">
                     <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
 
-                    <textarea id="callbackComment" name="comment" rows="2" placeholder="💬 Удобное время или дополнительная информация" class="form-field form-textarea" aria-label="Комментарий"></textarea>
+                    <textarea id="callbackComment" name="comment" rows="2" placeholder="💬 Удобное время или дополнительная информация" class="form-field form-textarea"></textarea>
 
                     <div class="form-row-messages">
                         <div class="consent-checkbox">
@@ -4876,7 +4621,7 @@ select:focus-visible {
                         <div id="callbackFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block callback-submit" aria-label="Записаться на диагностику">📞 Записаться →</button>
+                    <button type="submit" class="btn btn-primary btn-block callback-submit">📞 Записаться →</button>
 
                     <div class="callback-telegram-alt">
                         ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
@@ -5595,7 +5340,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 28.05.2026 22:57:46</span>
+                </a> <span class="footer-version">⚡ Версия 28.05.2026 23:13:26</span>
 
             </div>
         </div>
@@ -5650,7 +5395,7 @@ select:focus-visible {
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxb864ZL0gryPqElFfNkn5PXH58pIcuYNmlJd-WbwbB43uelQ0eRW_M0QA_LkQqQlnJdQ/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyDpmTyOc8N0h9OgINuY3S828MAA5UA9EYmY1_MZz6fubmdiHdvmAngI61szrVMT7UhJA/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
@@ -8150,7 +7895,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
 })();
 // ============================================================
 // 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов)
-// Защита от двойной отправки через isSubmittingChoice (без временной блокировки)
+// + явное заполнение скрытых полей форм
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -8189,18 +7934,44 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         }
     }
 
-    function updateFormHiddenFields(chosenText, chosenPrice, originalText, originalPrice, recommendedStr, answersStr) {
+    function updateFormHiddenFields(chosenText, chosenPrice, originalText, originalPrice, recommendedStr, answersArr) {
         const forms = ['callbackForm', 'quickOrderForm'];
         forms.forEach(formId => {
             const form = document.getElementById(formId);
             if (!form) return;
-            const fields = { chosenVariant: chosenText, chosenVariantPrice: chosenPrice, originalChosenVariant: originalText, originalChosenVariantPrice: originalPrice, recommendedVariants: recommendedStr, quizAnswersRaw: answersStr };
-            for (const [name, value] of Object.entries(fields)) {
-                let input = form.querySelector(`[name="${name}"]`);
-                if (!input) { input = document.createElement('input'); input.type = 'hidden'; input.name = name; input.id = name; form.appendChild(input); }
-                input.value = value;
+
+            // --- ОБЩИЕ ПОЛЯ ---
+            setField(form, 'chosenVariant', chosenText);
+            setField(form, 'chosenVariantPrice', chosenPrice);
+            setField(form, 'originalChosenVariant', originalText);
+            setField(form, 'originalChosenVariantPrice', originalPrice);
+            setField(form, 'recommendedVariants', recommendedStr);
+            setField(form, 'quizAnswersRaw', answersArr.join('\n'));
+
+            // --- ПОЛЯ ПО КАЖДОМУ ВОПРОСУ ---
+            const qLabels = ['role', 'level', 'urgency', 'importance', 'budget', 'industry', 'work_format'];
+            for (let i = 0; i < qLabels.length; i++) {
+                const fieldName = `quiz_q${i+1}_${qLabels[i]}`;
+                setField(form, fieldName, answersArr[i] || '');
             }
+
+            // --- РЕКОМЕНДАЦИИ И ВЫБРАННЫЙ ВАРИАНТ (дублирующие поля) ---
+            setField(form, 'quiz_recommendations', recommendedStr);
+            setField(form, 'quiz_chosen_variant', chosenText);
+            setField(form, 'quiz_chosen_price', chosenPrice);
         });
+    }
+
+    function setField(form, name, value) {
+        let input = form.querySelector(`[name="${name}"]`);
+        if (!input) {
+            input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.id = name;
+            form.appendChild(input);
+        }
+        input.value = value;
     }
 
     function updateSelectionBlock(variantText, variantPrice) {
@@ -8261,7 +8032,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             WORK_FORMAT_FOR_JOBSEEKER
         ];
         selectedVariantText = ''; selectedVariantPrice = ''; selectedOriginalText = ''; selectedOriginalPrice = '';
-        updateFormHiddenFields('', '', '', '', '', '');
+        updateFormHiddenFields('', '', '', '', '', answers);
         updateSelectionBlock('', '');
         renderQuiz();
     }
@@ -8549,11 +8320,12 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                 selectedVariantPrice = variantPrice;
                 selectedOriginalText = variantText;
                 selectedOriginalPrice = variantPrice;
-                const answersStr = answers.map((a, idx) => {
+                const answersArr = answers.slice(); // копия массива
+                const answersStr = answersArr.map((a, idx) => {
                     const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет', 'Сфера', 'Формат работы'][idx];
                     return `${qText}: ${a || 'не выбран'}`;
                 }).join('\n');
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersArr);
                 updateSelectionBlock(selectedVariantText, selectedVariantPrice);
                 sendQuizStats(answersStr, recommendations, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
                 window.showSuccessToast('✅ Выбор сохранён!');
@@ -8573,11 +8345,12 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                 selectedVariantPrice = '';
                 selectedOriginalText = 'Помогите выбрать (бесплатная консультация)';
                 selectedOriginalPrice = '';
-                const answersStr = answers.map((a, idx) => {
+                const answersArr = answers.slice();
+                const answersStr = answersArr.map((a, idx) => {
                     const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет', 'Сфера', 'Формат работы'][idx];
                     return `${qText}: ${a || 'не выбран'}`;
                 }).join('\n');
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersStr);
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersArr);
                 updateSelectionBlock(selectedOriginalText, selectedOriginalPrice);
                 sendQuizStats(answersStr, recommendations, '', '', selectedOriginalText, selectedOriginalPrice);
                 window.showSuccessToast('🙏 Спасибо! Я свяжусь с вами.');
@@ -8658,7 +8431,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                 <div class="quiz-final-screen">
                     <div class="quiz-final-icon">✨</div>
                     <div class="quiz-final-title">Спасибо за прохождение квиза!</div>
-                    <div class="quiz-final-text">📋 Заполните форму ниже, и я свяжусь с вами, чтобы обсудить детали.</div>
+                    <div class="quiz-final-text">📋 Выбранная услуга сохранена. Заполните форму ниже, и я свяжусь с вами, чтобы обсудить детали.</div>
                     <div class="quiz-final-buttons">
                         <button class="quiz-final-btn-primary go-to-callback">📝 Перейти к форме заявки</button>
                         <button class="quiz-final-btn-secondary go-to-calculator">🔍 Посмотреть все услуги</button>
@@ -8682,7 +8455,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         const removeBtn = document.getElementById('removeQuizSelection');
         if (removeBtn) {
             removeBtn.removeEventListener('click', removeBtn._removeHandler);
-            removeBtn._removeHandler = function () { selectedVariantText = ''; selectedVariantPrice = ''; updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', ''); updateSelectionBlock('', ''); window.showSuccessToast('🗑️ Выбранный вариант удалён'); };
+            removeBtn._removeHandler = function () { selectedVariantText = ''; selectedVariantPrice = ''; updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', answers); updateSelectionBlock('', ''); window.showSuccessToast('🗑️ Выбранный вариант удалён'); };
             removeBtn.addEventListener('click', removeBtn._removeHandler);
         }
         const copyResultBtn = document.getElementById('copyQuizResultBtn');
