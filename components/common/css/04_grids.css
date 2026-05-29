@@ -442,3 +442,63 @@
         box-sizing: border-box;
     }
 }
+
+/* ========== ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ ДЛЯ СЕКЦИИ УСЛУГ ========== */
+@media (max-width: 768px) {
+    #services .grid-2 {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    #services .card-service {
+        padding: 20px 16px;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+    }
+    #services .card-service ul {
+        padding-left: 0;
+    }
+}
+
+/* ========== ДОПОЛНИТЕЛЬНАЯ АДАПТАЦИЯ ДЛЯ СЕКЦИИ УСЛУГ ========== */
+@media (max-width: 768px) {
+    #services .card-service {
+        width: 100%;
+        min-width: auto;
+        padding: 20px 16px;
+        box-sizing: border-box;
+        margin: 0;
+    }
+    #services .service-list {
+        padding-left: 0;
+        margin: 0;
+    }
+    #services .service-list li {
+        word-break: break-word;
+        white-space: normal;
+    }
+}
+
+@media (max-width: 480px) {
+    #services .card-service {
+        padding: 16px 12px;
+    }
+    #services .card-service h3 {
+        font-size: 1.1rem;
+    }
+    #services .service-list li {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 360px) {
+    #services .card-service {
+        padding: 12px 10px;
+    }
+    #services .card-service h3 {
+        font-size: 1rem;
+    }
+    #services .service-list li {
+        font-size: 0.75rem;
+    }
+}

@@ -1194,6 +1194,66 @@ body {
         box-sizing: border-box;
     }
 }
+
+/* ========== ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ ДЛЯ СЕКЦИИ УСЛУГ ========== */
+@media (max-width: 768px) {
+    #services .grid-2 {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    #services .card-service {
+        padding: 20px 16px;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0;
+    }
+    #services .card-service ul {
+        padding-left: 0;
+    }
+}
+
+/* ========== ДОПОЛНИТЕЛЬНАЯ АДАПТАЦИЯ ДЛЯ СЕКЦИИ УСЛУГ ========== */
+@media (max-width: 768px) {
+    #services .card-service {
+        width: 100%;
+        min-width: auto;
+        padding: 20px 16px;
+        box-sizing: border-box;
+        margin: 0;
+    }
+    #services .service-list {
+        padding-left: 0;
+        margin: 0;
+    }
+    #services .service-list li {
+        word-break: break-word;
+        white-space: normal;
+    }
+}
+
+@media (max-width: 480px) {
+    #services .card-service {
+        padding: 16px 12px;
+    }
+    #services .card-service h3 {
+        font-size: 1.1rem;
+    }
+    #services .service-list li {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 360px) {
+    #services .card-service {
+        padding: 12px 10px;
+    }
+    #services .card-service h3 {
+        font-size: 1rem;
+    }
+    #services .service-list li {
+        font-size: 0.75rem;
+    }
+}
 /* ==================================================================
    05_navbar.css – навигационная панель
    ================================================================== */
@@ -3995,6 +4055,10 @@ section[id] {
         margin: 0 4px;
     }
 }
+
+.certificates-section {
+    padding-bottom: 40px;
+}
 /* ==================================================================
    13_accents.css – усиление контраста (без новых цветов)
    ================================================================== */
@@ -6087,7 +6151,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 21:52:36</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 21:56:41</span>
 
             </div>
         </div>
@@ -7435,7 +7499,7 @@ window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
 // ============================================================
 // 04_certificates.js – Бесконечная карусель с прогресс-баром
-// Плавная анимация, поддержка тач-устройств, адаптивность
+// Плавная автопрокрутка, поддержка тач-устройств, без лагов
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -7445,9 +7509,9 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         let originalSlides = Array.from(track.children);
         if (originalSlides.length === 0) return;
 
-        // Настройки
+        // ----- НАСТРОЙКИ -----
         const SLIDE_GAP = 24;           // px между слайдами
-        const SPEED = 120;              // px/сек (скорость автопрокрутки)
+        const SPEED = 100;              // px/сек (средняя скорость, комфортная)
         let slideWidth = 0;
         let originalSetWidth = 0;       // ширина одного набора оригиналов (с отступами)
         let scrollPos = 0;
@@ -7458,7 +7522,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         let dragStartPos = 0;
         let lastTimestamp = 0;
 
-        // Создаём утроенную ленту (3 копии)
+        // ----- УТРОЕНИЕ ЛЕНТЫ (3 копии для бесконечности) -----
         function buildTripleTrack() {
             const triple = [];
             for (let i = 0; i < 3; i++) {
@@ -7473,7 +7537,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
         let slides = buildTripleTrack();
 
-        // Обновляем размеры (при загрузке и при изменении окна)
+        // ----- ПЕРЕСЧЁТ РАЗМЕРОВ (при загрузке и resize) -----
         function updateDimensions() {
             if (slides[0]) {
                 slideWidth = slides[0].offsetWidth;
@@ -7482,13 +7546,13 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             originalSetWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
         }
 
-        // Установка позиции (без перескоков)
+        // ----- УСТАНОВКА ПОЗИЦИИ -----
         function setPosition(pos) {
             scrollPos = pos;
             track.style.transform = `translateX(${scrollPos}px)`;
         }
 
-        // Нормализация позиции для бесконечности (в пределах от -originalSetWidth до 0)
+        // ----- НОРМАЛИЗАЦИЯ ДЛЯ БЕСКОНЕЧНОСТИ -----
         function normalizePosition(pos) {
             let normalized = pos;
             while (normalized > 0) normalized -= originalSetWidth;
@@ -7496,7 +7560,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             return normalized;
         }
 
-        // Обновление прогресс-бара (бегунок)
+        // ----- ПРОГРЕСС-БАР (БЕГУНОК) -----
         function updateProgressBar() {
             const progressContainer = document.querySelector('.carousel-progress-container');
             const progressMarker = document.querySelector('.carousel-progress-marker');
@@ -7510,7 +7574,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             progressMarker.style.left = `${leftPos}px`;
         }
 
-        // Создание прогресс-бара, если его нет в DOM
+        // ----- СОЗДАНИЕ ПРОГРЕСС-БАРА, ЕСЛИ ЕГО НЕТ В DOM -----
         function ensureProgressBar() {
             let container = document.querySelector('.carousel-progress-container');
             if (!container) {
@@ -7565,7 +7629,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             return container;
         }
 
-        // Анимация (движение влево)
+        // ----- АНИМАЦИЯ (движение влево) -----
         function animate(now) {
             if (!animationId) return;
             if (lastTimestamp === 0) {
@@ -7581,6 +7645,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
                 let newPos = scrollPos - step;
                 // Бесконечное зацикливание
                 if (newPos < -originalSetWidth) newPos += originalSetWidth;
+                if (newPos > 0) newPos -= originalSetWidth;   // на всякий случай
                 setPosition(newPos);
                 updateProgressBar();
             }
@@ -7600,7 +7665,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             }
         }
 
-        // ----- Drag & Drop для мыши и тач-устройств -----
+        // ----- DRAG & DROP (мышь и тач) -----
         function getClientX(e) {
             if (e.touches) return e.touches[0].clientX;
             return e.clientX;
@@ -7620,7 +7685,6 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (!isDragging) return;
             const dx = clientX - dragStartX;
             let newPos = dragStartPos + dx;
-            // Разрешаем уходить дальше границ, но потом нормализуем
             scrollPos = newPos;
             setPosition(scrollPos);
             updateProgressBar();
@@ -7639,44 +7703,32 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (!isHovering) startAnimation();
         }
 
-        // Обработчики для мыши
+        // ----- МЫШЬ -----
         function onMouseDown(e) {
             if (e.button !== 0) return;
             e.preventDefault();
             onDragStart(getClientX(e));
         }
-
         function onMouseMove(e) {
             if (!isDragging) return;
             e.preventDefault();
             onDragMove(getClientX(e));
         }
+        function onMouseUp() { onDragEnd(); }
 
-        function onMouseUp() {
-            onDragEnd();
-        }
-
-        // Обработчики для тач-устройств
+        // ----- ТАЧ-УСТРОЙСТВА -----
         function onTouchStart(e) {
             e.preventDefault();
-            if (e.touches.length === 1) {
-                onDragStart(getClientX(e));
-            }
+            if (e.touches.length === 1) onDragStart(getClientX(e));
         }
-
         function onTouchMove(e) {
             if (!isDragging) return;
             e.preventDefault();
-            if (e.touches.length === 1) {
-                onDragMove(getClientX(e));
-            }
+            if (e.touches.length === 1) onDragMove(getClientX(e));
         }
+        function onTouchEnd(e) { onDragEnd(); }
 
-        function onTouchEnd(e) {
-            onDragEnd();
-        }
-
-        // Пауза при наведении мыши
+        // ----- ПАУЗА ПРИ НАВЕДЕНИИ МЫШИ -----
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => {
@@ -7689,7 +7741,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             });
         }
 
-        // Инициализация
+        // ----- ИНИЦИАЛИЗАЦИЯ -----
         function init() {
             updateDimensions();
             // Начальная позиция: второй набор оригиналов (сдвиг влево на originalSetWidth)
@@ -7699,17 +7751,16 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             updateProgressBar();
             startAnimation();
 
-            // События для мыши
+            // События
             track.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
 
-            // События для тач-устройств
             track.addEventListener('touchstart', onTouchStart, { passive: false });
             window.addEventListener('touchmove', onTouchMove, { passive: false });
             window.addEventListener('touchend', onTouchEnd);
 
-            // Адаптив при изменении размера окна
+            // Адаптив при изменении размера окна (debounce)
             let resizeTimeout;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
@@ -7747,7 +7798,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         initInfiniteCarousel('carouselTrack');
     }
 
-    // Экспортируем функцию на случай, если нужно переинициализировать вручную
+    // Экспортируем функцию для возможной переинициализации
     window.initInfiniteCarousel = initInfiniteCarousel;
 })();
 // ============================================================
