@@ -2692,13 +2692,53 @@ body {
     height: 6px;
     background: linear-gradient(90deg, var(--primary), var(--primary-light));
 }
+
+/* ========== БЕСПЛАТНЫЕ МАТЕРИАЛЫ: 3 СТОЛБЦА С АДАПТИВОМ ========== */
 .freebies-grid {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    justify-items: center;
+    align-items: start;
+    margin: 0 auto 24px;
+    padding: 0;
 }
+
+/* Планшеты (768–991px) – 2 столбца */
+@media (max-width: 991px) {
+    .freebies-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+    .freebies-grid .freebie-item:last-child {
+        grid-column: span 2;
+        max-width: 360px;
+        margin: 0 auto;
+    }
+}
+
+/* Телефоны (≤767px) – 1 столбец */
+@media (max-width: 767px) {
+    .freebies-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .freebies-grid .freebie-item:last-child {
+        grid-column: span 1;
+        max-width: 100%;
+    }
+}
+
+/* Для очень узких экранов (≤480px) – чуть меньше отступов */
+@media (max-width: 480px) {
+    .freebies-grid {
+        gap: 20px;
+    }
+    .freebie-item {
+        padding: 0 8px;
+    }
+}
+
 .freebie-item {
     text-align: center;
     min-width: 150px;
@@ -2756,9 +2796,244 @@ body {
     padding-top: 20px;
     margin-top: 8px;
 }
-@media (max-width: 640px) {
-    .freebies-grid { gap: 24px; }
-    .freebie-item { min-width: 140px; }
+
+/* ========== КАРТОЧКИ РЕЗУЛЬТАТОВ КВИЗА (компактные и адаптивные) ========== */
+.quiz-results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin: 24px 0 16px;
+}
+
+.quiz-result-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 20px 18px;
+    border: 1px solid #e9ecef;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.quiz-result-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px -12px rgba(45, 106, 159, 0.2);
+    border-color: var(--primary-light, #4A8BC2);
+}
+
+.quiz-result-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.quiz-result-category {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    margin-bottom: 8px;
+}
+
+.quiz-result-title {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--primary-dark, #1F4A6E);
+    margin-bottom: 12px;
+    flex: 1;
+}
+
+.quiz-result-price {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--primary, #2D6A9F);
+    background: #f0f7ff;
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 30px;
+    margin: 8px 0 16px;
+    align-self: flex-start;
+}
+
+.quiz-btn-details {
+    background: linear-gradient(135deg, var(--primary, #2D6A9F), var(--primary-dark, #1F4A6E));
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    text-align: center;
+    margin-top: auto;
+}
+
+.quiz-btn-details:hover {
+    background: linear-gradient(135deg, var(--primary-dark, #1F4A6E), var(--primary, #2D6A9F));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(45, 106, 159, 0.25);
+}
+
+.quiz-btn-help {
+    background: transparent;
+    border: 1.5px solid var(--primary, #2D6A9F);
+    color: var(--primary, #2D6A9F);
+    padding: 9px 16px;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    text-align: center;
+    margin-top: auto;
+}
+
+.quiz-btn-help:hover {
+    background: rgba(45, 106, 159, 0.06);
+    border-color: var(--primary-dark, #1F4A6E);
+    color: var(--primary-dark, #1F4A6E);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 991px) {
+    .quiz-results-grid {
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .quiz-results-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .quiz-result-card {
+        padding: 16px 14px;
+    }
+    .quiz-result-title {
+        font-size: 0.95rem;
+    }
+    .quiz-result-price {
+        font-size: 0.85rem;
+        padding: 3px 10px;
+    }
+    .quiz-btn-details,
+    .quiz-btn-help {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .quiz-result-card {
+        padding: 14px 12px;
+    }
+    .quiz-result-title {
+        font-size: 0.9rem;
+    }
+    .quiz-result-price {
+        font-size: 0.8rem;
+    }
+    .quiz-result-icon {
+        font-size: 28px;
+    }
+}
+
+/* ========== КНОПКИ ОТВЕТОВ КВИЗА – УДОБНО НА МОБИЛЬНЫХ ========== */
+.quiz-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.quiz-option {
+    flex: 1 1 auto;
+    min-width: 130px;
+    max-width: 100%;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: center;
+    border-radius: 60px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+    color: #1e4663;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.3;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .quiz-option {
+        flex: 0 1 auto;
+        min-width: 140px;
+    }
+}
+
+@media (max-width: 767px) {
+    .quiz-options {
+        gap: 10px;
+    }
+    .quiz-option {
+        flex: 1 1 calc(50% - 10px);
+        min-width: 120px;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .quiz-option {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 110px;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .quiz-option {
+        flex: 1 1 100%;
+        min-width: auto;
+        padding: 10px 12px;
+    }
+}
+
+.quiz-option {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0,0,0,0.05);
+}
+
+.quiz-option.selected {
+    background: var(--primary, #2D6A9F);
+    border-color: var(--primary, #2D6A9F);
+    color: white;
+    box-shadow: 0 4px 12px rgba(45,106,159,0.3);
+}
+
+.quiz-nav button {
+    min-width: 120px;
+    padding: 12px 20px;
+    font-size: 1rem;
+}
+
+@media (max-width: 480px) {
+    .quiz-nav button {
+        flex: 1;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
 }
 /* ==================================================================
    10_media_contacts.css – медиа, контакты, футер, общие компоненты
@@ -5806,7 +6081,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 16:43:14</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 17:14:36</span>
 
             </div>
         </div>
@@ -7209,7 +7484,6 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         // ----- УНИВЕРСАЛЬНЫЕ ФУНКЦИИ ПЕРЕТАСКИВАНИЯ ДЛЯ МЫШИ И ТАЧПАДА -----
         function getClientXFromEvent(e) {
             if (e.touches) {
-                // Touch-событие
                 return e.touches[0].clientX;
             }
             return e.clientX;
@@ -7221,7 +7495,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             dragStartPos = scrollPos;
             track.style.transition = 'none';
             document.body.style.userSelect = 'none';
-            document.body.style.overflow = 'hidden'; // блокируем скролл страницы
+            document.body.style.overflow = 'hidden';
             stopAnimation();
         }
 
@@ -7264,9 +7538,9 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             onDragEnd();
         }
 
-        // Обработчики для тач-событий (тачпад / сенсорный экран)
+        // Обработчики для тач-событий
         function onTouchStart(e) {
-            e.preventDefault();   // предотвращаем прокрутку страницы
+            e.preventDefault();
             if (e.touches.length === 1) {
                 onDragStart(getClientXFromEvent(e));
             }
@@ -7274,7 +7548,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
         function onTouchMove(e) {
             if (!isDragging) return;
-            e.preventDefault();   // критически важно: предотвращает скролл во время перетаскивания
+            e.preventDefault();
             if (e.touches.length === 1) {
                 onDragMove(getClientXFromEvent(e));
             }
@@ -7297,7 +7571,6 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             });
         }
 
-        // Инициализация
         function init() {
             updateDimensions();
             scrollPos = -originalSetWidth;
@@ -7306,12 +7579,10 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             updateProgressBar();
             startAnimation();
 
-            // Регистрируем события для мыши
             track.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
 
-            // Регистрируем события для тач-устройств
             track.addEventListener('touchstart', onTouchStart, { passive: false });
             window.addEventListener('touchmove', onTouchMove, { passive: false });
             window.addEventListener('touchend', onTouchEnd);
@@ -7346,6 +7617,9 @@ window.initFormEnterSubmit = initFormEnterSubmit;
     if (document.getElementById('carouselTrack')) {
         initInfiniteCarousel('carouselTrack');
     }
+
+    // 👇 ЭКСПОРТ ФУНКЦИИ ДЛЯ 99_main.js
+    window.initInfiniteCarousel = initInfiniteCarousel;
 })();
 // ============================================================
 // 05_modal.js – Модальные окна (политика конфиденциальности)
@@ -7486,6 +7760,7 @@ function initCopyButtons() {
 window.initCopyButtons = initCopyButtons;
 // ============================================================
 // 09_services-data.js – Полный перечень услуг с ценами и группировкой
+// Исправлены опечатки, добавлена услуга "Повышение грейда"
 // ============================================================
 logInit('Начало загрузки SERVICES_DATA', 'INFO', '', 3);
 const SERVICES_DATA = {
@@ -7495,7 +7770,7 @@ const SERVICES_DATA = {
         {name: "База кандидатов + тестирование", price: 20000},
         {name: "Подбор специалиста", price: 40000},
         {name: "Подбор специалиста + гарантия", price: 60000},
-        {name: "Составить 'Программу стажировки'", price: 70000},
+        {name: "Составить «Программу стажировки»", price: 70000},
         {name: "Классический рекрутинг", price: 70000},
         {name: "Подбор руководителя", price: 90000},
         {name: "Аутсорсинг подбора (абонемент)", price: 100000},
@@ -7521,19 +7796,20 @@ const SERVICES_DATA = {
     "business-training": [
         {name: "Тренинг под запрос (1ч, до 25 чел.)", price: 12000},
         {name: "Стратегическая сессия (1ч, до 12 чел.)", price: 13000},
-        {name: "Тренинг 'Профилактика выгорания'", price: 12000},
-        {name: "Тренинг 'Я хочу здесь работать' мотивация", price: 15000},
-        {name: "Тренинг 'Удержание персонала'", price: 12000}
+        {name: "Тренинг «Профилактика выгорания»", price: 12000},
+        {name: "Тренинг «Я хочу здесь работать» мотивация", price: 15000},
+        {name: "Тренинг «Удержание персонала»", price: 12000},
+        {name: "Мастер-класс (3ч, до 25 чел.)", price: 25000}
     ],
     corporate: [
         {name: "Абонемент на HR-консультации", price: 100000},
         {name: "Корпоративная подписка на рекрутинг", price: 200000},
-        {name: "HR найди людей - цена от", price: 90000},
+        {name: "HR найди людей – цена от", price: 90000},
         {name: "HR на час", price: 8500},
-        {name: "HR реши вопрос - цена от", price: 120000}
+        {name: "HR реши вопрос – цена от", price: 120000}
     ],
     start: [
-        {name: "Экспресс-диагностика (15мин) - Подбор услуги", price: 0},
+        {name: "Экспресс-диагностика (15мин) – Подбор услуги", price: 0},
         {name: "Сопроводительное письмо", price: 3000},
         {name: "Экспресс-консультация (30мин)", price: 3500},
         {name: "Аудит резюме", price: 4000},
@@ -7549,16 +7825,17 @@ const SERVICES_DATA = {
         {name: "Резюме руководителя", price: 9000},
         {name: "Индивидуальный тренинг «Продай себя дорого»", price: 14000},
         {name: "LinkedIn-профиль под ключ", price: 15000},
-        {name: "Резюме(CV) на английском", price: 15000},
+        {name: "Резюме (CV) на английском", price: 15000},
         {name: "Стратегия трудоустройства", price: 15000}
     ],
     growth: [
         {name: "Подготовка к повышению", price: 10000},
         {name: "Коучинг для руководителей", price: 10000},
         {name: "План развития (рост в должности)", price: 12000},
+        {name: "Повышение грейда", price: 12000},          // добавлено
         {name: "Индивидуальный тренинг «Продай себя дорого»", price: 14000},
         {name: "LinkedIn-профиль под ключ", price: 15000},
-        {name: "Резюме(CV) на английском", price: 15000},
+        {name: "Резюме (CV) на английском", price: 15000},
         {name: "Развитие управленческих навыков", price: 15000},
         {name: "Стратегия трудоустройства", price: 15000},
         {name: "Карьерная стратегия (пакет 3 консультации)", price: 18000},
@@ -7579,7 +7856,7 @@ const SERVICES_DATA = {
         {name: "Наставничество для HR", price: 7000}
     ],
     courses: [
-        {name: "Авторский курс 'Рекрутер для недвижимости'", price: 25000},
+        {name: "Авторский курс «Рекрутер для недвижимости»", price: 25000},
         {name: "Обучение с '0' менеджер по продажам", price: 50000}
     ]
 };
@@ -7744,8 +8021,8 @@ function initCalculator() {
 window.initCalculator = initCalculator;
 // ============================================================
 // 11_quiz-weights.js – Веса услуг и соответствие ответов ключам
-// Добавлены ключи: отрасль (industry_it, industry_sales, industry_hr, industry_other)
-// и формат работы (work_format_remote, work_format_office, work_format_hybrid)
+// Добавлены роли: Развиваю сотрудников, Собственник бизнеса
+// Исправлены кавычки для синхронизации с SERVICES_DATA
 // ============================================================
 window.SERVICE_WEIGHTS = {
     // ========== БАЗОВЫЕ УСЛУГИ ДЛЯ СОИСКАТЕЛЕЙ ==========
@@ -7858,7 +8135,7 @@ window.SERVICE_WEIGHTS = {
         work_format_remote:7, work_format_office:8, work_format_hybrid:8
     },
     "План развития (рост в должности)": {
-        role_growth:10,
+        role_growth:10, role_develop_employees:7,
         level_middle:9, level_senior:8,
         urgency_1_2_months:8, urgency_3_6_months:7,
         importance_career:10,
@@ -7872,7 +8149,7 @@ window.SERVICE_WEIGHTS = {
         budget_15000_50000:8
     },
     "Развитие управленческих навыков": {
-        role_growth:10,
+        role_growth:10, role_develop_employees:9,
         level_lead:10, level_director:9,
         urgency_1_2_months:8, urgency_3_6_months:7,
         importance_career:9, importance_team:8,
@@ -7888,7 +8165,7 @@ window.SERVICE_WEIGHTS = {
         work_format_any:5
     },
     "Коучинг для руководителей": {
-        role_growth:9, role_job_seeker:7,
+        role_growth:9, role_develop_employees:8, role_business_owner:7,
         level_lead:10, level_director:9, level_top:8,
         urgency_1_2_months:8,
         importance_career:9, importance_team:8,
@@ -7896,7 +8173,7 @@ window.SERVICE_WEIGHTS = {
         work_format_remote:7, work_format_office:9, work_format_hybrid:8
     },
     "Коучинг для руководителей (пакет 4 сессии)": {
-        role_growth:9,
+        role_growth:9, role_develop_employees:8, role_business_owner:7,
         level_lead:10, level_director:9,
         urgency_1_2_months:7,
         importance_career:9,
@@ -7906,7 +8183,7 @@ window.SERVICE_WEIGHTS = {
 
     // ========== ПРЕМИУМ-УСЛУГИ ==========
     "VIP-коучинг": {
-        role_growth:8, role_job_seeker:7,
+        role_growth:8, role_job_seeker:7, role_business_owner:9,
         level_senior:9, level_lead:9, level_director:8,
         urgency_1_2_months:7,
         importance_career:9, importance_salary:8,
@@ -7914,14 +8191,14 @@ window.SERVICE_WEIGHTS = {
         work_format_remote:7, work_format_office:8, work_format_hybrid:8
     },
     "Стратегия роста": {
-        role_growth:10,
+        role_growth:10, role_develop_employees:8, role_business_owner:9,
         level_senior:8, level_lead:9, level_director:9, level_top:9,
         urgency_3_6_months:8,
         importance_career:10,
         budget_100000_300000:10, budget_50000_100000:8
     },
     "Executive-коучинг/мес": {
-        role_growth:9,
+        role_growth:9, role_develop_employees:8, role_business_owner:10,
         level_director:9, level_top:10,
         urgency_1_2_months:8,
         importance_career:10,
@@ -7929,7 +8206,7 @@ window.SERVICE_WEIGHTS = {
         work_format_remote:7, work_format_office:9, work_format_hybrid:8
     },
     "Executive-сопровождение/мес": {
-        role_growth:8,
+        role_growth:8, role_develop_employees:7, role_business_owner:10,
         level_director:9, level_top:10,
         urgency_3_6_months:8,
         importance_career:9,
@@ -7937,7 +8214,7 @@ window.SERVICE_WEIGHTS = {
         work_format_remote:7, work_format_office:9, work_format_hybrid:8
     },
     "Поиск позиции C-level": {
-        role_job_seeker:10,
+        role_job_seeker:10, role_business_owner:8,
         level_top:10, level_director:9,
         urgency_fast:9,
         importance_salary:9, importance_career:8,
@@ -7945,7 +8222,7 @@ window.SERVICE_WEIGHTS = {
         work_format_any:5
     },
     "Коучинг топ-менеджеров": {
-        role_growth:9,
+        role_growth:9, role_develop_employees:8, role_business_owner:10,
         level_top:10, level_director:9,
         urgency_1_2_months:8,
         importance_career:9,
@@ -7975,8 +8252,8 @@ window.SERVICE_WEIGHTS = {
         budget_15000_50000:9,
         industry_it:9, industry_sales:8, industry_hr:8, industry_other:7
     },
-    "Составить 'Программу стажировки'": {
-        role_business:9,
+    "Составить «Программу стажировки»": {
+        role_business:9, role_develop_employees:8,
         level_junior:9,
         urgency_3_6_months:9,
         budget_50000_100000:9, budget_15000_50000:7,
@@ -7997,7 +8274,7 @@ window.SERVICE_WEIGHTS = {
         industry_it:9, industry_sales:8, industry_hr:8, industry_other:7
     },
     "Подбор руководителя": {
-        role_business:10,
+        role_business:10, role_develop_employees:7,
         level_lead:10, level_director:9,
         urgency_fast:9, urgency_1_2_months:8,
         budget_100000_300000:10, budget_50000_100000:8,
@@ -8038,7 +8315,7 @@ window.SERVICE_WEIGHTS = {
         industry_it:10, industry_sales:5, industry_hr:5, industry_other:5
     },
     "Эксклюзивный хэдхантинг": {
-        role_business:10,
+        role_business:10, role_business_owner:9,
         level_director:10, level_top:10, level_owner:9,
         urgency_fast:10,
         budget_higher:10, budget_300000_500000:10,
@@ -8052,40 +8329,122 @@ window.SERVICE_WEIGHTS = {
         industry_it:9, industry_sales:8, industry_hr:8, industry_other:7
     },
 
+    // ========== УДЕРЖАНИЕ И РАЗВИТИЕ ==========
+    "Оценка компетенций": {
+        role_business:8, role_develop_employees:9,
+        level_lead:8, level_director:7,
+        urgency_1_2_months:8,
+        budget_15000_50000:8,
+        industry_any:5
+    },
+    "Оценка управленческого потенциала": {
+        role_business:9, role_develop_employees:10,
+        level_lead:9, level_director:9, level_top:8,
+        urgency_3_6_months:9,
+        importance_career:8,
+        budget_50000_100000:9,
+        industry_any:5
+    },
+    "Разработка программы удержания": {
+        role_business:9, role_develop_employees:9,
+        level_lead:8, level_director:8,
+        urgency_3_6_months:9,
+        importance_team:9,
+        budget_50000_100000:9,
+        industry_hr:9, industry_other:7
+    },
+    "Разработка проекта адаптации персонала": {
+        role_business:9, role_develop_employees:10,
+        level_lead:7, level_director:8,
+        urgency_3_6_months:9,
+        importance_team:8,
+        budget_100000_300000:9,
+        industry_any:7
+    },
+    "Разработка HR-бренда": {
+        role_business:9, role_develop_employees:8, role_business_owner:8,
+        level_director:8, level_top:7,
+        urgency_3_6_months:8,
+        importance_team:7,
+        budget_100000_300000:9,
+        industry_any:7
+    },
+    "Стратегическая сессия с собственниками": {
+        role_business:9, role_business_owner:10, role_develop_employees:9,
+        level_top:10, level_director:9,
+        urgency_1_2_months:8,
+        importance_career:9,
+        budget_100000_300000:10,
+        industry_any:8
+    },
+    "HR-стратегия + подбор ключевых людей": {
+        role_business:10, role_develop_employees:9, role_business_owner:10,
+        level_director:10, level_top:10,
+        urgency_3_6_months:9,
+        importance_career:10,
+        budget_300000_500000:10,
+        industry_any:9
+    },
+    "Абонемент на HR-консультации": {
+        role_business:9, role_develop_employees:7, role_business_owner:7,
+        urgency_monthly:10,
+        budget_50000_100000:9,
+        industry_any:6
+    },
+    "Корпоративная подписка на рекрутинг": {
+        role_business:10, role_develop_employees:6,
+        urgency_monthly:10,
+        budget_100000_300000:9,
+        industry_any:7
+    },
+
     // ========== ТРЕНИНГИ ==========
     "Групповой тренинг «Продай себя дорого»": {
-        role_job_seeker:7, role_growth:7,
+        role_job_seeker:7, role_growth:7, role_develop_employees:6,
         level_any:5,
         urgency_1_2_months:6,
         importance_salary:6,
         budget_15000_50000:8, budget_5000_15000:7,
         work_format_remote:8, work_format_office:8, work_format_hybrid:9
     },
-    "Тренинг по запросу (1ч, до 25 чел.)": {
-        role_business:9,
+    "Тренинг под запрос (1ч, до 25 чел.)": {
+        role_business:9, role_develop_employees:8,
         urgency_fast:9,
         budget_15000_50000:9, budget_5000_15000:8,
         work_format_remote:8, work_format_office:10, work_format_hybrid:9,
         industry_it:8, industry_sales:9, industry_hr:9, industry_other:8
     },
-    "Тренинг 'Удержание персонала'": {
-        role_business:9,
+    "Тренинг «Удержание персонала»": {
+        role_business:9, role_develop_employees:9,
         urgency_1_2_months:8,
         budget_50000_100000:9, budget_15000_50000:7,
         industry_it:8, industry_sales:8, industry_hr:10, industry_other:8
     },
-    "Тренинг 'Профилактика выгорания'": {
-        role_business:8,
+    "Тренинг «Профилактика выгорания»": {
+        role_business:8, role_develop_employees:8,
         urgency_1_2_months:7,
         importance_balance:9,
         budget_15000_50000:8,
         work_format_remote:9, work_format_office:7, work_format_hybrid:8,
         industry_any:5
     },
+    "Тренинг «Я хочу здесь работать» мотивация": {
+        role_business:8, role_develop_employees:7,
+        urgency_fast:8,
+        budget_15000_50000:8,
+        industry_any:7
+    },
+    "Мастер-класс (3ч, до 25 чел.)": {
+        role_business:8, role_develop_employees:7,
+        urgency_1_2_months:7,
+        budget_15000_50000:8,
+        work_format_office:9, work_format_hybrid:7,
+        industry_any:6
+    },
 
     // ========== КУРСЫ ==========
-    "Авторский курс 'Рекрутер для недвижимости'": {
-        role_business:9, role_career_change:8,
+    "Авторский курс «Рекрутер для недвижимости»": {
+        role_business:9, role_career_change:8, role_develop_employees:7,
         level_junior:8, level_middle:8,
         urgency_1_2_months:8, urgency_3_6_months:7,
         importance_career:8, importance_salary:7,
@@ -8093,21 +8452,68 @@ window.SERVICE_WEIGHTS = {
         industry_hr:9, industry_other:7
     },
     "Обучение с '0' менеджер по продажам": {
-        role_business:9, role_career_change:9,
+        role_business:9, role_career_change:9, role_develop_employees:8,
         level_junior:10, level_middle:8,
         urgency_1_2_months:8, urgency_3_6_months:8,
         importance_career:9, importance_salary:8,
         budget_50000_100000:9, budget_15000_50000:8,
         industry_sales:10, industry_other:7
+    },
+
+    // ========== ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ (retention/corporate) ==========
+    "Консультация по внедрению гибких форматов": {
+        role_business:7, role_develop_employees:6,
+        urgency_1_2_months:6,
+        budget_5000_15000:7,
+        industry_it:6, industry_hr:6
+    },
+    "Оценка удовлетворённости персонала": {
+        role_business:8, role_develop_employees:8,
+        urgency_3_6_months:7,
+        budget_15000_50000:8,
+        industry_hr:8
+    },
+    "Стратегическая сессия в компании": {
+        role_business:8, role_develop_employees:7,
+        urgency_1_2_months:7,
+        budget_15000_50000:8,
+        industry_any:6
+    },
+    "HR найди людей – цена от": {
+        role_business:9,
+        urgency_fast:8,
+        budget_50000_100000:8,
+        industry_any:7
+    },
+    "HR на час": {
+        role_business:8,
+        urgency_fast:8,
+        budget_5000_15000:8,
+        industry_any:6
+    },
+    "HR реши вопрос – цена от": {
+        role_business:8,
+        urgency_1_2_months:7,
+        budget_50000_100000:8,
+        industry_any:7
+    },
+    "Наставничество для HR": {
+        role_business:7, role_develop_employees:8,
+        level_middle:7,
+        urgency_1_2_months:6,
+        budget_5000_15000:7,
+        industry_hr:8
     }
 };
 
 window.ANSWER_MAPPING = {
-    // Основные
+    // Основные роли
     "Ищу работу": "role_job_seeker",
     "Хочу сменить профессию": "role_career_change",
     "Рост в текущей компании": "role_growth",
     "Подбираю сотрудников": "role_business",
+    "Развиваю сотрудников": "role_develop_employees",
+    "Собственник бизнеса": "role_business_owner",
     // Уровни
     "Junior / начинающий": "level_junior",
     "Middle / опытный": "level_middle",
@@ -8137,18 +8543,18 @@ window.ANSWER_MAPPING = {
     "100 000 – 300 000 ₽": "budget_100000_300000",
     "300 000 – 500 000 ₽": "budget_300000_500000",
     "Выше 500 000 ₽": "budget_higher",
-    // НОВЫЕ: Отрасль
+    // Отрасль
     "IT / Технологии": "industry_it",
     "Продажи / Маркетинг": "industry_sales",
     "HR / Управление персоналом": "industry_hr",
     "Другое": "industry_other",
-    // НОВЫЕ: Формат работы
+    // Формат работы
     "Офлайн / В офисе": "work_format_office",
     "Онлайн / Удалённо": "work_format_remote",
     "Гибридный (смешанный)": "work_format_hybrid"
 };
 
-if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены (с отраслью и форматом работы)");
+if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены (с полной поддержкой развития сотрудников и собственников)");
 // ============================================================
 // 12_close-burger.js – Закрытие бургер-меню (используется в smooth-scroll)
 // ============================================================
@@ -8247,10 +8653,10 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     });
 })();
 // ============================================================
-// 14_quiz-scoring.js – Расчёт баллов и подбор двух лучших услуг
+// 14_quiz-scoring.js – Расчёт баллов и подбор услуг (2-4 варианта)
+// Поддержка ролей: Развиваю сотрудников, Собственник бизнеса
 // ============================================================
 (function() {
-    // ИСПРАВЛЕНО: понятные названия категорий для отображения в квизе
     const CATEGORY_DISPLAY_NAMES = {
         business_recruitment: '🔍 Подбор персонала',
         business_retention: '📊 Удержание и развитие',
@@ -8303,6 +8709,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     }
 
     function isServiceAllowed(service, userRole, userSegment) {
+        // Определяем, относится ли услуга к бизнесу (B2B)
         const isBusinessService = (service.includes("подбор") || service.includes("рекрутинг") ||
             service.includes("хэдхантинг") || service.includes("аутсорсинг") ||
             service.includes("вакансии") || service.includes("кандидатов") ||
@@ -8312,14 +8719,23 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             service === "База кандидатов + тестирование" ||
             service === "Подбор резюме под вакансию" ||
             service === "Составление вакансии (с УТП)" ||
-            service === "Тренинг по запросу (1ч, до 25 чел.)" ||
+            service === "Тренинг под запрос (1ч, до 25 чел.)" ||
             service === "Стратегическая сессия (1ч, до 12 чел.)" ||
             service === "Мастер-класс (3ч, до 25 чел.)" ||
             service === "Тренинг 'Удержание персонала'" ||
             service === "Тренинг 'Профилактика выгорания'");
-        const isBusinessUser = (userRole === "Подбираю сотрудников");
+
+        // B2B-роли: Подбираю сотрудников, Развиваю сотрудников, Собственник бизнеса
+        const isBusinessUser = (userRole === "Подбираю сотрудников" ||
+                                userRole === "Развиваю сотрудников" ||
+                                userRole === "Собственник бизнеса");
+
         if (isBusinessService && !isBusinessUser) return false;
-        if (isBusinessUser && !isBusinessService) return false;
+        if (!isBusinessService && isBusinessUser && userRole !== "Собственник бизнеса") {
+            // Собственнику бизнеса можно показывать и премиум-услуги для себя (VIP-коучинг, Executive)
+            if (!service.includes("VIP") && !service.includes("Executive") && !service.includes("Коучинг топ") && !service.includes("Стратегия роста"))
+                return false;
+        }
         if (!isBusinessService) {
             const price = getNumericPrice(service);
             if (price === 0) return false;
@@ -8330,17 +8746,17 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         return true;
     }
 
-    window.getTopTwoServices = function(answersArr) {
-        logInit(`getTopTwoServices вызван с answers: ${JSON.stringify(answersArr)}`, 'INFO', '', 4);
+    window.getTopServices = function(answersArr) {
+        logInit(`getTopServices вызван с answers: ${JSON.stringify(answersArr)}`, 'INFO', '', 4);
         let weights = window.SERVICE_WEIGHTS;
         let mapping = window.ANSWER_MAPPING;
         if (!weights || Object.keys(weights).length === 0 || !mapping) {
             logInit('SERVICE_WEIGHTS или ANSWER_MAPPING не загружены', 'ERROR', '', 1);
             return {
-                variantA: "Индивидуальная консультация (1ч)",
-                variantB: "Экспресс-консультация (30мин)",
-                variantAFormatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)",
-                variantBFormatted: "👤 Базовые услуги — Экспресс-консультация (30мин)"
+                services: [
+                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)", score: 0 },
+                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "👤 Базовые услуги — Экспресс-консультация (30мин)", score: 0 }
+                ]
             };
         }
         const userRole = answersArr[0];
@@ -8350,7 +8766,10 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             const answer = answersArr[i];
             if (answer && mapping[answer]) userKeys.push(mapping[answer]);
         }
+        // Добавляем ключи ролей для правильного взвешивания
         if (userRole === "Подбираю сотрудников") userKeys.push("role_business");
+        else if (userRole === "Развиваю сотрудников") userKeys.push("role_develop_employees");
+        else if (userRole === "Собственник бизнеса") userKeys.push("role_business_owner");
         else if (userRole === "Рост в текущей компании") userKeys.push("role_growth");
         else if (userRole === "Хочу сменить профессию") userKeys.push("role_career_change");
         else if (userRole === "Ищу работу") userKeys.push("role_job_seeker");
@@ -8363,7 +8782,11 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             if (total === 0 && weightObj.role_any) total = weightObj.role_any;
             if (total > 0) {
                 const price = getNumericPrice(service);
-                scores.push({ service, score: total, price: (price !== null && price !== undefined) ? price.toLocaleString() + ' ₽' : 'цена по запросу' });
+                scores.push({
+                    service: service,
+                    score: total,
+                    price: (price !== null && price !== undefined) ? price.toLocaleString() + ' ₽' : 'цена по запросу'
+                });
             }
         }
         scores.sort((a, b) => b.score - a.score);
@@ -8371,32 +8794,55 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         if (scores.length === 0) {
             logInit('Не найдено подходящих услуг', 'WARN', '', 2);
             return {
-                variantA: "Индивидуальная консультация (1ч)",
-                variantB: "Экспресс-консультация (30мин)",
-                variantAFormatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)",
-                variantBFormatted: "👤 Базовые услуги — Экспресс-консультация (30мин)"
+                services: [
+                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)", score: 0 },
+                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "👤 Базовые услуги — Экспресс-консультация (30мин)", score: 0 }
+                ]
             };
         }
 
-        const top = scores[0];
-        const second = scores[1] || scores[0];
-        logInit(`Результат: ${top.service} (${top.score}) и ${second.service} (${second.score})`, 'INFO', '', 4);
+        const maxScore = scores[0].score;
+        const filtered = scores.filter(item => item.score >= maxScore * 0.5);
+        const topServices = filtered.slice(0, 4);
 
+        const result = topServices.map(s => ({
+            service: s.service,
+            price: s.price,
+            formatted: formatServiceWithCategory(s.service),
+            score: s.score
+        }));
+
+        logInit(`Найдено рекомендаций: ${result.length}`, 'INFO', '', 4);
+        return { services: result };
+    };
+
+    // Для обратной совместимости
+    window.getTopTwoServices = function(answersArr) {
+        const top = window.getTopServices(answersArr);
+        const services = top.services;
+        if (services.length >= 2) {
+            return {
+                variantA: services[0].service,
+                variantB: services[1].service,
+                variantAFormatted: services[0].formatted,
+                variantBFormatted: services[1].formatted,
+                priceA: services[0].price,
+                priceB: services[1].price
+            };
+        }
         return {
-            variantA: top.service,
-            variantB: second.service,
-            variantAFormatted: formatServiceWithCategory(top.service),
-            variantBFormatted: formatServiceWithCategory(second.service),
-            scoreA: top.score,
-            scoreB: second.score,
-            priceA: top.price,
-            priceB: second.price
+            variantA: services[0].service,
+            variantB: services[0].service,
+            variantAFormatted: services[0].formatted,
+            variantBFormatted: services[0].formatted,
+            priceA: services[0].price,
+            priceB: services[0].price
         };
     };
 })();
 // ============================================================
 // 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов)
-// + явное заполнение скрытых полей форм
+// Добавлены роли: Развиваю сотрудников, Собственник бизнеса
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -8441,7 +8887,6 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             const form = document.getElementById(formId);
             if (!form) return;
 
-            // --- ОБЩИЕ ПОЛЯ ---
             setField(form, 'chosenVariant', chosenText);
             setField(form, 'chosenVariantPrice', chosenPrice);
             setField(form, 'originalChosenVariant', originalText);
@@ -8449,14 +8894,12 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             setField(form, 'recommendedVariants', recommendedStr);
             setField(form, 'quizAnswersRaw', answersArr.join('\n'));
 
-            // --- ПОЛЯ ПО КАЖДОМУ ВОПРОСУ ---
             const qLabels = ['role', 'level', 'urgency', 'importance', 'budget', 'industry', 'work_format'];
             for (let i = 0; i < qLabels.length; i++) {
                 const fieldName = `quiz_q${i+1}_${qLabels[i]}`;
                 setField(form, fieldName, answersArr[i] || '');
             }
 
-            // --- РЕКОМЕНДАЦИИ И ВЫБРАННЫЙ ВАРИАНТ (дублирующие поля) ---
             setField(form, 'quiz_recommendations', recommendedStr);
             setField(form, 'quiz_chosen_variant', chosenText);
             setField(form, 'quiz_chosen_price', chosenPrice);
@@ -8503,7 +8946,8 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
 
-    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] };
+    // ВОПРОСЫ (расширены)
+    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"] };
     const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
     const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
     const URGENCY_QUESTION = { text: "3. Как быстро нужен результат?", options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"] };
@@ -8540,7 +8984,8 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
 
     function updateIndustryAndWorkFormatQuestions(role) {
         let wasReset = false;
-        if (role === "Подбираю сотрудников") {
+        const businessRoles = ["Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"];
+        if (businessRoles.includes(role)) {
             quizQuestions[5] = INDUSTRY_FOR_BUSINESS;
             quizQuestions[6] = WORK_FORMAT_FOR_BUSINESS;
         } else {
@@ -8564,7 +9009,8 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     }
 
     function updateSecondQuestion(role) {
-        if (role === "Подбираю сотрудников") {
+        const businessRoles = ["Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"];
+        if (businessRoles.includes(role)) {
             quizQuestions[1] = {...LEVEL_RECRUITER};
         } else {
             quizQuestions[1] = {...LEVEL_JOBSEEKER};
@@ -8601,7 +9047,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         isAnalyzing = true;
                         container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
-                        setTimeout(() => { const topTwo = window.getTopTwoServices(answers); quizState = 'choice'; renderResult(topTwo); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
+                        setTimeout(() => { const recommendations = window.getTopServices(answers); quizState = 'choice'; renderResult(recommendations); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
@@ -8618,7 +9064,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         isAnalyzing = true;
                         container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
-                        setTimeout(() => { const topTwo = window.getTopTwoServices(answers); quizState = 'choice'; renderResult(topTwo); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
+                        setTimeout(() => { const recommendations = window.getTopServices(answers); quizState = 'choice'; renderResult(recommendations); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
@@ -8635,172 +9081,49 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         }
     }
 
-    function renderResult(topTwo) {
+    function renderResult(recommendations) {
         logInit('Квиз: renderResult', 'INFO', '', 3);
         const container = document.getElementById('quizContainer');
         if (!container) return;
 
-        const categoryNames = {
-            'business_recruitment': '🔍 Подбор персонала',
-            'business_retention': '📊 Удержание и развитие',
-            'individual_base': '👤 Базовые услуги',
-            'individual_standard': '👔 Карьерный консалтинг',
-            'individual_premium': '💎 Премиум сопровождение',
-            'training': '🎓 Обучение и тренинги',
-            'corporate': '🏢 Корпоративным клиентам',
-            'author_courses': '📚 Авторские программы'
-        };
-
-        const displayNameA = topTwo.variantAFormatted || topTwo.variantA;
-        const displayNameB = topTwo.variantBFormatted || topTwo.variantB;
-        const priceA = topTwo.priceA || getPrice(topTwo.variantA);
-        const priceB = topTwo.priceB || getPrice(topTwo.variantB);
-        const recommendations = `📌 Рекомендация 1: ${displayNameA} (${priceA})\n🎯 Рекомендация 2: ${displayNameB} (${priceB})`;
+        const services = recommendations.services || [];
+        const recommendationsText = services.map((s, idx) => `📌 Рекомендация ${idx+1}: ${s.formatted} (${s.price})`).join('\n');
         const esc = window.escapeHtml;
 
-        let rawCategoryA = displayNameA.split(' — ')[0] || '';
-        let rawCategoryB = displayNameB.split(' — ')[0] || '';
-        let categoryA = categoryNames[rawCategoryA] || rawCategoryA || 'Рекомендация';
-        let categoryB = categoryNames[rawCategoryB] || rawCategoryB || 'Рекомендация';
+        let cardsHtml = '';
+        for (let i = 0; i < services.length; i++) {
+            const s = services[i];
+            let rawCategory = s.formatted.split(' — ')[0] || '';
+            let category = rawCategory || 'Рекомендация';
+            const name = esc(s.formatted.split(' — ')[1] || s.service);
+            const price = esc(s.price);
+            const serviceName = esc(s.service);
+            const displayName = esc(s.formatted);
+            cardsHtml += `
+                <div class="quiz-result-card">
+                    <div class="quiz-result-icon">${i === 0 ? '🏆' : (i === 1 ? '🥈' : '📌')}</div>
+                    <div class="quiz-result-category">${esc(category)}</div>
+                    <div class="quiz-result-title">${name}</div>
+                    <div class="quiz-result-price">💰 ${price}</div>
+                    <button class="quiz-btn-details choose-option" data-choice="${i}" data-text="${serviceName}" data-price="${price}" data-display="${displayName}">Подробнее →</button>
+                </div>
+            `;
+        }
 
-        const nameA = esc(displayNameA.split(' — ')[1] || displayNameA);
-        const nameB = esc(displayNameB.split(' — ')[1] || displayNameB);
-        const priceAEsc = esc(priceA);
-        const priceBEsc = esc(priceB);
-        const varA = esc(topTwo.variantA);
-        const varB = esc(topTwo.variantB);
-        const displayA = esc(displayNameA);
-        const displayB = esc(displayNameB);
+        cardsHtml += `
+            <div class="quiz-result-card">
+                <div class="quiz-result-icon">🤝</div>
+                <div class="quiz-result-category">Помощь эксперта</div>
+                <div class="quiz-result-title">Бесплатная консультация</div>
+                <div class="quiz-result-price" style="background:#f5f5f5; color:#666;">🎁 15 минут</div>
+                <button class="quiz-btn-help choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Нужна помощь →</button>
+            </div>
+        `;
 
-        let html = `
-            <style>
-                .quiz-result-card {
-                    background: white;
-                    border-radius: 24px;
-                    padding: 20px 18px;
-                    border: 1px solid #e0e0e0;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-                    height: 100%;
-                    display: flex;
-                    flex-direction: column;
-                }
-                .quiz-result-card:hover {
-                    transform: translateY(-3px);
-                    box-shadow: 0 12px 24px -12px rgba(45,106,159,0.15);
-                    border-color: var(--primary-light, #4A8BC2);
-                }
-                .quiz-result-icon {
-                    font-size: 26px;
-                    margin-bottom: 10px;
-                }
-                .quiz-result-category {
-                    font-size: 0.7rem;
-                    color: #888;
-                    margin-bottom: 6px;
-                    letter-spacing: 0.3px;
-                    text-transform: uppercase;
-                }
-                .quiz-result-title {
-                    font-size: 1rem;
-                    font-weight: 700;
-                    color: var(--primary-dark, #1F4A6E);
-                    margin-bottom: 8px;
-                    line-height: 1.35;
-                }
-                .quiz-result-price {
-                    font-size: 0.9rem;
-                    font-weight: 600;
-                    color: var(--primary, #2D6A9F);
-                    margin: 10px 0;
-                    padding: 4px 10px;
-                    background: #f0f7ff;
-                    display: inline-block;
-                    border-radius: 30px;
-                    align-self: flex-start;
-                }
-                .quiz-btn-details {
-                    background: linear-gradient(135deg, var(--primary, #2D6A9F), var(--primary-dark, #1F4A6E));
-                    color: white;
-                    border: none;
-                    padding: 10px 18px;
-                    border-radius: 40px;
-                    font-weight: 600;
-                    font-size: 0.85rem;
-                    cursor: pointer;
-                    transition: all 0.25s ease;
-                    width: 100%;
-                    text-align: center;
-                    margin-top: auto;
-                }
-                .quiz-btn-details:hover {
-                    background: linear-gradient(135deg, var(--primary-dark, #1F4A6E), var(--primary, #2D6A9F));
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 10px rgba(45,106,159,0.2);
-                }
-                .quiz-btn-help {
-                    background: transparent;
-                    border: 1.5px solid var(--primary, #2D6A9F);
-                    color: var(--primary, #2D6A9F);
-                    padding: 9px 17px;
-                    border-radius: 40px;
-                    font-weight: 600;
-                    font-size: 0.85rem;
-                    cursor: pointer;
-                    transition: all 0.25s ease;
-                    width: 100%;
-                    text-align: center;
-                    margin-top: auto;
-                }
-                .quiz-btn-help:hover {
-                    background: rgba(45,106,159,0.06);
-                    border-color: var(--primary-dark, #1F4A6E);
-                    color: var(--primary-dark, #1F4A6E);
-                    transform: translateY(-1px);
-                }
-                .quiz-results-grid {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 20px;
-                    justify-content: center;
-                    margin: 20px 0 16px;
-                }
-                .quiz-results-grid > div {
-                    flex: 1;
-                    min-width: 240px;
-                }
-                @media (max-width: 768px) {
-                    .quiz-results-grid > div {
-                        min-width: 100%;
-                    }
-                    .quiz-result-card {
-                        padding: 18px 14px;
-                    }
-                }
-            </style>
+        const html = `
             <p style="font-weight: 500; margin-bottom: 20px; text-align:center; font-size:0.95rem; color: var(--text-muted);">🎯 На основе ваших ответов мы подобрали оптимальные варианты:</p>
             <div class="quiz-results-grid">
-                <div class="quiz-result-card">
-                    <div class="quiz-result-icon">📌</div>
-                    <div class="quiz-result-category">${esc(categoryA)}</div>
-                    <div class="quiz-result-title">${nameA}</div>
-                    <div class="quiz-result-price">💰 ${priceAEsc}</div>
-                    <button class="quiz-btn-details choose-option" data-choice="1" data-text="${varA}" data-price="${priceAEsc}" data-display="${displayA}">Подробнее →</button>
-                </div>
-                <div class="quiz-result-card">
-                    <div class="quiz-result-icon">🎯</div>
-                    <div class="quiz-result-category">${esc(categoryB)}</div>
-                    <div class="quiz-result-title">${nameB}</div>
-                    <div class="quiz-result-price">💰 ${priceBEsc}</div>
-                    <button class="quiz-btn-details choose-option" data-choice="2" data-text="${varB}" data-price="${priceBEsc}" data-display="${displayB}">Подробнее →</button>
-                </div>
-                <div class="quiz-result-card">
-                    <div class="quiz-result-icon">🤝</div>
-                    <div class="quiz-result-category">Помощь эксперта</div>
-                    <div class="quiz-result-title">Бесплатная консультация</div>
-                    <div class="quiz-result-price" style="background:#f5f5f5; color:#666;">🎁 15 минут</div>
-                    <button class="quiz-btn-help choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Нужна помощь →</button>
-                </div>
+                ${cardsHtml}
             </div>
             <div style="text-align:center; margin-top: 20px;">
                 <button id="resetQuizBtn" class="btn-secondary" style="padding: 8px 20px; font-size: 0.85rem;">🔄 Пройти заново</button>
@@ -8821,14 +9144,14 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                 selectedVariantPrice = variantPrice;
                 selectedOriginalText = variantText;
                 selectedOriginalPrice = variantPrice;
-                const answersArr = answers.slice(); // копия массива
+                const answersArr = answers.slice();
                 const answersStr = answersArr.map((a, idx) => {
                     const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет', 'Сфера', 'Формат работы'][idx];
                     return `${qText}: ${a || 'не выбран'}`;
                 }).join('\n');
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersArr);
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendationsText, answersArr);
                 updateSelectionBlock(selectedVariantText, selectedVariantPrice);
-                sendQuizStats(answersStr, recommendations, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
+                sendQuizStats(answersStr, recommendationsText, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
                 window.showSuccessToast('✅ Выбор сохранён!');
                 showFinalScreen();
                 isSubmittingChoice = false;
@@ -8851,9 +9174,9 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                     const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет', 'Сфера', 'Формат работы'][idx];
                     return `${qText}: ${a || 'не выбран'}`;
                 }).join('\n');
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersArr);
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendationsText, answersArr);
                 updateSelectionBlock(selectedOriginalText, selectedOriginalPrice);
-                sendQuizStats(answersStr, recommendations, '', '', selectedOriginalText, selectedOriginalPrice);
+                sendQuizStats(answersStr, recommendationsText, '', '', selectedOriginalText, selectedOriginalPrice);
                 window.showSuccessToast('🙏 Спасибо! Я свяжусь с вами.');
                 showFinalScreen();
                 isSubmittingChoice = false;
@@ -8871,63 +9194,17 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         function showFinalScreen() {
             container.innerHTML = `
                 <style>
-                    .quiz-final-screen {
-                        text-align: center;
-                        padding: 16px;
-                    }
-                    .quiz-final-icon {
-                        font-size: 48px;
-                        margin-bottom: 12px;
-                    }
-                    .quiz-final-title {
-                        font-size: 1.3rem;
-                        font-weight: 700;
-                        color: var(--primary-dark, #1F4A6E);
-                        margin-bottom: 10px;
-                    }
-                    .quiz-final-text {
-                        color: var(--text-muted, #666);
-                        margin-bottom: 20px;
-                        line-height: 1.5;
-                    }
-                    .quiz-final-buttons {
-                        display: flex;
-                        flex-wrap: wrap;
-                        gap: 16px;
-                        justify-content: center;
-                        margin: 20px 0;
-                    }
-                    .quiz-final-btn-primary, .quiz-final-btn-secondary {
-                        padding: 10px 24px;
-                        border-radius: 40px;
-                        font-weight: 600;
-                        font-size: 0.9rem;
-                        cursor: pointer;
-                        transition: all 0.25s ease;
-                        text-decoration: none;
-                        display: inline-block;
-                        border: none;
-                    }
-                    .quiz-final-btn-primary {
-                        background: linear-gradient(135deg, var(--primary, #2D6A9F), var(--primary-dark, #1F4A6E));
-                        color: white;
-                    }
-                    .quiz-final-btn-primary:hover {
-                        transform: translateY(-1px);
-                        box-shadow: 0 4px 10px rgba(45,106,159,0.2);
-                    }
-                    .quiz-final-btn-secondary {
-                        background: transparent;
-                        border: 1.5px solid var(--primary, #2D6A9F);
-                        color: var(--primary, #2D6A9F);
-                    }
-                    .quiz-final-btn-secondary:hover {
-                        background: rgba(45,106,159,0.06);
-                        transform: translateY(-1px);
-                    }
-                    .quiz-final-reset {
-                        margin-top: 16px;
-                    }
+                    .quiz-final-screen { text-align: center; padding: 16px; }
+                    .quiz-final-icon { font-size: 48px; margin-bottom: 12px; }
+                    .quiz-final-title { font-size: 1.3rem; font-weight: 700; color: var(--primary-dark, #1F4A6E); margin-bottom: 10px; }
+                    .quiz-final-text { color: var(--text-muted, #666); margin-bottom: 20px; line-height: 1.5; }
+                    .quiz-final-buttons { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 20px 0; }
+                    .quiz-final-btn-primary, .quiz-final-btn-secondary { padding: 10px 24px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.25s ease; text-decoration: none; display: inline-block; border: none; }
+                    .quiz-final-btn-primary { background: linear-gradient(135deg, var(--primary, #2D6A9F), var(--primary-dark, #1F4A6E)); color: white; }
+                    .quiz-final-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(45,106,159,0.2); }
+                    .quiz-final-btn-secondary { background: transparent; border: 1.5px solid var(--primary, #2D6A9F); color: var(--primary, #2D6A9F); }
+                    .quiz-final-btn-secondary:hover { background: rgba(45,106,159,0.06); transform: translateY(-1px); }
+                    .quiz-final-reset { margin-top: 16px; }
                 </style>
                 <div class="quiz-final-screen">
                     <div class="quiz-final-icon">✨</div>
