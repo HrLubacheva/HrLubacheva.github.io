@@ -754,7 +754,7 @@ body {
    04_grids.css – универсальные сетки (адаптив)
    ================================================================== */
 
-/* Базовые сетки */
+/* ========== БАЗОВЫЕ СЕТКИ ========== */
 .grid-3 {
     display: grid;
     gap: 30px;
@@ -792,7 +792,7 @@ body {
     padding-left: 0;
 }
 
-/* Адаптивность общих сеток */
+/* ========== АДАПТИВНОСТЬ ОБЩИХ СЕТОК ========== */
 @media (min-width: 992px) and (max-width: 1199px) {
     .grid-3 {
         grid-template-columns: repeat(2, 1fr);
@@ -825,7 +825,7 @@ body {
     }
 }
 
-/* ========== Фотографии процесса ========== */
+/* ========== ФОТОГРАФИИ ПРОЦЕССА ========== */
 .process-photos {
     display: flex;
     flex-wrap: nowrap;
@@ -880,7 +880,7 @@ body {
     .photo-caption { font-size: 0.75rem; margin-top: 10px; }
 }
 
-/* ========== Процесс работы – блоки с карточками ========== */
+/* ========== ПРОЦЕСС РАБОТЫ – БЛОКИ С КАРТОЧКАМИ ========== */
 .process-description {
     text-align: center;
     margin-bottom: 40px;
@@ -1059,6 +1059,7 @@ body {
     .card-process p { font-size: 0.8rem; }
     .process-step { width: 32px; height: 32px; font-size: 0.85rem; margin-bottom: 10px; }
 }
+
 /* ========== ИСПРАВЛЕНИЕ: убираем выход за границы на мобильных ========== */
 @media (max-width: 768px) {
     .process-block { min-width: auto; width: 100%; }
@@ -1068,6 +1069,46 @@ body {
         min-width: auto;
         width: 100%;
         box-sizing: border-box;
+    }
+}
+
+/* ========== СПИСКИ УСЛУГ В КАРТОЧКАХ (СЕКЦИЯ #services) ========== */
+/* Две колонки на десктопе и планшетах */
+@media (min-width: 768px) {
+    .card-service .service-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px 20px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .card-service .service-list li {
+        position: relative;
+        padding-left: 1.2em;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+    .card-service .service-list li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+        font-weight: bold;
+    }
+}
+/* На мобильных – одна колонка */
+@media (max-width: 767px) {
+    .card-service .service-list {
+        grid-template-columns: 1fr;
+    }
+}
+/* Дополнительная защита для узких экранов */
+@media (max-width: 480px) {
+    .card-service .service-list li {
+        font-size: 0.85rem;
+        line-height: 1.4;
     }
 }
 /* ==================================================================
@@ -4496,7 +4537,7 @@ select:focus-visible {
             <h2 class="section-title fade-up" id="services-title">Ценность для бизнеса и специалистов</h2>
             <p class="section-subtitle fade-up">Решения для бизнеса и специалистов. От стратегии до конкретных результатов.</p>
         </div>
-        <ul class="grid-2 cells-grid" data-grid-type="cards" role="list">
+        <ul class="grid-3 cells-grid" data-grid-type="cards" role="list">
             <li class="card card-service fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service1-title">
                 <h3 id="service1-title" itemprop="serviceType"><span class="emoji">🏢</span> HR для бизнеса</h3>
                 <div itemprop="description">
@@ -4576,8 +4617,6 @@ select:focus-visible {
         </ul>
     </div>
 </section>
-
-
 <section id="stats" aria-labelledby="stats-title">
     <div class="container">
         <h2 class="section-title fade-up" id="stats-title">Результаты в цифрах</h2>
@@ -5904,7 +5943,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 19:14:05</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 19:24:02</span>
 
             </div>
         </div>
