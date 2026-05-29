@@ -47,7 +47,7 @@
     }
 }
 
-/* Планшеты (768–991px) */
+/* Планшеты (768–991px) – 2 колонки */
 @media (max-width: 991px) {
     .grid-3 {
         grid-template-columns: repeat(2, 1fr);
@@ -58,7 +58,7 @@
     }
 }
 
-/* Мобильные (до 768px) – все сетки в 1 колонку */
+/* Телефоны (≤768px) – 1 колонка */
 @media (max-width: 768px) {
     .grid-2,
     .grid-3 {
@@ -352,10 +352,21 @@
         grid-template-columns: 1fr;
     }
 }
-/* Дополнительная защита для узких экранов */
+/* Защита от вылезания и масштабирование на узких экранах */
 @media (max-width: 480px) {
     .card-service .service-list li {
         font-size: 0.85rem;
         line-height: 1.4;
+    }
+    .card-service h3 {
+        font-size: 1.1rem;
+    }
+}
+@media (max-width: 360px) {
+    .card-service .service-list li {
+        font-size: 0.75rem;
+    }
+    .card-service h3 {
+        font-size: 1rem;
     }
 }
