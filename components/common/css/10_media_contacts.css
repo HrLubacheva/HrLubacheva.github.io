@@ -527,3 +527,28 @@ section[id] {
     background: var(--light-bg);
     padding: 60px 0;
 }
+/* ========== ДОПОЛНИТЕЛЬНАЯ АДАПТАЦИЯ ДЛЯ САМЫХ УЗКИХ ЭКРАНОВ ========== */
+@media (max-width: 400px) {
+    .btn,
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .hero-buttons .btn,
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-secondary,
+    .callback-submit,
+    .add-service-btn,
+    .quiz-nav button {
+        width: 100%;
+    }
+    .quiz-nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .hero-buttons {
+        gap: 8px;
+    }
+}

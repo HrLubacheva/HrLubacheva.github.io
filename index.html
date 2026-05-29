@@ -2602,6 +2602,19 @@ body {
         padding: 6px 12px;
     }
 }
+
+@media (max-width: 400px) {
+    .form-row-messages {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .consent-checkbox {
+        justify-content: center;
+    }
+    .form-messages {
+        text-align: center;
+    }
+}
 /* ==================================================================
    09_quiz_freebies.css – квиз и бесплатные материалы (плавные эффекты)
    ================================================================== */
@@ -3655,6 +3668,31 @@ section[id] {
 .section-light {
     background: var(--light-bg);
     padding: 60px 0;
+}
+/* ========== ДОПОЛНИТЕЛЬНАЯ АДАПТАЦИЯ ДЛЯ САМЫХ УЗКИХ ЭКРАНОВ ========== */
+@media (max-width: 400px) {
+    .btn,
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+    }
+    .hero-buttons .btn,
+    .hero-buttons .btn-primary,
+    .hero-buttons .btn-secondary,
+    .callback-submit,
+    .add-service-btn,
+    .quiz-nav button {
+        width: 100%;
+    }
+    .quiz-nav {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .hero-buttons {
+        gap: 8px;
+    }
 }
 /* ==================================================================
    11_pricelist.css – полный прайс-лист (аккордеоны)
@@ -6026,7 +6064,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 21:49:08</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 21:50:46</span>
 
             </div>
         </div>
