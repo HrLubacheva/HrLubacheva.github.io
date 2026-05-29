@@ -117,3 +117,21 @@ select:focus-visible {
     color: initial !important;
     display: inline-block;
 }
+
+/* Дополнительная защита от вылезания за пределы на мобильных */
+@media (max-width: 768px) {
+    .benefits-column {
+        min-width: auto;
+        width: 100%;
+        flex: 1 1 100%;
+    }
+    .benefit-card {
+        width: 100%;
+        box-sizing: border-box;
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+    .benefits-two-columns {
+        overflow-x: hidden;
+    }
+}
