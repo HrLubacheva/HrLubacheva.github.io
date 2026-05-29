@@ -305,7 +305,6 @@
         initInfiniteCarousel('carouselTrack');
     }
 
-    // 👇 ЭКСПОРТ ФУНКЦИИ ДЛЯ 99_main.js
-    window.initInfiniteCarousel = initInfiniteCarousel;
+    // Экспорт функции для 99_main.js (одна строка)
     window.initInfiniteCarousel = initInfiniteCarousel;
 })();

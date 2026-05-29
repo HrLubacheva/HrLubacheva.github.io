@@ -12,9 +12,7 @@ window.addToCart = function(serviceName, price, quantity) {
     renderCart();
 };
 
-function addToCart(serviceName, price, quantity) {
-    window.addToCart(serviceName, price, quantity);
-}
+// (Удалена внутренняя функция addToCart – больше никакой рекурсии)
 
 function renderCart() {
     let total = 0, totalQty = 0;
@@ -105,7 +103,7 @@ function initAddButtons() {
                 let quantity = parseInt(document.getElementById(qty).value, 10);
                 const defaultQty = window.APP_CONFIG?.CONSTANTS?.DEFAULT_QUANTITY || 1;
                 if (isNaN(quantity) || quantity < defaultQty) quantity = defaultQty;
-                if (serviceName) addToCart(serviceName, price, quantity);
+                if (serviceName) window.addToCart(serviceName, price, quantity);
                 else { if (window.IS_DEV) console.error('Не удалось получить название услуги'); window.showErrorToast('❌ Ошибка: не удалось определить услугу'); }
             };
             button.addEventListener('click', button._handler);
