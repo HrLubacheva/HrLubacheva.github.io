@@ -1,8 +1,7 @@
 /* ==================================================================
-   04_grids.css – универсальные сетки (адаптив)
+   04_grids.css – универсальные сетки (адаптив) + масштабирование + переносы
    ================================================================== */
 
-/* ========== БАЗОВЫЕ СЕТКИ ========== */
 .grid-3 {
     display: grid;
     gap: 30px;
@@ -11,7 +10,6 @@
     list-style: none;
     padding-left: 0;
 }
-
 .grid-2 {
     display: grid;
     gap: 30px;
@@ -20,7 +18,6 @@
     list-style: none;
     padding-left: 0;
 }
-
 .grid-1 {
     display: grid;
     gap: 20px;
@@ -29,8 +26,6 @@
     list-style: none;
     padding-left: 0;
 }
-
-/* Специальная сетка для тренинга */
 .grid-training-3 {
     display: grid;
     gap: 30px;
@@ -40,36 +35,36 @@
     padding-left: 0;
 }
 
-/* ========== АДАПТИВНОСТЬ ОБЩИХ СЕТОК ========== */
 @media (min-width: 992px) and (max-width: 1199px) {
-    .grid-3 {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
-
-/* Планшеты (768–991px) – 2 колонки */
 @media (max-width: 991px) {
-    .grid-3 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .grid-training-3 {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-    }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-training-3 { grid-template-columns: repeat(2, 1fr); gap: 24px; }
 }
-
-/* Телефоны (≤768px) – 1 колонка */
 @media (max-width: 768px) {
-    .grid-2,
-    .grid-3 {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 20px; }
+}
+@media (max-width: 576px) {
+    .grid-training-3 { gap: 16px; }
 }
 
-@media (max-width: 576px) {
-    .grid-training-3 {
-        gap: 16px;
+/* ========== ПОДЗАГОЛОВОК СЕКЦИИ УСЛУГ В 2 КОЛОНКИ ========== */
+@media (min-width: 768px) {
+    #services .section-subtitle {
+        column-count: 2;
+        column-gap: 40px;
+        text-align: left;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 20px;
+    }
+}
+@media (max-width: 767px) {
+    #services .section-subtitle {
+        column-count: 1;
+        text-align: center;
     }
 }
 
@@ -82,31 +77,17 @@
     margin-top: 50px;
     overflow-x: auto;
 }
-.process-photo-item:first-child {
-    flex: 0.95;
-    min-width: 160px;
-}
-.process-photo-item:last-child {
-    flex: 1.1;
-    min-width: 160px;
-}
-.process-photo-item {
-    text-align: center;
-}
+.process-photo-item:first-child { flex: 0.95; min-width: 160px; }
+.process-photo-item:last-child { flex: 1.1; min-width: 160px; }
+.process-photo-item { text-align: center; }
 .process-photo-item img {
-    width: 100%;
-    height: auto;
-    max-height: 850px;
-    object-fit: contain;
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%; height: auto; max-height: 850px;
+    object-fit: contain; border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     background: #f0f4f8;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.process-photo-item img:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 15px 35px rgba(45, 106, 159, 0.15);
-}
+.process-photo-item img:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(45,106,159,0.15); }
 .photo-caption {
     margin-top: 16px;
     font-size: 0.9rem;
@@ -118,13 +99,11 @@
 }
 @media (max-width: 640px) {
     .process-photos { gap: 12px; }
-    .process-photo-item:first-child,
-    .process-photo-item:last-child { min-width: 120px; }
+    .process-photo-item:first-child, .process-photo-item:last-child { min-width: 120px; }
 }
 @media (max-width: 480px) {
     .process-photos { gap: 8px; }
-    .process-photo-item:first-child,
-    .process-photo-item:last-child { min-width: 100px; }
+    .process-photo-item:first-child, .process-photo-item:last-child { min-width: 100px; }
     .photo-caption { font-size: 0.75rem; margin-top: 10px; }
 }
 
@@ -139,11 +118,7 @@
     color: var(--text-muted);
 }
 @media (max-width: 768px) {
-    .process-description {
-        margin-bottom: 30px;
-        font-size: 0.95rem;
-        padding: 0 16px;
-    }
+    .process-description { margin-bottom: 30px; font-size: 0.95rem; padding: 0 16px; }
 }
 .process-two-blocks {
     display: flex;
@@ -159,10 +134,7 @@
     flex-direction: column;
     width: 100%;
 }
-.process-block-full {
-    margin: 40px 0;
-    width: 100%;
-}
+.process-block-full { margin: 40px 0; width: 100%; }
 .process-block-inner {
     border: 1px solid transparent;
     border-radius: var(--radius-lg);
@@ -171,21 +143,19 @@
     width: 100%;
     box-sizing: border-box;
 }
-.process-block:hover .process-block-inner {
-    border-color: rgba(45, 106, 159, 0.15);
-}
+.process-block:hover .process-block-inner { border-color: rgba(45,106,159,0.15); }
 .process-block-header {
     text-align: center;
     margin-bottom: 32px;
     padding: 20px 16px;
-    background: linear-gradient(135deg, rgba(45, 106, 159, 0.08), rgba(74, 139, 194, 0.04));
+    background: linear-gradient(135deg, rgba(45,106,159,0.08), rgba(74,139,194,0.04));
     border-radius: 48px;
     transition: all 0.3s ease;
     width: 100%;
     box-sizing: border-box;
 }
 .process-block-header:hover {
-    background: linear-gradient(135deg, rgba(45, 106, 159, 0.12), rgba(74, 139, 194, 0.06));
+    background: linear-gradient(135deg, rgba(45,106,159,0.12), rgba(74,139,194,0.06));
 }
 .process-block-title {
     font-size: 1.6rem;
@@ -222,7 +192,7 @@
     border-radius: var(--radius-lg);
     padding: 24px 20px;
     box-shadow: var(--shadow-sm);
-    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
     border: 1px solid var(--border);
     height: 100%;
     display: flex;
@@ -231,7 +201,7 @@
 }
 .card-process:hover {
     transform: translateY(-6px);
-    box-shadow: 0 20px 30px -12px rgba(45, 106, 159, 0.2);
+    box-shadow: 0 20px 30px -12px rgba(45,106,159,0.2);
 }
 .process-step {
     width: 40px;
@@ -274,15 +244,9 @@
     min-height: 180px;
     padding-bottom: 20px;
 }
-.grid-training-3 .card-process p {
-    flex-grow: 1;
-    margin-bottom: 0;
-}
+.grid-training-3 .card-process p { flex-grow: 1; margin-bottom: 0; }
 @media (max-width: 576px) {
-    .grid-training-3 .card-process {
-        padding: 16px 12px;
-        min-height: 150px;
-    }
+    .grid-training-3 .card-process { padding: 16px 12px; min-height: 150px; }
     .grid-training-3 .card-process h4 { font-size: 1rem; margin-bottom: 8px; }
     .grid-training-3 .card-process p { font-size: 0.8rem; line-height: 1.3; }
     .grid-training-3 .process-step { width: 32px; height: 32px; font-size: 0.85rem; margin-bottom: 10px; }
@@ -311,9 +275,7 @@
 /* ========== ИСПРАВЛЕНИЕ: убираем выход за границы на мобильных ========== */
 @media (max-width: 768px) {
     .process-block { min-width: auto; width: 100%; }
-    .grid-2 .card,
-    .grid-3 .card,
-    .card {
+    .grid-2 .card, .grid-3 .card, .card {
         min-width: auto;
         width: 100%;
         box-sizing: border-box;
@@ -321,7 +283,6 @@
 }
 
 /* ========== СПИСКИ УСЛУГ В КАРТОЧКАХ (СЕКЦИЯ #services) ========== */
-/* Две колонки на десктопе и планшетах */
 @media (min-width: 768px) {
     .card-service .service-list {
         display: grid;
@@ -334,7 +295,10 @@
     .card-service .service-list li {
         position: relative;
         padding-left: 1.2em;
-        word-break: break-word;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+        word-break: normal;
         overflow-wrap: break-word;
         white-space: normal;
     }
@@ -346,27 +310,33 @@
         font-weight: bold;
     }
 }
-/* На мобильных – одна колонка */
 @media (max-width: 767px) {
-    .card-service .service-list {
-        grid-template-columns: 1fr;
-    }
+    .card-service .service-list { grid-template-columns: 1fr; }
 }
-/* Защита от вылезания и масштабирование на узких экранах */
+
+/* ========== ВЕРТИКАЛЬНОЕ ВЫРАВНИВАНИЕ КАРТОЧЕК УСЛУГ ========== */
+.card-service {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.card-service .service-list {
+    margin-top: auto;
+    margin-bottom: 0;
+}
+.card-service h3 {
+    margin-bottom: 0.75rem;
+}
+
+/* ========== ПЛАВНОЕ МАСШТАБИРОВАНИЕ ТЕКСТА ========== */
+.card-service h3 {
+    font-size: clamp(1rem, 4vw, 1.4rem);
+}
+.card-service .service-list li {
+    font-size: clamp(0.75rem, 3.5vw, 0.95rem);
+}
 @media (max-width: 480px) {
-    .card-service .service-list li {
-        font-size: 0.85rem;
-        line-height: 1.4;
-    }
-    .card-service h3 {
-        font-size: 1.1rem;
-    }
-}
-@media (max-width: 360px) {
-    .card-service .service-list li {
-        font-size: 0.75rem;
-    }
-    .card-service h3 {
-        font-size: 1rem;
+    .card-service {
+        padding: 18px 14px !important;
     }
 }

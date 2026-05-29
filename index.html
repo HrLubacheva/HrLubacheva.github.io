@@ -751,7 +751,7 @@ body {
     }
 }
 /* ==================================================================
-   04_grids.css – универсальные сетки (адаптив)
+   04_grids.css – универсальные сетки (адаптив) + масштабирование + переносы
    ================================================================== */
 
 /* ========== БАЗОВЫЕ СЕТКИ ========== */
@@ -822,6 +822,25 @@ body {
 @media (max-width: 576px) {
     .grid-training-3 {
         gap: 16px;
+    }
+}
+
+/* ========== ПОДЗАГОЛОВОК СЕКЦИИ УСЛУГ В 2 КОЛОНКИ ========== */
+@media (min-width: 768px) {
+    #services .section-subtitle {
+        column-count: 2;
+        column-gap: 40px;
+        text-align: left;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 20px;
+    }
+}
+@media (max-width: 767px) {
+    #services .section-subtitle {
+        column-count: 1;
+        text-align: center;
     }
 }
 
@@ -1086,7 +1105,10 @@ body {
     .card-service .service-list li {
         position: relative;
         padding-left: 1.2em;
-        word-break: break-word;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+        word-break: normal;
         overflow-wrap: break-word;
         white-space: normal;
     }
@@ -1104,22 +1126,31 @@ body {
         grid-template-columns: 1fr;
     }
 }
-/* Защита от вылезания и масштабирование на узких экранах */
-@media (max-width: 480px) {
-    .card-service .service-list li {
-        font-size: 0.85rem;
-        line-height: 1.4;
-    }
-    .card-service h3 {
-        font-size: 1.1rem;
-    }
+
+/* ========== ВЕРТИКАЛЬНОЕ ВЫРАВНИВАНИЕ КАРТОЧЕК УСЛУГ ========== */
+.card-service {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
-@media (max-width: 360px) {
-    .card-service .service-list li {
-        font-size: 0.75rem;
-    }
-    .card-service h3 {
-        font-size: 1rem;
+.card-service .service-list {
+    margin-top: auto;
+    margin-bottom: 0;
+}
+.card-service h3 {
+    margin-bottom: 0.75rem;
+}
+
+/* ========== ПЛАВНОЕ МАСШТАБИРОВАНИЕ ТЕКСТА ========== */
+.card-service h3 {
+    font-size: clamp(1rem, 4vw, 1.4rem);
+}
+.card-service .service-list li {
+    font-size: clamp(0.75rem, 3.5vw, 0.95rem);
+}
+@media (max-width: 480px) {
+    .card-service {
+        padding: 18px 14px !important;
     }
 }
 /* ==================================================================
@@ -3583,6 +3614,27 @@ section[id] {
         white-space: normal;
     }
 }
+
+/* ========== ПРАВИЛЬНЫЕ ПЕРЕНОСЫ ДЛЯ ВСЕГО САЙТА (русский язык) ========== */
+body,
+.card,
+.card-service,
+.card-role,
+.process-description,
+.section-subtitle,
+.quiz-question p,
+.quiz-option,
+.quiz-result-title,
+.service-list li,
+.callback-form .form-field,
+.price-table td,
+.price-table th {
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
 /* ==================================================================
    11_pricelist.css – полный прайс-лист (аккордеоны)
    ================================================================== */
@@ -4552,12 +4604,13 @@ select:focus-visible {
             <li class="card card-service fade-up" role="listitem" itemscope itemtype="https://schema.org/Service" aria-labelledby="service1-title">
                 <h3 id="service1-title" itemprop="serviceType"><span class="emoji">🏢</span> HR для бизнеса</h3>
                 <div itemprop="description">
+                    <!-- Список оптимизирован для двух колонок: длинные и короткие фразы чередуются -->
                     <ul class="service-list">
                         <li>Подбор персонала (Junior → C-level)</li>
-                        <li>Онбординг и оценка</li>
-                        <li>Аутсорсинг подбора</li>
                         <li>Кадровый аудит</li>
+                        <li>Онбординг и оценка</li>
                         <li>Развитие</li>
+                        <li>Аутсорсинг подбора</li>
                         <li>Удержание</li>
                     </ul>
                 </div>
@@ -4568,9 +4621,9 @@ select:focus-visible {
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Карьерная стратегия</li>
+                        <li>Переговоры о зарплате</li>
                         <li>Упаковка резюме</li>
                         <li>Подготовка к интервью</li>
-                        <li>Переговоры о зарплате</li>
                         <li>Обход ИИ-фильтров АТС</li>
                     </ul>
                 </div>
@@ -4581,8 +4634,8 @@ select:focus-visible {
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Корпоративные тренинги (офлайн | онлайн)</li>
-                        <li>Развитие управленческих навыков</li>
                         <li>Мастер-классы</li>
+                        <li>Развитие управленческих навыков</li>
                         <li>Стратегические сессии</li>
                         <li>Коучинг топ-менеджеров</li>
                     </ul>
@@ -5954,7 +6007,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 22:28:35</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 22:46:14</span>
 
             </div>
         </div>

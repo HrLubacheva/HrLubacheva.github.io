@@ -1,15 +1,19 @@
 /* ==================================================================
-   12_certificates.css – карусель сертификатов (только нужное)
+   12_certificates.css – карусель сертификатов (без hover-эффектов, с прожилками)
    ================================================================== */
 .certificates-section {
     background: var(--light-bg, #f8f9fa);
-    padding: 60px 0;
+    padding: 60px 0 40px;
 }
 .carousel-wrapper {
     position: relative;
     display: flex;
     align-items: center;
     margin: 40px 0 20px;
+    cursor: grab;
+}
+.carousel-wrapper:active {
+    cursor: grabbing;
 }
 .carousel-viewport {
     overflow-x: hidden;
@@ -31,39 +35,36 @@
     background: transparent;
     border-radius: var(--radius-md, 16px);
     overflow: hidden;
-    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.08), var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
 }
 .carousel-slide:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
+    transform: none;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.08), var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
 }
 .carousel-slide img {
     height: 100%;
     width: auto;
     max-width: 100%;
     object-fit: cover;
-    transform: scale(1.02);
-    transition: transform 0.25s ease;
     display: block;
     background: transparent;
+    transition: none;
 }
 .carousel-slide:hover img {
-    transform: scale(1.05);
+    transform: none;
 }
 .carousel-slide.horizontal {
     max-width: 360px;
 }
 .carousel-slide.horizontal img {
     object-fit: cover;
-    transform: scale(1.02);
     background: transparent;
 }
 .carousel-slide.horizontal:hover img {
-    transform: scale(1.05);
+    transform: none;
 }
 @media (max-width: 992px) {
     .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
@@ -77,8 +78,6 @@
     .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
     .carousel-slide.horizontal { max-width: 200px; }
 }
-
-/* Прогресс-бар и бегунок (создаются скриптом) */
 .carousel-progress-container {
     position: relative;
     width: 100%;
@@ -111,8 +110,6 @@
     transform: translateY(-50%) scale(1.2);
     background: var(--primary-dark, #1F4A6E);
 }
-
-/* Инструкция (опционально, можно добавить в HTML) */
 .carousel-instruction {
     text-align: center;
     font-size: 0.85rem;
@@ -142,7 +139,4 @@
     .instruction-icon {
         margin: 0 4px;
     }
-}
-.certificates-section {
-    padding-bottom: 40px;
 }

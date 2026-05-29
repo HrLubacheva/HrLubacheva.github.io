@@ -563,3 +563,24 @@ section[id] {
         white-space: normal;
     }
 }
+
+/* ========== ПРАВИЛЬНЫЕ ПЕРЕНОСЫ ДЛЯ ВСЕГО САЙТА (русский язык) ========== */
+body,
+.card,
+.card-service,
+.card-role,
+.process-description,
+.section-subtitle,
+.quiz-question p,
+.quiz-option,
+.quiz-result-title,
+.service-list li,
+.callback-form .form-field,
+.price-table td,
+.price-table th {
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
