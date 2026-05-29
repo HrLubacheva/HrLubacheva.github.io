@@ -272,3 +272,85 @@
     justify-content: flex-end;
     margin-top: 15px;
 }
+
+/* ========== АДАПТАЦИЯ КАЛЬКУЛЯТОРА ДЛЯ МОБИЛЬНЫХ ========== */
+@media (max-width: 640px) {
+    /* Расширяем карточку калькулятора – убираем внутренние отступы и max-width */
+    .calculator-card {
+        max-width: 100%;
+        padding: 20px 16px;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    /* Контейнер добавления услуги – перестраиваем в две строки */
+    .add-service {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+
+    /* Выпадающий список – занимает всю ширину */
+    .service-select {
+        width: 100% !important;
+        min-width: auto !important;
+        flex: none !important;
+        box-sizing: border-box;
+    }
+
+    /* Блок с количеством и кнопкой – размещаем в одну строку (или две, если не хватает места) */
+    .add-service .calc-qty,
+    .add-service .add-service-btn {
+        width: auto;
+        flex: 1 1 auto;
+    }
+
+    /* Если нужно, чтобы кнопка была на отдельной строке – раскомментируйте ниже */
+    /*
+    .add-service {
+        gap: 10px !important;
+    }
+    .add-service .calc-qty {
+        width: 100%;
+    }
+    .add-service .add-service-btn {
+        width: 100%;
+    }
+    */
+
+    /* Уменьшаем отступы в группах услуг */
+    .service-group {
+        padding: 16px;
+        margin-bottom: 20px;
+    }
+
+    /* Заголовок группы услуг – чуть меньше */
+    .service-group h3 {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+
+    /* Корзина – более компактная */
+    .cart-section h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Общий отступ для секции калькулятора */
+    .calculator-section {
+        padding: 40px 0;
+    }
+}
+
+/* Дополнительно для очень узких экранов (≤480px) – можно сделать кнопку на отдельной строке */
+@media (max-width: 480px) {
+    .add-service .calc-qty,
+    .add-service .add-service-btn {
+        width: 100% !important;
+        flex: none !important;
+    }
+    .add-service {
+        gap: 8px !important;
+    }
+}
