@@ -91,7 +91,7 @@
     }
 }
 
-/* ========== Преимущества (две колонки) ========== */
+/* ========== Преимущества (две колонки) – исправлено переполнение ========== */
 .benefits-two-columns {
     display: flex;
     gap: 40px;
@@ -99,12 +99,13 @@
 }
 
 .benefits-column {
-    flex: 1;
-    min-width: 280px;
+    flex: 1 1 0;          /* позволяет сжиматься равномерно */
+    min-width: 0;         /* отключаем минимальную ширину – ключевое исправление */
     position: relative;
     padding: 8px 0;
 }
 
+/* Декоративные полоски между колонками */
 .benefits-column:first-child::before {
     content: '';
     position: absolute;
@@ -233,12 +234,6 @@
     color: var(--primary-dark);
     transition: color 0.2s;
     line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-height: 2.6em;
 }
 
 .benefit-card p {
@@ -247,12 +242,6 @@
     color: var(--text-dark);
     margin: 0;
     font-weight: 500;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-height: 4.5em;
 }
 
 .benefit-card:hover h4 {
@@ -265,38 +254,52 @@
         flex-direction: column;
         gap: 48px;
     }
+
+    .benefits-column {
+        width: 100%;
+        min-width: auto;
+        flex: 1 1 100%;
+    }
+
     .benefits-column:first-child::before,
     .benefits-column:last-child::after {
         display: none;
     }
+
     .benefits-column-header {
         padding: 20px 16px;
         margin-bottom: 24px;
     }
+
     .benefits-column-title {
         font-size: 1.3rem;
     }
+
     .benefits-column-icon {
         font-size: 2rem;
     }
+
     .benefits-stack {
         gap: 20px;
     }
+
     .benefit-card {
         padding: 20px 16px;
+        word-break: break-word;
+        overflow-wrap: break-word;
     }
+
     .benefit-card h4 {
         font-size: 1.2rem;
         line-height: 1.3;
-        min-height: auto; /* убираем принудительную высоту */
-        -webkit-line-clamp: unset;
+        min-height: auto;
         overflow: visible;
     }
+
     .benefit-card p {
         font-size: 0.9rem;
         line-height: 1.4;
         min-height: auto;
-        -webkit-line-clamp: unset;
         overflow: visible;
     }
 }
@@ -318,23 +321,37 @@
     }
 }
 
-/* ========== УМЕНЬШАЕМ СТАТИСТИКУ НА ТЕЛЕФОНАХ ========== */
+/* ========== Ещё более мелкие экраны (≤360px) – сильное масштабирование ========== */
+@media (max-width: 360px) {
+    .benefit-card {
+        padding: 14px 10px;
+    }
+    .benefit-card h4 {
+        font-size: 1rem;
+    }
+    .benefit-card p {
+        font-size: 0.75rem;
+        line-height: 1.3;
+    }
+}
+
+/* ========== Уменьшаем статистику на телефонах ========== */
 @media (max-width: 640px) {
     .stats-grid {
-        gap: 16px; /* уменьшаем расстояние между карточками */
+        gap: 16px;
         margin: 20px 0;
     }
     .card-stat {
-        padding: 16px 8px; /* убираем лишние отступы внутри */
+        padding: 16px 8px;
     }
     .stat-number {
-        font-size: 1.8rem;   /* вместо 2.8rem */
+        font-size: 1.8rem;
     }
     .stat-plus {
-        font-size: 1.4rem;   /* вместо 2rem */
+        font-size: 1.4rem;
     }
     .stat-label {
-        font-size: 0.75rem;  /* вместо 1rem */
+        font-size: 0.75rem;
     }
     .stat-number-wrapper {
         gap: 2px;
@@ -357,121 +374,5 @@
     }
     .stat-label {
         font-size: 0.65rem;
-    }
-}
-
-/* Дополнительная защита от вылезания за пределы на мобильных */
-@media (max-width: 768px) {
-    .benefits-column {
-        min-width: auto;
-        width: 100%;
-        flex: 1 1 100%;
-    }
-    .benefit-card {
-        width: 100%;
-        box-sizing: border-box;
-        word-break: break-word;
-        overflow-wrap: break-word;
-    }
-    .benefits-two-columns {
-        overflow-x: hidden;
-    }
-}
-
-/* ========== МАСШТАБИРОВАНИЕ БЛОКА ПРЕИМУЩЕСТВ НА МОБИЛЬНЫХ ========== */
-@media (max-width: 768px) {
-    .benefits-two-columns {
-        overflow-x: hidden;
-    }
-
-    .benefits-column {
-        min-width: auto;
-        width: 100%;
-        flex: 1 1 100%;
-    }
-
-    .benefit-card {
-        width: 100%;
-        box-sizing: border-box;
-        word-break: break-word;
-        overflow-wrap: break-word;
-        padding: 20px 16px;  /* уменьшенные отступы */
-    }
-
-    .benefit-card h4 {
-        font-size: 1.2rem;   /* масштабируем заголовок */
-        word-break: break-word;
-    }
-
-    .benefit-card p {
-        font-size: 0.9rem;   /* масштабируем текст */
-        line-height: 1.4;
-        word-break: break-word;
-    }
-}
-
-/* Ещё более мелкие экраны (≤360px) – сильное масштабирование */
-@media (max-width: 360px) {
-    .benefit-card {
-        padding: 14px 10px;
-    }
-    .benefit-card h4 {
-        font-size: 1rem;
-    }
-    .benefit-card p {
-        font-size: 0.75rem;
-        line-height: 1.3;
-    }
-}
-
-/* ========== Преимущества (две колонки) – исправлено переполнение ========== */
-.benefits-two-columns {
-    display: flex;
-    gap: 40px;
-    flex-wrap: wrap;
-}
-
-.benefits-column {
-    flex: 1 1 0;          /* позволяет сжиматься */
-    min-width: 0;         /* отключаем минимальную ширину – ключевое исправление */
-}
-
-/* Остальные стили для заголовков, карточек и т.д. оставляем без изменений */
-.benefits-column-header { ... }
-.benefits-column-icon { ... }
-.benefits-column-title { ... }
-.benefit-card { ... }
-
-/* Адаптив: на мобильных колонки идут вертикально */
-@media (max-width: 768px) {
-    .benefits-two-columns {
-        flex-direction: column;
-        gap: 48px;
-    }
-    .benefits-column {
-        width: 100%;
-    }
-    .benefit-card {
-        padding: 20px 16px;
-    }
-    .benefit-card h4 {
-        font-size: 1.2rem;
-    }
-    .benefit-card p {
-        font-size: 0.9rem;
-    }
-}
-
-/* Для очень узких экранов (≤360px) – дополнительное масштабирование */
-@media (max-width: 360px) {
-    .benefit-card {
-        padding: 14px 10px;
-    }
-    .benefit-card h4 {
-        font-size: 1rem;
-    }
-    .benefit-card p {
-        font-size: 0.75rem;
-        line-height: 1.3;
     }
 }
