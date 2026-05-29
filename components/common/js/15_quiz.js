@@ -1,10 +1,12 @@
 // ============================================================
-// 15_quiz.js – Квиз: 5 вопросов (роль, уровень, срочность, важность, бюджет)
-// Показывает 2 услуги + бесплатная консультация. Без подсветки лучшего выбора.
+// 15_quiz.js – Квиз: 5 вопросов, 2 услуги + бесплатная консультация
+// Без подсветки лучшего выбора.
+// При выборе услуги -> addToCart + скролл к #cart
+// При помощи -> скролл к #callback-form
 // ============================================================
 (function () {
     let quizQuestions = [];
-    let answers = [null, null, null, null, null]; // 5 ответов
+    let answers = [null, null, null, null, null];
     let quizState = 'questions';
     let currentQuestionIndex = 0;
     let isAnalyzing = false;
@@ -20,7 +22,6 @@
         window.escapeHtml = function (str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); };
     }
 
-    // Мотивирующие теги
     const benefitTags = {
         "Аудит резюме": "🔥 Повысит отклики",
         "Подготовка к собеседованию (1ч)": "🎯 Уверенность +100%",
@@ -55,6 +56,11 @@
         } else {
             targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
+    }
+
+    // Ищем корзину строго по id="cart"
+    function getCartElement() {
+        return document.getElementById('cart');
     }
 
     function updateFormHiddenFields(chosenText, chosenPrice, originalText, originalPrice, recommendedStr, answersArr) {
@@ -120,10 +126,9 @@
         else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
 
-    // Вопросы (только 5)
-    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Хочу расти в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Найти себя / определиться с путём"] };
+    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Найти себя / определиться с путём"] };
     const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
-    const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Директор / Managing Director"] };
+    const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
     const URGENCY_QUESTION = { text: "3. Как быстро нужен результат?", options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"] };
     const IMPORTANCE_QUESTION = { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"] };
     const BUDGET_QUESTION = { text: "5. Бюджет на консультацию/подбор?", options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"] };
@@ -234,7 +239,6 @@
         if (!container) return;
 
         const services = recommendations.services || [];
-        // Берём только первые 2 услуги
         const topTwo = services.slice(0, 2);
         const recommendationsText = topTwo.map((s, idx) => `📌 Рекомендация ${idx+1}: ${s.formatted} (${s.price})`).join('\n');
         const esc = window.escapeHtml;
@@ -259,14 +263,12 @@
                     ${benefit ? `<div class="quiz-result-benefit">${esc(benefit)}</div>` : ''}
                     <div class="quiz-result-price">💰 ${price}</div>
                     <div class="quiz-result-buttons">
-                        <button class="quiz-btn-select choose-option" data-choice="${i}" data-text="${serviceName}" data-price="${price}" data-display="${displayName}">✅ Выбрать</button>
-                        ${numericPrice !== null && numericPrice !== 0 ? `<button class="quiz-btn-cart add-to-cart" data-name="${serviceName}" data-price="${numericPrice}">➕ В корзину</button>` : ''}
+                        <button class="quiz-btn-select choose-option" data-choice="${i}" data-text="${serviceName}" data-price="${price}" data-display="${displayName}" data-numeric-price="${numericPrice !== null ? numericPrice : ''}">✅ Выбрать</button>
                     </div>
                 </div>
             `;
         }
 
-        // Карточка бесплатной консультации
         cardsHtml += `
             <div class="quiz-result-card">
                 <div class="quiz-result-icon">🤝</div>
@@ -293,7 +295,7 @@
 
         container.innerHTML = html;
 
-        // Обработчики кнопки "✅ Выбрать"
+        // Обработчик кнопки "✅ Выбрать" – добавление в корзину + скролл к #cart
         document.querySelectorAll('.choose-option').forEach(btn => {
             btn.removeEventListener('click', btn._choiceHandler);
             btn._choiceHandler = (e) => {
@@ -302,6 +304,19 @@
                 const variantText = btn.dataset.text;
                 const variantPrice = btn.dataset.price;
                 const displayText = btn.dataset.display || variantText;
+                const numericPrice = btn.dataset.numericPrice ? parseInt(btn.dataset.numericPrice, 10) : null;
+
+                // Добавление в корзину
+                if (numericPrice !== null && numericPrice !== 0 && typeof window.addToCart === 'function') {
+                    window.addToCart(variantText, numericPrice, 1);
+                    window.showSuccessToast(`🛒 ${variantText} добавлен(а) в корзину`);
+                } else if (numericPrice === null || numericPrice === 0) {
+                    window.showSuccessToast(`✅ Выбрано: ${displayText}`);
+                } else {
+                    window.showSuccessToast(`✅ Выбрано: ${displayText} (добавление в корзину недоступно)`);
+                }
+
+                // Сохранение выбора
                 selectedVariantText = displayText;
                 selectedVariantPrice = variantPrice;
                 selectedOriginalText = variantText;
@@ -314,36 +329,26 @@
                 updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendationsText, answersArr);
                 updateSelectionBlock(selectedVariantText, selectedVariantPrice);
                 sendQuizStats(answersStr, recommendationsText, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
-                window.showSuccessToast(`✅ Выбрано: ${displayText}`);
 
-                // Подсветка выбранной карточки (без затемнения остальных)
+                // Подсветка выбранной карточки
                 document.querySelectorAll('.quiz-result-card').forEach(card => card.classList.remove('selected'));
                 const currentCard = btn.closest('.quiz-result-card');
                 if (currentCard) currentCard.classList.add('selected');
+
+                // Скролл к корзине (строго по id="cart")
+                const cartElement = getCartElement();
+                if (cartElement) {
+                    scrollToElement(cartElement);
+                } else if (window.IS_DEV) {
+                    console.warn('Элемент #cart не найден. Скролл не выполнен.');
+                }
 
                 isSubmittingChoice = false;
             };
             btn.addEventListener('click', btn._choiceHandler);
         });
 
-        // Обработчики "➕ В корзину"
-        document.querySelectorAll('.add-to-cart').forEach(btn => {
-            btn.removeEventListener('click', btn._cartHandler);
-            btn._cartHandler = (e) => {
-                e.stopPropagation();
-                const serviceName = btn.dataset.name;
-                const price = parseInt(btn.dataset.price, 10);
-                if (window.addToCart && typeof window.addToCart === 'function') {
-                    window.addToCart(serviceName, price, 1);
-                } else {
-                    console.error('addToCart не определена');
-                    window.showErrorToast('Не удалось добавить в корзину, попробуйте позже');
-                }
-            };
-            btn.addEventListener('click', btn._cartHandler);
-        });
-
-        // Обработчик "Нужна помощь?"
+        // Обработчик "Нужна помощь?" – скролл к #callback-form
         const helpBtn = document.querySelector('.choose-help');
         if (helpBtn) {
             helpBtn.removeEventListener('click', helpBtn._helpHandler);
@@ -363,7 +368,13 @@
                 updateSelectionBlock(selectedOriginalText, selectedOriginalPrice);
                 sendQuizStats(answersStr, recommendationsText, '', '', selectedOriginalText, selectedOriginalPrice);
                 window.showSuccessToast('🙏 Спасибо! Я свяжусь с вами.');
-                showFinalScreen();
+
+                const callbackForm = document.getElementById('callback-form');
+                if (callbackForm) {
+                    scrollToElement(callbackForm);
+                } else {
+                    showFinalScreen();
+                }
                 isSubmittingChoice = false;
             };
             helpBtn.addEventListener('click', helpBtn._helpHandler);

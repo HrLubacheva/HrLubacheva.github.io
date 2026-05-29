@@ -141,7 +141,8 @@
                 <div id="discountInfo" class="discount-info"></div>
             </div>
 
-            <div class="cart-section">
+            <!-- Здесь добавлен id="cart" -->
+            <div class="cart-section" id="cart">
                 <h3>🛒 Выбранные услуги</h3>
                 <div id="servicesList" class="services-list"></div>
                 <div class="share-cart-container">
@@ -253,62 +254,58 @@
         }
     }
     /* ========== КАСТОМНЫЕ ВЫПАДАЮЩИЕ СПИСКИ ========== */
-.service-select {
-    appearance: none;
-    -webkit-appearance: none;
-    background-color: #fff;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232D6A9F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 18px;
-    padding: 14px 40px 14px 18px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    border-radius: 60px;
-    border: 1px solid var(--border, #e0e0e0);
-    transition: all 0.2s ease;
-    cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
-}
-
-.service-select:hover {
-    border-color: var(--primary-light, #4A8BC2);
-}
-
-.service-select:focus {
-    outline: none;
-    border-color: var(--primary, #2D6A9F);
-    box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
-}
-
-/* Стили для опций (базовые, но поддерживаются не всеми браузерами) */
-.service-select option {
-    padding: 12px;
-    font-size: 0.9rem;
-    background-color: #fff;
-    color: var(--text-dark);
-}
-
-/* Группы внутри select */
-.service-select optgroup {
-    font-weight: 700;
-    color: var(--primary-dark, #1F4A6E);
-    background-color: #f8f9fa;
-    padding: 8px 0 4px 0;
-}
-
-.service-select optgroup option {
-    padding-left: 24px;
-    font-weight: normal;
-}
-
-/* Адаптив для мобильных: ещё крупнее */
-@media (max-width: 640px) {
     .service-select {
-        padding: 16px 40px 16px 18px;
-        font-size: 1rem;
-        background-position: right 14px center;
+        appearance: none;
+        -webkit-appearance: none;
+        background-color: #fff;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232D6A9F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        background-size: 18px;
+        padding: 14px 40px 14px 18px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        border-radius: 60px;
+        border: 1px solid var(--border, #e0e0e0);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
-}
 
+    .service-select:hover {
+        border-color: var(--primary-light, #4A8BC2);
+    }
+
+    .service-select:focus {
+        outline: none;
+        border-color: var(--primary, #2D6A9F);
+        box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
+    }
+
+    .service-select option {
+        padding: 12px;
+        font-size: 0.9rem;
+        background-color: #fff;
+        color: var(--text-dark);
+    }
+
+    .service-select optgroup {
+        font-weight: 700;
+        color: var(--primary-dark, #1F4A6E);
+        background-color: #f8f9fa;
+        padding: 8px 0 4px 0;
+    }
+
+    .service-select optgroup option {
+        padding-left: 24px;
+        font-weight: normal;
+    }
+
+    @media (max-width: 640px) {
+        .service-select {
+            padding: 16px 40px 16px 18px;
+            font-size: 1rem;
+            background-position: right 14px center;
+        }
+    }
 </style>
