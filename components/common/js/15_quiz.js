@@ -20,7 +20,15 @@
     const BREAKPOINT_MOBILE = C.BREAKPOINT_MOBILE || 768;
 
     if (typeof window.escapeHtml !== 'function') {
-        window.escapeHtml = function (str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); };
+        window.escapeHtml = function (str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function (m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        };
     }
 
     const benefitTags = {
@@ -41,7 +49,15 @@
         "Хэдхантинг": "🎯 Только топ-кандидаты"
     };
 
-    function getPrice(serviceName) { if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) { const price = window.PRICE_BOOK[serviceName]; if (price === 0) return '0 ₽'; if (price === null) return 'цена по запросу'; return price.toLocaleString() + ' ₽'; } return 'цена по запросу'; }
+    function getPrice(serviceName) {
+        if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) {
+            const price = window.PRICE_BOOK[serviceName];
+            if (price === 0) return '0 ₽';
+            if (price === null) return 'цена по запросу';
+            return price.toLocaleString() + ' ₽';
+        }
+        return 'цена по запросу';
+    }
 
     function getNavbarHeight() {
         const navbar = document.querySelector('.navbar');
@@ -55,7 +71,7 @@
             const offset = navbarHeight + 15;
             window.smoothScrollTo(targetElement, offset);
         } else {
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            targetElement.scrollIntoView({behavior: 'smooth', block: 'start'});
         }
     }
 
@@ -74,7 +90,7 @@
 
             const qLabels = ['role', 'level', 'urgency', 'importance', 'budget', 'industry', 'work_format'];
             for (let i = 0; i < qLabels.length; i++) {
-                const fieldName = `quiz_q${i+1}_${qLabels[i]}`;
+                const fieldName = `quiz_q${i + 1}_${qLabels[i]}`;
                 setField(form, fieldName, answersArr[i] || '');
             }
 
@@ -108,33 +124,84 @@
             block.style.display = '';
             if (window.innerWidth <= BREAKPOINT_MOBILE) block.style.display = 'flex';
             else block.style.display = 'grid';
-        } else { block.style.display = 'none'; if (nameSpan) nameSpan.innerHTML = ''; if (priceSpan) priceSpan.innerHTML = ''; }
+        } else {
+            block.style.display = 'none';
+            if (nameSpan) nameSpan.innerHTML = '';
+            if (priceSpan) priceSpan.innerHTML = '';
+        }
     }
 
     function sendQuizStats(answersStr, recommendedStr, chosenText, chosenPrice, originalText, originalPrice) {
         const scriptUrl = window.APP_CONFIG ? window.APP_CONFIG.SCRIPT_URL : window.SCRIPT_URL;
         if (!scriptUrl) return;
-        const formData = { formType: 'Квиз ответы', quizAnswersRaw: answersStr, recommendedVariants: recommendedStr, chosenVariant: chosenText, chosenVariantPrice: chosenPrice, originalChosenVariant: originalText, originalChosenVariantPrice: originalPrice, userId: typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : '' };
+        const formData = {
+            formType: 'Квиз ответы',
+            quizAnswersRaw: answersStr,
+            recommendedVariants: recommendedStr,
+            chosenVariant: chosenText,
+            chosenVariantPrice: chosenPrice,
+            originalChosenVariant: originalText,
+            originalChosenVariantPrice: originalPrice,
+            userId: typeof window.getOrCreateLocalUserId === 'function' ? window.getOrCreateLocalUserId() : ''
+        };
         if (typeof window.getTimeOnSite === 'function') formData.timeOnSite = window.getTimeOnSite();
         if (typeof window.getVisitStatsText === 'function') formData.visitStats = window.getVisitStatsText();
         if (typeof window.getUTMText === 'function') formData.utm = window.getUTMText();
         if (typeof window.getDeviceText === 'function') formData.device = window.getDeviceText();
         if (typeof window.getPageText === 'function') formData.page = window.getPageText();
-        if (typeof window.postWithRetry === 'function') window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза', err); });
-        else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
+        if (typeof window.postWithRetry === 'function') window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => {
+            if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза', err);
+        });
+        else fetch(scriptUrl, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: new URLSearchParams(formData)
+        }).catch(e => {
+            if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e);
+        });
     }
 
-    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"] };
-    const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
-    const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
-    const URGENCY_QUESTION = { text: "3. Как быстро нужен результат?", options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"] };
-    const IMPORTANCE_QUESTION = { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"] };
-    const BUDGET_QUESTION = { text: "5. Бюджет на консультацию/подбор?", options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"] };
+    const FIRST_QUESTION = {
+        text: "1. Ваша роль?",
+        options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"]
+    };
+    const LEVEL_JOBSEEKER = {
+        text: "2. Ваш текущий уровень?",
+        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"]
+    };
+    const LEVEL_RECRUITER = {
+        text: "2. Какой уровень сотрудника ищете?",
+        options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"]
+    };
+    const URGENCY_QUESTION = {
+        text: "3. Как быстро нужен результат?",
+        options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"]
+    };
+    const IMPORTANCE_QUESTION = {
+        text: "4. Что для вас важнее всего?",
+        options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"]
+    };
+    const BUDGET_QUESTION = {
+        text: "5. Бюджет на консультацию/подбор?",
+        options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"]
+    };
 
-    const INDUSTRY_FOR_JOBSEEKER = { text: "6. Ваша сфера деятельности?", options: ["IT / Технологии", "Продажи / Маркетинг", "HR / Управление персоналом", "Другое"] };
-    const INDUSTRY_FOR_BUSINESS = { text: "6. В какой сфере работает ваша компания?", options: ["IT / Технологии", "Продажи / Маркетинг", "HR / Управление персоналом", "Другое"] };
-    const WORK_FORMAT_FOR_JOBSEEKER = { text: "7. Предпочитаемый формат работы?", options: ["Офлайн / В офисе", "Онлайн / Удалённо", "Гибридный (смешанный)"] };
-    const WORK_FORMAT_FOR_BUSINESS = { text: "7. Какой формат работы предпочтительнее для сотрудников?", options: ["Офлайн / В офисе", "Онлайн / Удалённо", "Гибридный (смешанный)"] };
+    const INDUSTRY_FOR_JOBSEEKER = {
+        text: "6. Ваша сфера деятельности?",
+        options: ["IT / Технологии", "Продажи / Маркетинг", "HR / Управление персоналом", "Другое"]
+    };
+    const INDUSTRY_FOR_BUSINESS = {
+        text: "6. В какой сфере работает ваша компания?",
+        options: ["IT / Технологии", "Продажи / Маркетинг", "HR / Управление персоналом", "Другое"]
+    };
+    const WORK_FORMAT_FOR_JOBSEEKER = {
+        text: "7. Предпочитаемый формат работы?",
+        options: ["Офлайн / В офисе", "Онлайн / Удалённо", "Гибридный (смешанный)"]
+    };
+    const WORK_FORMAT_FOR_BUSINESS = {
+        text: "7. Какой формат работы предпочтительнее для сотрудников?",
+        options: ["Офлайн / В офисе", "Онлайн / Удалённо", "Гибридный (смешанный)"]
+    };
 
     let currentRole = null;
 
@@ -153,7 +220,10 @@
             INDUSTRY_FOR_JOBSEEKER,
             WORK_FORMAT_FOR_JOBSEEKER
         ];
-        selectedVariantText = ''; selectedVariantPrice = ''; selectedOriginalText = ''; selectedOriginalPrice = '';
+        selectedVariantText = '';
+        selectedVariantPrice = '';
+        selectedOriginalText = '';
+        selectedOriginalPrice = '';
         updateFormHiddenFields('', '', '', '', '', answers);
         updateSelectionBlock('', '');
         renderQuiz();
@@ -203,10 +273,16 @@
         if (!container) return;
         if (quizState === 'questions') {
             const currentQ = quizQuestions[currentQuestionIndex];
-            if (!currentQ || !currentQ.options) { container.innerHTML = '<div style="text-align:center; padding:40px;">Ошибка загрузки вопроса</div>'; return; }
+            if (!currentQ || !currentQ.options) {
+                container.innerHTML = '<div style="text-align:center; padding:40px;">Ошибка загрузки вопроса</div>';
+                return;
+            }
             const progressWidth = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
             let html = `<div class="quiz-progress"><div class="quiz-progress-bar" style="width: ${progressWidth}%;"></div></div><div class="quiz-question"><p>${window.escapeHtml(currentQ.text)}</p><div class="quiz-options">`;
-            for (let opt of currentQ.options) { const isSelected = (answers[currentQuestionIndex] === opt); html += `<button class="quiz-option ${isSelected ? 'selected' : ''}" data-opt="${window.escapeHtml(opt)}" type="button">${window.escapeHtml(opt)}</button>`; }
+            for (let opt of currentQ.options) {
+                const isSelected = (answers[currentQuestionIndex] === opt);
+                html += `<button class="quiz-option ${isSelected ? 'selected' : ''}" data-opt="${window.escapeHtml(opt)}" type="button">${window.escapeHtml(opt)}</button>`;
+            }
             html += `</div></div><div class="quiz-nav"><button id="quizPrevBtn" class="btn-secondary" ${currentQuestionIndex === 0 ? 'disabled' : ''}>◀ Назад</button>`;
             if (currentQuestionIndex < quizQuestions.length - 1) html += `<button id="quizNextBtn" class="btn-primary">Далее ▶</button>`;
             html += `</div>`;
@@ -224,7 +300,12 @@
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         isAnalyzing = true;
                         container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
-                        setTimeout(() => { const recommendations = window.getTopServices(answers); quizState = 'choice'; renderResult(recommendations); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
+                        setTimeout(() => {
+                            const recommendations = window.getTopServices(answers);
+                            quizState = 'choice';
+                            renderResult(recommendations);
+                            isAnalyzing = false;
+                        }, QUIZ_ANALYZE_DELAY);
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
@@ -237,11 +318,19 @@
                 nextBtn.removeEventListener('click', nextBtn._nextHandler);
                 nextBtn._nextHandler = () => {
                     if (isAnalyzing) return;
-                    if (answers[currentQuestionIndex] === null) { window.showWarningToast('📌 Выберите вариант ответа, чтобы продолжить'); return; }
+                    if (answers[currentQuestionIndex] === null) {
+                        window.showWarningToast('📌 Выберите вариант ответа, чтобы продолжить');
+                        return;
+                    }
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         isAnalyzing = true;
                         container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
-                        setTimeout(() => { const recommendations = window.getTopServices(answers); quizState = 'choice'; renderResult(recommendations); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
+                        setTimeout(() => {
+                            const recommendations = window.getTopServices(answers);
+                            quizState = 'choice';
+                            renderResult(recommendations);
+                            isAnalyzing = false;
+                        }, QUIZ_ANALYZE_DELAY);
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
@@ -252,7 +341,12 @@
             const prevBtn = document.getElementById('quizPrevBtn');
             if (prevBtn) {
                 prevBtn.removeEventListener('click', prevBtn._prevHandler);
-                prevBtn._prevHandler = () => { if (currentQuestionIndex > 0) { currentQuestionIndex--; renderQuiz(); } };
+                prevBtn._prevHandler = () => {
+                    if (currentQuestionIndex > 0) {
+                        currentQuestionIndex--;
+                        renderQuiz();
+                    }
+                };
                 prevBtn.addEventListener('click', prevBtn._prevHandler);
             }
         }
@@ -270,7 +364,7 @@
         if (!container) return;
 
         const services = recommendations.services || [];
-        const recommendationsText = services.map((s, idx) => `📌 Рекомендация ${idx+1}: ${s.formatted} (${s.price})`).join('\n');
+        const recommendationsText = services.map((s, idx) => `📌 Рекомендация ${idx + 1}: ${s.formatted} (${s.price})`).join('\n');
         const esc = window.escapeHtml;
 
         let cardsHtml = '';
@@ -439,8 +533,16 @@
             const goToCallbackBtn = container.querySelector('.go-to-callback');
             const goToCalculatorBtn = container.querySelector('.go-to-calculator');
             const resetBtnAfter = document.getElementById('resetQuizBtnAfter');
-            if (goToCallbackBtn) goToCallbackBtn.addEventListener('click', (e) => { e.preventDefault(); const target = document.getElementById('callback-form'); if (target) scrollToElement(target); });
-            if (goToCalculatorBtn) goToCalculatorBtn.addEventListener('click', (e) => { e.preventDefault(); const target = document.getElementById('calculator'); if (target) scrollToElement(target); });
+            if (goToCallbackBtn) goToCallbackBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.getElementById('callback-form');
+                if (target) scrollToElement(target);
+            });
+            if (goToCalculatorBtn) goToCalculatorBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.getElementById('calculator');
+                if (target) scrollToElement(target);
+            });
             if (resetBtnAfter) resetBtnAfter.addEventListener('click', () => startQuiz());
         }
     }
@@ -450,14 +552,20 @@
         const removeBtn = document.getElementById('removeQuizSelection');
         if (removeBtn) {
             removeBtn.removeEventListener('click', removeBtn._removeHandler);
-            removeBtn._removeHandler = function () { selectedVariantText = ''; selectedVariantPrice = ''; updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', answers); updateSelectionBlock('', ''); window.showSuccessToast('🗑️ Выбранный вариант удалён'); };
+            removeBtn._removeHandler = function () {
+                selectedVariantText = '';
+                selectedVariantPrice = '';
+                updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', answers);
+                updateSelectionBlock('', '');
+                window.showSuccessToast('🗑️ Выбранный вариант удалён');
+            };
             removeBtn.addEventListener('click', removeBtn._removeHandler);
         }
 
         const addToCartFromQuizBtn = document.getElementById('addQuizSelectionToCart');
         if (addToCartFromQuizBtn) {
             addToCartFromQuizBtn.removeEventListener('click', addToCartFromQuizBtn._addToCartHandler);
-            addToCartFromQuizBtn._addToCartHandler = function() {
+            addToCartFromQuizBtn._addToCartHandler = function () {
                 const serviceName = document.getElementById('chosenVariant')?.value || '';
                 const priceStr = document.getElementById('chosenVariantPrice')?.value || '';
                 const numericPrice = priceStr ? parseInt(priceStr.replace(/\D/g, ''), 10) : null;
@@ -471,7 +579,6 @@
             };
             addToCartFromQuizBtn.addEventListener('click', addToCartFromQuizBtn._addToCartHandler);
         }
-
         const copyResultBtn = document.getElementById('copyQuizResultBtn');
         if (copyResultBtn) {
             copyResultBtn.removeEventListener('click', copyResultBtn._copyHandler);
@@ -482,13 +589,25 @@
                 const chosenVariantPrice = document.getElementById('chosenVariantPrice')?.value || '';
                 const originalChosenVariant = document.getElementById('originalChosenVariant')?.value || '';
                 const recommendedVariants = document.getElementById('recommendedVariants')?.value || '';
-                if (!chosenVariant && !originalChosenVariant) { window.showWarningToast('📋 Пройдите квиз и выберите вариант, чтобы скопировать рекомендации.'); return; }
+                if (!chosenVariant && !originalChosenVariant) {
+                    window.showWarningToast('📋 Пройдите квиз и выберите вариант, чтобы скопировать рекомендации.');
+                    return;
+                }
                 let copyText = '🎯 Мои результаты квиза у Виктории Любачевой:\n\n';
-                if (chosenVariant) { copyText += `✅ Выбранный вариант: ${chosenVariant}`; if (chosenVariantPrice) copyText += ` (${chosenVariantPrice})`; copyText += '\n'; }
+                if (chosenVariant) {
+                    copyText += `✅ Выбранный вариант: ${chosenVariant}`;
+                    if (chosenVariantPrice) copyText += ` (${chosenVariantPrice})`;
+                    copyText += '\n';
+                }
                 if (originalChosenVariant && originalChosenVariant !== chosenVariant) copyText += `📌 Исходный выбор: ${originalChosenVariant}\n`;
                 if (recommendedVariants) copyText += `\n📌 Рекомендации эксперта:\n${recommendedVariants}\n`;
                 copyText += `\n🔗 ${window.location.href.split('?')[0]}`;
-                navigator.clipboard.writeText(copyText).then(() => { window.showSuccessToast('✅ Рекомендации скопированы в буфер'); if (window.lockAction) window.lockAction(actionKey, 5000); }).catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
+                navigator.clipboard.writeText(copyText).then(() => {
+                    window.showSuccessToast('✅ Рекомендации скопированы в буфер');
+                    if (window.lockAction) window.lockAction(actionKey, 5000);
+                }).catch(() => {
+                    window.showErrorToast('❌ Не удалось скопировать');
+                });
             };
             copyResultBtn.addEventListener('click', copyResultBtn._copyHandler);
         }
