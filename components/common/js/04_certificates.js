@@ -3,6 +3,7 @@
 // Лента утроена (3 копии). Движение влево непрерывно.
 // Полоса прокрутки с бегунком, синхронизированная.
 // Наведение – пауза, перетаскивание – синхронизация.
+// ДОБАВЛЕНА ПОДДЕРЖКА ТАЧПАДА / СЕНСОРНОГО ЭКРАНА
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -23,7 +24,7 @@
         let dragStartX = 0;
         let dragStartPos = 0;
         let lastTimestamp = 0;
-        const SPEED = 140;              // px/сек (регулируйте)
+        const SPEED = 140;              // px/сек
 
         // Создаём утроенную ленту (3 копии)
         function buildTripleTrack() {
@@ -54,13 +55,10 @@
         }
 
         function setPosition(pos) {
-            // Бесконечная прокрутка: удерживаем позицию в пределах от -originalSetWidth до 0
-            // Но для удобства вычислений разрешаем любую и будем нормализовывать
             scrollPos = pos;
             track.style.transform = `translateX(${scrollPos}px)`;
         }
 
-        // Нормализация позиции для полосы прогресса и перескока
         function normalizePosition(pos) {
             let normalized = pos;
             while (normalized > 0) normalized -= originalSetWidth;
@@ -68,15 +66,12 @@
             return normalized;
         }
 
-        // Обновление прогресс-бара (бегунок от 0 до 1, где 0 = крайний правый край ленты, 1 = левый край одного цикла)
         function updateProgressBar() {
             const progressContainer = document.querySelector('.carousel-progress-container');
             const progressMarker = document.querySelector('.carousel-progress-marker');
             if (!progressContainer || !progressMarker) return;
-            // Вычисляем относительное смещение в пределах одного цикла (от -originalSetWidth до 0)
             let normalized = normalizePosition(scrollPos);
-            // normalized от -originalSetWidth (лево) до 0 (право)
-            let progress = -normalized / originalSetWidth; // от 0 до 1
+            let progress = -normalized / originalSetWidth;
             const containerRect = progressContainer.getBoundingClientRect();
             const markerWidth = progressMarker.offsetWidth;
             const maxLeft = containerRect.width - markerWidth;
@@ -84,7 +79,6 @@
             progressMarker.style.left = `${leftPos}px`;
         }
 
-        // Создание прогресс-бара, если его нет
         function ensureProgressBar() {
             let container = document.querySelector('.carousel-progress-container');
             if (!container) {
@@ -117,22 +111,18 @@
                     transition: left 0.05s linear;
                 `;
                 progressDiv.appendChild(marker);
-                // Вставляем после карусели
                 wrapper.insertAdjacentElement('afterend', progressDiv);
-                // Клик по полосе – перемотка
                 progressDiv.addEventListener('click', (e) => {
                     const rect = progressDiv.getBoundingClientRect();
                     const clickX = e.clientX - rect.left;
                     const percent = clickX / rect.width;
                     let targetNormalized = -percent * originalSetWidth;
                     let newPos = normalizePosition(scrollPos);
-                    // Сдвигаем newPos до targetNormalized, но с учётом текущего цикла
                     let delta = targetNormalized - newPos;
                     scrollPos += delta;
                     setPosition(scrollPos);
                     updateProgressBar();
                     if (!isHovering && !isDragging) {
-                        // перезапускаем анимацию, чтобы продолжить
                         stopAnimation();
                         startAnimation();
                     }
@@ -142,7 +132,6 @@
             return container;
         }
 
-        // Анимация
         function animate(now) {
             if (!animationId) return;
             if (lastTimestamp === 0) {
@@ -155,8 +144,7 @@
 
             if (!isHovering && !isDragging) {
                 let step = (SPEED * delta) / 1000;
-                let newPos = scrollPos - step; // двигаем влево
-                // Бесконечное зацикливание: если ушли левее -originalSetWidth, перепрыгиваем
+                let newPos = scrollPos - step;
                 const minPos = -originalSetWidth;
                 if (newPos < minPos) {
                     newPos += originalSetWidth;
@@ -180,34 +168,40 @@
             }
         }
 
-        // Drag & drop
-        function onMouseDown(e) {
-            if (e.button !== 0) return;
+        // ----- УНИВЕРСАЛЬНЫЕ ФУНКЦИИ ПЕРЕТАСКИВАНИЯ ДЛЯ МЫШИ И ТАЧПАДА -----
+        function getClientXFromEvent(e) {
+            if (e.touches) {
+                // Touch-событие
+                return e.touches[0].clientX;
+            }
+            return e.clientX;
+        }
+
+        function onDragStart(clientX) {
             isDragging = true;
-            dragStartX = e.clientX;
+            dragStartX = clientX;
             dragStartPos = scrollPos;
             track.style.transition = 'none';
-            e.preventDefault();
             document.body.style.userSelect = 'none';
+            document.body.style.overflow = 'hidden'; // блокируем скролл страницы
             stopAnimation();
         }
 
-        function onMouseMove(e) {
+        function onDragMove(clientX) {
             if (!isDragging) return;
-            const dx = e.clientX - dragStartX;
+            const dx = clientX - dragStartX;
             let newPos = dragStartPos + dx;
-            // Бесконечная прокрутка: не ограничиваем, но для синхронизации прогресса потом нормализуем
             scrollPos = newPos;
             setPosition(scrollPos);
             updateProgressBar();
         }
 
-        function onMouseUp() {
+        function onDragEnd() {
             if (!isDragging) return;
             isDragging = false;
             document.body.style.userSelect = '';
+            document.body.style.overflow = '';
             track.style.transition = 'transform 0.3s ease';
-            // Нормализуем позицию, чтобы не было огромных чисел
             let norm = normalizePosition(scrollPos);
             scrollPos = norm;
             setPosition(scrollPos);
@@ -215,7 +209,44 @@
             if (!isHovering) startAnimation();
         }
 
-        // Наведение мыши
+        // Обработчики для мыши
+        function onMouseDown(e) {
+            if (e.button !== 0) return;
+            e.preventDefault();
+            onDragStart(getClientXFromEvent(e));
+        }
+
+        function onMouseMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            onDragMove(getClientXFromEvent(e));
+        }
+
+        function onMouseUp(e) {
+            onDragEnd();
+        }
+
+        // Обработчики для тач-событий (тачпад / сенсорный экран)
+        function onTouchStart(e) {
+            e.preventDefault();   // предотвращаем прокрутку страницы
+            if (e.touches.length === 1) {
+                onDragStart(getClientXFromEvent(e));
+            }
+        }
+
+        function onTouchMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();   // критически важно: предотвращает скролл во время перетаскивания
+            if (e.touches.length === 1) {
+                onDragMove(getClientXFromEvent(e));
+            }
+        }
+
+        function onTouchEnd(e) {
+            onDragEnd();
+        }
+
+        // Наведение мыши (пауза автопрокрутки)
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => {
@@ -231,20 +262,24 @@
         // Инициализация
         function init() {
             updateDimensions();
-            // Стартовая позиция: второй набор оригиналов (сдвиг на -originalSetWidth)
             scrollPos = -originalSetWidth;
             setPosition(scrollPos);
             ensureProgressBar();
             updateProgressBar();
             startAnimation();
 
+            // Регистрируем события для мыши
             track.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
 
+            // Регистрируем события для тач-устройств
+            track.addEventListener('touchstart', onTouchStart, { passive: false });
+            window.addEventListener('touchmove', onTouchMove, { passive: false });
+            window.addEventListener('touchend', onTouchEnd);
+
             window.addEventListener('resize', () => {
                 updateDimensions();
-                // Нормализуем позицию после смены размеров
                 let norm = normalizePosition(scrollPos);
                 scrollPos = norm;
                 setPosition(scrollPos);
