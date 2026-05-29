@@ -3694,6 +3694,29 @@ section[id] {
         gap: 8px;
     }
 }
+
+/* ========== ИСПРАВЛЕНИЕ БЛОКА УСЛУГ НА МОБИЛЬНЫХ ========== */
+@media (max-width: 768px) {
+    #services .card-service,
+    #services .card {
+        width: 100% !important;
+        min-width: auto !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box !important;
+    }
+    #services .grid-2 {
+        gap: 16px !important;
+    }
+    #services .service-list {
+        padding-left: 0;
+        margin: 0;
+    }
+    #services .service-list li {
+        word-break: break-word;
+        white-space: normal;
+    }
+}
 /* ==================================================================
    11_pricelist.css – полный прайс-лист (аккордеоны)
    ================================================================== */
@@ -6064,7 +6087,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 21:50:46</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 21:52:36</span>
 
             </div>
         </div>
