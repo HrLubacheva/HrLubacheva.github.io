@@ -214,21 +214,92 @@
         logInit('initMaterialsEmailButtons finished', 'INFO', '', 4);
     }
 
+    // ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ПОДСВЕТКИ МЕНЮ ==========
     function initActiveNav() {
-        const sections = document.querySelectorAll('section[id]');
         const navLinks = document.querySelectorAll('.nav-links a');
-        if (!sections.length || !navLinks.length) return;
-        const observer = new IntersectionObserver((entries) => {
-            const visibleSections = entries.filter(entry => entry.isIntersecting && entry.intersectionRatio >= 0.25).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-            if (visibleSections.length) {
-                const activeId = visibleSections[0].target.id;
-                navLinks.forEach(link => {
-                    const href = link.getAttribute('href');
-                    link.classList.toggle('active', href === `#${activeId}`);
-                });
+        if (!navLinks.length) return;
+
+        // Список id секций, которые есть в меню (соответствие href без #)
+        const menuSectionIds = Array.from(navLinks).map(link => {
+            const href = link.getAttribute('href');
+            return href ? href.substring(1) : null;
+        }).filter(Boolean);
+
+        // Функция проверки, видна ли секция (хотя бы частично)
+        function isSectionVisible(section) {
+            const rect = section.getBoundingClientRect();
+            return rect.top < window.innerHeight && rect.bottom > 0;
+        }
+
+        function updateActiveNav() {
+            let activeId = null;
+
+            // Приоритет: если секция #home видна хотя бы на 10% и её верх не уехал далеко
+            const homeSection = document.getElementById('home');
+            if (homeSection) {
+                const rect = homeSection.getBoundingClientRect();
+                const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+                const ratio = visibleHeight / rect.height;
+                if (ratio >= 0.1 && rect.top <= 100) {
+                    activeId = 'home';
+                }
             }
-        }, {threshold: [0.25, 0.5, 0.75]});
-        sections.forEach(section => observer.observe(section));
+
+            // Если home не активна, ищем среди секций, которые есть в меню
+            if (!activeId) {
+                let bestSection = null;
+                let bestTop = Infinity;
+
+                for (const id of menuSectionIds) {
+                    const section = document.getElementById(id);
+                    if (!section) continue;
+                    const rect = section.getBoundingClientRect();
+                    // Если секция видима (хотя бы частично)
+                    if (isSectionVisible(section)) {
+                        // Берём ту, чья верхняя граница ближе всего к верху (но не отрицательная далеко)
+                        const top = rect.top;
+                        if (top >= 0 && top < bestTop) {
+                            bestTop = top;
+                            bestSection = section;
+                        }
+                    }
+                }
+
+                if (bestSection) {
+                    activeId = bestSection.id;
+                } else {
+                    // Если ни одна секция из меню не видна, пытаемся найти ближайшую сверху (последнюю, чей низ положительный)
+                    let lastVisibleId = null;
+                    let lastVisibleBottom = -Infinity;
+                    for (const id of menuSectionIds) {
+                        const section = document.getElementById(id);
+                        if (!section) continue;
+                        const rect = section.getBoundingClientRect();
+                        if (rect.bottom > 0 && rect.bottom < window.innerHeight + 200) {
+                            if (rect.bottom > lastVisibleBottom) {
+                                lastVisibleBottom = rect.bottom;
+                                lastVisibleId = id;
+                            }
+                        }
+                    }
+                    if (lastVisibleId) activeId = lastVisibleId;
+                }
+            }
+
+            // Обновляем классы у ссылок
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === `#${activeId}`) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        window.addEventListener('resize', updateActiveNav);
+        updateActiveNav();
     }
 
     function initCarousel() {
@@ -238,7 +309,6 @@
         }
     }
 
-    // НОВАЯ ФУНКЦИЯ для инициализации отслеживания ошибок, если файл error_tracking.js уже загружен
     function initErrorTrackingIfAvailable() {
         if (typeof window.initErrorTracking === 'function') {
             window.initErrorTracking();
@@ -247,7 +317,6 @@
             window.ErrorTracking.init();
             logInit('ErrorTracking инициализирован через модуль', 'INFO', '', 3);
         } else {
-            // Если скрипт ещё не загружен, подождём событие load
             window.addEventListener('load', function() {
                 if (typeof window.initErrorTracking === 'function') {
                     window.initErrorTracking();
@@ -318,12 +387,12 @@
         logInit('Запуск window.initQuiz()', 'INFO', '', 3);
         window.initQuiz();
 
-        initActiveNav();
+        initActiveNav();    // <--- ИСПРАВЛЕННАЯ ПОДСВЕТКА
         initFormValidation();
         initScrollTopButton();
         initMaterialsEmailButtons();
         initCarousel();
-        initErrorTrackingIfAvailable(); // <--- ДОБАВЛЕНА ИНИЦИАЛИЗАЦИЯ ТРЕКИНГА ОШИБОК
+        initErrorTrackingIfAvailable();
 
         if (typeof initAnimations === 'function') {
             logInit('Вызов initAnimations', 'INFO', '', 3);

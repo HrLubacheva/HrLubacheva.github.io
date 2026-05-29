@@ -1,7 +1,6 @@
 // ============================================================
-// 04_certificates.js – Бесконечная карусель с прогресс-баром
-// Плавная автопрокрутка, поддержка тач-устройств, утроение слайдов
-// Исправлено: при перетаскивании экран не дергается
+// 04_certificates.js – Бесконечная плавная карусель
+// Прогресс-бар: плавная полоса (волна) без дерганий
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -13,7 +12,7 @@
 
         // Настройки
         const SLIDE_GAP = 24;
-        const SPEED = 100;
+        const SPEED_PX_PER_SEC = 25; // очень медленно и плавно
         let slideWidth = 0;
         let originalSetWidth = 0;
         let scrollPos = 0;
@@ -49,7 +48,8 @@
 
         function setPosition(pos) {
             scrollPos = pos;
-            track.style.transform = `translateX(${scrollPos}px)`;
+            // Используем translate3d для аппаратного ускорения
+            track.style.transform = `translate3d(${scrollPos}px, 0, 0)`;
         }
 
         function normalizePosition(pos) {
@@ -59,31 +59,33 @@
             return norm;
         }
 
+        // Обновление прогресс-бара (ширина полосы)
         function updateProgressBar() {
-            const container = document.querySelector('.carousel-progress-container');
-            const marker = document.querySelector('.carousel-progress-marker');
-            if (!container || !marker) return;
+            const fill = document.querySelector('.carousel-progress-fill');
+            if (!fill) return;
             let norm = normalizePosition(scrollPos);
             let progress = -norm / originalSetWidth;
-            const rect = container.getBoundingClientRect();
-            const maxLeft = rect.width - marker.offsetWidth;
-            marker.style.left = `${progress * maxLeft}px`;
+            // Ограничиваем от 0 до 1
+            progress = Math.min(1, Math.max(0, progress));
+            fill.style.width = `${progress * 100}%`;
         }
 
         function ensureProgressBar() {
             if (document.querySelector('.carousel-progress-container')) return;
             const wrapper = track.closest('.carousel-wrapper');
             if (!wrapper) return;
-            const div = document.createElement('div');
-            div.className = 'carousel-progress-container';
-            div.style.cssText = `position:relative; width:100%; height:6px; background:#e2e8f0; border-radius:6px; margin:20px auto 10px; cursor:pointer;`;
-            const marker = document.createElement('div');
-            marker.className = 'carousel-progress-marker';
-            marker.style.cssText = `position:absolute; width:20px; height:20px; background:var(--primary,#2D6A9F); border-radius:50%; top:50%; transform:translateY(-50%); left:0; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:left 0.05s linear;`;
-            div.appendChild(marker);
-            wrapper.insertAdjacentElement('afterend', div);
-            div.addEventListener('click', (e) => {
-                const rect = div.getBoundingClientRect();
+            const container = document.createElement('div');
+            container.className = 'carousel-progress-container';
+            container.style.cssText = 'position:relative; width:100%; height:4px; background:#e2e8f0; border-radius:4px; margin:20px auto 10px; cursor:pointer; overflow:hidden;';
+            const fill = document.createElement('div');
+            fill.className = 'carousel-progress-fill';
+            fill.style.cssText = 'position:absolute; top:0; left:0; height:100%; width:0%; background:linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius:4px; transition:width 0.05s linear; will-change:width;';
+            container.appendChild(fill);
+            wrapper.insertAdjacentElement('afterend', container);
+
+            // Клик для перемотки
+            container.addEventListener('click', (e) => {
+                const rect = container.getBoundingClientRect();
                 const percent = (e.clientX - rect.left) / rect.width;
                 const targetNorm = -percent * originalSetWidth;
                 let delta = targetNorm - normalizePosition(scrollPos);
@@ -104,10 +106,10 @@
                 requestAnimationFrame(animate);
                 return;
             }
-            const delta = Math.min(100, now - lastTimestamp);
+            const deltaSec = Math.min(0.1, (now - lastTimestamp) / 1000);
             lastTimestamp = now;
             if (!isHovering && !isDragging) {
-                let step = (SPEED * delta) / 1000;
+                let step = SPEED_PX_PER_SEC * deltaSec;
                 let newPos = scrollPos - step;
                 if (newPos < -originalSetWidth) newPos += originalSetWidth;
                 setPosition(newPos);
@@ -128,23 +130,7 @@
             }
         }
 
-        // ----- Drag & drop с полной блокировкой скролла страницы -----
-        function lockPageScroll() {
-            // Блокируем скролл на body и html
-            document.body.style.overflow = 'hidden';
-            document.documentElement.style.overflow = 'hidden';
-            // Дополнительно фиксируем позицию, чтобы не было скачка
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-        }
-
-        function unlockPageScroll() {
-            document.body.style.overflow = '';
-            document.documentElement.style.overflow = '';
-            document.body.style.position = '';
-            document.body.style.width = '';
-        }
-
+        // Drag & drop с аппаратным ускорением
         function getClientX(e) {
             return e.touches ? e.touches[0].clientX : e.clientX;
         }
@@ -154,8 +140,6 @@
             dragStartX = x;
             dragStartPos = scrollPos;
             track.style.transition = 'none';
-            track.style.touchAction = 'none';      // запрещаем браузеру обрабатывать жесты
-            lockPageScroll();
             stopAnimation();
         }
 
@@ -171,16 +155,12 @@
             if (!isDragging) return;
             isDragging = false;
             track.style.transition = 'transform 0.3s ease';
-            track.style.touchAction = '';
-            unlockPageScroll();
-            // Нормализуем позицию после отпускания
             scrollPos = normalizePosition(scrollPos);
             setPosition(scrollPos);
             updateProgressBar();
             if (!isHovering) startAnimation();
         }
 
-        // Обработчики мыши
         function onMouseDown(e) {
             if (e.button !== 0) return;
             e.preventDefault();
@@ -195,17 +175,19 @@
             onDragEnd();
         }
 
-        // Обработчики тач-устройств
         function onTouchStart(e) {
-            e.preventDefault();
-            if (e.touches.length === 1) onDragStart(getClientX(e));
+            if (e.touches.length === 1) {
+                onDragStart(getClientX(e));
+            }
         }
         function onTouchMove(e) {
             if (!isDragging) return;
-            e.preventDefault();
-            if (e.touches.length === 1) onDragMove(getClientX(e));
+            if (e.touches.length === 1) {
+                e.preventDefault();
+                onDragMove(getClientX(e));
+            }
         }
-        function onTouchEnd(e) {
+        function onTouchEnd() {
             onDragEnd();
         }
 

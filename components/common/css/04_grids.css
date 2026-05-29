@@ -1,7 +1,8 @@
 /* ==================================================================
-   04_grids.css – универсальные сетки (адаптив) + масштабирование + переносы
+   04_grids.css – универсальные сетки (адаптив) + улучшенный визуал услуг
    ================================================================== */
 
+/* ========== БАЗОВЫЕ СЕТКИ ========== */
 .grid-3 {
     display: grid;
     gap: 30px;
@@ -35,6 +36,7 @@
     padding-left: 0;
 }
 
+/* ========== АДАПТИВНОСТЬ ОБЩИХ СЕТОК ========== */
 @media (min-width: 992px) and (max-width: 1199px) {
     .grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
@@ -50,17 +52,25 @@
 }
 
 /* ========== ПОДЗАГОЛОВОК СЕКЦИИ УСЛУГ В 2 КОЛОНКИ ========== */
-@media (min-width: 768px) {
+/* Оформление подзаголовка секции услуг – единая колонка */
+#services .section-subtitle {
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+/* На мобильных – чуть меньше отступы */
+@media (max-width: 768px) {
     #services .section-subtitle {
-        column-count: 2;
-        column-gap: 40px;
-        text-align: left;
-        max-width: 900px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 0 20px;
+        padding: 0 16px;
+        font-size: 0.95rem;
     }
 }
+
 @media (max-width: 767px) {
     #services .section-subtitle {
         column-count: 1;
@@ -87,7 +97,10 @@
     background: #f0f4f8;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.process-photo-item img:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(45,106,159,0.15); }
+.process-photo-item img:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(45,106,159,0.15);
+}
 .photo-caption {
     margin-top: 16px;
     font-size: 0.9rem;
@@ -99,11 +112,13 @@
 }
 @media (max-width: 640px) {
     .process-photos { gap: 12px; }
-    .process-photo-item:first-child, .process-photo-item:last-child { min-width: 120px; }
+    .process-photo-item:first-child,
+    .process-photo-item:last-child { min-width: 120px; }
 }
 @media (max-width: 480px) {
     .process-photos { gap: 8px; }
-    .process-photo-item:first-child, .process-photo-item:last-child { min-width: 100px; }
+    .process-photo-item:first-child,
+    .process-photo-item:last-child { min-width: 100px; }
     .photo-caption { font-size: 0.75rem; margin-top: 10px; }
 }
 
@@ -179,7 +194,9 @@
     gap: 24px;
     width: 100%;
 }
-@media (max-width: 500px) { .process-grid-2x2 { gap: 16px; } }
+@media (max-width: 500px) {
+    .process-grid-2x2 { gap: 16px; }
+}
 @media (max-width: 400px) {
     .process-grid-2x2 { gap: 12px; }
     .card-process { padding: 16px 12px; }
@@ -338,5 +355,134 @@
 @media (max-width: 480px) {
     .card-service {
         padding: 18px 14px !important;
+    }
+}
+
+/* ========== УЛУЧШЕННЫЙ ВИЗУАЛ ДЛЯ КАРТОЧЕК УСЛУГ ========== */
+.card-service {
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    position: relative;
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+.card-service:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 30px -12px rgba(45, 106, 159, 0.25);
+}
+.card-service:hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    padding: 2px;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.7;
+}
+.card-service h3 .emoji {
+    font-size: 1.8rem;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    transition: transform 0.2s ease;
+}
+.card-service:hover h3 .emoji {
+    transform: scale(1.05);
+}
+.card-service h3 {
+    position: relative;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+.card-service h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+.card-service:hover h3::after {
+    width: 80px;
+}
+.card-service .service-list li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.card-service .service-list li:hover {
+    transform: translateX(4px);
+    color: var(--primary);
+}
+.card-service .service-list li::before {
+    content: "▹";
+    color: var(--primary);
+    font-size: 0.8rem;
+    left: 0;
+    top: 0;
+    transition: transform 0.2s ease;
+}
+.card-service .service-list li:hover::before {
+    transform: translateX(2px);
+}
+@media (max-width: 768px) {
+    .card-service h3 {
+        font-size: 1.2rem;
+        padding-bottom: 8px;
+        margin-bottom: 16px;
+    }
+    .card-service .service-list li {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+    .card-service .service-list li:hover {
+        transform: translateX(2px);
+    }
+}
+@media (max-width: 480px) {
+    .card-service h3 {
+        font-size: 1.1rem;
+    }
+    .card-service .service-list li {
+        font-size: 0.8rem;
+    }
+}
+
+/* ========== УВЕЛИЧЕННЫЙ ШРИФТ В КАРТОЧКАХ УСЛУГ НА ПЛАНШЕТАХ И ТЕЛЕФОНАХ ========== */
+@media (max-width: 992px) {
+    .card-service h3 {
+        font-size: 1.3rem !important;
+    }
+    .card-service .service-list li {
+        font-size: 0.95rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-service h3 {
+        font-size: 1.2rem !important;
+    }
+    .card-service .service-list li {
+        font-size: 0.9rem !important;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-service h3 {
+        font-size: 1.1rem !important;
+    }
+    .card-service .service-list li {
+        font-size: 0.85rem !important;
     }
 }

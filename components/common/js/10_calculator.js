@@ -12,23 +12,41 @@ window.addToCart = function(serviceName, price, quantity) {
     renderCart();
 };
 
-// (Удалена внутренняя функция addToCart – больше никакой рекурсии)
-
 function renderCart() {
     let total = 0, totalQty = 0;
-    cart.forEach(item => { const itemPrice = getNumericPrice(item.price); total += itemPrice * item.qty; totalQty += item.qty; });
+    cart.forEach(item => {
+        const itemPrice = getNumericPrice(item.price);
+        total += itemPrice * item.qty;
+        // Учитываем в количестве только платные услуги (price !== null и price > 0)
+        if (item.price !== null && item.price > 0) {
+            totalQty += item.qty;
+        }
+    });
     let finalTotal = total, discount = 0, discountApplied = false;
     const minItems = window.APP_CONFIG?.CONSTANTS?.DISCOUNT_MIN_ITEMS || 2;
     const discountPercent = window.APP_CONFIG?.CONSTANTS?.DISCOUNT_PERCENT || 0.05;
-    if (totalQty >= minItems && total > 0) { discount = total * discountPercent; finalTotal = total - discount; discountApplied = true; }
+    if (totalQty >= minItems && total > 0) {
+        discount = total * discountPercent;
+        finalTotal = total - discount;
+        discountApplied = true;
+    }
     const totalPriceSpan = document.getElementById('totalPrice');
     if (totalPriceSpan) totalPriceSpan.innerHTML = formatPrice(finalTotal);
     const discountDiv = document.getElementById('discountInfo');
     if (discountDiv) {
-        if (discountApplied) discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
-        else if (totalQty === 1 && total > 0) discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
-        else if (totalQty >= 1 && total === 0) discountDiv.innerHTML = '🔹 Бесплатные услуги не участвуют в скидке. Добавьте платные услуги.';
-        else discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
+        if (discountApplied) {
+            discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} платных услуг) — экономия ${Math.round(discount).toLocaleString()} ₽`;
+        } else if (totalQty >= 1 && total === 0) {
+            discountDiv.innerHTML = '🔹 Добавьте платные услуги для скидки 5%';
+        } else if (totalQty === 0 && cart.length > 0) {
+            discountDiv.innerHTML = '🔹 В корзине только услуги по запросу. Скидка не применяется.';
+        } else if (cart.length === 0) {
+            discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
+        } else if (totalQty === 1 && total > 0) {
+            discountDiv.innerHTML = '🔹 Добавьте ещё одну платную услугу для скидки 5%';
+        } else {
+            discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
+        }
     }
     const container = document.getElementById('servicesList');
     if (!container) return;
@@ -49,6 +67,7 @@ function renderCart() {
     document.querySelectorAll('.qty-plus').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); cart[idx].qty++; renderCart(); }; });
     document.querySelectorAll('.remove-item').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); cart.splice(idx, 1); renderCart(); }; });
 }
+
 function populateSelect(selectId, services) {
     const select = document.getElementById(selectId);
     if (!select) { if (window.IS_DEV) console.error('Select not found:', selectId); return; }
@@ -66,6 +85,7 @@ function populateSelect(selectId, services) {
         select.appendChild(option);
     });
 }
+
 function initSelects() {
     if (typeof SERVICES_DATA === 'undefined') { if (window.IS_DEV) console.error('SERVICES_DATA не загружен!'); return; }
     populateSelect('recruitment-select', SERVICES_DATA.recruitment);
@@ -78,6 +98,7 @@ function initSelects() {
     populateSelect('training-select', SERVICES_DATA.training);
     populateSelect('courses-select', SERVICES_DATA.courses);
 }
+
 function initAddButtons() {
     const handlers = [
         {btn: 'recruitment-add', select: 'recruitment-select', qty: 'recruitment-qty'},
@@ -110,6 +131,7 @@ function initAddButtons() {
         } else if (window.IS_DEV) console.error('Button not found:', btn);
     });
 }
+
 function initTabs() {
     const tabs = document.querySelectorAll('#calculator .tab-btn');
     tabs.forEach(btn => {
@@ -125,7 +147,9 @@ function initTabs() {
         btn.addEventListener('click', btn._tabHandler);
     });
 }
+
 window.getCartData = function() { if (cart.length === 0) return 'Корзина пуста'; return cart.map(item => { const price = getNumericPrice(item.price); const totalPrice = price * item.qty; let priceDisplay; if (price === 0) priceDisplay = '0 ₽'; else if (price === null) priceDisplay = 'по запросу'; else priceDisplay = totalPrice.toLocaleString() + ' ₽'; return `${item.name} x${item.qty} = ${priceDisplay}`; }).join('\n'); };
+
 function initCalculator() {
     if (window.IS_DEV) console.log('Инициализация калькулятора...');
     if (window._calculatorInitialized) { if (window.IS_DEV) console.log('Калькулятор уже инициализирован'); return; }
@@ -136,4 +160,5 @@ function initCalculator() {
     initTabs();
     if (window.IS_DEV) console.log('Инициализация калькулятора завершена');
 }
+
 window.initCalculator = initCalculator;

@@ -1,6 +1,7 @@
 // ============================================================
 // 13_smooth-scroll.js – Плавный скролл по якорям (собственная анимация)
 // Работает во всех браузерах, включая Safari
+// Увеличена длительность до 900 мс для более медленной прокрутки
 // ============================================================
 (function() {
     'use strict';
@@ -30,17 +31,15 @@
         const startPosition = window.pageYOffset;
         const targetPosition = targetElement.getBoundingClientRect().top + startPosition - offset;
         const distance = targetPosition - startPosition;
-        const duration = 600; // миллисекунд
+        const duration = 900; // миллисекунд – увеличено с 600 для более медленной прокрутки
         let startTime = null;
 
         function animation(currentTime) {
             if (startTime === null) startTime = currentTime;
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            // easeInOutCubic для плавности
-            const ease = progress < 0.5
-                ? 4 * progress * progress * progress
-                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+            // easeOutCubic – плавное замедление в конце (ощущается более естественно)
+            const ease = 1 - Math.pow(1 - progress, 3);
             window.scrollTo(0, startPosition + distance * ease);
             if (elapsed < duration) {
                 requestAnimationFrame(animation);

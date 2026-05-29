@@ -31,15 +31,15 @@
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия {{VERSION}}</span>
-
+                </a>
+                <span class="footer-version">⚡ Версия {{VERSION}}</span>
             </div>
         </div>
 
         <!-- Нижняя строка: копирайт + дубль политики (опционально) -->
         <div class="footer-bottom">
             <div class="footer-copyright">
-                © 2026 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер
+                © <span id="currentYear"></span> Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер
             </div>
             <div class="footer-policy-full">
                 <a href="privacy.html" target="_blank">
@@ -49,3 +49,11 @@
         </div>
     </div>
 </footer>
+<script>
+    (function() {
+        var yearSpan = document.getElementById('currentYear');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    })();
+</script>

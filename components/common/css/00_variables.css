@@ -84,3 +84,11 @@ body {
         scroll-behavior: auto !important;
     }
 }
+
+:root {
+    /* существующие переменные ... */
+
+    --accent-warm: #E67E22;      /* тёплый оранжевый */
+    --accent-warm-light: #F39C12; /* светлый вариант */
+    --accent-gradient: linear-gradient(135deg, var(--primary), var(--accent-warm));
+}
