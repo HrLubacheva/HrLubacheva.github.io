@@ -1,6 +1,6 @@
 // ============================================================
 // 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов)
-// + явное заполнение скрытых полей форм
+// Добавлены роли: Развиваю сотрудников, Собственник бизнеса
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -45,7 +45,6 @@
             const form = document.getElementById(formId);
             if (!form) return;
 
-            // --- ОБЩИЕ ПОЛЯ ---
             setField(form, 'chosenVariant', chosenText);
             setField(form, 'chosenVariantPrice', chosenPrice);
             setField(form, 'originalChosenVariant', originalText);
@@ -53,14 +52,12 @@
             setField(form, 'recommendedVariants', recommendedStr);
             setField(form, 'quizAnswersRaw', answersArr.join('\n'));
 
-            // --- ПОЛЯ ПО КАЖДОМУ ВОПРОСУ ---
             const qLabels = ['role', 'level', 'urgency', 'importance', 'budget', 'industry', 'work_format'];
             for (let i = 0; i < qLabels.length; i++) {
                 const fieldName = `quiz_q${i+1}_${qLabels[i]}`;
                 setField(form, fieldName, answersArr[i] || '');
             }
 
-            // --- РЕКОМЕНДАЦИИ И ВЫБРАННЫЙ ВАРИАНТ (дублирующие поля) ---
             setField(form, 'quiz_recommendations', recommendedStr);
             setField(form, 'quiz_chosen_variant', chosenText);
             setField(form, 'quiz_chosen_price', chosenPrice);
@@ -107,7 +104,8 @@
         else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
 
-    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников"] };
+    // ВОПРОСЫ (расширены)
+    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"] };
     const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
     const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
     const URGENCY_QUESTION = { text: "3. Как быстро нужен результат?", options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"] };
@@ -144,7 +142,8 @@
 
     function updateIndustryAndWorkFormatQuestions(role) {
         let wasReset = false;
-        if (role === "Подбираю сотрудников") {
+        const businessRoles = ["Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"];
+        if (businessRoles.includes(role)) {
             quizQuestions[5] = INDUSTRY_FOR_BUSINESS;
             quizQuestions[6] = WORK_FORMAT_FOR_BUSINESS;
         } else {
@@ -168,7 +167,8 @@
     }
 
     function updateSecondQuestion(role) {
-        if (role === "Подбираю сотрудников") {
+        const businessRoles = ["Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"];
+        if (businessRoles.includes(role)) {
             quizQuestions[1] = {...LEVEL_RECRUITER};
         } else {
             quizQuestions[1] = {...LEVEL_JOBSEEKER};
@@ -205,7 +205,7 @@
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         isAnalyzing = true;
                         container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
-                        setTimeout(() => { const topTwo = window.getTopTwoServices(answers); quizState = 'choice'; renderResult(topTwo); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
+                        setTimeout(() => { const recommendations = window.getTopServices(answers); quizState = 'choice'; renderResult(recommendations); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
@@ -222,7 +222,7 @@
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         isAnalyzing = true;
                         container.innerHTML = `<div class="quiz-loading"><div class="quiz-spinner"></div><p>Анализируем ваши ответы...</p></div>`;
-                        setTimeout(() => { const topTwo = window.getTopTwoServices(answers); quizState = 'choice'; renderResult(topTwo); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
+                        setTimeout(() => { const recommendations = window.getTopServices(answers); quizState = 'choice'; renderResult(recommendations); isAnalyzing = false; }, QUIZ_ANALYZE_DELAY);
                     } else {
                         currentQuestionIndex++;
                         renderQuiz();
@@ -239,172 +239,49 @@
         }
     }
 
-    function renderResult(topTwo) {
+    function renderResult(recommendations) {
         logInit('Квиз: renderResult', 'INFO', '', 3);
         const container = document.getElementById('quizContainer');
         if (!container) return;
 
-        const categoryNames = {
-            'business_recruitment': '🔍 Подбор персонала',
-            'business_retention': '📊 Удержание и развитие',
-            'individual_base': '👤 Базовые услуги',
-            'individual_standard': '👔 Карьерный консалтинг',
-            'individual_premium': '💎 Премиум сопровождение',
-            'training': '🎓 Обучение и тренинги',
-            'corporate': '🏢 Корпоративным клиентам',
-            'author_courses': '📚 Авторские программы'
-        };
-
-        const displayNameA = topTwo.variantAFormatted || topTwo.variantA;
-        const displayNameB = topTwo.variantBFormatted || topTwo.variantB;
-        const priceA = topTwo.priceA || getPrice(topTwo.variantA);
-        const priceB = topTwo.priceB || getPrice(topTwo.variantB);
-        const recommendations = `📌 Рекомендация 1: ${displayNameA} (${priceA})\n🎯 Рекомендация 2: ${displayNameB} (${priceB})`;
+        const services = recommendations.services || [];
+        const recommendationsText = services.map((s, idx) => `📌 Рекомендация ${idx+1}: ${s.formatted} (${s.price})`).join('\n');
         const esc = window.escapeHtml;
 
-        let rawCategoryA = displayNameA.split(' — ')[0] || '';
-        let rawCategoryB = displayNameB.split(' — ')[0] || '';
-        let categoryA = categoryNames[rawCategoryA] || rawCategoryA || 'Рекомендация';
-        let categoryB = categoryNames[rawCategoryB] || rawCategoryB || 'Рекомендация';
+        let cardsHtml = '';
+        for (let i = 0; i < services.length; i++) {
+            const s = services[i];
+            let rawCategory = s.formatted.split(' — ')[0] || '';
+            let category = rawCategory || 'Рекомендация';
+            const name = esc(s.formatted.split(' — ')[1] || s.service);
+            const price = esc(s.price);
+            const serviceName = esc(s.service);
+            const displayName = esc(s.formatted);
+            cardsHtml += `
+                <div class="quiz-result-card">
+                    <div class="quiz-result-icon">${i === 0 ? '🏆' : (i === 1 ? '🥈' : '📌')}</div>
+                    <div class="quiz-result-category">${esc(category)}</div>
+                    <div class="quiz-result-title">${name}</div>
+                    <div class="quiz-result-price">💰 ${price}</div>
+                    <button class="quiz-btn-details choose-option" data-choice="${i}" data-text="${serviceName}" data-price="${price}" data-display="${displayName}">Подробнее →</button>
+                </div>
+            `;
+        }
 
-        const nameA = esc(displayNameA.split(' — ')[1] || displayNameA);
-        const nameB = esc(displayNameB.split(' — ')[1] || displayNameB);
-        const priceAEsc = esc(priceA);
-        const priceBEsc = esc(priceB);
-        const varA = esc(topTwo.variantA);
-        const varB = esc(topTwo.variantB);
-        const displayA = esc(displayNameA);
-        const displayB = esc(displayNameB);
+        cardsHtml += `
+            <div class="quiz-result-card">
+                <div class="quiz-result-icon">🤝</div>
+                <div class="quiz-result-category">Помощь эксперта</div>
+                <div class="quiz-result-title">Бесплатная консультация</div>
+                <div class="quiz-result-price" style="background:#f5f5f5; color:#666;">🎁 15 минут</div>
+                <button class="quiz-btn-help choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Нужна помощь →</button>
+            </div>
+        `;
 
-        let html = `
-            <style>
-                .quiz-result-card {
-                    background: white;
-                    border-radius: 24px;
-                    padding: 20px 18px;
-                    border: 1px solid #e0e0e0;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-                    height: 100%;
-                    display: flex;
-                    flex-direction: column;
-                }
-                .quiz-result-card:hover {
-                    transform: translateY(-3px);
-                    box-shadow: 0 12px 24px -12px rgba(45,106,159,0.15);
-                    border-color: var(--primary-light, #4A8BC2);
-                }
-                .quiz-result-icon {
-                    font-size: 26px;
-                    margin-bottom: 10px;
-                }
-                .quiz-result-category {
-                    font-size: 0.7rem;
-                    color: #888;
-                    margin-bottom: 6px;
-                    letter-spacing: 0.3px;
-                    text-transform: uppercase;
-                }
-                .quiz-result-title {
-                    font-size: 1rem;
-                    font-weight: 700;
-                    color: var(--primary-dark, #1F4A6E);
-                    margin-bottom: 8px;
-                    line-height: 1.35;
-                }
-                .quiz-result-price {
-                    font-size: 0.9rem;
-                    font-weight: 600;
-                    color: var(--primary, #2D6A9F);
-                    margin: 10px 0;
-                    padding: 4px 10px;
-                    background: #f0f7ff;
-                    display: inline-block;
-                    border-radius: 30px;
-                    align-self: flex-start;
-                }
-                .quiz-btn-details {
-                    background: linear-gradient(135deg, var(--primary, #2D6A9F), var(--primary-dark, #1F4A6E));
-                    color: white;
-                    border: none;
-                    padding: 10px 18px;
-                    border-radius: 40px;
-                    font-weight: 600;
-                    font-size: 0.85rem;
-                    cursor: pointer;
-                    transition: all 0.25s ease;
-                    width: 100%;
-                    text-align: center;
-                    margin-top: auto;
-                }
-                .quiz-btn-details:hover {
-                    background: linear-gradient(135deg, var(--primary-dark, #1F4A6E), var(--primary, #2D6A9F));
-                    transform: translateY(-1px);
-                    box-shadow: 0 4px 10px rgba(45,106,159,0.2);
-                }
-                .quiz-btn-help {
-                    background: transparent;
-                    border: 1.5px solid var(--primary, #2D6A9F);
-                    color: var(--primary, #2D6A9F);
-                    padding: 9px 17px;
-                    border-radius: 40px;
-                    font-weight: 600;
-                    font-size: 0.85rem;
-                    cursor: pointer;
-                    transition: all 0.25s ease;
-                    width: 100%;
-                    text-align: center;
-                    margin-top: auto;
-                }
-                .quiz-btn-help:hover {
-                    background: rgba(45,106,159,0.06);
-                    border-color: var(--primary-dark, #1F4A6E);
-                    color: var(--primary-dark, #1F4A6E);
-                    transform: translateY(-1px);
-                }
-                .quiz-results-grid {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 20px;
-                    justify-content: center;
-                    margin: 20px 0 16px;
-                }
-                .quiz-results-grid > div {
-                    flex: 1;
-                    min-width: 240px;
-                }
-                @media (max-width: 768px) {
-                    .quiz-results-grid > div {
-                        min-width: 100%;
-                    }
-                    .quiz-result-card {
-                        padding: 18px 14px;
-                    }
-                }
-            </style>
+        const html = `
             <p style="font-weight: 500; margin-bottom: 20px; text-align:center; font-size:0.95rem; color: var(--text-muted);">🎯 На основе ваших ответов мы подобрали оптимальные варианты:</p>
             <div class="quiz-results-grid">
-                <div class="quiz-result-card">
-                    <div class="quiz-result-icon">📌</div>
-                    <div class="quiz-result-category">${esc(categoryA)}</div>
-                    <div class="quiz-result-title">${nameA}</div>
-                    <div class="quiz-result-price">💰 ${priceAEsc}</div>
-                    <button class="quiz-btn-details choose-option" data-choice="1" data-text="${varA}" data-price="${priceAEsc}" data-display="${displayA}">Подробнее →</button>
-                </div>
-                <div class="quiz-result-card">
-                    <div class="quiz-result-icon">🎯</div>
-                    <div class="quiz-result-category">${esc(categoryB)}</div>
-                    <div class="quiz-result-title">${nameB}</div>
-                    <div class="quiz-result-price">💰 ${priceBEsc}</div>
-                    <button class="quiz-btn-details choose-option" data-choice="2" data-text="${varB}" data-price="${priceBEsc}" data-display="${displayB}">Подробнее →</button>
-                </div>
-                <div class="quiz-result-card">
-                    <div class="quiz-result-icon">🤝</div>
-                    <div class="quiz-result-category">Помощь эксперта</div>
-                    <div class="quiz-result-title">Бесплатная консультация</div>
-                    <div class="quiz-result-price" style="background:#f5f5f5; color:#666;">🎁 15 минут</div>
-                    <button class="quiz-btn-help choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Нужна помощь →</button>
-                </div>
+                ${cardsHtml}
             </div>
             <div style="text-align:center; margin-top: 20px;">
                 <button id="resetQuizBtn" class="btn-secondary" style="padding: 8px 20px; font-size: 0.85rem;">🔄 Пройти заново</button>
@@ -425,14 +302,14 @@
                 selectedVariantPrice = variantPrice;
                 selectedOriginalText = variantText;
                 selectedOriginalPrice = variantPrice;
-                const answersArr = answers.slice(); // копия массива
+                const answersArr = answers.slice();
                 const answersStr = answersArr.map((a, idx) => {
                     const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет', 'Сфера', 'Формат работы'][idx];
                     return `${qText}: ${a || 'не выбран'}`;
                 }).join('\n');
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersArr);
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendationsText, answersArr);
                 updateSelectionBlock(selectedVariantText, selectedVariantPrice);
-                sendQuizStats(answersStr, recommendations, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
+                sendQuizStats(answersStr, recommendationsText, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
                 window.showSuccessToast('✅ Выбор сохранён!');
                 showFinalScreen();
                 isSubmittingChoice = false;
@@ -455,9 +332,9 @@
                     const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет', 'Сфера', 'Формат работы'][idx];
                     return `${qText}: ${a || 'не выбран'}`;
                 }).join('\n');
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendations, answersArr);
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendationsText, answersArr);
                 updateSelectionBlock(selectedOriginalText, selectedOriginalPrice);
-                sendQuizStats(answersStr, recommendations, '', '', selectedOriginalText, selectedOriginalPrice);
+                sendQuizStats(answersStr, recommendationsText, '', '', selectedOriginalText, selectedOriginalPrice);
                 window.showSuccessToast('🙏 Спасибо! Я свяжусь с вами.');
                 showFinalScreen();
                 isSubmittingChoice = false;
@@ -475,63 +352,17 @@
         function showFinalScreen() {
             container.innerHTML = `
                 <style>
-                    .quiz-final-screen {
-                        text-align: center;
-                        padding: 16px;
-                    }
-                    .quiz-final-icon {
-                        font-size: 48px;
-                        margin-bottom: 12px;
-                    }
-                    .quiz-final-title {
-                        font-size: 1.3rem;
-                        font-weight: 700;
-                        color: var(--primary-dark, #1F4A6E);
-                        margin-bottom: 10px;
-                    }
-                    .quiz-final-text {
-                        color: var(--text-muted, #666);
-                        margin-bottom: 20px;
-                        line-height: 1.5;
-                    }
-                    .quiz-final-buttons {
-                        display: flex;
-                        flex-wrap: wrap;
-                        gap: 16px;
-                        justify-content: center;
-                        margin: 20px 0;
-                    }
-                    .quiz-final-btn-primary, .quiz-final-btn-secondary {
-                        padding: 10px 24px;
-                        border-radius: 40px;
-                        font-weight: 600;
-                        font-size: 0.9rem;
-                        cursor: pointer;
-                        transition: all 0.25s ease;
-                        text-decoration: none;
-                        display: inline-block;
-                        border: none;
-                    }
-                    .quiz-final-btn-primary {
-                        background: linear-gradient(135deg, var(--primary, #2D6A9F), var(--primary-dark, #1F4A6E));
-                        color: white;
-                    }
-                    .quiz-final-btn-primary:hover {
-                        transform: translateY(-1px);
-                        box-shadow: 0 4px 10px rgba(45,106,159,0.2);
-                    }
-                    .quiz-final-btn-secondary {
-                        background: transparent;
-                        border: 1.5px solid var(--primary, #2D6A9F);
-                        color: var(--primary, #2D6A9F);
-                    }
-                    .quiz-final-btn-secondary:hover {
-                        background: rgba(45,106,159,0.06);
-                        transform: translateY(-1px);
-                    }
-                    .quiz-final-reset {
-                        margin-top: 16px;
-                    }
+                    .quiz-final-screen { text-align: center; padding: 16px; }
+                    .quiz-final-icon { font-size: 48px; margin-bottom: 12px; }
+                    .quiz-final-title { font-size: 1.3rem; font-weight: 700; color: var(--primary-dark, #1F4A6E); margin-bottom: 10px; }
+                    .quiz-final-text { color: var(--text-muted, #666); margin-bottom: 20px; line-height: 1.5; }
+                    .quiz-final-buttons { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin: 20px 0; }
+                    .quiz-final-btn-primary, .quiz-final-btn-secondary { padding: 10px 24px; border-radius: 40px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.25s ease; text-decoration: none; display: inline-block; border: none; }
+                    .quiz-final-btn-primary { background: linear-gradient(135deg, var(--primary, #2D6A9F), var(--primary-dark, #1F4A6E)); color: white; }
+                    .quiz-final-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(45,106,159,0.2); }
+                    .quiz-final-btn-secondary { background: transparent; border: 1.5px solid var(--primary, #2D6A9F); color: var(--primary, #2D6A9F); }
+                    .quiz-final-btn-secondary:hover { background: rgba(45,106,159,0.06); transform: translateY(-1px); }
+                    .quiz-final-reset { margin-top: 16px; }
                 </style>
                 <div class="quiz-final-screen">
                     <div class="quiz-final-icon">✨</div>

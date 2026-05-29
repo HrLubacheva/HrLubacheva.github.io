@@ -171,7 +171,6 @@
         // ----- УНИВЕРСАЛЬНЫЕ ФУНКЦИИ ПЕРЕТАСКИВАНИЯ ДЛЯ МЫШИ И ТАЧПАДА -----
         function getClientXFromEvent(e) {
             if (e.touches) {
-                // Touch-событие
                 return e.touches[0].clientX;
             }
             return e.clientX;
@@ -183,7 +182,7 @@
             dragStartPos = scrollPos;
             track.style.transition = 'none';
             document.body.style.userSelect = 'none';
-            document.body.style.overflow = 'hidden'; // блокируем скролл страницы
+            document.body.style.overflow = 'hidden';
             stopAnimation();
         }
 
@@ -226,9 +225,9 @@
             onDragEnd();
         }
 
-        // Обработчики для тач-событий (тачпад / сенсорный экран)
+        // Обработчики для тач-событий
         function onTouchStart(e) {
-            e.preventDefault();   // предотвращаем прокрутку страницы
+            e.preventDefault();
             if (e.touches.length === 1) {
                 onDragStart(getClientXFromEvent(e));
             }
@@ -236,7 +235,7 @@
 
         function onTouchMove(e) {
             if (!isDragging) return;
-            e.preventDefault();   // критически важно: предотвращает скролл во время перетаскивания
+            e.preventDefault();
             if (e.touches.length === 1) {
                 onDragMove(getClientXFromEvent(e));
             }
@@ -259,7 +258,6 @@
             });
         }
 
-        // Инициализация
         function init() {
             updateDimensions();
             scrollPos = -originalSetWidth;
@@ -268,12 +266,10 @@
             updateProgressBar();
             startAnimation();
 
-            // Регистрируем события для мыши
             track.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
 
-            // Регистрируем события для тач-устройств
             track.addEventListener('touchstart', onTouchStart, { passive: false });
             window.addEventListener('touchmove', onTouchMove, { passive: false });
             window.addEventListener('touchend', onTouchEnd);
@@ -308,4 +304,7 @@
     if (document.getElementById('carouselTrack')) {
         initInfiniteCarousel('carouselTrack');
     }
+
+    // 👇 ЭКСПОРТ ФУНКЦИИ ДЛЯ 99_main.js
+    window.initInfiniteCarousel = initInfiniteCarousel;
 })();

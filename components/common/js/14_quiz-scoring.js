@@ -1,8 +1,8 @@
 // ============================================================
-// 14_quiz-scoring.js – Расчёт баллов и подбор двух лучших услуг
+// 14_quiz-scoring.js – Расчёт баллов и подбор услуг (2-4 варианта)
+// Поддержка ролей: Развиваю сотрудников, Собственник бизнеса
 // ============================================================
 (function() {
-    // ИСПРАВЛЕНО: понятные названия категорий для отображения в квизе
     const CATEGORY_DISPLAY_NAMES = {
         business_recruitment: '🔍 Подбор персонала',
         business_retention: '📊 Удержание и развитие',
@@ -55,6 +55,7 @@
     }
 
     function isServiceAllowed(service, userRole, userSegment) {
+        // Определяем, относится ли услуга к бизнесу (B2B)
         const isBusinessService = (service.includes("подбор") || service.includes("рекрутинг") ||
             service.includes("хэдхантинг") || service.includes("аутсорсинг") ||
             service.includes("вакансии") || service.includes("кандидатов") ||
@@ -64,14 +65,23 @@
             service === "База кандидатов + тестирование" ||
             service === "Подбор резюме под вакансию" ||
             service === "Составление вакансии (с УТП)" ||
-            service === "Тренинг по запросу (1ч, до 25 чел.)" ||
+            service === "Тренинг под запрос (1ч, до 25 чел.)" ||
             service === "Стратегическая сессия (1ч, до 12 чел.)" ||
             service === "Мастер-класс (3ч, до 25 чел.)" ||
             service === "Тренинг 'Удержание персонала'" ||
             service === "Тренинг 'Профилактика выгорания'");
-        const isBusinessUser = (userRole === "Подбираю сотрудников");
+
+        // B2B-роли: Подбираю сотрудников, Развиваю сотрудников, Собственник бизнеса
+        const isBusinessUser = (userRole === "Подбираю сотрудников" ||
+                                userRole === "Развиваю сотрудников" ||
+                                userRole === "Собственник бизнеса");
+
         if (isBusinessService && !isBusinessUser) return false;
-        if (isBusinessUser && !isBusinessService) return false;
+        if (!isBusinessService && isBusinessUser && userRole !== "Собственник бизнеса") {
+            // Собственнику бизнеса можно показывать и премиум-услуги для себя (VIP-коучинг, Executive)
+            if (!service.includes("VIP") && !service.includes("Executive") && !service.includes("Коучинг топ") && !service.includes("Стратегия роста"))
+                return false;
+        }
         if (!isBusinessService) {
             const price = getNumericPrice(service);
             if (price === 0) return false;
@@ -82,17 +92,17 @@
         return true;
     }
 
-    window.getTopTwoServices = function(answersArr) {
-        logInit(`getTopTwoServices вызван с answers: ${JSON.stringify(answersArr)}`, 'INFO', '', 4);
+    window.getTopServices = function(answersArr) {
+        logInit(`getTopServices вызван с answers: ${JSON.stringify(answersArr)}`, 'INFO', '', 4);
         let weights = window.SERVICE_WEIGHTS;
         let mapping = window.ANSWER_MAPPING;
         if (!weights || Object.keys(weights).length === 0 || !mapping) {
             logInit('SERVICE_WEIGHTS или ANSWER_MAPPING не загружены', 'ERROR', '', 1);
             return {
-                variantA: "Индивидуальная консультация (1ч)",
-                variantB: "Экспресс-консультация (30мин)",
-                variantAFormatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)",
-                variantBFormatted: "👤 Базовые услуги — Экспресс-консультация (30мин)"
+                services: [
+                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)", score: 0 },
+                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "👤 Базовые услуги — Экспресс-консультация (30мин)", score: 0 }
+                ]
             };
         }
         const userRole = answersArr[0];
@@ -102,7 +112,10 @@
             const answer = answersArr[i];
             if (answer && mapping[answer]) userKeys.push(mapping[answer]);
         }
+        // Добавляем ключи ролей для правильного взвешивания
         if (userRole === "Подбираю сотрудников") userKeys.push("role_business");
+        else if (userRole === "Развиваю сотрудников") userKeys.push("role_develop_employees");
+        else if (userRole === "Собственник бизнеса") userKeys.push("role_business_owner");
         else if (userRole === "Рост в текущей компании") userKeys.push("role_growth");
         else if (userRole === "Хочу сменить профессию") userKeys.push("role_career_change");
         else if (userRole === "Ищу работу") userKeys.push("role_job_seeker");
@@ -115,7 +128,11 @@
             if (total === 0 && weightObj.role_any) total = weightObj.role_any;
             if (total > 0) {
                 const price = getNumericPrice(service);
-                scores.push({ service, score: total, price: (price !== null && price !== undefined) ? price.toLocaleString() + ' ₽' : 'цена по запросу' });
+                scores.push({
+                    service: service,
+                    score: total,
+                    price: (price !== null && price !== undefined) ? price.toLocaleString() + ' ₽' : 'цена по запросу'
+                });
             }
         }
         scores.sort((a, b) => b.score - a.score);
@@ -123,26 +140,49 @@
         if (scores.length === 0) {
             logInit('Не найдено подходящих услуг', 'WARN', '', 2);
             return {
-                variantA: "Индивидуальная консультация (1ч)",
-                variantB: "Экспресс-консультация (30мин)",
-                variantAFormatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)",
-                variantBFormatted: "👤 Базовые услуги — Экспресс-консультация (30мин)"
+                services: [
+                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)", score: 0 },
+                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "👤 Базовые услуги — Экспресс-консультация (30мин)", score: 0 }
+                ]
             };
         }
 
-        const top = scores[0];
-        const second = scores[1] || scores[0];
-        logInit(`Результат: ${top.service} (${top.score}) и ${second.service} (${second.score})`, 'INFO', '', 4);
+        const maxScore = scores[0].score;
+        const filtered = scores.filter(item => item.score >= maxScore * 0.5);
+        const topServices = filtered.slice(0, 4);
 
+        const result = topServices.map(s => ({
+            service: s.service,
+            price: s.price,
+            formatted: formatServiceWithCategory(s.service),
+            score: s.score
+        }));
+
+        logInit(`Найдено рекомендаций: ${result.length}`, 'INFO', '', 4);
+        return { services: result };
+    };
+
+    // Для обратной совместимости
+    window.getTopTwoServices = function(answersArr) {
+        const top = window.getTopServices(answersArr);
+        const services = top.services;
+        if (services.length >= 2) {
+            return {
+                variantA: services[0].service,
+                variantB: services[1].service,
+                variantAFormatted: services[0].formatted,
+                variantBFormatted: services[1].formatted,
+                priceA: services[0].price,
+                priceB: services[1].price
+            };
+        }
         return {
-            variantA: top.service,
-            variantB: second.service,
-            variantAFormatted: formatServiceWithCategory(top.service),
-            variantBFormatted: formatServiceWithCategory(second.service),
-            scoreA: top.score,
-            scoreB: second.score,
-            priceA: top.price,
-            priceB: second.price
+            variantA: services[0].service,
+            variantB: services[0].service,
+            variantAFormatted: services[0].formatted,
+            variantBFormatted: services[0].formatted,
+            priceA: services[0].price,
+            priceB: services[0].price
         };
     };
 })();

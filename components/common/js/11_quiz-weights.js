@@ -1,7 +1,7 @@
 // ============================================================
 // 11_quiz-weights.js – Веса услуг и соответствие ответов ключам
-// Добавлены ключи: отрасль (industry_it, industry_sales, industry_hr, industry_other)
-// и формат работы (work_format_remote, work_format_office, work_format_hybrid)
+// Добавлены роли: Развиваю сотрудников, Собственник бизнеса
+// Исправлены кавычки для синхронизации с SERVICES_DATA
 // ============================================================
 window.SERVICE_WEIGHTS = {
     // ========== БАЗОВЫЕ УСЛУГИ ДЛЯ СОИСКАТЕЛЕЙ ==========
@@ -114,7 +114,7 @@ window.SERVICE_WEIGHTS = {
         work_format_remote:7, work_format_office:8, work_format_hybrid:8
     },
     "План развития (рост в должности)": {
-        role_growth:10,
+        role_growth:10, role_develop_employees:7,
         level_middle:9, level_senior:8,
         urgency_1_2_months:8, urgency_3_6_months:7,
         importance_career:10,
@@ -128,7 +128,7 @@ window.SERVICE_WEIGHTS = {
         budget_15000_50000:8
     },
     "Развитие управленческих навыков": {
-        role_growth:10,
+        role_growth:10, role_develop_employees:9,
         level_lead:10, level_director:9,
         urgency_1_2_months:8, urgency_3_6_months:7,
         importance_career:9, importance_team:8,
@@ -144,7 +144,7 @@ window.SERVICE_WEIGHTS = {
         work_format_any:5
     },
     "Коучинг для руководителей": {
-        role_growth:9, role_job_seeker:7,
+        role_growth:9, role_develop_employees:8, role_business_owner:7,
         level_lead:10, level_director:9, level_top:8,
         urgency_1_2_months:8,
         importance_career:9, importance_team:8,
@@ -152,7 +152,7 @@ window.SERVICE_WEIGHTS = {
         work_format_remote:7, work_format_office:9, work_format_hybrid:8
     },
     "Коучинг для руководителей (пакет 4 сессии)": {
-        role_growth:9,
+        role_growth:9, role_develop_employees:8, role_business_owner:7,
         level_lead:10, level_director:9,
         urgency_1_2_months:7,
         importance_career:9,
@@ -162,7 +162,7 @@ window.SERVICE_WEIGHTS = {
 
     // ========== ПРЕМИУМ-УСЛУГИ ==========
     "VIP-коучинг": {
-        role_growth:8, role_job_seeker:7,
+        role_growth:8, role_job_seeker:7, role_business_owner:9,
         level_senior:9, level_lead:9, level_director:8,
         urgency_1_2_months:7,
         importance_career:9, importance_salary:8,
@@ -170,14 +170,14 @@ window.SERVICE_WEIGHTS = {
         work_format_remote:7, work_format_office:8, work_format_hybrid:8
     },
     "Стратегия роста": {
-        role_growth:10,
+        role_growth:10, role_develop_employees:8, role_business_owner:9,
         level_senior:8, level_lead:9, level_director:9, level_top:9,
         urgency_3_6_months:8,
         importance_career:10,
         budget_100000_300000:10, budget_50000_100000:8
     },
     "Executive-коучинг/мес": {
-        role_growth:9,
+        role_growth:9, role_develop_employees:8, role_business_owner:10,
         level_director:9, level_top:10,
         urgency_1_2_months:8,
         importance_career:10,
@@ -185,7 +185,7 @@ window.SERVICE_WEIGHTS = {
         work_format_remote:7, work_format_office:9, work_format_hybrid:8
     },
     "Executive-сопровождение/мес": {
-        role_growth:8,
+        role_growth:8, role_develop_employees:7, role_business_owner:10,
         level_director:9, level_top:10,
         urgency_3_6_months:8,
         importance_career:9,
@@ -193,7 +193,7 @@ window.SERVICE_WEIGHTS = {
         work_format_remote:7, work_format_office:9, work_format_hybrid:8
     },
     "Поиск позиции C-level": {
-        role_job_seeker:10,
+        role_job_seeker:10, role_business_owner:8,
         level_top:10, level_director:9,
         urgency_fast:9,
         importance_salary:9, importance_career:8,
@@ -201,7 +201,7 @@ window.SERVICE_WEIGHTS = {
         work_format_any:5
     },
     "Коучинг топ-менеджеров": {
-        role_growth:9,
+        role_growth:9, role_develop_employees:8, role_business_owner:10,
         level_top:10, level_director:9,
         urgency_1_2_months:8,
         importance_career:9,
@@ -231,8 +231,8 @@ window.SERVICE_WEIGHTS = {
         budget_15000_50000:9,
         industry_it:9, industry_sales:8, industry_hr:8, industry_other:7
     },
-    "Составить 'Программу стажировки'": {
-        role_business:9,
+    "Составить «Программу стажировки»": {
+        role_business:9, role_develop_employees:8,
         level_junior:9,
         urgency_3_6_months:9,
         budget_50000_100000:9, budget_15000_50000:7,
@@ -253,7 +253,7 @@ window.SERVICE_WEIGHTS = {
         industry_it:9, industry_sales:8, industry_hr:8, industry_other:7
     },
     "Подбор руководителя": {
-        role_business:10,
+        role_business:10, role_develop_employees:7,
         level_lead:10, level_director:9,
         urgency_fast:9, urgency_1_2_months:8,
         budget_100000_300000:10, budget_50000_100000:8,
@@ -294,7 +294,7 @@ window.SERVICE_WEIGHTS = {
         industry_it:10, industry_sales:5, industry_hr:5, industry_other:5
     },
     "Эксклюзивный хэдхантинг": {
-        role_business:10,
+        role_business:10, role_business_owner:9,
         level_director:10, level_top:10, level_owner:9,
         urgency_fast:10,
         budget_higher:10, budget_300000_500000:10,
@@ -308,40 +308,122 @@ window.SERVICE_WEIGHTS = {
         industry_it:9, industry_sales:8, industry_hr:8, industry_other:7
     },
 
+    // ========== УДЕРЖАНИЕ И РАЗВИТИЕ ==========
+    "Оценка компетенций": {
+        role_business:8, role_develop_employees:9,
+        level_lead:8, level_director:7,
+        urgency_1_2_months:8,
+        budget_15000_50000:8,
+        industry_any:5
+    },
+    "Оценка управленческого потенциала": {
+        role_business:9, role_develop_employees:10,
+        level_lead:9, level_director:9, level_top:8,
+        urgency_3_6_months:9,
+        importance_career:8,
+        budget_50000_100000:9,
+        industry_any:5
+    },
+    "Разработка программы удержания": {
+        role_business:9, role_develop_employees:9,
+        level_lead:8, level_director:8,
+        urgency_3_6_months:9,
+        importance_team:9,
+        budget_50000_100000:9,
+        industry_hr:9, industry_other:7
+    },
+    "Разработка проекта адаптации персонала": {
+        role_business:9, role_develop_employees:10,
+        level_lead:7, level_director:8,
+        urgency_3_6_months:9,
+        importance_team:8,
+        budget_100000_300000:9,
+        industry_any:7
+    },
+    "Разработка HR-бренда": {
+        role_business:9, role_develop_employees:8, role_business_owner:8,
+        level_director:8, level_top:7,
+        urgency_3_6_months:8,
+        importance_team:7,
+        budget_100000_300000:9,
+        industry_any:7
+    },
+    "Стратегическая сессия с собственниками": {
+        role_business:9, role_business_owner:10, role_develop_employees:9,
+        level_top:10, level_director:9,
+        urgency_1_2_months:8,
+        importance_career:9,
+        budget_100000_300000:10,
+        industry_any:8
+    },
+    "HR-стратегия + подбор ключевых людей": {
+        role_business:10, role_develop_employees:9, role_business_owner:10,
+        level_director:10, level_top:10,
+        urgency_3_6_months:9,
+        importance_career:10,
+        budget_300000_500000:10,
+        industry_any:9
+    },
+    "Абонемент на HR-консультации": {
+        role_business:9, role_develop_employees:7, role_business_owner:7,
+        urgency_monthly:10,
+        budget_50000_100000:9,
+        industry_any:6
+    },
+    "Корпоративная подписка на рекрутинг": {
+        role_business:10, role_develop_employees:6,
+        urgency_monthly:10,
+        budget_100000_300000:9,
+        industry_any:7
+    },
+
     // ========== ТРЕНИНГИ ==========
     "Групповой тренинг «Продай себя дорого»": {
-        role_job_seeker:7, role_growth:7,
+        role_job_seeker:7, role_growth:7, role_develop_employees:6,
         level_any:5,
         urgency_1_2_months:6,
         importance_salary:6,
         budget_15000_50000:8, budget_5000_15000:7,
         work_format_remote:8, work_format_office:8, work_format_hybrid:9
     },
-    "Тренинг по запросу (1ч, до 25 чел.)": {
-        role_business:9,
+    "Тренинг под запрос (1ч, до 25 чел.)": {
+        role_business:9, role_develop_employees:8,
         urgency_fast:9,
         budget_15000_50000:9, budget_5000_15000:8,
         work_format_remote:8, work_format_office:10, work_format_hybrid:9,
         industry_it:8, industry_sales:9, industry_hr:9, industry_other:8
     },
-    "Тренинг 'Удержание персонала'": {
-        role_business:9,
+    "Тренинг «Удержание персонала»": {
+        role_business:9, role_develop_employees:9,
         urgency_1_2_months:8,
         budget_50000_100000:9, budget_15000_50000:7,
         industry_it:8, industry_sales:8, industry_hr:10, industry_other:8
     },
-    "Тренинг 'Профилактика выгорания'": {
-        role_business:8,
+    "Тренинг «Профилактика выгорания»": {
+        role_business:8, role_develop_employees:8,
         urgency_1_2_months:7,
         importance_balance:9,
         budget_15000_50000:8,
         work_format_remote:9, work_format_office:7, work_format_hybrid:8,
         industry_any:5
     },
+    "Тренинг «Я хочу здесь работать» мотивация": {
+        role_business:8, role_develop_employees:7,
+        urgency_fast:8,
+        budget_15000_50000:8,
+        industry_any:7
+    },
+    "Мастер-класс (3ч, до 25 чел.)": {
+        role_business:8, role_develop_employees:7,
+        urgency_1_2_months:7,
+        budget_15000_50000:8,
+        work_format_office:9, work_format_hybrid:7,
+        industry_any:6
+    },
 
     // ========== КУРСЫ ==========
-    "Авторский курс 'Рекрутер для недвижимости'": {
-        role_business:9, role_career_change:8,
+    "Авторский курс «Рекрутер для недвижимости»": {
+        role_business:9, role_career_change:8, role_develop_employees:7,
         level_junior:8, level_middle:8,
         urgency_1_2_months:8, urgency_3_6_months:7,
         importance_career:8, importance_salary:7,
@@ -349,21 +431,68 @@ window.SERVICE_WEIGHTS = {
         industry_hr:9, industry_other:7
     },
     "Обучение с '0' менеджер по продажам": {
-        role_business:9, role_career_change:9,
+        role_business:9, role_career_change:9, role_develop_employees:8,
         level_junior:10, level_middle:8,
         urgency_1_2_months:8, urgency_3_6_months:8,
         importance_career:9, importance_salary:8,
         budget_50000_100000:9, budget_15000_50000:8,
         industry_sales:10, industry_other:7
+    },
+
+    // ========== ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ (retention/corporate) ==========
+    "Консультация по внедрению гибких форматов": {
+        role_business:7, role_develop_employees:6,
+        urgency_1_2_months:6,
+        budget_5000_15000:7,
+        industry_it:6, industry_hr:6
+    },
+    "Оценка удовлетворённости персонала": {
+        role_business:8, role_develop_employees:8,
+        urgency_3_6_months:7,
+        budget_15000_50000:8,
+        industry_hr:8
+    },
+    "Стратегическая сессия в компании": {
+        role_business:8, role_develop_employees:7,
+        urgency_1_2_months:7,
+        budget_15000_50000:8,
+        industry_any:6
+    },
+    "HR найди людей – цена от": {
+        role_business:9,
+        urgency_fast:8,
+        budget_50000_100000:8,
+        industry_any:7
+    },
+    "HR на час": {
+        role_business:8,
+        urgency_fast:8,
+        budget_5000_15000:8,
+        industry_any:6
+    },
+    "HR реши вопрос – цена от": {
+        role_business:8,
+        urgency_1_2_months:7,
+        budget_50000_100000:8,
+        industry_any:7
+    },
+    "Наставничество для HR": {
+        role_business:7, role_develop_employees:8,
+        level_middle:7,
+        urgency_1_2_months:6,
+        budget_5000_15000:7,
+        industry_hr:8
     }
 };
 
 window.ANSWER_MAPPING = {
-    // Основные
+    // Основные роли
     "Ищу работу": "role_job_seeker",
     "Хочу сменить профессию": "role_career_change",
     "Рост в текущей компании": "role_growth",
     "Подбираю сотрудников": "role_business",
+    "Развиваю сотрудников": "role_develop_employees",
+    "Собственник бизнеса": "role_business_owner",
     // Уровни
     "Junior / начинающий": "level_junior",
     "Middle / опытный": "level_middle",
@@ -393,15 +522,15 @@ window.ANSWER_MAPPING = {
     "100 000 – 300 000 ₽": "budget_100000_300000",
     "300 000 – 500 000 ₽": "budget_300000_500000",
     "Выше 500 000 ₽": "budget_higher",
-    // НОВЫЕ: Отрасль
+    // Отрасль
     "IT / Технологии": "industry_it",
     "Продажи / Маркетинг": "industry_sales",
     "HR / Управление персоналом": "industry_hr",
     "Другое": "industry_other",
-    // НОВЫЕ: Формат работы
+    // Формат работы
     "Офлайн / В офисе": "work_format_office",
     "Онлайн / Удалённо": "work_format_remote",
     "Гибридный (смешанный)": "work_format_hybrid"
 };
 
-if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены (с отраслью и форматом работы)");
+if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены (с полной поддержкой развития сотрудников и собственников)");
