@@ -1,6 +1,7 @@
 // ============================================================
 // 04_certificates.js – Бесконечная карусель с прогресс-баром
 // Плавная автопрокрутка, поддержка тач-устройств, без лагов
+// Корректное утроение и бесконечная прокрутка
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -12,7 +13,7 @@
 
         // ----- НАСТРОЙКИ -----
         const SLIDE_GAP = 24;           // px между слайдами
-        const SPEED = 100;              // px/сек (средняя скорость, комфортная)
+        const SPEED = 80;               // px/сек (чуть медленнее для комфорта)
         let slideWidth = 0;
         let originalSetWidth = 0;       // ширина одного набора оригиналов (с отступами)
         let scrollPos = 0;
@@ -38,11 +39,11 @@
 
         let slides = buildTripleTrack();
 
-        // ----- ПЕРЕСЧЁТ РАЗМЕРОВ (при загрузке и resize) -----
+        // ----- ПЕРЕСЧЁТ РАЗМЕРОВ -----
         function updateDimensions() {
             if (slides[0]) {
                 slideWidth = slides[0].offsetWidth;
-                if (slideWidth === 0) slideWidth = 200; // fallback
+                if (slideWidth === 0) slideWidth = 200;
             }
             originalSetWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
         }
@@ -144,9 +145,14 @@
             if (!isHovering && !isDragging) {
                 let step = (SPEED * delta) / 1000;
                 let newPos = scrollPos - step;
-                // Бесконечное зацикливание
-                if (newPos < -originalSetWidth) newPos += originalSetWidth;
-                if (newPos > 0) newPos -= originalSetWidth;   // на всякий случай
+                // Бесконечное зацикливание: если ушли левее -originalSetWidth, перепрыгиваем
+                if (newPos < -originalSetWidth) {
+                    newPos += originalSetWidth;
+                }
+                // Также если ушли правее 0 (редко, но на всякий случай)
+                if (newPos > 0) {
+                    newPos -= originalSetWidth;
+                }
                 setPosition(newPos);
                 updateProgressBar();
             }
@@ -242,17 +248,54 @@
             });
         }
 
-        // ----- ИНИЦИАЛИЗАЦИЯ -----
+        // ----- ИНИЦИАЛИЗАЦИЯ С ОЖИДАНИЕМ ЗАГРУЗКИ ИЗОБРАЖЕНИЙ -----
         function init() {
-            updateDimensions();
-            // Начальная позиция: второй набор оригиналов (сдвиг влево на originalSetWidth)
-            scrollPos = -originalSetWidth;
-            setPosition(scrollPos);
-            ensureProgressBar();
-            updateProgressBar();
-            startAnimation();
+            // Функция для обновления после загрузки всех картинок
+            function afterImagesLoaded() {
+                updateDimensions();
+                // Начальная позиция: второй набор оригиналов (сдвиг влево на originalSetWidth)
+                scrollPos = -originalSetWidth;
+                setPosition(scrollPos);
+                ensureProgressBar();
+                updateProgressBar();
+                startAnimation();
+            }
 
-            // События
+            // Ждём, пока все изображения в треке загрузятся
+            const images = slides.map(s => s.querySelector('img')).filter(Boolean);
+            if (images.length === 0) {
+                afterImagesLoaded();
+                return;
+            }
+
+            let loadedCount = 0;
+            const totalImages = images.length;
+            function imageLoaded() {
+                loadedCount++;
+                if (loadedCount === totalImages) {
+                    afterImagesLoaded();
+                }
+            }
+
+            images.forEach(img => {
+                if (img.complete) {
+                    imageLoaded();
+                } else {
+                    img.addEventListener('load', imageLoaded);
+                    img.addEventListener('error', imageLoaded);
+                }
+            });
+
+            // Fallback: если через 3 секунды всё ещё не всё загрузилось, всё равно запускаем
+            setTimeout(() => {
+                if (loadedCount !== totalImages) {
+                    afterImagesLoaded();
+                }
+            }, 3000);
+        }
+
+        // Присоединяем события после инициализации
+        function attachEvents() {
             track.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
@@ -261,7 +304,6 @@
             window.addEventListener('touchmove', onTouchMove, { passive: false });
             window.addEventListener('touchend', onTouchEnd);
 
-            // Адаптив при изменении размера окна (debounce)
             let resizeTimeout;
             window.addEventListener('resize', () => {
                 clearTimeout(resizeTimeout);
@@ -279,26 +321,13 @@
             });
         }
 
-        // Ждём загрузки всех изображений, чтобы корректно рассчитать ширину
-        function waitForImages() {
-            const imgs = slides.map(s => s.querySelector('img')).filter(Boolean);
-            if (imgs.length === 0) return Promise.resolve();
-            return Promise.all(imgs.map(img =>
-                img.complete ? Promise.resolve() : new Promise(resolve => {
-                    img.onload = resolve;
-                    img.onerror = resolve;
-                })
-            ));
-        }
-
-        waitForImages().then(init);
+        init();
+        attachEvents();
     }
 
-    // Запускаем карусель, если есть элемент с id="carouselTrack"
     if (document.getElementById('carouselTrack')) {
         initInfiniteCarousel('carouselTrack');
     }
 
-    // Экспортируем функцию для возможной переинициализации
     window.initInfiniteCarousel = initInfiniteCarousel;
 })();
