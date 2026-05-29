@@ -751,7 +751,7 @@ body {
     }
 }
 /* ==================================================================
-   04_grids.css – универсальные сетки
+   04_grids.css – универсальные сетки (исправлено: одна колонка на мобильных)
    ================================================================== */
 
 /* Базовые сетки */
@@ -799,20 +799,22 @@ body {
     }
 }
 
+/* Планшеты (768–991px): .grid-3 – 2 колонки, .grid-2 – 2 колонки (оставляем как есть) */
 @media (max-width: 991px) {
-    .grid-3,
-    .grid-2 {
+    .grid-3 {
         grid-template-columns: repeat(2, 1fr);
     }
     .grid-training-3 {
         grid-template-columns: repeat(2, 1fr);
         gap: 24px;
     }
+    /* .grid-2 на этом диапазоне остаётся 2 колонки (задано выше), не меняем */
 }
 
+/* Мобильные (до 768px) – все сетки в 1 колонку */
 @media (max-width: 768px) {
-    .grid-3,
-    .grid-2 {
+    .grid-2,
+    .grid-3 {
         grid-template-columns: 1fr;
         gap: 20px;
     }
@@ -824,7 +826,7 @@ body {
     }
 }
 
-/* Убираем принудительные две колонки на планшетах */
+/* Дополнительная страховка для очень узких планшетов (480–767px) – уже 1 колонка */
 @media (min-width: 480px) and (max-width: 767px) {
     .grid-2 {
         grid-template-columns: 1fr;
@@ -904,7 +906,6 @@ body {
 
 /* ========== Процесс работы – блоки с карточками ========== */
 
-/* Описание процесса */
 .process-description {
     text-align: center;
     margin-bottom: 40px;
@@ -925,7 +926,6 @@ body {
     }
 }
 
-/* Два независимых блока */
 .process-two-blocks {
     display: flex;
     gap: 40px;
@@ -947,7 +947,6 @@ body {
     width: 100%;
 }
 
-/* Невидимая рамка вокруг 4 ячеек */
 .process-block-inner {
     border: 1px solid transparent;
     border-radius: var(--radius-lg);
@@ -961,7 +960,6 @@ body {
     border-color: rgba(45, 106, 159, 0.15);
 }
 
-/* Градиентный фон для заголовков блоков */
 .process-block-header {
     text-align: center;
     margin-bottom: 32px;
@@ -995,7 +993,6 @@ body {
     display: block;
 }
 
-/* Сетка 2×2 для карточек — всегда 2 колонки */
 .process-grid-2x2 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1032,7 +1029,6 @@ body {
     }
 }
 
-/* Единый стиль для всех карточек процесса */
 .card-process {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -1091,7 +1087,6 @@ body {
     min-height: 4.2em;
 }
 
-/* Карточки тренинга — дополнительные стили */
 .grid-training-3 .card-process {
     display: flex;
     flex-direction: column;
@@ -1111,7 +1106,6 @@ body {
     padding-bottom: 0;
 }
 
-/* Уменьшаем шрифт на телефонах */
 @media (max-width: 576px) {
     .grid-training-3 .card-process {
         padding: 16px 12px;
@@ -1145,7 +1139,6 @@ body {
     }
 }
 
-/* Адаптив для мобильных — уменьшаем шрифт, но оставляем 2 колонки */
 @media (max-width: 768px) {
     .process-two-blocks {
         flex-direction: column;
@@ -1200,6 +1193,101 @@ body {
         min-width: auto;
         width: 100%;
         box-sizing: border-box;
+    }
+}
+
+/* ==================================================================
+   ФИНАЛЬНЫЕ ИСПРАВЛЕНИЯ: карточки не вылезают за границы на мобильных
+   ================================================================== */
+
+/* Убираем фиксированную min-width у блоков, которые её переопределяют */
+@media (max-width: 768px) {
+    .process-block,
+    .benefits-column,
+    .media-item,
+    .card {
+        min-width: auto !important;
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    /* Уменьшаем отступы внутри карточек */
+    .card {
+        padding: 20px 16px !important;
+    }
+
+    /* Уменьшаем расстояние между карточками */
+    .grid-2,
+    .grid-3,
+    .stats-grid,
+    .benefits-stack {
+        gap: 16px !important;
+    }
+}
+
+/* Дополнительное масштабирование для очень узких экранов (≤480px) */
+@media (max-width: 480px) {
+    /* Заголовки карточек */
+    .card h3,
+    .card-role h3,
+    .card-service h3,
+    .benefit-card h4,
+    .process-block-title {
+        font-size: 1.1rem !important;
+        line-height: 1.3;
+    }
+
+    /* Текст внутри карточек */
+    .card p,
+    .card-role p,
+    .card-service p,
+    .benefit-card p,
+    .process-card p {
+        font-size: 0.85rem !important;
+        line-height: 1.4;
+    }
+
+    /* Список услуг (маркированный) */
+    .service-list li {
+        font-size: 0.8rem !important;
+        margin-bottom: 6px;
+    }
+
+    /* Статистика — дополнительное уменьшение */
+    .stat-number {
+        font-size: 1.6rem !important;
+    }
+    .stat-plus {
+        font-size: 1.2rem !important;
+    }
+    .stat-label {
+        font-size: 0.7rem !important;
+    }
+}
+
+/* Для совсем узких экранов (≤360px) – ещё сильнее уменьшаем */
+@media (max-width: 360px) {
+    .card {
+        padding: 14px 12px !important;
+    }
+    .card h3,
+    .card-role h3,
+    .card-service h3 {
+        font-size: 1rem !important;
+    }
+    .card p,
+    .card-role p,
+    .card-service p {
+        font-size: 0.75rem !important;
+    }
+    .service-list li {
+        font-size: 0.7rem !important;
+    }
+    .benefit-card h4 {
+        font-size: 0.9rem !important;
+    }
+    .benefit-card p {
+        font-size: 0.7rem !important;
     }
 }
 /* ==================================================================
@@ -5551,7 +5639,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 16:08:42</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 16:31:04</span>
 
             </div>
         </div>
