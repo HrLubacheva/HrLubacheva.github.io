@@ -128,8 +128,6 @@
     margin: 0 auto 24px;
     padding: 0;
 }
-
-/* Планшеты (768–991px) – 2 столбца */
 @media (max-width: 991px) {
     .freebies-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -141,8 +139,6 @@
         margin: 0 auto;
     }
 }
-
-/* Телефоны (≤767px) – 1 столбец */
 @media (max-width: 767px) {
     .freebies-grid {
         grid-template-columns: 1fr;
@@ -153,8 +149,6 @@
         max-width: 100%;
     }
 }
-
-/* Для очень узких экранов (≤480px) – чуть меньше отступов */
 @media (max-width: 480px) {
     .freebies-grid {
         gap: 20px;
@@ -163,7 +157,6 @@
         padding: 0 8px;
     }
 }
-
 .freebie-item {
     text-align: center;
     min-width: 150px;
@@ -222,37 +215,44 @@
     margin-top: 8px;
 }
 
-/* ========== КАРТОЧКИ РЕЗУЛЬТАТОВ КВИЗА (компактные и адаптивные) ========== */
+/* ========== КАРТОЧКИ РЕЗУЛЬТАТОВ КВИЗА ========== */
 .quiz-results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 24px;
     margin: 24px 0 16px;
 }
-
 .quiz-result-card {
     background: #ffffff;
     border-radius: 20px;
     padding: 20px 18px;
     border: 1px solid #e9ecef;
     transition: all 0.25s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     display: flex;
     flex-direction: column;
     height: 100%;
+    position: relative;
 }
-
-.quiz-result-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 20px -12px rgba(45, 106, 159, 0.2);
-    border-color: var(--primary-light, #4A8BC2);
+.quiz-top-badge {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a2a3a;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 30px;
+    display: inline-block;
+    margin-bottom: 12px;
+    width: fit-content;
 }
-
+.quiz-result-card.top-recommendation {
+    border: 2px solid #FFD700;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
 .quiz-result-icon {
     font-size: 32px;
     margin-bottom: 12px;
 }
-
 .quiz-result-category {
     font-size: 0.7rem;
     font-weight: 600;
@@ -261,16 +261,24 @@
     color: #6c757d;
     margin-bottom: 8px;
 }
-
 .quiz-result-title {
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.35;
     color: var(--primary-dark, #1F4A6E);
     margin-bottom: 12px;
-    flex: 1;
 }
-
+.quiz-result-benefit {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #28a745;
+    background: #e8f5e9;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 30px;
+    margin: -4px 0 8px 0;
+    width: fit-content;
+}
 .quiz-result-price {
     font-size: 0.9rem;
     font-weight: 700;
@@ -282,45 +290,50 @@
     margin: 8px 0 16px;
     align-self: flex-start;
 }
-
+.quiz-result-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+.quiz-btn-details,
+.quiz-btn-cart,
+.quiz-btn-help {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
 .quiz-btn-details {
     background: linear-gradient(135deg, var(--primary, #2D6A9F), var(--primary-dark, #1F4A6E));
     color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 40px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 100%;
-    text-align: center;
-    margin-top: auto;
 }
-
 .quiz-btn-details:hover {
     background: linear-gradient(135deg, var(--primary-dark, #1F4A6E), var(--primary, #2D6A9F));
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(45, 106, 159, 0.25);
+    box-shadow: 0 4px 10px rgba(45,106,159,0.25);
 }
-
+.quiz-btn-cart {
+    background: #f0f7ff;
+    color: var(--primary, #2D6A9F);
+    border: 1px solid var(--primary-light, #4A8BC2);
+}
+.quiz-btn-cart:hover {
+    background: #e3f0fa;
+    transform: translateY(-2px);
+}
 .quiz-btn-help {
     background: transparent;
     border: 1.5px solid var(--primary, #2D6A9F);
     color: var(--primary, #2D6A9F);
-    padding: 9px 16px;
-    border-radius: 40px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 100%;
-    text-align: center;
-    margin-top: auto;
 }
-
 .quiz-btn-help:hover {
-    background: rgba(45, 106, 159, 0.06);
+    background: rgba(45,106,159,0.06);
     border-color: var(--primary-dark, #1F4A6E);
     color: var(--primary-dark, #1F4A6E);
     transform: translateY(-2px);
@@ -328,11 +341,10 @@
 
 @media (max-width: 991px) {
     .quiz-results-grid {
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 20px;
     }
 }
-
 @media (max-width: 767px) {
     .quiz-results-grid {
         grid-template-columns: 1fr;
@@ -349,12 +361,21 @@
         padding: 3px 10px;
     }
     .quiz-btn-details,
+    .quiz-btn-cart,
     .quiz-btn-help {
         padding: 8px 14px;
         font-size: 0.8rem;
     }
+    .quiz-top-badge {
+        font-size: 0.65rem;
+        padding: 3px 8px;
+        margin-bottom: 8px;
+    }
+    .quiz-result-benefit {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+    }
 }
-
 @media (max-width: 480px) {
     .quiz-result-card {
         padding: 14px 12px;
@@ -368,6 +389,15 @@
     .quiz-result-icon {
         font-size: 28px;
     }
+    .quiz-result-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .quiz-btn-details,
+    .quiz-btn-cart,
+    .quiz-btn-help {
+        width: 100%;
+    }
 }
 
 /* ========== КНОПКИ ОТВЕТОВ КВИЗА – УДОБНО НА МОБИЛЬНЫХ ========== */
@@ -378,7 +408,6 @@
     gap: 12px;
     margin-top: 20px;
 }
-
 .quiz-option {
     flex: 1 1 auto;
     min-width: 130px;
@@ -398,14 +427,12 @@
     word-break: break-word;
     line-height: 1.3;
 }
-
 @media (min-width: 768px) and (max-width: 991px) {
     .quiz-option {
         flex: 0 1 auto;
         min-width: 140px;
     }
 }
-
 @media (max-width: 767px) {
     .quiz-options {
         gap: 10px;
@@ -417,7 +444,6 @@
         font-size: 0.95rem;
     }
 }
-
 @media (max-width: 480px) {
     .quiz-option {
         flex: 1 1 calc(50% - 8px);
@@ -426,7 +452,6 @@
         font-size: 0.9rem;
     }
 }
-
 @media (max-width: 360px) {
     .quiz-option {
         flex: 1 1 100%;
@@ -434,89 +459,25 @@
         padding: 10px 12px;
     }
 }
-
 .quiz-option {
     touch-action: manipulation;
     -webkit-tap-highlight-color: rgba(0,0,0,0.05);
 }
-
 .quiz-option.selected {
     background: var(--primary, #2D6A9F);
     border-color: var(--primary, #2D6A9F);
     color: white;
     box-shadow: 0 4px 12px rgba(45,106,159,0.3);
 }
-
 .quiz-nav button {
     min-width: 120px;
     padding: 12px 20px;
     font-size: 1rem;
 }
-
 @media (max-width: 480px) {
     .quiz-nav button {
         flex: 1;
         padding: 10px 16px;
         font-size: 0.9rem;
-    }
-}
-
-/* ========== УЛУЧШЕНИЕ БЛОКА РЕЗУЛЬТАТОВ КВИЗА НА ТЕЛЕФОНАХ ========== */
-@media (max-width: 640px) {
-    .quiz-results-grid {
-        gap: 16px;
-        margin: 16px 0;
-    }
-
-    .quiz-result-card {
-        padding: 20px 16px;
-        border-radius: 20px;
-    }
-
-    .quiz-result-icon {
-        font-size: 28px;
-        margin-bottom: 10px;
-    }
-
-    .quiz-result-category {
-        font-size: 0.75rem;
-        margin-bottom: 6px;
-    }
-
-    .quiz-result-title {
-        font-size: 1rem;
-        font-weight: 700;
-        line-height: 1.4;
-        margin-bottom: 8px;
-    }
-
-    .quiz-result-price {
-        font-size: 0.9rem;
-        padding: 4px 12px;
-        margin: 6px 0 12px;
-    }
-
-    .quiz-btn-details,
-    .quiz-btn-help {
-        padding: 12px 14px;
-        font-size: 0.9rem;
-    }
-}
-
-/* Для очень узких экранов (≤480px) – дополнительные улучшения */
-@media (max-width: 480px) {
-    .quiz-result-card {
-        padding: 16px 12px;
-    }
-    .quiz-result-title {
-        font-size: 0.95rem;
-    }
-    .quiz-result-price {
-        font-size: 0.85rem;
-    }
-    .quiz-btn-details,
-    .quiz-btn-help {
-        padding: 10px 12px;
-        font-size: 0.85rem;
     }
 }

@@ -5,12 +5,17 @@ let cart = [];
 function formatPrice(price) { if (price === null) return 'по запросу'; if (price === 0) return '0 ₽'; return price.toLocaleString() + ' ₽'; }
 function getNumericPrice(price) { if (price === null) return 0; return price; }
 
-function addToCart(serviceName, price, quantity) {
+window.addToCart = function(serviceName, price, quantity) {
     const existing = cart.find(item => item.name === serviceName);
     if (existing) { existing.qty += quantity; window.showSuccessToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`); }
     else { cart.push({name: serviceName, price: price, qty: quantity}); window.showSuccessToast(`✅ "${serviceName}" добавлен(а) в корзину`); }
     renderCart();
+};
+
+function addToCart(serviceName, price, quantity) {
+    window.addToCart(serviceName, price, quantity);
 }
+
 function renderCart() {
     let total = 0, totalQty = 0;
     cart.forEach(item => { const itemPrice = getNumericPrice(item.price); total += itemPrice * item.qty; totalQty += item.qty; });
@@ -38,7 +43,6 @@ function renderCart() {
         if (item.price === null) priceDisplay = 'по запросу';
         else if (item.price === 0) priceDisplay = '0 ₽';
         else priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
-        // ИСПРАВЛЕНО: добавлен escapeHtml для защиты от XSS
         const escapedName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
         div.innerHTML = `<div class="service-name">${escapedName}</div><div class="service-price">${priceDisplay}</div><div class="service-qty-control"><button class="qty-btn qty-minus" data-idx="${idx}">−</button><span class="qty-value">${item.qty}</span><button class="qty-btn qty-plus" data-idx="${idx}">+</button></div><div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>`;
         container.appendChild(div);

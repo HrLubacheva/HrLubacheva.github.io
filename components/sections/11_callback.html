@@ -21,16 +21,24 @@
                     <legend class="visually-hidden">Запись на диагностику</legend>
 
                     <div class="form-row-three">
-                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
-                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
-                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email" class="form-field">
+                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name"
+                               class="form-field">
+                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric"
+                               required autocomplete="tel" class="form-field">
+                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email"
+                               class="form-field">
                     </div>
 
                     <div id="quizSelectionBlock" class="callback-quiz-selection" style="display: none;">
                         <div class="service-name"></div>
                         <div class="service-price"></div>
-                        <div class="service-remove">
-                            <button type="button" id="removeQuizSelection" class="btn btn-icon remove-item" aria-label="Удалить выбранный вариант">✖</button>
+                        <div class="service-actions">
+                            <button type="button" id="removeQuizSelection" class="btn btn-icon remove-item"
+                                    aria-label="Удалить выбранный вариант">✖
+                            </button>
+                            <button type="button" id="addQuizSelectionToCart" class="btn btn-secondary btn-small"
+                                    aria-label="Добавить в корзину">🛒 В корзину
+                            </button>
                         </div>
                     </div>
 
@@ -54,12 +62,15 @@
                     <input type="hidden" name="recommendedVariants" id="recommendedVariants">
                     <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
 
-                    <textarea id="callbackComment" name="comment" rows="2" placeholder="💬 Удобное время или дополнительная информация" class="form-field form-textarea"></textarea>
+                    <textarea id="callbackComment" name="comment" rows="2"
+                              placeholder="💬 Удобное время или дополнительная информация"
+                              class="form-field form-textarea"></textarea>
 
                     <div class="form-row-messages">
                         <div class="consent-checkbox">
                             <input type="checkbox" id="callbackConsent" name="consent" required>
-                            <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
+                            <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку
+                                персональных данных</a></label>
                         </div>
                         <div id="callbackFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                     </div>
@@ -67,7 +78,8 @@
                     <button type="submit" class="btn btn-primary btn-block callback-submit">📞 Записаться →</button>
 
                     <div class="callback-telegram-alt">
-                        ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
+                        ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank"
+                                                rel="noopener noreferrer">Telegram</a>
                     </div>
                 </fieldset>
             </form>

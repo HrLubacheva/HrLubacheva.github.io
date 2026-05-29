@@ -233,7 +233,7 @@
 
     function initCarousel() {
         if (typeof window.initInfiniteCarousel === 'function') {
-            window.initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
+            window.initInfiniteCarousel('carouselTrack');
             logInit('Карусель сертификатов инициализирована', 'INFO', '', 4);
         }
     }

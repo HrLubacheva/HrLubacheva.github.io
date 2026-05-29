@@ -307,4 +307,5 @@
 
     // 👇 ЭКСПОРТ ФУНКЦИИ ДЛЯ 99_main.js
     window.initInfiniteCarousel = initInfiniteCarousel;
+    window.initInfiniteCarousel = initInfiniteCarousel;
 })();

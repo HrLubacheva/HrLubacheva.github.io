@@ -2609,6 +2609,95 @@ body {
 .callback-telegram-alt a:hover {
     text-decoration: underline;
 }
+
+/* ========== БЕСПЛАТНЫЕ МАТЕРИАЛЫ: 3 СТОЛБЦА С АДАПТИВОМ ========== */
+.freebies-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    justify-items: center;
+    align-items: start;
+    margin: 0 auto 24px;
+    padding: 0;
+}
+
+/* Планшеты (768–991px) – 2 столбца */
+@media (max-width: 991px) {
+    .freebies-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+    /* Чтобы третий элемент не оставался один, можно центрировать, но лучше пусть будет на всю ширину */
+    .freebies-grid .freebie-item:last-child {
+        grid-column: span 2;
+        max-width: 360px;
+        margin: 0 auto;
+    }
+}
+
+/* Телефоны (≤767px) – 1 столбец */
+@media (max-width: 767px) {
+    .freebies-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+    .freebies-grid .freebie-item:last-child {
+        grid-column: span 1;
+        max-width: 100%;
+    }
+}
+
+/* Для совсем узких экранов (≤480px) – чуть меньше отступов */
+@media (max-width: 480px) {
+    .freebies-grid {
+        gap: 20px;
+    }
+    .freebie-item {
+        padding: 0 8px;
+    }
+}
+
+/* Выравнивание иконок и текста по центру (уже есть в .freebie-item, но усиливаем) */
+.freebie-item {
+    text-align: center;
+    width: 100%;
+}
+
+/* Кнопки в блоке выбранной услуги квиза */
+.callback-quiz-selection .service-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .callback-quiz-selection .service-actions {
+        margin-top: 8px;
+        justify-content: flex-end;
+    }
+    .callback-quiz-selection .service-actions button {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+}
+
+/* Кнопки в блоке выбранной услуги квиза */
+.callback-quiz-selection .service-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .callback-quiz-selection .service-actions {
+        margin-top: 8px;
+        justify-content: flex-end;
+    }
+    .callback-quiz-selection .service-actions button {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+}
 /* ==================================================================
    09_quiz_freebies.css – квиз и бесплатные материалы (плавные эффекты)
    ================================================================== */
@@ -2739,8 +2828,6 @@ body {
     margin: 0 auto 24px;
     padding: 0;
 }
-
-/* Планшеты (768–991px) – 2 столбца */
 @media (max-width: 991px) {
     .freebies-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -2752,8 +2839,6 @@ body {
         margin: 0 auto;
     }
 }
-
-/* Телефоны (≤767px) – 1 столбец */
 @media (max-width: 767px) {
     .freebies-grid {
         grid-template-columns: 1fr;
@@ -2764,8 +2849,6 @@ body {
         max-width: 100%;
     }
 }
-
-/* Для очень узких экранов (≤480px) – чуть меньше отступов */
 @media (max-width: 480px) {
     .freebies-grid {
         gap: 20px;
@@ -2774,7 +2857,6 @@ body {
         padding: 0 8px;
     }
 }
-
 .freebie-item {
     text-align: center;
     min-width: 150px;
@@ -2833,37 +2915,44 @@ body {
     margin-top: 8px;
 }
 
-/* ========== КАРТОЧКИ РЕЗУЛЬТАТОВ КВИЗА (компактные и адаптивные) ========== */
+/* ========== КАРТОЧКИ РЕЗУЛЬТАТОВ КВИЗА ========== */
 .quiz-results-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 24px;
     margin: 24px 0 16px;
 }
-
 .quiz-result-card {
     background: #ffffff;
     border-radius: 20px;
     padding: 20px 18px;
     border: 1px solid #e9ecef;
     transition: all 0.25s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     display: flex;
     flex-direction: column;
     height: 100%;
+    position: relative;
 }
-
-.quiz-result-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 20px -12px rgba(45, 106, 159, 0.2);
-    border-color: var(--primary-light, #4A8BC2);
+.quiz-top-badge {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a2a3a;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 30px;
+    display: inline-block;
+    margin-bottom: 12px;
+    width: fit-content;
 }
-
+.quiz-result-card.top-recommendation {
+    border: 2px solid #FFD700;
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.2);
+}
 .quiz-result-icon {
     font-size: 32px;
     margin-bottom: 12px;
 }
-
 .quiz-result-category {
     font-size: 0.7rem;
     font-weight: 600;
@@ -2872,16 +2961,24 @@ body {
     color: #6c757d;
     margin-bottom: 8px;
 }
-
 .quiz-result-title {
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.35;
     color: var(--primary-dark, #1F4A6E);
     margin-bottom: 12px;
-    flex: 1;
 }
-
+.quiz-result-benefit {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #28a745;
+    background: #e8f5e9;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 30px;
+    margin: -4px 0 8px 0;
+    width: fit-content;
+}
 .quiz-result-price {
     font-size: 0.9rem;
     font-weight: 700;
@@ -2893,45 +2990,50 @@ body {
     margin: 8px 0 16px;
     align-self: flex-start;
 }
-
+.quiz-result-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+}
+.quiz-btn-details,
+.quiz-btn-cart,
+.quiz-btn-help {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+    border-radius: 40px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
 .quiz-btn-details {
     background: linear-gradient(135deg, var(--primary, #2D6A9F), var(--primary-dark, #1F4A6E));
     color: white;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 40px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 100%;
-    text-align: center;
-    margin-top: auto;
 }
-
 .quiz-btn-details:hover {
     background: linear-gradient(135deg, var(--primary-dark, #1F4A6E), var(--primary, #2D6A9F));
     transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(45, 106, 159, 0.25);
+    box-shadow: 0 4px 10px rgba(45,106,159,0.25);
 }
-
+.quiz-btn-cart {
+    background: #f0f7ff;
+    color: var(--primary, #2D6A9F);
+    border: 1px solid var(--primary-light, #4A8BC2);
+}
+.quiz-btn-cart:hover {
+    background: #e3f0fa;
+    transform: translateY(-2px);
+}
 .quiz-btn-help {
     background: transparent;
     border: 1.5px solid var(--primary, #2D6A9F);
     color: var(--primary, #2D6A9F);
-    padding: 9px 16px;
-    border-radius: 40px;
-    font-weight: 600;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 100%;
-    text-align: center;
-    margin-top: auto;
 }
-
 .quiz-btn-help:hover {
-    background: rgba(45, 106, 159, 0.06);
+    background: rgba(45,106,159,0.06);
     border-color: var(--primary-dark, #1F4A6E);
     color: var(--primary-dark, #1F4A6E);
     transform: translateY(-2px);
@@ -2939,11 +3041,10 @@ body {
 
 @media (max-width: 991px) {
     .quiz-results-grid {
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 20px;
     }
 }
-
 @media (max-width: 767px) {
     .quiz-results-grid {
         grid-template-columns: 1fr;
@@ -2960,12 +3061,21 @@ body {
         padding: 3px 10px;
     }
     .quiz-btn-details,
+    .quiz-btn-cart,
     .quiz-btn-help {
         padding: 8px 14px;
         font-size: 0.8rem;
     }
+    .quiz-top-badge {
+        font-size: 0.65rem;
+        padding: 3px 8px;
+        margin-bottom: 8px;
+    }
+    .quiz-result-benefit {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+    }
 }
-
 @media (max-width: 480px) {
     .quiz-result-card {
         padding: 14px 12px;
@@ -2979,6 +3089,15 @@ body {
     .quiz-result-icon {
         font-size: 28px;
     }
+    .quiz-result-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    .quiz-btn-details,
+    .quiz-btn-cart,
+    .quiz-btn-help {
+        width: 100%;
+    }
 }
 
 /* ========== КНОПКИ ОТВЕТОВ КВИЗА – УДОБНО НА МОБИЛЬНЫХ ========== */
@@ -2989,7 +3108,6 @@ body {
     gap: 12px;
     margin-top: 20px;
 }
-
 .quiz-option {
     flex: 1 1 auto;
     min-width: 130px;
@@ -3009,14 +3127,12 @@ body {
     word-break: break-word;
     line-height: 1.3;
 }
-
 @media (min-width: 768px) and (max-width: 991px) {
     .quiz-option {
         flex: 0 1 auto;
         min-width: 140px;
     }
 }
-
 @media (max-width: 767px) {
     .quiz-options {
         gap: 10px;
@@ -3028,7 +3144,6 @@ body {
         font-size: 0.95rem;
     }
 }
-
 @media (max-width: 480px) {
     .quiz-option {
         flex: 1 1 calc(50% - 8px);
@@ -3037,7 +3152,6 @@ body {
         font-size: 0.9rem;
     }
 }
-
 @media (max-width: 360px) {
     .quiz-option {
         flex: 1 1 100%;
@@ -3045,90 +3159,26 @@ body {
         padding: 10px 12px;
     }
 }
-
 .quiz-option {
     touch-action: manipulation;
     -webkit-tap-highlight-color: rgba(0,0,0,0.05);
 }
-
 .quiz-option.selected {
     background: var(--primary, #2D6A9F);
     border-color: var(--primary, #2D6A9F);
     color: white;
     box-shadow: 0 4px 12px rgba(45,106,159,0.3);
 }
-
 .quiz-nav button {
     min-width: 120px;
     padding: 12px 20px;
     font-size: 1rem;
 }
-
 @media (max-width: 480px) {
     .quiz-nav button {
         flex: 1;
         padding: 10px 16px;
         font-size: 0.9rem;
-    }
-}
-
-/* ========== УЛУЧШЕНИЕ БЛОКА РЕЗУЛЬТАТОВ КВИЗА НА ТЕЛЕФОНАХ ========== */
-@media (max-width: 640px) {
-    .quiz-results-grid {
-        gap: 16px;
-        margin: 16px 0;
-    }
-
-    .quiz-result-card {
-        padding: 20px 16px;
-        border-radius: 20px;
-    }
-
-    .quiz-result-icon {
-        font-size: 28px;
-        margin-bottom: 10px;
-    }
-
-    .quiz-result-category {
-        font-size: 0.75rem;
-        margin-bottom: 6px;
-    }
-
-    .quiz-result-title {
-        font-size: 1rem;
-        font-weight: 700;
-        line-height: 1.4;
-        margin-bottom: 8px;
-    }
-
-    .quiz-result-price {
-        font-size: 0.9rem;
-        padding: 4px 12px;
-        margin: 6px 0 12px;
-    }
-
-    .quiz-btn-details,
-    .quiz-btn-help {
-        padding: 12px 14px;
-        font-size: 0.9rem;
-    }
-}
-
-/* Для очень узких экранов (≤480px) – дополнительные улучшения */
-@media (max-width: 480px) {
-    .quiz-result-card {
-        padding: 16px 12px;
-    }
-    .quiz-result-title {
-        font-size: 0.95rem;
-    }
-    .quiz-result-price {
-        font-size: 0.85rem;
-    }
-    .quiz-btn-details,
-    .quiz-btn-help {
-        padding: 10px 12px;
-        font-size: 0.85rem;
     }
 }
 /* ==================================================================
@@ -5427,58 +5477,7 @@ select:focus-visible {
     </div>
 </section>
 
-/* ========== БЕСПЛАТНЫЕ МАТЕРИАЛЫ: 3 СТОЛБЦА С АДАПТИВОМ ========== */
-.freebies-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    justify-items: center;
-    align-items: start;
-    margin: 0 auto 24px;
-    padding: 0;
-}
 
-/* Планшеты (768–991px) – 2 столбца */
-@media (max-width: 991px) {
-    .freebies-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-    }
-    /* Чтобы третий элемент не оставался один, можно центрировать, но лучше пусть будет на всю ширину */
-    .freebies-grid .freebie-item:last-child {
-        grid-column: span 2;
-        max-width: 360px;
-        margin: 0 auto;
-    }
-}
-
-/* Телефоны (≤767px) – 1 столбец */
-@media (max-width: 767px) {
-    .freebies-grid {
-        grid-template-columns: 1fr;
-        gap: 24px;
-    }
-    .freebies-grid .freebie-item:last-child {
-        grid-column: span 1;
-        max-width: 100%;
-    }
-}
-
-/* Для совсем узких экранов (≤480px) – чуть меньше отступов */
-@media (max-width: 480px) {
-    .freebies-grid {
-        gap: 20px;
-    }
-    .freebie-item {
-        padding: 0 8px;
-    }
-}
-
-/* Выравнивание иконок и текста по центру (уже есть в .freebie-item, но усиливаем) */
-.freebie-item {
-    text-align: center;
-    width: 100%;
-}
 <section id="callback-form" aria-labelledby="callback-title">
     <div class="container">
         <div class="calendar-card fade-up">
@@ -5502,16 +5501,24 @@ select:focus-visible {
                     <legend class="visually-hidden">Запись на диагностику</legend>
 
                     <div class="form-row-three">
-                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
-                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
-                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email" class="form-field">
+                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name"
+                               class="form-field">
+                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric"
+                               required autocomplete="tel" class="form-field">
+                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email"
+                               class="form-field">
                     </div>
 
                     <div id="quizSelectionBlock" class="callback-quiz-selection" style="display: none;">
                         <div class="service-name"></div>
                         <div class="service-price"></div>
-                        <div class="service-remove">
-                            <button type="button" id="removeQuizSelection" class="btn btn-icon remove-item" aria-label="Удалить выбранный вариант">✖</button>
+                        <div class="service-actions">
+                            <button type="button" id="removeQuizSelection" class="btn btn-icon remove-item"
+                                    aria-label="Удалить выбранный вариант">✖
+                            </button>
+                            <button type="button" id="addQuizSelectionToCart" class="btn btn-secondary btn-small"
+                                    aria-label="Добавить в корзину">🛒 В корзину
+                            </button>
                         </div>
                     </div>
 
@@ -5535,12 +5542,15 @@ select:focus-visible {
                     <input type="hidden" name="recommendedVariants" id="recommendedVariants">
                     <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
 
-                    <textarea id="callbackComment" name="comment" rows="2" placeholder="💬 Удобное время или дополнительная информация" class="form-field form-textarea"></textarea>
+                    <textarea id="callbackComment" name="comment" rows="2"
+                              placeholder="💬 Удобное время или дополнительная информация"
+                              class="form-field form-textarea"></textarea>
 
                     <div class="form-row-messages">
                         <div class="consent-checkbox">
                             <input type="checkbox" id="callbackConsent" name="consent" required>
-                            <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
+                            <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку
+                                персональных данных</a></label>
                         </div>
                         <div id="callbackFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                     </div>
@@ -5548,7 +5558,8 @@ select:focus-visible {
                     <button type="submit" class="btn btn-primary btn-block callback-submit">📞 Записаться →</button>
 
                     <div class="callback-telegram-alt">
-                        ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
+                        ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank"
+                                                rel="noopener noreferrer">Telegram</a>
                     </div>
                 </fieldset>
             </form>
@@ -6177,7 +6188,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 20:20:47</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 20:47:20</span>
 
             </div>
         </div>
@@ -7716,6 +7727,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
     // 👇 ЭКСПОРТ ФУНКЦИИ ДЛЯ 99_main.js
     window.initInfiniteCarousel = initInfiniteCarousel;
+    window.initInfiniteCarousel = initInfiniteCarousel;
 })();
 // ============================================================
 // 05_modal.js – Модальные окна (политика конфиденциальности)
@@ -7985,12 +7997,17 @@ let cart = [];
 function formatPrice(price) { if (price === null) return 'по запросу'; if (price === 0) return '0 ₽'; return price.toLocaleString() + ' ₽'; }
 function getNumericPrice(price) { if (price === null) return 0; return price; }
 
-function addToCart(serviceName, price, quantity) {
+window.addToCart = function(serviceName, price, quantity) {
     const existing = cart.find(item => item.name === serviceName);
     if (existing) { existing.qty += quantity; window.showSuccessToast(`✅ "${serviceName}" количество увеличено до ${existing.qty}`); }
     else { cart.push({name: serviceName, price: price, qty: quantity}); window.showSuccessToast(`✅ "${serviceName}" добавлен(а) в корзину`); }
     renderCart();
+};
+
+function addToCart(serviceName, price, quantity) {
+    window.addToCart(serviceName, price, quantity);
 }
+
 function renderCart() {
     let total = 0, totalQty = 0;
     cart.forEach(item => { const itemPrice = getNumericPrice(item.price); total += itemPrice * item.qty; totalQty += item.qty; });
@@ -8018,7 +8035,6 @@ function renderCart() {
         if (item.price === null) priceDisplay = 'по запросу';
         else if (item.price === 0) priceDisplay = '0 ₽';
         else priceDisplay = (item.price * item.qty).toLocaleString() + ' ₽';
-        // ИСПРАВЛЕНО: добавлен escapeHtml для защиты от XSS
         const escapedName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
         div.innerHTML = `<div class="service-name">${escapedName}</div><div class="service-price">${priceDisplay}</div><div class="service-qty-control"><button class="qty-btn qty-minus" data-idx="${idx}">−</button><span class="qty-value">${item.qty}</span><button class="qty-btn qty-plus" data-idx="${idx}">+</button></div><div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>`;
         container.appendChild(div);
@@ -8805,7 +8821,6 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     }
 
     function isServiceAllowed(service, userRole, userSegment) {
-        // Определяем, относится ли услуга к бизнесу (B2B)
         const isBusinessService = (service.includes("подбор") || service.includes("рекрутинг") ||
             service.includes("хэдхантинг") || service.includes("аутсорсинг") ||
             service.includes("вакансии") || service.includes("кандидатов") ||
@@ -8821,14 +8836,12 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             service === "Тренинг 'Удержание персонала'" ||
             service === "Тренинг 'Профилактика выгорания'");
 
-        // B2B-роли: Подбираю сотрудников, Развиваю сотрудников, Собственник бизнеса
         const isBusinessUser = (userRole === "Подбираю сотрудников" ||
                                 userRole === "Развиваю сотрудников" ||
                                 userRole === "Собственник бизнеса");
 
         if (isBusinessService && !isBusinessUser) return false;
         if (!isBusinessService && isBusinessUser && userRole !== "Собственник бизнеса") {
-            // Собственнику бизнеса можно показывать и премиум-услуги для себя (VIP-коучинг, Executive)
             if (!service.includes("VIP") && !service.includes("Executive") && !service.includes("Коучинг топ") && !service.includes("Стратегия роста"))
                 return false;
         }
@@ -8862,7 +8875,6 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             const answer = answersArr[i];
             if (answer && mapping[answer]) userKeys.push(mapping[answer]);
         }
-        // Добавляем ключи ролей для правильного взвешивания
         if (userRole === "Подбираю сотрудников") userKeys.push("role_business");
         else if (userRole === "Развиваю сотрудников") userKeys.push("role_develop_employees");
         else if (userRole === "Собственник бизнеса") userKeys.push("role_business_owner");
@@ -8912,7 +8924,6 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         return { services: result };
     };
 
-    // Для обратной совместимости
     window.getTopTwoServices = function(answersArr) {
         const top = window.getTopServices(answersArr);
         const services = top.services;
@@ -8939,6 +8950,8 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
 // ============================================================
 // 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов)
 // Добавлены роли: Развиваю сотрудников, Собственник бизнеса
+// Финальная версия: компактные карточки, добавление в корзину,
+// выделение главной рекомендации, мотивирующие теги
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -8958,6 +8971,24 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     if (typeof window.escapeHtml !== 'function') {
         window.escapeHtml = function (str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); };
     }
+
+    const benefitTags = {
+        "Аудит резюме": "🔥 Повысит отклики",
+        "Подготовка к собеседованию (1ч)": "🎯 Уверенность +100%",
+        "Переговоры о зарплате (1ч)": "💰 Прибавка до 30%",
+        "Подбор специалиста": "⚡ Закрытие за 2 недели",
+        "Коучинг для руководителей": "💼 Управляйте эффективнее",
+        "Стратегия поиска работы": "🚀 Найдёте работу быстрее",
+        "Индивидуальный тренинг «Продай себя дорого»": "🏆 Выделитесь среди других",
+        "Развитие управленческих навыков": "📈 Рост команды",
+        "Executive-коучинг/мес": "🎯 Стратегия для топов",
+        "VIP-коучинг": "💎 Персональный подход",
+        "Резюме специалиста": "📄 Привлечёт работодателя",
+        "Профориентация для взрослых": "🧭 Найдёте своё призвание",
+        "Карьерная стратегия (пакет 3 консультации)": "🗺️ Чёткий план",
+        "Составление вакансии (с УТП)": "📢 Привлечёт лучших",
+        "Хэдхантинг": "🎯 Только топ-кандидаты"
+    };
 
     function getPrice(serviceName) { if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) { const price = window.PRICE_BOOK[serviceName]; if (price === 0) return '0 ₽'; if (price === null) return 'цена по запросу'; return price.toLocaleString() + ' ₽'; } return 'цена по запросу'; }
 
@@ -9042,7 +9073,6 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
 
-    // ВОПРОСЫ (расширены)
     const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"] };
     const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
     const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
@@ -9177,6 +9207,12 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         }
     }
 
+    function extractNumericPrice(priceStr) {
+        if (!priceStr) return null;
+        const match = priceStr.replace(/\s/g, '').match(/(\d+)/);
+        return match ? parseInt(match[1], 10) : null;
+    }
+
     function renderResult(recommendations) {
         logInit('Квиз: renderResult', 'INFO', '', 3);
         const container = document.getElementById('quizContainer');
@@ -9195,13 +9231,26 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             const price = esc(s.price);
             const serviceName = esc(s.service);
             const displayName = esc(s.formatted);
+            const numericPrice = extractNumericPrice(s.price);
+            const benefit = benefitTags[serviceName] || '';
+
+            let topBadge = '';
+            if (i === 0) {
+                topBadge = '<div class="quiz-top-badge">⭐ Лучший выбор</div>';
+            }
+
             cardsHtml += `
-                <div class="quiz-result-card">
+                <div class="quiz-result-card ${i === 0 ? 'top-recommendation' : ''}" data-service-name="${serviceName}" data-price="${numericPrice !== null ? numericPrice : ''}">
+                    ${topBadge}
                     <div class="quiz-result-icon">${i === 0 ? '🏆' : (i === 1 ? '🥈' : '📌')}</div>
                     <div class="quiz-result-category">${esc(category)}</div>
                     <div class="quiz-result-title">${name}</div>
+                    ${benefit ? `<div class="quiz-result-benefit">${esc(benefit)}</div>` : ''}
                     <div class="quiz-result-price">💰 ${price}</div>
-                    <button class="quiz-btn-details choose-option" data-choice="${i}" data-text="${serviceName}" data-price="${price}" data-display="${displayName}">Подробнее →</button>
+                    <div class="quiz-result-buttons">
+                        <button class="quiz-btn-details choose-option" data-choice="${i}" data-text="${serviceName}" data-price="${price}" data-display="${displayName}">Подробнее →</button>
+                        ${numericPrice !== null && numericPrice !== 0 ? `<button class="quiz-btn-cart add-to-cart" data-name="${serviceName}" data-price="${numericPrice}">➕ В корзину</button>` : ''}
+                    </div>
                 </div>
             `;
         }
@@ -9212,12 +9261,17 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                 <div class="quiz-result-category">Помощь эксперта</div>
                 <div class="quiz-result-title">Бесплатная консультация</div>
                 <div class="quiz-result-price" style="background:#f5f5f5; color:#666;">🎁 15 минут</div>
-                <button class="quiz-btn-help choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Нужна помощь →</button>
+                <div class="quiz-result-buttons">
+                    <button class="quiz-btn-help choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Нужна помощь →</button>
+                </div>
             </div>
         `;
 
         const html = `
-            <p style="font-weight: 500; margin-bottom: 20px; text-align:center; font-size:0.95rem; color: var(--text-muted);">🎯 На основе ваших ответов мы подобрали оптимальные варианты:</p>
+            <p style="font-weight: 500; margin-bottom: 20px; text-align:center; font-size:0.95rem; color: var(--text-muted);">
+                🎯 На основе ваших ответов мы подобрали оптимальные варианты.<br>
+                <strong>⭐ Отмеченный вариант — лучший выбор для старта.</strong>
+            </p>
             <div class="quiz-results-grid">
                 ${cardsHtml}
             </div>
@@ -9253,6 +9307,22 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                 isSubmittingChoice = false;
             };
             btn.addEventListener('click', btn._choiceHandler);
+        });
+
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.removeEventListener('click', btn._cartHandler);
+            btn._cartHandler = (e) => {
+                e.stopPropagation();
+                const serviceName = btn.dataset.name;
+                const price = parseInt(btn.dataset.price, 10);
+                if (window.addToCart && typeof window.addToCart === 'function') {
+                    window.addToCart(serviceName, price, 1);
+                } else {
+                    console.error('addToCart не определена');
+                    window.showErrorToast('Не удалось добавить в корзину, попробуйте позже');
+                }
+            };
+            btn.addEventListener('click', btn._cartHandler);
         });
 
         const helpBtn = document.querySelector('.choose-help');
@@ -9332,6 +9402,25 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             removeBtn._removeHandler = function () { selectedVariantText = ''; selectedVariantPrice = ''; updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', answers); updateSelectionBlock('', ''); window.showSuccessToast('🗑️ Выбранный вариант удалён'); };
             removeBtn.addEventListener('click', removeBtn._removeHandler);
         }
+
+        const addToCartFromQuizBtn = document.getElementById('addQuizSelectionToCart');
+        if (addToCartFromQuizBtn) {
+            addToCartFromQuizBtn.removeEventListener('click', addToCartFromQuizBtn._addToCartHandler);
+            addToCartFromQuizBtn._addToCartHandler = function() {
+                const serviceName = document.getElementById('chosenVariant')?.value || '';
+                const priceStr = document.getElementById('chosenVariantPrice')?.value || '';
+                const numericPrice = priceStr ? parseInt(priceStr.replace(/\D/g, ''), 10) : null;
+                if (serviceName && numericPrice !== null && numericPrice !== 0 && window.addToCart) {
+                    window.addToCart(serviceName, numericPrice, 1);
+                } else if (serviceName && numericPrice === 0) {
+                    window.showWarningToast('⚠️ Эта услуга бесплатная, добавление в корзину не требуется');
+                } else {
+                    window.showWarningToast('⚠️ Не выбрана услуга в квизе');
+                }
+            };
+            addToCartFromQuizBtn.addEventListener('click', addToCartFromQuizBtn._addToCartHandler);
+        }
+
         const copyResultBtn = document.getElementById('copyQuizResultBtn');
         if (copyResultBtn) {
             copyResultBtn.removeEventListener('click', copyResultBtn._copyHandler);
@@ -9652,7 +9741,7 @@ window.isValidEmail = isValidEmail;
 
     function initCarousel() {
         if (typeof window.initInfiniteCarousel === 'function') {
-            window.initInfiniteCarousel('carouselTrack', '.carousel-prev', '.carousel-next', 'progressBar', 'carouselDots');
+            window.initInfiniteCarousel('carouselTrack');
             logInit('Карусель сертификатов инициализирована', 'INFO', '', 4);
         }
     }

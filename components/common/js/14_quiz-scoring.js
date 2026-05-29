@@ -55,7 +55,6 @@
     }
 
     function isServiceAllowed(service, userRole, userSegment) {
-        // Определяем, относится ли услуга к бизнесу (B2B)
         const isBusinessService = (service.includes("подбор") || service.includes("рекрутинг") ||
             service.includes("хэдхантинг") || service.includes("аутсорсинг") ||
             service.includes("вакансии") || service.includes("кандидатов") ||
@@ -71,14 +70,12 @@
             service === "Тренинг 'Удержание персонала'" ||
             service === "Тренинг 'Профилактика выгорания'");
 
-        // B2B-роли: Подбираю сотрудников, Развиваю сотрудников, Собственник бизнеса
         const isBusinessUser = (userRole === "Подбираю сотрудников" ||
                                 userRole === "Развиваю сотрудников" ||
                                 userRole === "Собственник бизнеса");
 
         if (isBusinessService && !isBusinessUser) return false;
         if (!isBusinessService && isBusinessUser && userRole !== "Собственник бизнеса") {
-            // Собственнику бизнеса можно показывать и премиум-услуги для себя (VIP-коучинг, Executive)
             if (!service.includes("VIP") && !service.includes("Executive") && !service.includes("Коучинг топ") && !service.includes("Стратегия роста"))
                 return false;
         }
@@ -112,7 +109,6 @@
             const answer = answersArr[i];
             if (answer && mapping[answer]) userKeys.push(mapping[answer]);
         }
-        // Добавляем ключи ролей для правильного взвешивания
         if (userRole === "Подбираю сотрудников") userKeys.push("role_business");
         else if (userRole === "Развиваю сотрудников") userKeys.push("role_develop_employees");
         else if (userRole === "Собственник бизнеса") userKeys.push("role_business_owner");
@@ -162,7 +158,6 @@
         return { services: result };
     };
 
-    // Для обратной совместимости
     window.getTopTwoServices = function(answersArr) {
         const top = window.getTopServices(answersArr);
         const services = top.services;

@@ -1,6 +1,8 @@
 // ============================================================
 // 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов)
 // Добавлены роли: Развиваю сотрудников, Собственник бизнеса
+// Финальная версия: компактные карточки, добавление в корзину,
+// выделение главной рекомендации, мотивирующие теги
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -20,6 +22,24 @@
     if (typeof window.escapeHtml !== 'function') {
         window.escapeHtml = function (str) { if (!str) return ''; return str.replace(/[&<>]/g, function(m) { if (m === '&') return '&amp;'; if (m === '<') return '&lt;'; if (m === '>') return '&gt;'; return m; }); };
     }
+
+    const benefitTags = {
+        "Аудит резюме": "🔥 Повысит отклики",
+        "Подготовка к собеседованию (1ч)": "🎯 Уверенность +100%",
+        "Переговоры о зарплате (1ч)": "💰 Прибавка до 30%",
+        "Подбор специалиста": "⚡ Закрытие за 2 недели",
+        "Коучинг для руководителей": "💼 Управляйте эффективнее",
+        "Стратегия поиска работы": "🚀 Найдёте работу быстрее",
+        "Индивидуальный тренинг «Продай себя дорого»": "🏆 Выделитесь среди других",
+        "Развитие управленческих навыков": "📈 Рост команды",
+        "Executive-коучинг/мес": "🎯 Стратегия для топов",
+        "VIP-коучинг": "💎 Персональный подход",
+        "Резюме специалиста": "📄 Привлечёт работодателя",
+        "Профориентация для взрослых": "🧭 Найдёте своё призвание",
+        "Карьерная стратегия (пакет 3 консультации)": "🗺️ Чёткий план",
+        "Составление вакансии (с УТП)": "📢 Привлечёт лучших",
+        "Хэдхантинг": "🎯 Только топ-кандидаты"
+    };
 
     function getPrice(serviceName) { if (window.PRICE_BOOK && window.PRICE_BOOK[serviceName] !== undefined) { const price = window.PRICE_BOOK[serviceName]; if (price === 0) return '0 ₽'; if (price === null) return 'цена по запросу'; return price.toLocaleString() + ' ₽'; } return 'цена по запросу'; }
 
@@ -104,7 +124,6 @@
         else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
 
-    // ВОПРОСЫ (расширены)
     const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"] };
     const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
     const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
@@ -239,6 +258,12 @@
         }
     }
 
+    function extractNumericPrice(priceStr) {
+        if (!priceStr) return null;
+        const match = priceStr.replace(/\s/g, '').match(/(\d+)/);
+        return match ? parseInt(match[1], 10) : null;
+    }
+
     function renderResult(recommendations) {
         logInit('Квиз: renderResult', 'INFO', '', 3);
         const container = document.getElementById('quizContainer');
@@ -257,13 +282,26 @@
             const price = esc(s.price);
             const serviceName = esc(s.service);
             const displayName = esc(s.formatted);
+            const numericPrice = extractNumericPrice(s.price);
+            const benefit = benefitTags[serviceName] || '';
+
+            let topBadge = '';
+            if (i === 0) {
+                topBadge = '<div class="quiz-top-badge">⭐ Лучший выбор</div>';
+            }
+
             cardsHtml += `
-                <div class="quiz-result-card">
+                <div class="quiz-result-card ${i === 0 ? 'top-recommendation' : ''}" data-service-name="${serviceName}" data-price="${numericPrice !== null ? numericPrice : ''}">
+                    ${topBadge}
                     <div class="quiz-result-icon">${i === 0 ? '🏆' : (i === 1 ? '🥈' : '📌')}</div>
                     <div class="quiz-result-category">${esc(category)}</div>
                     <div class="quiz-result-title">${name}</div>
+                    ${benefit ? `<div class="quiz-result-benefit">${esc(benefit)}</div>` : ''}
                     <div class="quiz-result-price">💰 ${price}</div>
-                    <button class="quiz-btn-details choose-option" data-choice="${i}" data-text="${serviceName}" data-price="${price}" data-display="${displayName}">Подробнее →</button>
+                    <div class="quiz-result-buttons">
+                        <button class="quiz-btn-details choose-option" data-choice="${i}" data-text="${serviceName}" data-price="${price}" data-display="${displayName}">Подробнее →</button>
+                        ${numericPrice !== null && numericPrice !== 0 ? `<button class="quiz-btn-cart add-to-cart" data-name="${serviceName}" data-price="${numericPrice}">➕ В корзину</button>` : ''}
+                    </div>
                 </div>
             `;
         }
@@ -274,12 +312,17 @@
                 <div class="quiz-result-category">Помощь эксперта</div>
                 <div class="quiz-result-title">Бесплатная консультация</div>
                 <div class="quiz-result-price" style="background:#f5f5f5; color:#666;">🎁 15 минут</div>
-                <button class="quiz-btn-help choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Нужна помощь →</button>
+                <div class="quiz-result-buttons">
+                    <button class="quiz-btn-help choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Нужна помощь →</button>
+                </div>
             </div>
         `;
 
         const html = `
-            <p style="font-weight: 500; margin-bottom: 20px; text-align:center; font-size:0.95rem; color: var(--text-muted);">🎯 На основе ваших ответов мы подобрали оптимальные варианты:</p>
+            <p style="font-weight: 500; margin-bottom: 20px; text-align:center; font-size:0.95rem; color: var(--text-muted);">
+                🎯 На основе ваших ответов мы подобрали оптимальные варианты.<br>
+                <strong>⭐ Отмеченный вариант — лучший выбор для старта.</strong>
+            </p>
             <div class="quiz-results-grid">
                 ${cardsHtml}
             </div>
@@ -315,6 +358,22 @@
                 isSubmittingChoice = false;
             };
             btn.addEventListener('click', btn._choiceHandler);
+        });
+
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.removeEventListener('click', btn._cartHandler);
+            btn._cartHandler = (e) => {
+                e.stopPropagation();
+                const serviceName = btn.dataset.name;
+                const price = parseInt(btn.dataset.price, 10);
+                if (window.addToCart && typeof window.addToCart === 'function') {
+                    window.addToCart(serviceName, price, 1);
+                } else {
+                    console.error('addToCart не определена');
+                    window.showErrorToast('Не удалось добавить в корзину, попробуйте позже');
+                }
+            };
+            btn.addEventListener('click', btn._cartHandler);
         });
 
         const helpBtn = document.querySelector('.choose-help');
@@ -394,6 +453,25 @@
             removeBtn._removeHandler = function () { selectedVariantText = ''; selectedVariantPrice = ''; updateFormHiddenFields('', '', selectedOriginalText, selectedOriginalPrice, '', answers); updateSelectionBlock('', ''); window.showSuccessToast('🗑️ Выбранный вариант удалён'); };
             removeBtn.addEventListener('click', removeBtn._removeHandler);
         }
+
+        const addToCartFromQuizBtn = document.getElementById('addQuizSelectionToCart');
+        if (addToCartFromQuizBtn) {
+            addToCartFromQuizBtn.removeEventListener('click', addToCartFromQuizBtn._addToCartHandler);
+            addToCartFromQuizBtn._addToCartHandler = function() {
+                const serviceName = document.getElementById('chosenVariant')?.value || '';
+                const priceStr = document.getElementById('chosenVariantPrice')?.value || '';
+                const numericPrice = priceStr ? parseInt(priceStr.replace(/\D/g, ''), 10) : null;
+                if (serviceName && numericPrice !== null && numericPrice !== 0 && window.addToCart) {
+                    window.addToCart(serviceName, numericPrice, 1);
+                } else if (serviceName && numericPrice === 0) {
+                    window.showWarningToast('⚠️ Эта услуга бесплатная, добавление в корзину не требуется');
+                } else {
+                    window.showWarningToast('⚠️ Не выбрана услуга в квизе');
+                }
+            };
+            addToCartFromQuizBtn.addEventListener('click', addToCartFromQuizBtn._addToCartHandler);
+        }
+
         const copyResultBtn = document.getElementById('copyQuizResultBtn');
         if (copyResultBtn) {
             copyResultBtn.removeEventListener('click', copyResultBtn._copyHandler);
