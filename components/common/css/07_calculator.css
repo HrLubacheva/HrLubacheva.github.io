@@ -354,3 +354,35 @@
         gap: 8px !important;
     }
 }
+
+/* ========== КОРЗИНА НА МОБИЛЬНЫХ: ЦЕНА РЯДОМ С НАЗВАНИЕМ ========== */
+@media (max-width: 640px) {
+    .calc-item {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    /* Название и цена — в одной строке */
+    .calc-item .service-name {
+        flex: 1 1 auto;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    .calc-item .service-price {
+        flex: 0 0 auto;
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-left: 8px;
+        white-space: nowrap;
+    }
+
+    /* Управление количеством и удаление — на новой строке */
+    .service-qty-control,
+    .calc-item .service-remove {
+        margin-top: 6px;
+    }
+}
