@@ -799,7 +799,7 @@ body {
     }
 }
 
-/* Планшеты (768–991px): .grid-3 – 2 колонки, .grid-2 – 2 колонки (оставляем как есть) */
+/* Планшеты (768–991px): .grid-3 – 2 колонки, .grid-2 – 2 колонки */
 @media (max-width: 991px) {
     .grid-3 {
         grid-template-columns: repeat(2, 1fr);
@@ -808,7 +808,6 @@ body {
         grid-template-columns: repeat(2, 1fr);
         gap: 24px;
     }
-    /* .grid-2 на этом диапазоне остаётся 2 колонки (задано выше), не меняем */
 }
 
 /* Мобильные (до 768px) – все сетки в 1 колонку */
@@ -1193,101 +1192,6 @@ body {
         min-width: auto;
         width: 100%;
         box-sizing: border-box;
-    }
-}
-
-/* ==================================================================
-   ФИНАЛЬНЫЕ ИСПРАВЛЕНИЯ: карточки не вылезают за границы на мобильных
-   ================================================================== */
-
-/* Убираем фиксированную min-width у блоков, которые её переопределяют */
-@media (max-width: 768px) {
-    .process-block,
-    .benefits-column,
-    .media-item,
-    .card {
-        min-width: auto !important;
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-
-    /* Уменьшаем отступы внутри карточек */
-    .card {
-        padding: 20px 16px !important;
-    }
-
-    /* Уменьшаем расстояние между карточками */
-    .grid-2,
-    .grid-3,
-    .stats-grid,
-    .benefits-stack {
-        gap: 16px !important;
-    }
-}
-
-/* Дополнительное масштабирование для очень узких экранов (≤480px) */
-@media (max-width: 480px) {
-    /* Заголовки карточек */
-    .card h3,
-    .card-role h3,
-    .card-service h3,
-    .benefit-card h4,
-    .process-block-title {
-        font-size: 1.1rem !important;
-        line-height: 1.3;
-    }
-
-    /* Текст внутри карточек */
-    .card p,
-    .card-role p,
-    .card-service p,
-    .benefit-card p,
-    .process-card p {
-        font-size: 0.85rem !important;
-        line-height: 1.4;
-    }
-
-    /* Список услуг (маркированный) */
-    .service-list li {
-        font-size: 0.8rem !important;
-        margin-bottom: 6px;
-    }
-
-    /* Статистика — дополнительное уменьшение */
-    .stat-number {
-        font-size: 1.6rem !important;
-    }
-    .stat-plus {
-        font-size: 1.2rem !important;
-    }
-    .stat-label {
-        font-size: 0.7rem !important;
-    }
-}
-
-/* Для совсем узких экранов (≤360px) – ещё сильнее уменьшаем */
-@media (max-width: 360px) {
-    .card {
-        padding: 14px 12px !important;
-    }
-    .card h3,
-    .card-role h3,
-    .card-service h3 {
-        font-size: 1rem !important;
-    }
-    .card p,
-    .card-role p,
-    .card-service p {
-        font-size: 0.75rem !important;
-    }
-    .service-list li {
-        font-size: 0.7rem !important;
-    }
-    .benefit-card h4 {
-        font-size: 0.9rem !important;
-    }
-    .benefit-card p {
-        font-size: 0.7rem !important;
     }
 }
 /* ==================================================================
@@ -6227,7 +6131,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 18:38:41</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 18:42:21</span>
 
             </div>
         </div>
