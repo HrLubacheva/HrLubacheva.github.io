@@ -287,6 +287,14 @@ body {
         scroll-behavior: auto !important;
     }
 }
+
+:root {
+    /* существующие переменные ... */
+
+    --accent-warm: #E67E22;      /* тёплый оранжевый */
+    --accent-warm-light: #F39C12; /* светлый вариант */
+    --accent-gradient: linear-gradient(135deg, var(--primary), var(--accent-warm));
+}
 /* ==================================================================
    01_typography.css – типографика
    ================================================================== */
@@ -494,6 +502,21 @@ body {
     align-items: center;
     justify-content: center;
 }
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--accent-warm));
+    color: white;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+.btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--accent-warm-light));
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+}
+.btn-primary:active {
+    transform: scale(0.98);
+    transition: transform 0.05s;
+}
 /* ==================================================================
    03_cards.css – единая система карточек
    ================================================================== */
@@ -613,6 +636,15 @@ body {
     .card-benefit p {
         font-size: 0.95rem;
     }
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.25);
+}
+
+.card-service:hover {
+    box-shadow: 0 20px 35px -12px rgba(230, 126, 34, 0.2);
 }
 /* ==================================================================
    04_footer.css – единый стиль для футера
@@ -750,10 +782,30 @@ body {
         gap: 12px;
     }
 }
+
+.site-footer {
+    background: #1e2f3f; /* чуть светлее, чем было */
+    color: #cbd5e0;
+    padding: 32px 0 24px;
+    margin-top: 60px;
+    border-top: 2px solid rgba(230, 126, 34, 0.3); /* тёплая линия */
+}
+
+/* Добавляем градиентную линию над футером (опционально) */
+.site-footer::before {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-warm), var(--primary-light));
+    margin: 0 auto 20px auto;
+    border-radius: 3px;
+}
 /* ==================================================================
-   04_grids.css – универсальные сетки (адаптив) + масштабирование + переносы
+   04_grids.css – универсальные сетки (адаптив) + улучшенный визуал услуг
    ================================================================== */
 
+/* ========== БАЗОВЫЕ СЕТКИ ========== */
 .grid-3 {
     display: grid;
     gap: 30px;
@@ -787,6 +839,7 @@ body {
     padding-left: 0;
 }
 
+/* ========== АДАПТИВНОСТЬ ОБЩИХ СЕТОК ========== */
 @media (min-width: 992px) and (max-width: 1199px) {
     .grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
@@ -802,17 +855,25 @@ body {
 }
 
 /* ========== ПОДЗАГОЛОВОК СЕКЦИИ УСЛУГ В 2 КОЛОНКИ ========== */
-@media (min-width: 768px) {
+/* Оформление подзаголовка секции услуг – единая колонка */
+#services .section-subtitle {
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+/* На мобильных – чуть меньше отступы */
+@media (max-width: 768px) {
     #services .section-subtitle {
-        column-count: 2;
-        column-gap: 40px;
-        text-align: left;
-        max-width: 900px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 0 20px;
+        padding: 0 16px;
+        font-size: 0.95rem;
     }
 }
+
 @media (max-width: 767px) {
     #services .section-subtitle {
         column-count: 1;
@@ -839,7 +900,10 @@ body {
     background: #f0f4f8;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.process-photo-item img:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(45,106,159,0.15); }
+.process-photo-item img:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(45,106,159,0.15);
+}
 .photo-caption {
     margin-top: 16px;
     font-size: 0.9rem;
@@ -851,11 +915,13 @@ body {
 }
 @media (max-width: 640px) {
     .process-photos { gap: 12px; }
-    .process-photo-item:first-child, .process-photo-item:last-child { min-width: 120px; }
+    .process-photo-item:first-child,
+    .process-photo-item:last-child { min-width: 120px; }
 }
 @media (max-width: 480px) {
     .process-photos { gap: 8px; }
-    .process-photo-item:first-child, .process-photo-item:last-child { min-width: 100px; }
+    .process-photo-item:first-child,
+    .process-photo-item:last-child { min-width: 100px; }
     .photo-caption { font-size: 0.75rem; margin-top: 10px; }
 }
 
@@ -931,7 +997,9 @@ body {
     gap: 24px;
     width: 100%;
 }
-@media (max-width: 500px) { .process-grid-2x2 { gap: 16px; } }
+@media (max-width: 500px) {
+    .process-grid-2x2 { gap: 16px; }
+}
 @media (max-width: 400px) {
     .process-grid-2x2 { gap: 12px; }
     .card-process { padding: 16px 12px; }
@@ -1092,8 +1160,137 @@ body {
         padding: 18px 14px !important;
     }
 }
+
+/* ========== УЛУЧШЕННЫЙ ВИЗУАЛ ДЛЯ КАРТОЧЕК УСЛУГ ========== */
+.card-service {
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    position: relative;
+    background: var(--surface-soft);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+.card-service:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 30px -12px rgba(45, 106, 159, 0.25);
+}
+.card-service:hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    padding: 2px;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.7;
+}
+.card-service h3 .emoji {
+    font-size: 1.8rem;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    transition: transform 0.2s ease;
+}
+.card-service:hover h3 .emoji {
+    transform: scale(1.05);
+}
+.card-service h3 {
+    position: relative;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+.card-service h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+.card-service:hover h3::after {
+    width: 80px;
+}
+.card-service .service-list li {
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.card-service .service-list li:hover {
+    transform: translateX(4px);
+    color: var(--primary);
+}
+.card-service .service-list li::before {
+    content: "▹";
+    color: var(--primary);
+    font-size: 0.8rem;
+    left: 0;
+    top: 0;
+    transition: transform 0.2s ease;
+}
+.card-service .service-list li:hover::before {
+    transform: translateX(2px);
+}
+@media (max-width: 768px) {
+    .card-service h3 {
+        font-size: 1.2rem;
+        padding-bottom: 8px;
+        margin-bottom: 16px;
+    }
+    .card-service .service-list li {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+    .card-service .service-list li:hover {
+        transform: translateX(2px);
+    }
+}
+@media (max-width: 480px) {
+    .card-service h3 {
+        font-size: 1.1rem;
+    }
+    .card-service .service-list li {
+        font-size: 0.8rem;
+    }
+}
+
+/* ========== УВЕЛИЧЕННЫЙ ШРИФТ В КАРТОЧКАХ УСЛУГ НА ПЛАНШЕТАХ И ТЕЛЕФОНАХ ========== */
+@media (max-width: 992px) {
+    .card-service h3 {
+        font-size: 1.3rem !important;
+    }
+    .card-service .service-list li {
+        font-size: 0.95rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-service h3 {
+        font-size: 1.2rem !important;
+    }
+    .card-service .service-list li {
+        font-size: 0.9rem !important;
+        line-height: 1.4;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-service h3 {
+        font-size: 1.1rem !important;
+    }
+    .card-service .service-list li {
+        font-size: 0.85rem !important;
+    }
+}
 /* ==================================================================
-   05_navbar.css – навигационная панель
+   05_navbar.css – навигационная панель (улучшенная)
    ================================================================== */
 .navbar {
     background: white;
@@ -1122,6 +1319,10 @@ body {
     font-weight: 800;
     color: var(--primary);
     white-space: nowrap;
+    transition: transform 0.2s ease;
+}
+.logo:hover {
+    transform: scale(1.02);
 }
 .logo-sub {
     font-weight: 400;
@@ -1192,10 +1393,17 @@ body {
     font-weight: 500;
     transition: var(--transition);
     border-bottom: 1px solid transparent;
+    padding: 4px 0;
 }
 .nav-links a:hover {
     color: var(--primary);
     border-bottom-color: var(--primary);
+}
+/* Активный пункт меню */
+.nav-links a.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    font-weight: 600;
 }
 
 .burger-menu:focus-visible {
@@ -1214,6 +1422,7 @@ body {
     border-radius: 50%;
 }
 
+/* Мобильные устройства */
 @media (max-width: 768px) {
     .burger-menu { display: block; }
     .nav-bottom {
@@ -1237,50 +1446,75 @@ body {
     .nav-links {
         flex-direction: column;
         align-items: center;
-        gap: 20px;
+        gap: 25px;
     }
     .nav-links a {
         font-size: 1.2rem;
-        padding: 8px 0;
+        padding: 10px 0;
+        display: inline-block;
     }
     body.menu-open { overflow: hidden; }
     .nav-top {
         flex-wrap: nowrap;
         justify-content: space-between;
+        align-items: center;
     }
     .logo { font-size: 1.2rem; }
     .logo-sub { font-size: 0.75rem; }
+
+    /* Фикс: иконки соцсетей не должны растягиваться */
+    .social-icons {
+        flex-shrink: 0;
+        gap: 8px;
+    }
+    .social-icons a {
+        width: 32px;
+        height: 32px;
+    }
+    .social-icons svg {
+        width: 20px;
+        height: 20px;
+    }
 }
 
+/* Очень маленькие экраны (≤480px) */
 @media (max-width: 480px) {
     .social-icons svg { width: 20px; height: 20px; }
     .logo { font-size: 1rem; }
+    .nav-links a {
+        font-size: 1rem;
+        padding: 8px 0;
+    }
+    .social-icons {
+        gap: 6px;
+    }
+    .social-icons a {
+        width: 28px;
+        height: 28px;
+    }
 }
 /* ==================================================================
-   05_stats_benefits.css – статистика и преимущества
+   05_stats_benefits.css – статистика и преимущества (уменьшенная высота, улучшенный вид)
    ================================================================== */
 
-/* ========== Статистика ========== */
+/* ========== СТАТИСТИКА ========== */
 .stats-grid {
     display: grid;
     gap: 30px;
     margin: 40px 0;
 }
-
 @media (min-width: 576px) and (max-width: 991px) {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 24px;
     }
 }
-
 @media (min-width: 992px) {
     .stats-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 30px;
     }
 }
-
 @media (max-width: 575px) {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -1305,12 +1539,10 @@ body {
         justify-content: center;
     }
 }
-
 .card-stat {
     text-align: center;
     padding: 28px 20px;
 }
-
 .stat-number-wrapper {
     display: flex;
     align-items: baseline;
@@ -1320,27 +1552,23 @@ body {
     white-space: nowrap;
     flex-wrap: nowrap;
 }
-
 .stat-number {
     font-size: 2.8rem;
     font-weight: 800;
     color: var(--primary);
     line-height: 1.2;
 }
-
 .stat-plus {
     font-size: 2rem;
     font-weight: 700;
     color: var(--primary);
     line-height: 1.2;
 }
-
 .stat-label {
     font-size: 1rem;
     color: var(--text-muted);
     font-weight: 500;
 }
-
 @media (max-width: 360px) {
     .stat-number-wrapper {
         white-space: normal;
@@ -1349,94 +1577,120 @@ body {
     }
 }
 
-/* ========== Преимущества (две колонки) – исправлено переполнение ========== */
+/* ========== ПРЕИМУЩЕСТВА – СТРОГО 2 КОЛОНКИ 50% НА 50% ========== */
 .benefits-two-columns {
-    display: flex;
-    gap: 40px;
-    flex-wrap: wrap;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 60px !important;
 }
-
+@media (min-width: 992px) {
+    .benefits-two-columns {
+        gap: 60px !important;
+    }
+    .benefits-column {
+        flex: 0 0 calc(50% - 30px) !important;
+        max-width: calc(50% - 30px) !important;
+        min-width: 0 !important;
+        width: auto !important;
+    }
+}
+@media (max-width: 991px) {
+    .benefits-two-columns {
+        flex-direction: column !important;
+        gap: 48px !important;
+    }
+    .benefits-column {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+}
 .benefits-column {
-    flex: 1 1 0;          /* позволяет сжиматься равномерно */
-    min-width: 0;         /* отключаем минимальную ширину – ключевое исправление */
     position: relative;
     padding: 8px 0;
 }
-
-/* Декоративные полоски между колонками */
-.benefits-column:first-child::before {
-    content: '';
-    position: absolute;
-    left: -20px;
-    top: 20px;
-    bottom: 20px;
-    width: 3px;
-    background: linear-gradient(180deg, var(--primary-light), var(--primary), var(--primary-light));
-    border-radius: 3px;
-    opacity: 0.6;
+/* Декоративные полоски – только на десктопе */
+@media (min-width: 992px) {
+    .benefits-column:first-child::before {
+        content: '';
+        position: absolute;
+        left: -30px;
+        top: 20px;
+        bottom: 20px;
+        width: 3px;
+        background: linear-gradient(180deg, var(--primary-light), var(--primary), var(--primary-light));
+        border-radius: 3px;
+        opacity: 0.6;
+    }
+    .benefits-column:last-child::after {
+        content: '';
+        position: absolute;
+        right: -30px;
+        top: 20px;
+        bottom: 20px;
+        width: 3px;
+        background: linear-gradient(180deg, var(--primary-light), var(--primary), var(--primary-light));
+        border-radius: 3px;
+        opacity: 0.6;
+    }
 }
 
-.benefits-column:last-child::after {
-    content: '';
-    position: absolute;
-    right: -20px;
-    top: 20px;
-    bottom: 20px;
-    width: 3px;
-    background: linear-gradient(180deg, var(--primary-light), var(--primary), var(--primary-light));
-    border-radius: 3px;
-    opacity: 0.6;
-}
-
+/* ========== ЗАГОЛОВКИ КОЛОНОК – КОМПАКТНЫЕ ========== */
 .benefits-column-header {
     text-align: center;
-    margin-bottom: 32px;
-    padding: 24px 20px;
-    background: linear-gradient(135deg, rgba(45, 106, 159, 0.15), rgba(74, 139, 194, 0.08));
+    margin-bottom: 28px;
+    padding: 18px 16px;
+    background: linear-gradient(135deg, rgba(45, 106, 159, 0.25), rgba(74, 139, 194, 0.12));
     border-radius: 28px;
-    border: 1px solid rgba(45, 106, 159, 0.3);
+    border: 1px solid rgba(45, 106, 159, 0.4);
     backdrop-filter: blur(4px);
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 130px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
-
 .benefits-column-header:hover {
-    border-color: rgba(45, 106, 159, 0.6);
-    background: linear-gradient(135deg, rgba(45, 106, 159, 0.2), rgba(74, 139, 194, 0.1));
+    transform: translateY(-2px);
+    border-color: rgba(45, 106, 159, 0.7);
+    background: linear-gradient(135deg, rgba(45, 106, 159, 0.35), rgba(74, 139, 194, 0.2));
+    box-shadow: 0 10px 20px rgba(45, 106, 159, 0.15);
 }
-
 .benefits-column-icon {
     font-size: 2.5rem;
-    margin-bottom: 12px;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    margin-bottom: 10px;
+    filter: drop-shadow(0 2px 6px rgba(45,106,159,0.3));
+    transition: transform 0.2s ease;
 }
-
+.benefits-column-header:hover .benefits-column-icon {
+    transform: scale(1.03);
+}
 .benefits-column-title {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 1.5rem;
+    font-weight: 800;
     color: white;
-    margin: 0 0 8px 0;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    margin: 0 0 6px 0;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
-
 .benefits-column-desc {
     font-size: 0.85rem;
-    color: var(--primary-light);
+    color: #cbe4fe;
     font-weight: 500;
-    letter-spacing: 0.5px;
     margin: 0;
 }
 
+/* ========== КАРТОЧКИ – УМЕНЬШЕННАЯ ВЫСОТА, ЧИТАЕМОСТЬ ========== */
 .benefits-stack {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 18px;
 }
-
 .benefit-card {
     background: white;
-    border-radius: var(--radius-lg);
-    padding: 28px 24px;
-    box-shadow: var(--shadow-lg);
+    border-radius: 24px;
+    padding: 16px 18px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.05);
     transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
     border: none;
     position: relative;
@@ -1444,156 +1698,161 @@ body {
     text-align: center;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    word-break: normal;
+    overflow-wrap: break-word;
+    min-height: 180px;
 }
-
+/* На мобильных убираем фиксированную высоту */
+@media (max-width: 991px) {
+    .benefit-card {
+        min-height: auto;
+        padding: 16px 14px;
+    }
+}
+/* Верхняя декоративная линия */
 .benefit-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
-    height: 4px;
+    height: 3px;
     background: linear-gradient(90deg, var(--primary), var(--primary-light));
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.4s ease;
 }
-
 .benefit-card:hover::before {
     transform: scaleX(1);
 }
-
-.benefit-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 25px 40px rgba(0, 0, 0, 0.3);
-    background: white;
+/* Разделительная линия между заголовком и текстом */
+.benefit-card h4::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-light), transparent);
+    margin: 10px auto 0;
+    border-radius: 2px;
 }
-
+.benefit-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+}
 .benefit-card:hover::after {
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: var(--radius-lg);
-    padding: 2px;
+    border-radius: 24px;
+    padding: 1px;
     background: linear-gradient(135deg, var(--primary), var(--primary-light));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
-    opacity: 0.6;
+    opacity: 0.4;
 }
-
 .benefit-card h4 {
-    font-size: 1.4rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     color: var(--primary-dark);
     transition: color 0.2s;
     line-height: 1.3;
 }
-
 .benefit-card p {
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 0.85rem;
+    line-height: 1.45;
     color: var(--text-dark);
     margin: 0;
     font-weight: 500;
 }
-
 .benefit-card:hover h4 {
     color: var(--primary);
 }
 
-/* ========== Адаптив для преимуществ (мобильные) ========== */
-@media (max-width: 768px) {
+/* ========== АДАПТИВ ДЛЯ ПЛАНШЕТОВ И МОБИЛЬНЫХ ========== */
+@media (max-width: 991px) {
     .benefits-two-columns {
         flex-direction: column;
         gap: 48px;
     }
-
     .benefits-column {
         width: 100%;
         min-width: auto;
+        max-width: 100%;
         flex: 1 1 100%;
     }
-
     .benefits-column:first-child::before,
     .benefits-column:last-child::after {
         display: none;
     }
-
     .benefits-column-header {
-        padding: 20px 16px;
+        min-height: auto;
+        padding: 18px 14px;
         margin-bottom: 24px;
     }
-
     .benefits-column-title {
         font-size: 1.3rem;
     }
-
     .benefits-column-icon {
         font-size: 2rem;
     }
-
     .benefits-stack {
-        gap: 20px;
+        gap: 16px;
     }
-
     .benefit-card {
-        padding: 20px 16px;
-        word-break: break-word;
-        overflow-wrap: break-word;
+        min-height: auto;
+        padding: 14px 14px;
     }
-
     .benefit-card h4 {
-        font-size: 1.2rem;
-        line-height: 1.3;
-        min-height: auto;
-        overflow: visible;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
     }
-
     .benefit-card p {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         line-height: 1.4;
-        min-height: auto;
-        overflow: visible;
+    }
+    .benefit-card h4::after {
+        width: 30px;
+        margin: 8px auto 0;
     }
 }
-
-/* ========== Для очень узких телефонов (до 480px) ========== */
 @media (max-width: 480px) {
     .benefit-card {
-        padding: 16px 12px;
+        padding: 12px 12px;
     }
     .benefit-card h4 {
         font-size: 1rem;
-        line-height: 1.3;
     }
     .benefit-card p {
         font-size: 0.8rem;
-        line-height: 1.4;
-        word-break: break-word;
-        overflow-wrap: break-word;
+    }
+    .benefits-column-title {
+        font-size: 1.2rem;
     }
 }
-
-/* ========== Ещё более мелкие экраны (≤360px) – сильное масштабирование ========== */
 @media (max-width: 360px) {
     .benefit-card {
-        padding: 14px 10px;
+        padding: 10px 10px;
     }
     .benefit-card h4 {
-        font-size: 1rem;
+        font-size: 0.95rem;
     }
     .benefit-card p {
         font-size: 0.75rem;
-        line-height: 1.3;
+        line-height: 1.35;
     }
 }
 
-/* ========== Уменьшаем статистику на телефонах ========== */
+/* ========== УМЕНЬШАЕМ СТАТИСТИКУ НА ТЕЛЕФОНАХ ========== */
 @media (max-width: 640px) {
     .stats-grid {
         gap: 16px;
@@ -1616,7 +1875,6 @@ body {
         margin-bottom: 6px;
     }
 }
-
 @media (max-width: 480px) {
     .stats-grid {
         gap: 12px;
@@ -2129,6 +2387,48 @@ body {
     .add-service {
         gap: 8px;
     }
+}
+
+/* ========== ПРИГЛУШЁННЫЙ КАЛЬКУЛЯТОР ========== */
+
+/* Фон секции калькулятора – делаем нейтральным, без резкого контраста */
+.calculator-section {
+    background: #f0f2f5; /* чуть темнее, чем было #f8f9fa */
+}
+
+/* Карточка калькулятора – убираем ярко-белый, делаем слегка сероватым */
+.calculator-card {
+    background: #ffffff;
+    box-shadow: var(--shadow-sm);
+    /* если была яркая тень – убавляем */
+}
+
+/* Активные табы – делаем не оранжевыми, а тёмно-синими (как было) */
+.calculator-tabs .tab-btn.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(45,106,159,0.2);
+}
+
+/* Кнопки "Добавить" – возвращаем синий градиент, без оранжевого */
+.add-service-btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+}
+.add-service-btn:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    box-shadow: 0 4px 12px rgba(45,106,159,0.3);
+}
+
+/* Общий блок итого – делаем чуть приглушённее */
+.total-block {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+/* Корзина – убираем излишние тени */
+.services-list .calc-item {
+    background: #fefefe;
+    border-bottom: 1px solid #eef2f5;
 }
 /* ==================================================================
    08_forms.css – формы обратной связи
@@ -3574,6 +3874,51 @@ body,
     word-break: normal;
     overflow-wrap: break-word;
 }
+
+/* ========== КНОПКИ НА ТЁМНОМ ФОНЕ ========== */
+.section-dark .btn-primary,
+.section-dark .btn-secondary {
+    transition: all 0.3s ease;
+}
+
+.section-dark .btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.8);
+    color: white;
+}
+
+.section-dark .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: white;
+    color: white;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+}
+
+.section-dark .btn-primary {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.section-dark .btn-primary:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* ========== УМЕНЬШЕННЫЕ ОТСТУПЫ СЕКЦИЙ НА МОБИЛЬНЫХ ========== */
+@media (max-width: 768px) {
+    .section,
+    .section-light,
+    .section-dark,
+    section:not(.certificates-section) {
+        padding: 40px 0 !important;
+    }
+    /* Для секции сертификатов оставляем чуть больше, чтобы карусель не прижималась */
+    .certificates-section {
+        padding: 40px 0 30px !important;
+    }
+    /* Герой-секция – чуть меньше отступов сверху и снизу */
+    .hero-grid {
+        padding: 30px 0 !important;
+    }
+}
 /* ==================================================================
    11_pricelist.css – полный прайс-лист (аккордеоны)
    ================================================================== */
@@ -3708,7 +4053,7 @@ body,
     }
 }
 /* ==================================================================
-   12_certificates.css – карусель сертификатов (без hover-эффектов, с прожилками)
+   12_certificates.css – карусель сертификатов (плавная волна)
    ================================================================== */
 .certificates-section {
     background: var(--light-bg, #f8f9fa);
@@ -3728,6 +4073,8 @@ body,
     overflow-x: hidden;
     width: 100%;
     border-radius: var(--radius-lg, 28px);
+    /* Аппаратное ускорение */
+    will-change: transform;
 }
 .carousel-track {
     display: flex;
@@ -3747,11 +4094,8 @@ body,
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.08), var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
-}
-.carousel-slide:hover {
-    transform: none;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.08), var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s ease;
 }
 .carousel-slide img {
     height: 100%;
@@ -3760,20 +4104,9 @@ body,
     object-fit: cover;
     display: block;
     background: transparent;
-    transition: none;
-}
-.carousel-slide:hover img {
-    transform: none;
 }
 .carousel-slide.horizontal {
     max-width: 360px;
-}
-.carousel-slide.horizontal img {
-    object-fit: cover;
-    background: transparent;
-}
-.carousel-slide.horizontal:hover img {
-    transform: none;
 }
 @media (max-width: 992px) {
     .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
@@ -3787,38 +4120,47 @@ body,
     .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
     .carousel-slide.horizontal { max-width: 200px; }
 }
+
+/* Прогресс-бар в виде плавной линии (волна) */
 .carousel-progress-container {
     position: relative;
     width: 100%;
-    height: 6px;
+    height: 4px;
     background: #e2e8f0;
-    border-radius: 6px;
+    border-radius: 4px;
     margin: 20px auto 10px;
     cursor: pointer;
-    transition: height 0.2s;
+    overflow: hidden;
 }
-.carousel-progress-container:hover {
-    height: 8px;
-    background: #cbd5e0;
-}
-.carousel-progress-marker {
+.carousel-progress-fill {
     position: absolute;
-    width: 18px;
-    height: 18px;
-    background: var(--primary, #2D6A9F);
-    border-radius: 50%;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 0;
     left: 0;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    transition: left 0.05s linear;
-    z-index: 2;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 4px;
+    transition: width 0.05s linear;
+    will-change: width;
 }
-.carousel-progress-marker:hover {
-    transform: translateY(-50%) scale(1.2);
-    background: var(--primary-dark, #1F4A6E);
+
+/* Эффект "волны" – пульсирующий свет на полосе (опционально) */
+.carousel-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 30px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: waveMove 1.5s ease-in-out infinite;
+    pointer-events: none;
 }
+@keyframes waveMove {
+    0% { transform: translateX(-30px); }
+    100% { transform: translateX(100%); }
+}
+
 .carousel-instruction {
     text-align: center;
     font-size: 0.85rem;
@@ -3834,19 +4176,10 @@ body,
     margin-right: auto;
     backdrop-filter: blur(4px);
 }
-.instruction-icon {
-    margin: 0 8px;
-    font-size: 1rem;
-    opacity: 0.7;
-}
 @media (max-width: 768px) {
     .carousel-instruction {
         font-size: 0.75rem;
         padding: 6px 12px;
-        white-space: normal;
-    }
-    .instruction-icon {
-        margin: 0 4px;
     }
 }
 /* ==================================================================
@@ -3988,6 +4321,36 @@ body,
 }
 .tab-btn.active {
     box-shadow: 0 4px 12px rgba(45, 106, 159, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+
+/* ========== ТЁПЛЫЙ АКЦЕНТ ДЛЯ ЭМОДЗИ И ИКОНОК ========== */
+.emoji {
+    filter: drop-shadow(0 2px 4px rgba(230, 126, 34, 0.2));
+    transition: filter 0.2s ease;
+}
+.card-service:hover .emoji {
+    filter: drop-shadow(0 4px 8px rgba(230, 126, 34, 0.4));
+}
+
+/* Акцентные ссылки */
+a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
+    border-bottom-color: var(--accent-warm);
+    color: var(--accent-warm);
+}
+
+/* Активные табы калькулятора */
+.tab-btn.active {
+    background: var(--accent-warm);
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
+}
+
+/* Кнопка квиза в hero */
+.quiz-link {
+    color: var(--accent-warm);
+}
+.quiz-link:hover {
+    color: var(--accent-warm-light);
+    text-decoration: underline;
 }
 /* ==================================================================
    14_modal.css – модальные окна (материалы, политика)
@@ -5421,79 +5784,77 @@ select:focus-visible {
                 <div class="media-image">
                     <img src="assets/images/media-tv-1.webp" alt="Виктория Любачева в программе «Карьерный навигатор»" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">"Папа в декрете"<br>Как выгодно уходить в декрет?</div>
+                <div class="media-caption" itemprop="caption">"Папа в декрете"<br>Как выгодно уходить в декрет?</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-2.webp" alt="Виктория Любачева даёт интервью о рынке труда" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">"Папа в декрете"<br>Как выгодно уходить в декрет?</div>
+                <div class="media-caption" itemprop="caption">"Папа в декрете"<br>Как выгодно уходить в декрет?</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-3.webp" alt="Виктория Любачева в студии телеканала" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">"Папа в декрете"<br>Как выгодно уходить в декрет?</div>
+                <div class="media-caption" itemprop="caption">"Папа в декрете"<br>Как выгодно уходить в декрет?</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-4.webp" alt="Виктория Любачева в эфире" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">Какие профессии заменит искусственный интеллект?</div>
+                <div class="media-caption" itemprop="caption">Какие профессии заменит искусственный интеллект?</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-5.webp" alt="HR-эксперт Виктория Любачева" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">"День фрилансера"<br>Стабильность против свободы</div>
+                <div class="media-caption" itemprop="caption">"День фрилансера"<br>Стабильность против свободы</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-6.webp" alt="Виктория Любачева в телестудии" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">"День фрилансера"<br>Стабильность против свободы</div>
+                <div class="media-caption" itemprop="caption">"День фрилансера"<br>Стабильность против свободы</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-7.webp" alt="Интервью с HR-экспертом" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">"Когда лучше увольняться?"</div>
+                <div class="media-caption" itemprop="caption">"Когда лучше увольняться?"</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-8.webp" alt="Виктория Любачева на съёмках" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">Раскрываю секреты:<br>в каком месяце лучше идти в отпуск?</div>
+                <div class="media-caption" itemprop="caption">Раскрываю секреты:<br>в каком месяце лучше идти в отпуск?</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-9.webp" alt="HR в телепередаче" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">"На кого переучиться сейчас чтобы зарабатывать 200-300 тысяч?"</div>
+                <div class="media-caption" itemprop="caption">"На кого переучиться сейчас чтобы зарабатывать 200-300 тысяч?"</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-10.webp" alt="Виктория Любачева в новом выпуске" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">Как и где искать работу?</div>
+                <div class="media-caption" itemprop="caption">Как и где искать работу?</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-11.webp" alt="Экспертное мнение на ТВ" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">Плюсы и минусы<br>удаленной и офисной работы</div>
+                <div class="media-caption" itemprop="caption">Плюсы и минусы<br>удаленной и офисной работы</div>
             </div>
             <div class="media-item" itemscope itemtype="https://schema.org/ImageObject">
                 <div class="media-image">
                     <img src="assets/images/media-tv-12.webp" alt="Виктория Любачева завершает эфир" loading="lazy" itemprop="contentUrl">
                 </div>
-                <div class="media-caption" itemprop="description">Как правильно выбрать график работы?<br>6/1, 5/2, 4/3</div>
+                <div class="media-caption" itemprop="caption">Как правильно выбрать график работы?<br>6/1, 5/2, 4/3</div>
             </div>
         </div>
     </div>
 </section>
-
-
 <section id="contacts" class="section-dark" aria-labelledby="contacts-title">
     <div class="container contact-block" itemscope itemtype="https://schema.org/ContactPage">
         <h2 class="section-title fade-up" id="contacts-title">Остались вопросы? Напишите или позвоните</h2>
@@ -6012,15 +6373,15 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 19:52:24</span>
-
+                </a>
+                <span class="footer-version">⚡ Версия 29.05.2026 21:33:10</span>
             </div>
         </div>
 
         <!-- Нижняя строка: копирайт + дубль политики (опционально) -->
         <div class="footer-bottom">
             <div class="footer-copyright">
-                © 2026 Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер
+                © <span id="currentYear"></span> Виктория Любачева — Карьерный консультант, HR-эксперт, Бизнес-тренер
             </div>
             <div class="footer-policy-full">
                 <a href="privacy.html" target="_blank">
@@ -6029,7 +6390,15 @@ select:focus-visible {
             </div>
         </div>
     </div>
-</footer><div id="cookieConsent" class="cookie-consent" style="display: none;">
+</footer>
+<script>
+    (function() {
+        var yearSpan = document.getElementById('currentYear');
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
+    })();
+</script><div id="cookieConsent" class="cookie-consent" style="display: none;">
     <div class="cookie-consent__inner">
         <div class="cookie-consent__text">
             <span class="cookie-icon">🍪</span>
@@ -7359,9 +7728,8 @@ function initFormEnterSubmit() {
 window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
 // ============================================================
-// 04_certificates.js – Бесконечная карусель с прогресс-баром
-// Плавная автопрокрутка, поддержка тач-устройств, утроение слайдов
-// Исправлено: при перетаскивании экран не дергается
+// 04_certificates.js – Бесконечная плавная карусель
+// Прогресс-бар: плавная полоса (волна) без дерганий
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -7373,7 +7741,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
         // Настройки
         const SLIDE_GAP = 24;
-        const SPEED = 100;
+        const SPEED_PX_PER_SEC = 25; // очень медленно и плавно
         let slideWidth = 0;
         let originalSetWidth = 0;
         let scrollPos = 0;
@@ -7409,7 +7777,8 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 
         function setPosition(pos) {
             scrollPos = pos;
-            track.style.transform = `translateX(${scrollPos}px)`;
+            // Используем translate3d для аппаратного ускорения
+            track.style.transform = `translate3d(${scrollPos}px, 0, 0)`;
         }
 
         function normalizePosition(pos) {
@@ -7419,31 +7788,33 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             return norm;
         }
 
+        // Обновление прогресс-бара (ширина полосы)
         function updateProgressBar() {
-            const container = document.querySelector('.carousel-progress-container');
-            const marker = document.querySelector('.carousel-progress-marker');
-            if (!container || !marker) return;
+            const fill = document.querySelector('.carousel-progress-fill');
+            if (!fill) return;
             let norm = normalizePosition(scrollPos);
             let progress = -norm / originalSetWidth;
-            const rect = container.getBoundingClientRect();
-            const maxLeft = rect.width - marker.offsetWidth;
-            marker.style.left = `${progress * maxLeft}px`;
+            // Ограничиваем от 0 до 1
+            progress = Math.min(1, Math.max(0, progress));
+            fill.style.width = `${progress * 100}%`;
         }
 
         function ensureProgressBar() {
             if (document.querySelector('.carousel-progress-container')) return;
             const wrapper = track.closest('.carousel-wrapper');
             if (!wrapper) return;
-            const div = document.createElement('div');
-            div.className = 'carousel-progress-container';
-            div.style.cssText = `position:relative; width:100%; height:6px; background:#e2e8f0; border-radius:6px; margin:20px auto 10px; cursor:pointer;`;
-            const marker = document.createElement('div');
-            marker.className = 'carousel-progress-marker';
-            marker.style.cssText = `position:absolute; width:20px; height:20px; background:var(--primary,#2D6A9F); border-radius:50%; top:50%; transform:translateY(-50%); left:0; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:left 0.05s linear;`;
-            div.appendChild(marker);
-            wrapper.insertAdjacentElement('afterend', div);
-            div.addEventListener('click', (e) => {
-                const rect = div.getBoundingClientRect();
+            const container = document.createElement('div');
+            container.className = 'carousel-progress-container';
+            container.style.cssText = 'position:relative; width:100%; height:4px; background:#e2e8f0; border-radius:4px; margin:20px auto 10px; cursor:pointer; overflow:hidden;';
+            const fill = document.createElement('div');
+            fill.className = 'carousel-progress-fill';
+            fill.style.cssText = 'position:absolute; top:0; left:0; height:100%; width:0%; background:linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius:4px; transition:width 0.05s linear; will-change:width;';
+            container.appendChild(fill);
+            wrapper.insertAdjacentElement('afterend', container);
+
+            // Клик для перемотки
+            container.addEventListener('click', (e) => {
+                const rect = container.getBoundingClientRect();
                 const percent = (e.clientX - rect.left) / rect.width;
                 const targetNorm = -percent * originalSetWidth;
                 let delta = targetNorm - normalizePosition(scrollPos);
@@ -7464,10 +7835,10 @@ window.initFormEnterSubmit = initFormEnterSubmit;
                 requestAnimationFrame(animate);
                 return;
             }
-            const delta = Math.min(100, now - lastTimestamp);
+            const deltaSec = Math.min(0.1, (now - lastTimestamp) / 1000);
             lastTimestamp = now;
             if (!isHovering && !isDragging) {
-                let step = (SPEED * delta) / 1000;
+                let step = SPEED_PX_PER_SEC * deltaSec;
                 let newPos = scrollPos - step;
                 if (newPos < -originalSetWidth) newPos += originalSetWidth;
                 setPosition(newPos);
@@ -7488,23 +7859,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             }
         }
 
-        // ----- Drag & drop с полной блокировкой скролла страницы -----
-        function lockPageScroll() {
-            // Блокируем скролл на body и html
-            document.body.style.overflow = 'hidden';
-            document.documentElement.style.overflow = 'hidden';
-            // Дополнительно фиксируем позицию, чтобы не было скачка
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-        }
-
-        function unlockPageScroll() {
-            document.body.style.overflow = '';
-            document.documentElement.style.overflow = '';
-            document.body.style.position = '';
-            document.body.style.width = '';
-        }
-
+        // Drag & drop с аппаратным ускорением
         function getClientX(e) {
             return e.touches ? e.touches[0].clientX : e.clientX;
         }
@@ -7514,8 +7869,6 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             dragStartX = x;
             dragStartPos = scrollPos;
             track.style.transition = 'none';
-            track.style.touchAction = 'none';      // запрещаем браузеру обрабатывать жесты
-            lockPageScroll();
             stopAnimation();
         }
 
@@ -7531,16 +7884,12 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (!isDragging) return;
             isDragging = false;
             track.style.transition = 'transform 0.3s ease';
-            track.style.touchAction = '';
-            unlockPageScroll();
-            // Нормализуем позицию после отпускания
             scrollPos = normalizePosition(scrollPos);
             setPosition(scrollPos);
             updateProgressBar();
             if (!isHovering) startAnimation();
         }
 
-        // Обработчики мыши
         function onMouseDown(e) {
             if (e.button !== 0) return;
             e.preventDefault();
@@ -7555,17 +7904,19 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             onDragEnd();
         }
 
-        // Обработчики тач-устройств
         function onTouchStart(e) {
-            e.preventDefault();
-            if (e.touches.length === 1) onDragStart(getClientX(e));
+            if (e.touches.length === 1) {
+                onDragStart(getClientX(e));
+            }
         }
         function onTouchMove(e) {
             if (!isDragging) return;
-            e.preventDefault();
-            if (e.touches.length === 1) onDragMove(getClientX(e));
+            if (e.touches.length === 1) {
+                e.preventDefault();
+                onDragMove(getClientX(e));
+            }
         }
-        function onTouchEnd(e) {
+        function onTouchEnd() {
             onDragEnd();
         }
 
@@ -7897,23 +8248,41 @@ window.addToCart = function(serviceName, price, quantity) {
     renderCart();
 };
 
-// (Удалена внутренняя функция addToCart – больше никакой рекурсии)
-
 function renderCart() {
     let total = 0, totalQty = 0;
-    cart.forEach(item => { const itemPrice = getNumericPrice(item.price); total += itemPrice * item.qty; totalQty += item.qty; });
+    cart.forEach(item => {
+        const itemPrice = getNumericPrice(item.price);
+        total += itemPrice * item.qty;
+        // Учитываем в количестве только платные услуги (price !== null и price > 0)
+        if (item.price !== null && item.price > 0) {
+            totalQty += item.qty;
+        }
+    });
     let finalTotal = total, discount = 0, discountApplied = false;
     const minItems = window.APP_CONFIG?.CONSTANTS?.DISCOUNT_MIN_ITEMS || 2;
     const discountPercent = window.APP_CONFIG?.CONSTANTS?.DISCOUNT_PERCENT || 0.05;
-    if (totalQty >= minItems && total > 0) { discount = total * discountPercent; finalTotal = total - discount; discountApplied = true; }
+    if (totalQty >= minItems && total > 0) {
+        discount = total * discountPercent;
+        finalTotal = total - discount;
+        discountApplied = true;
+    }
     const totalPriceSpan = document.getElementById('totalPrice');
     if (totalPriceSpan) totalPriceSpan.innerHTML = formatPrice(finalTotal);
     const discountDiv = document.getElementById('discountInfo');
     if (discountDiv) {
-        if (discountApplied) discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} услуги) — экономия ${Math.round(discount).toLocaleString()} ₽`;
-        else if (totalQty === 1 && total > 0) discountDiv.innerHTML = '🔹 Добавьте ещё одну услугу для скидки 5%';
-        else if (totalQty >= 1 && total === 0) discountDiv.innerHTML = '🔹 Бесплатные услуги не участвуют в скидке. Добавьте платные услуги.';
-        else discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
+        if (discountApplied) {
+            discountDiv.innerHTML = `✅ Скидка 5% (${totalQty} платных услуг) — экономия ${Math.round(discount).toLocaleString()} ₽`;
+        } else if (totalQty >= 1 && total === 0) {
+            discountDiv.innerHTML = '🔹 Добавьте платные услуги для скидки 5%';
+        } else if (totalQty === 0 && cart.length > 0) {
+            discountDiv.innerHTML = '🔹 В корзине только услуги по запросу. Скидка не применяется.';
+        } else if (cart.length === 0) {
+            discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
+        } else if (totalQty === 1 && total > 0) {
+            discountDiv.innerHTML = '🔹 Добавьте ещё одну платную услугу для скидки 5%';
+        } else {
+            discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
+        }
     }
     const container = document.getElementById('servicesList');
     if (!container) return;
@@ -7934,6 +8303,7 @@ function renderCart() {
     document.querySelectorAll('.qty-plus').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); cart[idx].qty++; renderCart(); }; });
     document.querySelectorAll('.remove-item').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); cart.splice(idx, 1); renderCart(); }; });
 }
+
 function populateSelect(selectId, services) {
     const select = document.getElementById(selectId);
     if (!select) { if (window.IS_DEV) console.error('Select not found:', selectId); return; }
@@ -7951,6 +8321,7 @@ function populateSelect(selectId, services) {
         select.appendChild(option);
     });
 }
+
 function initSelects() {
     if (typeof SERVICES_DATA === 'undefined') { if (window.IS_DEV) console.error('SERVICES_DATA не загружен!'); return; }
     populateSelect('recruitment-select', SERVICES_DATA.recruitment);
@@ -7963,6 +8334,7 @@ function initSelects() {
     populateSelect('training-select', SERVICES_DATA.training);
     populateSelect('courses-select', SERVICES_DATA.courses);
 }
+
 function initAddButtons() {
     const handlers = [
         {btn: 'recruitment-add', select: 'recruitment-select', qty: 'recruitment-qty'},
@@ -7995,6 +8367,7 @@ function initAddButtons() {
         } else if (window.IS_DEV) console.error('Button not found:', btn);
     });
 }
+
 function initTabs() {
     const tabs = document.querySelectorAll('#calculator .tab-btn');
     tabs.forEach(btn => {
@@ -8010,7 +8383,9 @@ function initTabs() {
         btn.addEventListener('click', btn._tabHandler);
     });
 }
+
 window.getCartData = function() { if (cart.length === 0) return 'Корзина пуста'; return cart.map(item => { const price = getNumericPrice(item.price); const totalPrice = price * item.qty; let priceDisplay; if (price === 0) priceDisplay = '0 ₽'; else if (price === null) priceDisplay = 'по запросу'; else priceDisplay = totalPrice.toLocaleString() + ' ₽'; return `${item.name} x${item.qty} = ${priceDisplay}`; }).join('\n'); };
+
 function initCalculator() {
     if (window.IS_DEV) console.log('Инициализация калькулятора...');
     if (window._calculatorInitialized) { if (window.IS_DEV) console.log('Калькулятор уже инициализирован'); return; }
@@ -8021,10 +8396,11 @@ function initCalculator() {
     initTabs();
     if (window.IS_DEV) console.log('Инициализация калькулятора завершена');
 }
+
 window.initCalculator = initCalculator;
 // ============================================================
 // 11_quiz-weights.js – Веса услуг и соответствие ответов ключам
-// Добавлены роли: Развиваю сотрудников, Собственник бизнеса
+// Добавлены роли: Развиваю сотрудников, Собственник бизнеса, Найти себя / определиться с путём
 // Исправлены кавычки для синхронизации с SERVICES_DATA
 // ============================================================
 window.SERVICE_WEIGHTS = {
@@ -8516,7 +8892,7 @@ window.ANSWER_MAPPING = {
     "Рост в текущей компании": "role_growth",
     "Подбираю сотрудников": "role_business",
     "Развиваю сотрудников": "role_develop_employees",
-    "Собственник бизнеса": "role_business_owner",
+    "Найти себя / определиться с путём": "role_career_change",
     // Уровни
     "Junior / начинающий": "level_junior",
     "Middle / опытный": "level_middle",
@@ -8557,7 +8933,7 @@ window.ANSWER_MAPPING = {
     "Гибридный (смешанный)": "work_format_hybrid"
 };
 
-if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены (с полной поддержкой развития сотрудников и собственников)");
+if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены (с полной поддержкой развития сотрудников, собственников и поиска себя)");
 // ============================================================
 // 12_close-burger.js – Закрытие бургер-меню (используется в smooth-scroll)
 // ============================================================
@@ -8578,6 +8954,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
 // ============================================================
 // 13_smooth-scroll.js – Плавный скролл по якорям (собственная анимация)
 // Работает во всех браузерах, включая Safari
+// Увеличена длительность до 900 мс для более медленной прокрутки
 // ============================================================
 (function() {
     'use strict';
@@ -8607,17 +8984,15 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         const startPosition = window.pageYOffset;
         const targetPosition = targetElement.getBoundingClientRect().top + startPosition - offset;
         const distance = targetPosition - startPosition;
-        const duration = 600; // миллисекунд
+        const duration = 900; // миллисекунд – увеличено с 600 для более медленной прокрутки
         let startTime = null;
 
         function animation(currentTime) {
             if (startTime === null) startTime = currentTime;
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            // easeInOutCubic для плавности
-            const ease = progress < 0.5
-                ? 4 * progress * progress * progress
-                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+            // easeOutCubic – плавное замедление в конце (ощущается более естественно)
+            const ease = 1 - Math.pow(1 - progress, 3);
             window.scrollTo(0, startPosition + distance * ease);
             if (elapsed < duration) {
                 requestAnimationFrame(animation);
@@ -8841,8 +9216,9 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
 })();
 // ============================================================
 // 15_quiz.js – Квиз: вопросы, рендер, сохранение выбора (7 вопросов)
-// Добавлены роли: Развиваю сотрудников, Собственник бизнеса
+// Добавлены роли: Развиваю сотрудников, Найти себя / определиться с путём
 // Версия: подсветка выбора + затемнение остальных карточек
+// Исправлен сброс подсветки при перезапуске квиза
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -8962,7 +9338,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
 
-    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"] };
+    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Найти себя / определиться с путём"] };
     const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
     const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
     const URGENCY_QUESTION = { text: "3. Как быстро нужен результат?", options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"] };
@@ -8995,6 +9371,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         selectedVariantText = ''; selectedVariantPrice = ''; selectedOriginalText = ''; selectedOriginalPrice = '';
         updateFormHiddenFields('', '', '', '', '', answers);
         updateSelectionBlock('', '');
+        updateCardDimming(false);  // <--- СБРОС ПОДСВЕТКИ ПРИ ПЕРЕЗАПУСКЕ
         renderQuiz();
     }
 
@@ -9626,21 +10003,92 @@ window.isValidEmail = isValidEmail;
         logInit('initMaterialsEmailButtons finished', 'INFO', '', 4);
     }
 
+    // ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ПОДСВЕТКИ МЕНЮ ==========
     function initActiveNav() {
-        const sections = document.querySelectorAll('section[id]');
         const navLinks = document.querySelectorAll('.nav-links a');
-        if (!sections.length || !navLinks.length) return;
-        const observer = new IntersectionObserver((entries) => {
-            const visibleSections = entries.filter(entry => entry.isIntersecting && entry.intersectionRatio >= 0.25).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-            if (visibleSections.length) {
-                const activeId = visibleSections[0].target.id;
-                navLinks.forEach(link => {
-                    const href = link.getAttribute('href');
-                    link.classList.toggle('active', href === `#${activeId}`);
-                });
+        if (!navLinks.length) return;
+
+        // Список id секций, которые есть в меню (соответствие href без #)
+        const menuSectionIds = Array.from(navLinks).map(link => {
+            const href = link.getAttribute('href');
+            return href ? href.substring(1) : null;
+        }).filter(Boolean);
+
+        // Функция проверки, видна ли секция (хотя бы частично)
+        function isSectionVisible(section) {
+            const rect = section.getBoundingClientRect();
+            return rect.top < window.innerHeight && rect.bottom > 0;
+        }
+
+        function updateActiveNav() {
+            let activeId = null;
+
+            // Приоритет: если секция #home видна хотя бы на 10% и её верх не уехал далеко
+            const homeSection = document.getElementById('home');
+            if (homeSection) {
+                const rect = homeSection.getBoundingClientRect();
+                const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+                const ratio = visibleHeight / rect.height;
+                if (ratio >= 0.1 && rect.top <= 100) {
+                    activeId = 'home';
+                }
             }
-        }, {threshold: [0.25, 0.5, 0.75]});
-        sections.forEach(section => observer.observe(section));
+
+            // Если home не активна, ищем среди секций, которые есть в меню
+            if (!activeId) {
+                let bestSection = null;
+                let bestTop = Infinity;
+
+                for (const id of menuSectionIds) {
+                    const section = document.getElementById(id);
+                    if (!section) continue;
+                    const rect = section.getBoundingClientRect();
+                    // Если секция видима (хотя бы частично)
+                    if (isSectionVisible(section)) {
+                        // Берём ту, чья верхняя граница ближе всего к верху (но не отрицательная далеко)
+                        const top = rect.top;
+                        if (top >= 0 && top < bestTop) {
+                            bestTop = top;
+                            bestSection = section;
+                        }
+                    }
+                }
+
+                if (bestSection) {
+                    activeId = bestSection.id;
+                } else {
+                    // Если ни одна секция из меню не видна, пытаемся найти ближайшую сверху (последнюю, чей низ положительный)
+                    let lastVisibleId = null;
+                    let lastVisibleBottom = -Infinity;
+                    for (const id of menuSectionIds) {
+                        const section = document.getElementById(id);
+                        if (!section) continue;
+                        const rect = section.getBoundingClientRect();
+                        if (rect.bottom > 0 && rect.bottom < window.innerHeight + 200) {
+                            if (rect.bottom > lastVisibleBottom) {
+                                lastVisibleBottom = rect.bottom;
+                                lastVisibleId = id;
+                            }
+                        }
+                    }
+                    if (lastVisibleId) activeId = lastVisibleId;
+                }
+            }
+
+            // Обновляем классы у ссылок
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === `#${activeId}`) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateActiveNav);
+        window.addEventListener('resize', updateActiveNav);
+        updateActiveNav();
     }
 
     function initCarousel() {
@@ -9650,7 +10098,6 @@ window.isValidEmail = isValidEmail;
         }
     }
 
-    // НОВАЯ ФУНКЦИЯ для инициализации отслеживания ошибок, если файл error_tracking.js уже загружен
     function initErrorTrackingIfAvailable() {
         if (typeof window.initErrorTracking === 'function') {
             window.initErrorTracking();
@@ -9659,7 +10106,6 @@ window.isValidEmail = isValidEmail;
             window.ErrorTracking.init();
             logInit('ErrorTracking инициализирован через модуль', 'INFO', '', 3);
         } else {
-            // Если скрипт ещё не загружен, подождём событие load
             window.addEventListener('load', function() {
                 if (typeof window.initErrorTracking === 'function') {
                     window.initErrorTracking();
@@ -9730,12 +10176,12 @@ window.isValidEmail = isValidEmail;
         logInit('Запуск window.initQuiz()', 'INFO', '', 3);
         window.initQuiz();
 
-        initActiveNav();
+        initActiveNav();    // <--- ИСПРАВЛЕННАЯ ПОДСВЕТКА
         initFormValidation();
         initScrollTopButton();
         initMaterialsEmailButtons();
         initCarousel();
-        initErrorTrackingIfAvailable(); // <--- ДОБАВЛЕНА ИНИЦИАЛИЗАЦИЯ ТРЕКИНГА ОШИБОК
+        initErrorTrackingIfAvailable();
 
         if (typeof initAnimations === 'function') {
             logInit('Вызов initAnimations', 'INFO', '', 3);
