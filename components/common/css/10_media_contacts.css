@@ -348,7 +348,6 @@ footer a:hover {
 }
 
 /* ========== Глобальные правила для ссылок (без прыжков) ========== */
-/* Обычные ссылки (не кнопки, не иконки соцсетей) получают прозрачную границу снизу */
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
     text-decoration: none;
     border-bottom: 1px solid transparent;
@@ -357,8 +356,6 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     border-bottom-color: var(--primary);
 }
-
-/* Ссылки в контактах (особый цвет) */
 .contact-line a {
     color: #90cdf4;
     border-bottom: 1px solid transparent;
@@ -367,8 +364,6 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     color: white;
     border-bottom-color: white;
 }
-
-/* Ссылки в футере (оставляем стандартное подчёркивание) */
 footer a {
     text-decoration: underline;
     border-bottom: none;
@@ -376,8 +371,6 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-
-/* Иконки соцсетей — без border-bottom */
 .social-icons a {
     border-bottom: none;
 }
@@ -385,7 +378,6 @@ footer a:hover {
     border-bottom: none;
 }
 
-/* focus-visible стили */
 a:focus-visible,
 button:focus-visible,
 .quiz-option:focus-visible,
@@ -400,12 +392,10 @@ button:focus-visible,
     outline-offset: 3px;
     border-radius: 4px;
 }
-
 :focus {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
-
 input:focus,
 textarea:focus,
 select:focus,
@@ -415,7 +405,6 @@ button:focus {
     outline-width: 2px;
     outline-style: solid;
 }
-
 fieldset {
     border: none;
     padding: 0;
@@ -527,11 +516,10 @@ section[id] {
     background: var(--light-bg);
     padding: 60px 0;
 }
+
 /* ========== ДОПОЛНИТЕЛЬНАЯ АДАПТАЦИЯ ДЛЯ САМЫХ УЗКИХ ЭКРАНОВ ========== */
 @media (max-width: 400px) {
-    .btn,
-    .btn-primary,
-    .btn-secondary {
+    .btn, .btn-primary, .btn-secondary {
         width: 100%;
         text-align: center;
         box-sizing: border-box;

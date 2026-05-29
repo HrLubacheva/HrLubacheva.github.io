@@ -751,7 +751,7 @@ body {
     }
 }
 /* ==================================================================
-   04_grids.css – универсальные сетки (исправлено: одна колонка на мобильных)
+   04_grids.css – универсальные сетки (адаптив)
    ================================================================== */
 
 /* Базовые сетки */
@@ -799,7 +799,7 @@ body {
     }
 }
 
-/* Планшеты (768–991px): .grid-3 – 2 колонки, .grid-2 – 2 колонки */
+/* Планшеты (768–991px) */
 @media (max-width: 991px) {
     .grid-3 {
         grid-template-columns: repeat(2, 1fr);
@@ -822,13 +822,6 @@ body {
 @media (max-width: 576px) {
     .grid-training-3 {
         gap: 16px;
-    }
-}
-
-/* Дополнительная страховка для очень узких планшетов (480–767px) – уже 1 колонка */
-@media (min-width: 480px) and (max-width: 767px) {
-    .grid-2 {
-        grid-template-columns: 1fr;
     }
 }
 
@@ -866,7 +859,6 @@ body {
     transform: translateY(-4px);
     box-shadow: 0 15px 35px rgba(45, 106, 159, 0.15);
 }
-
 .photo-caption {
     margin-top: 16px;
     font-size: 0.9rem;
@@ -874,49 +866,30 @@ body {
     color: var(--primary-dark);
     text-align: center;
     letter-spacing: -0.2px;
-    position: relative;
-    display: inline-block;
     width: 100%;
 }
-
 @media (max-width: 640px) {
-    .process-photos {
-        gap: 12px;
-    }
+    .process-photos { gap: 12px; }
     .process-photo-item:first-child,
-    .process-photo-item:last-child {
-        min-width: 120px;
-    }
+    .process-photo-item:last-child { min-width: 120px; }
 }
-
 @media (max-width: 480px) {
-    .process-photos {
-        gap: 8px;
-    }
+    .process-photos { gap: 8px; }
     .process-photo-item:first-child,
-    .process-photo-item:last-child {
-        min-width: 100px;
-    }
-    .photo-caption {
-        font-size: 0.75rem;
-        margin-top: 10px;
-    }
+    .process-photo-item:last-child { min-width: 100px; }
+    .photo-caption { font-size: 0.75rem; margin-top: 10px; }
 }
 
 /* ========== Процесс работы – блоки с карточками ========== */
-
 .process-description {
     text-align: center;
     margin-bottom: 40px;
-    margin-top: 0;
-    font-size: 1rem;
-    color: var(--text-muted);
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
     line-height: 1.5;
+    color: var(--text-muted);
 }
-
 @media (max-width: 768px) {
     .process-description {
         margin-bottom: 30px;
@@ -924,14 +897,12 @@ body {
         padding: 0 16px;
     }
 }
-
 .process-two-blocks {
     display: flex;
     gap: 40px;
     flex-wrap: wrap;
     margin: 40px 0;
 }
-
 .process-block {
     flex: 1;
     min-width: 280px;
@@ -940,12 +911,10 @@ body {
     flex-direction: column;
     width: 100%;
 }
-
 .process-block-full {
     margin: 40px 0;
     width: 100%;
 }
-
 .process-block-inner {
     border: 1px solid transparent;
     border-radius: var(--radius-lg);
@@ -954,11 +923,9 @@ body {
     width: 100%;
     box-sizing: border-box;
 }
-
 .process-block:hover .process-block-inner {
     border-color: rgba(45, 106, 159, 0.15);
 }
-
 .process-block-header {
     text-align: center;
     margin-bottom: 32px;
@@ -969,11 +936,9 @@ body {
     width: 100%;
     box-sizing: border-box;
 }
-
 .process-block-header:hover {
     background: linear-gradient(135deg, rgba(45, 106, 159, 0.12), rgba(74, 139, 194, 0.06));
 }
-
 .process-block-title {
     font-size: 1.6rem;
     font-weight: 700;
@@ -984,50 +949,26 @@ body {
     margin: 0 0 8px 0;
     display: inline-block;
 }
-
 .process-block-subtitle {
     font-size: 0.85rem;
     color: var(--primary-light);
     font-weight: 500;
     display: block;
 }
-
 .process-grid-2x2 {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 24px;
     width: 100%;
 }
-
-@media (max-width: 500px) {
-    .process-grid-2x2 {
-        gap: 16px;
-    }
-}
-
+@media (max-width: 500px) { .process-grid-2x2 { gap: 16px; } }
 @media (max-width: 400px) {
-    .process-grid-2x2 {
-        gap: 12px;
-    }
-    .card-process {
-        padding: 16px 12px;
-    }
-    .card-process h4 {
-        font-size: 1rem;
-        min-height: auto;
-    }
-    .card-process p {
-        font-size: 0.8rem;
-        min-height: auto;
-    }
-    .process-step {
-        width: 32px;
-        height: 32px;
-        font-size: 0.9rem;
-        margin-bottom: 10px;
-    }
+    .process-grid-2x2 { gap: 12px; }
+    .card-process { padding: 16px 12px; }
+    .card-process h4 { font-size: 1rem; }
+    .card-process p { font-size: 0.8rem; }
+    .process-step { width: 32px; height: 32px; font-size: 0.9rem; margin-bottom: 10px; }
 }
-
 .card-process {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -1040,12 +981,10 @@ body {
     flex-direction: column;
     min-width: 0;
 }
-
 .card-process:hover {
     transform: translateY(-6px);
     box-shadow: 0 20px 30px -12px rgba(45, 106, 159, 0.2);
 }
-
 .process-step {
     width: 40px;
     height: 40px;
@@ -1058,7 +997,6 @@ body {
     font-weight: bold;
     margin-bottom: 15px;
 }
-
 .card-process h4 {
     font-size: 1.2rem;
     font-weight: 700;
@@ -1072,7 +1010,6 @@ body {
     text-overflow: ellipsis;
     min-height: 2.6em;
 }
-
 .card-process p {
     font-size: 0.9rem;
     line-height: 1.4;
@@ -1085,173 +1022,52 @@ body {
     text-overflow: ellipsis;
     min-height: 4.2em;
 }
-
 .grid-training-3 .card-process {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
     min-height: 180px;
     padding-bottom: 20px;
 }
-
 .grid-training-3 .card-process p {
     flex-grow: 1;
     margin-bottom: 0;
-    padding-bottom: 0;
 }
-
-.grid-training-3 .card-process > :last-child {
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
 @media (max-width: 576px) {
     .grid-training-3 .card-process {
         padding: 16px 12px;
         min-height: 150px;
     }
-    .grid-training-3 .card-process h4 {
-        font-size: 1rem;
-        margin-bottom: 8px;
-    }
-    .grid-training-3 .card-process p {
-        font-size: 0.8rem;
-        line-height: 1.3;
-    }
-    .grid-training-3 .process-step {
-        width: 32px;
-        height: 32px;
-        font-size: 0.85rem;
-        margin-bottom: 10px;
-    }
+    .grid-training-3 .card-process h4 { font-size: 1rem; margin-bottom: 8px; }
+    .grid-training-3 .card-process p { font-size: 0.8rem; line-height: 1.3; }
+    .grid-training-3 .process-step { width: 32px; height: 32px; font-size: 0.85rem; margin-bottom: 10px; }
 }
-
 @media (max-width: 400px) {
-    .grid-training-3 .card-process {
-        min-height: 130px;
-    }
-    .grid-training-3 .card-process h4 {
-        font-size: 0.9rem;
-    }
-    .grid-training-3 .card-process p {
-        font-size: 0.75rem;
-    }
+    .grid-training-3 .card-process { min-height: 130px; }
+    .grid-training-3 .card-process h4 { font-size: 0.9rem; }
+    .grid-training-3 .card-process p { font-size: 0.75rem; }
 }
-
 @media (max-width: 768px) {
-    .process-two-blocks {
-        flex-direction: column;
-        gap: 48px;
-    }
-    .process-block-title {
-        font-size: 1.4rem;
-    }
+    .process-two-blocks { flex-direction: column; gap: 48px; }
+    .process-block-title { font-size: 1.4rem; }
 }
-
 @media (max-width: 576px) {
-    .card-process {
-        padding: 20px 16px;
-    }
-    .card-process h4 {
-        font-size: 1.1rem;
-        min-height: auto;
-    }
-    .card-process p {
-        font-size: 0.85rem;
-        min-height: auto;
-    }
+    .card-process { padding: 20px 16px; }
+    .card-process h4 { font-size: 1.1rem; min-height: auto; }
+    .card-process p { font-size: 0.85rem; min-height: auto; }
 }
-
 @media (max-width: 400px) {
-    .card-process {
-        padding: 16px 12px;
-    }
-    .card-process h4 {
-        font-size: 1rem;
-    }
-    .card-process p {
-        font-size: 0.8rem;
-    }
-    .process-step {
-        width: 32px;
-        height: 32px;
-        font-size: 0.85rem;
-        margin-bottom: 10px;
-    }
+    .card-process { padding: 16px 12px; }
+    .card-process h4 { font-size: 1rem; }
+    .card-process p { font-size: 0.8rem; }
+    .process-step { width: 32px; height: 32px; font-size: 0.85rem; margin-bottom: 10px; }
 }
-
 /* ========== ИСПРАВЛЕНИЕ: убираем выход за границы на мобильных ========== */
 @media (max-width: 768px) {
-    .process-block {
-        min-width: auto;
-        width: 100%;
-    }
+    .process-block { min-width: auto; width: 100%; }
     .grid-2 .card,
     .grid-3 .card,
     .card {
         min-width: auto;
         width: 100%;
         box-sizing: border-box;
-    }
-}
-
-/* ========== ФИНАЛЬНОЕ ИСПРАВЛЕНИЕ ДЛЯ СЕКЦИИ УСЛУГ ========== */
-@media (max-width: 768px) {
-    #services .grid-2 {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-    #services .card-service {
-        padding: 20px 16px;
-        width: 100%;
-        box-sizing: border-box;
-        margin: 0;
-    }
-    #services .card-service ul {
-        padding-left: 0;
-    }
-}
-
-/* ========== ДОПОЛНИТЕЛЬНАЯ АДАПТАЦИЯ ДЛЯ СЕКЦИИ УСЛУГ ========== */
-@media (max-width: 768px) {
-    #services .card-service {
-        width: 100%;
-        min-width: auto;
-        padding: 20px 16px;
-        box-sizing: border-box;
-        margin: 0;
-    }
-    #services .service-list {
-        padding-left: 0;
-        margin: 0;
-    }
-    #services .service-list li {
-        word-break: break-word;
-        white-space: normal;
-    }
-}
-
-@media (max-width: 480px) {
-    #services .card-service {
-        padding: 16px 12px;
-    }
-    #services .card-service h3 {
-        font-size: 1.1rem;
-    }
-    #services .service-list li {
-        font-size: 0.85rem;
-    }
-}
-
-@media (max-width: 360px) {
-    #services .card-service {
-        padding: 12px 10px;
-    }
-    #services .card-service h3 {
-        font-size: 1rem;
-    }
-    #services .service-list li {
-        font-size: 0.75rem;
     }
 }
 /* ==================================================================
@@ -1974,7 +1790,6 @@ body {
     from { opacity: 0; }
     to { opacity: 1; }
 }
-
 .service-group {
     margin-bottom: 32px;
     padding: 24px;
@@ -2193,9 +2008,8 @@ body {
     margin-top: 15px;
 }
 
-/* ========== АДАПТАЦИЯ КАЛЬКУЛЯТОРА ДЛЯ МОБИЛЬНЫХ ========== */
+/* ========== АДАПТАЦИЯ КАЛЬКУЛЯТОРА, КОРЗИНЫ ДЛЯ МОБИЛЬНЫХ ========== */
 @media (max-width: 640px) {
-    /* Расширяем карточку калькулятора – убираем внутренние отступы и max-width */
     .calculator-card {
         max-width: 100%;
         padding: 20px 16px;
@@ -2204,79 +2018,37 @@ body {
         box-shadow: none;
         background: transparent;
     }
-
-    /* Контейнер добавления услуги – перестраиваем в две строки */
     .add-service {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 12px !important;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
     }
-
-    /* Выпадающий список – занимает всю ширину */
     .service-select {
-        width: 100% !important;
-        min-width: auto !important;
-        flex: none !important;
+        width: 100%;
+        min-width: auto;
+        flex: none;
         box-sizing: border-box;
     }
-
-    /* Блок с количеством и кнопкой – размещаем в одну строку (или две, если не хватает места) */
     .add-service .calc-qty,
     .add-service .add-service-btn {
         width: auto;
         flex: 1 1 auto;
     }
-
-    /* Если нужно, чтобы кнопка была на отдельной строке – раскомментируйте ниже */
-    /*
-    .add-service {
-        gap: 10px !important;
-    }
-    .add-service .calc-qty {
-        width: 100%;
-    }
-    .add-service .add-service-btn {
-        width: 100%;
-    }
-    */
-
-    /* Уменьшаем отступы в группах услуг */
     .service-group {
         padding: 16px;
         margin-bottom: 20px;
     }
-
-    /* Заголовок группы услуг – чуть меньше */
     .service-group h3 {
         font-size: 1rem;
         margin-bottom: 12px;
     }
-
-    /* Корзина – более компактная */
     .cart-section h3 {
         font-size: 1.1rem;
     }
-
-    /* Общий отступ для секции калькулятора */
     .calculator-section {
         padding: 40px 0;
     }
-}
-
-/* Дополнительно для очень узких экранов (≤480px) – можно сделать кнопку на отдельной строке */
-@media (max-width: 480px) {
-    .add-service .calc-qty,
-    .add-service .add-service-btn {
-        width: 100% !important;
-        flex: none !important;
-    }
-    .add-service {
-        gap: 8px !important;
-    }
-}
-
-/* ========== КОРЗИНА НА МОБИЛЬНЫХ: ЦЕНА РЯДОМ С НАЗВАНИЕМ ========== */
-@media (max-width: 640px) {
+    /* Корзина: название и цена в одной строке */
     .calc-item {
         display: flex;
         flex-wrap: wrap;
@@ -2284,8 +2056,6 @@ body {
         justify-content: space-between;
         gap: 8px;
     }
-
-    /* Название и цена — в одной строке */
     .calc-item .service-name {
         flex: 1 1 auto;
         font-size: 0.9rem;
@@ -2299,19 +2069,11 @@ body {
         margin-left: 8px;
         white-space: nowrap;
     }
-
-    /* Управление количеством и удаление — на новой строке */
     .service-qty-control,
     .calc-item .service-remove {
         margin-top: 6px;
     }
-}
-
-/* ========== УЛУЧШЕНИЕ БЛОКА КАЛЬКУЛЯТОРА НА ТЕЛЕФОНАХ ========== */
-@media (max-width: 640px) {
-    .service-group h3 {
-        font-size: 1rem;
-    }
+    /* Дополнительные улучшения */
     .service-select {
         font-size: 0.95rem;
         padding: 14px 16px;
@@ -2327,12 +2089,6 @@ body {
     .cart-section h3 {
         font-size: 1rem;
     }
-    .calc-item .service-name {
-        font-size: 0.9rem;
-    }
-    .calc-item .service-price {
-        font-size: 0.9rem;
-    }
     .qty-btn {
         width: 30px;
         height: 30px;
@@ -2340,6 +2096,16 @@ body {
     }
     .remove-item {
         font-size: 1rem;
+    }
+}
+@media (max-width: 480px) {
+    .add-service .calc-qty,
+    .add-service .add-service-btn {
+        width: 100%;
+        flex: none;
+    }
+    .add-service {
+        gap: 8px;
     }
 }
 /* ==================================================================
@@ -3550,7 +3316,6 @@ footer a:hover {
 }
 
 /* ========== Глобальные правила для ссылок (без прыжков) ========== */
-/* Обычные ссылки (не кнопки, не иконки соцсетей) получают прозрачную границу снизу */
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
     text-decoration: none;
     border-bottom: 1px solid transparent;
@@ -3559,8 +3324,6 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     border-bottom-color: var(--primary);
 }
-
-/* Ссылки в контактах (особый цвет) */
 .contact-line a {
     color: #90cdf4;
     border-bottom: 1px solid transparent;
@@ -3569,8 +3332,6 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     color: white;
     border-bottom-color: white;
 }
-
-/* Ссылки в футере (оставляем стандартное подчёркивание) */
 footer a {
     text-decoration: underline;
     border-bottom: none;
@@ -3578,8 +3339,6 @@ footer a {
 footer a:hover {
     text-decoration: underline;
 }
-
-/* Иконки соцсетей — без border-bottom */
 .social-icons a {
     border-bottom: none;
 }
@@ -3587,7 +3346,6 @@ footer a:hover {
     border-bottom: none;
 }
 
-/* focus-visible стили */
 a:focus-visible,
 button:focus-visible,
 .quiz-option:focus-visible,
@@ -3602,12 +3360,10 @@ button:focus-visible,
     outline-offset: 3px;
     border-radius: 4px;
 }
-
 :focus {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
 }
-
 input:focus,
 textarea:focus,
 select:focus,
@@ -3617,7 +3373,6 @@ button:focus {
     outline-width: 2px;
     outline-style: solid;
 }
-
 fieldset {
     border: none;
     padding: 0;
@@ -3729,11 +3484,10 @@ section[id] {
     background: var(--light-bg);
     padding: 60px 0;
 }
+
 /* ========== ДОПОЛНИТЕЛЬНАЯ АДАПТАЦИЯ ДЛЯ САМЫХ УЗКИХ ЭКРАНОВ ========== */
 @media (max-width: 400px) {
-    .btn,
-    .btn-primary,
-    .btn-secondary {
+    .btn, .btn-primary, .btn-secondary {
         width: 100%;
         text-align: center;
         box-sizing: border-box;
@@ -4055,7 +3809,6 @@ section[id] {
         margin: 0 4px;
     }
 }
-
 .certificates-section {
     padding-bottom: 40px;
 }
@@ -6151,7 +5904,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 22:07:37</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 22:13:50</span>
 
             </div>
         </div>
@@ -7500,6 +7253,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
 // ============================================================
 // 04_certificates.js – Бесконечная карусель с прогресс-баром
 // Плавная автопрокрутка, поддержка тач-устройств, утроение слайдов
+// Исправлено: при перетаскивании экран не дергается
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -7527,7 +7281,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             const triple = [];
             for (let i = 0; i < 3; i++) {
                 originalSlides.forEach(slide => {
-                    triple.push(slide.cloneNode(true)));
+                    triple.push(slide.cloneNode(true));
                 });
             }
             track.innerHTML = '';
@@ -7626,19 +7380,37 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             }
         }
 
-        // Drag & drop
+        // ----- Drag & drop с полной блокировкой скролла страницы -----
+        function lockPageScroll() {
+            // Блокируем скролл на body и html
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+            // Дополнительно фиксируем позицию, чтобы не было скачка
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+        }
+
+        function unlockPageScroll() {
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+        }
+
         function getClientX(e) {
             return e.touches ? e.touches[0].clientX : e.clientX;
         }
+
         function onDragStart(x) {
             isDragging = true;
             dragStartX = x;
             dragStartPos = scrollPos;
             track.style.transition = 'none';
-            document.body.style.userSelect = 'none';
-            document.body.style.overflow = 'hidden';
+            track.style.touchAction = 'none';      // запрещаем браузеру обрабатывать жесты
+            lockPageScroll();
             stopAnimation();
         }
+
         function onDragMove(x) {
             if (!isDragging) return;
             const dx = x - dragStartX;
@@ -7646,18 +7418,21 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             setPosition(scrollPos);
             updateProgressBar();
         }
+
         function onDragEnd() {
             if (!isDragging) return;
             isDragging = false;
-            document.body.style.userSelect = '';
-            document.body.style.overflow = '';
             track.style.transition = 'transform 0.3s ease';
+            track.style.touchAction = '';
+            unlockPageScroll();
+            // Нормализуем позицию после отпускания
             scrollPos = normalizePosition(scrollPos);
             setPosition(scrollPos);
             updateProgressBar();
             if (!isHovering) startAnimation();
         }
 
+        // Обработчики мыши
         function onMouseDown(e) {
             if (e.button !== 0) return;
             e.preventDefault();
@@ -7668,8 +7443,11 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             e.preventDefault();
             onDragMove(getClientX(e));
         }
-        function onMouseUp() { onDragEnd(); }
+        function onMouseUp() {
+            onDragEnd();
+        }
 
+        // Обработчики тач-устройств
         function onTouchStart(e) {
             e.preventDefault();
             if (e.touches.length === 1) onDragStart(getClientX(e));
@@ -7679,7 +7457,9 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             e.preventDefault();
             if (e.touches.length === 1) onDragMove(getClientX(e));
         }
-        function onTouchEnd() { onDragEnd(); }
+        function onTouchEnd(e) {
+            onDragEnd();
+        }
 
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {

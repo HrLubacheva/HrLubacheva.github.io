@@ -54,7 +54,6 @@
     from { opacity: 0; }
     to { opacity: 1; }
 }
-
 .service-group {
     margin-bottom: 32px;
     padding: 24px;
@@ -273,9 +272,8 @@
     margin-top: 15px;
 }
 
-/* ========== АДАПТАЦИЯ КАЛЬКУЛЯТОРА ДЛЯ МОБИЛЬНЫХ ========== */
+/* ========== АДАПТАЦИЯ КАЛЬКУЛЯТОРА, КОРЗИНЫ ДЛЯ МОБИЛЬНЫХ ========== */
 @media (max-width: 640px) {
-    /* Расширяем карточку калькулятора – убираем внутренние отступы и max-width */
     .calculator-card {
         max-width: 100%;
         padding: 20px 16px;
@@ -284,79 +282,37 @@
         box-shadow: none;
         background: transparent;
     }
-
-    /* Контейнер добавления услуги – перестраиваем в две строки */
     .add-service {
-        flex-direction: column !important;
-        align-items: stretch !important;
-        gap: 12px !important;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
     }
-
-    /* Выпадающий список – занимает всю ширину */
     .service-select {
-        width: 100% !important;
-        min-width: auto !important;
-        flex: none !important;
+        width: 100%;
+        min-width: auto;
+        flex: none;
         box-sizing: border-box;
     }
-
-    /* Блок с количеством и кнопкой – размещаем в одну строку (или две, если не хватает места) */
     .add-service .calc-qty,
     .add-service .add-service-btn {
         width: auto;
         flex: 1 1 auto;
     }
-
-    /* Если нужно, чтобы кнопка была на отдельной строке – раскомментируйте ниже */
-    /*
-    .add-service {
-        gap: 10px !important;
-    }
-    .add-service .calc-qty {
-        width: 100%;
-    }
-    .add-service .add-service-btn {
-        width: 100%;
-    }
-    */
-
-    /* Уменьшаем отступы в группах услуг */
     .service-group {
         padding: 16px;
         margin-bottom: 20px;
     }
-
-    /* Заголовок группы услуг – чуть меньше */
     .service-group h3 {
         font-size: 1rem;
         margin-bottom: 12px;
     }
-
-    /* Корзина – более компактная */
     .cart-section h3 {
         font-size: 1.1rem;
     }
-
-    /* Общий отступ для секции калькулятора */
     .calculator-section {
         padding: 40px 0;
     }
-}
-
-/* Дополнительно для очень узких экранов (≤480px) – можно сделать кнопку на отдельной строке */
-@media (max-width: 480px) {
-    .add-service .calc-qty,
-    .add-service .add-service-btn {
-        width: 100% !important;
-        flex: none !important;
-    }
-    .add-service {
-        gap: 8px !important;
-    }
-}
-
-/* ========== КОРЗИНА НА МОБИЛЬНЫХ: ЦЕНА РЯДОМ С НАЗВАНИЕМ ========== */
-@media (max-width: 640px) {
+    /* Корзина: название и цена в одной строке */
     .calc-item {
         display: flex;
         flex-wrap: wrap;
@@ -364,8 +320,6 @@
         justify-content: space-between;
         gap: 8px;
     }
-
-    /* Название и цена — в одной строке */
     .calc-item .service-name {
         flex: 1 1 auto;
         font-size: 0.9rem;
@@ -379,19 +333,11 @@
         margin-left: 8px;
         white-space: nowrap;
     }
-
-    /* Управление количеством и удаление — на новой строке */
     .service-qty-control,
     .calc-item .service-remove {
         margin-top: 6px;
     }
-}
-
-/* ========== УЛУЧШЕНИЕ БЛОКА КАЛЬКУЛЯТОРА НА ТЕЛЕФОНАХ ========== */
-@media (max-width: 640px) {
-    .service-group h3 {
-        font-size: 1rem;
-    }
+    /* Дополнительные улучшения */
     .service-select {
         font-size: 0.95rem;
         padding: 14px 16px;
@@ -407,12 +353,6 @@
     .cart-section h3 {
         font-size: 1rem;
     }
-    .calc-item .service-name {
-        font-size: 0.9rem;
-    }
-    .calc-item .service-price {
-        font-size: 0.9rem;
-    }
     .qty-btn {
         width: 30px;
         height: 30px;
@@ -420,5 +360,15 @@
     }
     .remove-item {
         font-size: 1rem;
+    }
+}
+@media (max-width: 480px) {
+    .add-service .calc-qty,
+    .add-service .add-service-btn {
+        width: 100%;
+        flex: none;
+    }
+    .add-service {
+        gap: 8px;
     }
 }

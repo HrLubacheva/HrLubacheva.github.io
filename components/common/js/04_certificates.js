@@ -1,6 +1,7 @@
 // ============================================================
 // 04_certificates.js – Бесконечная карусель с прогресс-баром
 // Плавная автопрокрутка, поддержка тач-устройств, утроение слайдов
+// Исправлено: при перетаскивании экран не дергается
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -28,7 +29,7 @@
             const triple = [];
             for (let i = 0; i < 3; i++) {
                 originalSlides.forEach(slide => {
-                    triple.push(slide.cloneNode(true)));
+                    triple.push(slide.cloneNode(true));
                 });
             }
             track.innerHTML = '';
@@ -127,19 +128,37 @@
             }
         }
 
-        // Drag & drop
+        // ----- Drag & drop с полной блокировкой скролла страницы -----
+        function lockPageScroll() {
+            // Блокируем скролл на body и html
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+            // Дополнительно фиксируем позицию, чтобы не было скачка
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+        }
+
+        function unlockPageScroll() {
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+        }
+
         function getClientX(e) {
             return e.touches ? e.touches[0].clientX : e.clientX;
         }
+
         function onDragStart(x) {
             isDragging = true;
             dragStartX = x;
             dragStartPos = scrollPos;
             track.style.transition = 'none';
-            document.body.style.userSelect = 'none';
-            document.body.style.overflow = 'hidden';
+            track.style.touchAction = 'none';      // запрещаем браузеру обрабатывать жесты
+            lockPageScroll();
             stopAnimation();
         }
+
         function onDragMove(x) {
             if (!isDragging) return;
             const dx = x - dragStartX;
@@ -147,18 +166,21 @@
             setPosition(scrollPos);
             updateProgressBar();
         }
+
         function onDragEnd() {
             if (!isDragging) return;
             isDragging = false;
-            document.body.style.userSelect = '';
-            document.body.style.overflow = '';
             track.style.transition = 'transform 0.3s ease';
+            track.style.touchAction = '';
+            unlockPageScroll();
+            // Нормализуем позицию после отпускания
             scrollPos = normalizePosition(scrollPos);
             setPosition(scrollPos);
             updateProgressBar();
             if (!isHovering) startAnimation();
         }
 
+        // Обработчики мыши
         function onMouseDown(e) {
             if (e.button !== 0) return;
             e.preventDefault();
@@ -169,8 +191,11 @@
             e.preventDefault();
             onDragMove(getClientX(e));
         }
-        function onMouseUp() { onDragEnd(); }
+        function onMouseUp() {
+            onDragEnd();
+        }
 
+        // Обработчики тач-устройств
         function onTouchStart(e) {
             e.preventDefault();
             if (e.touches.length === 1) onDragStart(getClientX(e));
@@ -180,7 +205,9 @@
             e.preventDefault();
             if (e.touches.length === 1) onDragMove(getClientX(e));
         }
-        function onTouchEnd() { onDragEnd(); }
+        function onTouchEnd(e) {
+            onDragEnd();
+        }
 
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
