@@ -3790,7 +3790,7 @@ section[id] {
     }
 }
 /* ==================================================================
-   12_certificates.css – карусель сертификатов
+   12_certificates.css – карусель сертификатов (только нужное)
    ================================================================== */
 .certificates-section {
     background: var(--light-bg, #f8f9fa);
@@ -3856,124 +3856,20 @@ section[id] {
 .carousel-slide.horizontal:hover img {
     transform: scale(1.05);
 }
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: white;
-    border: none;
-    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
-    cursor: pointer;
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary, #2D6A9F);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    z-index: 3;
-}
-.carousel-btn:hover {
-    background: var(--primary, #2D6A9F);
-    color: white;
-    transform: translateY(-50%) scale(1.05);
-}
-.carousel-prev {
-    left: -22px;
-}
-.carousel-next {
-    right: -22px;
-}
-.carousel-progress {
-    width: 100%;
-    height: 2px;
-    background: #e2e8f0;
-    border-radius: 2px;
-    margin: 24px 0 20px;
-    overflow: hidden;
-}
-.progress-bar {
-    width: 0%;
-    height: 100%;
-    background: var(--primary, #2D6A9F);
-    border-radius: 2px;
-    transition: width 0.05s linear;
-}
-.carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #cbd5e0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.dot.active {
-    background: var(--primary, #2D6A9F);
-    width: 24px;
-    border-radius: 6px;
-}
-.dot:hover {
-    background: var(--primary-light, #4A8BC2);
-    transform: scale(1.2);
-}
 @media (max-width: 992px) {
     .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
     .carousel-slide.horizontal { max-width: 300px; }
-    .carousel-prev { left: -16px; }
-    .carousel-next { right: -16px; }
 }
 @media (max-width: 768px) {
     .carousel-slide { min-width: 100px; max-width: 180px; height: 180px; }
     .carousel-slide.horizontal { max-width: 240px; }
-    .carousel-btn { width: 36px; height: 36px; font-size: 20px; }
-    .carousel-prev { left: -12px; }
-    .carousel-next { right: -12px; }
 }
 @media (max-width: 576px) {
     .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
     .carousel-slide.horizontal { max-width: 200px; }
 }
 
-/* ========== ИНСТРУКЦИЯ ПОД КАРУСЕЛЬЮ (единый блок) ========== */
-.carousel-instruction {
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 20px;
-    margin-bottom: 10px;
-    padding: 8px 16px;
-    background: rgba(45, 106, 159, 0.06);
-    border-radius: 60px;
-    display: inline-block;
-    width: auto;
-    margin-left: auto;
-    margin-right: auto;
-    backdrop-filter: blur(4px);
-}
-.instruction-icon {
-    margin: 0 8px;
-    font-size: 1rem;
-    opacity: 0.7;
-}
-@media (max-width: 768px) {
-    .carousel-instruction {
-        font-size: 0.75rem;
-        padding: 6px 12px;
-        white-space: normal;
-    }
-    .instruction-icon {
-        margin: 0 4px;
-    }
-}
-
+/* Прогресс-бар и бегунок (создаются скриптом) */
 .carousel-progress-container {
     position: relative;
     width: 100%;
@@ -4007,20 +3903,36 @@ section[id] {
     background: var(--primary-dark, #1F4A6E);
 }
 
-/* Прогресс-бар с бегущим градиентом */
-.carousel-progress {
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 40%, var(--primary, #2D6A9F) 50%, #e2e8f0 60%, #e2e8f0 100%);
-    background-size: 200% 100%;
-    border-radius: 4px;
-    margin: 20px auto 10px;
-    transition: opacity 0.2s;
+/* Инструкция (опционально, можно добавить в HTML) */
+.carousel-instruction {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    background: rgba(45, 106, 159, 0.06);
+    border-radius: 60px;
+    display: inline-block;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    backdrop-filter: blur(4px);
 }
-/* Анимация будет добавлена скриптом динамически, но можно и здесь прописать */
-@keyframes progressMove {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 200% 0%; }
+.instruction-icon {
+    margin: 0 8px;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+@media (max-width: 768px) {
+    .carousel-instruction {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+        white-space: normal;
+    }
+    .instruction-icon {
+        margin: 0 4px;
+    }
 }
 /* ==================================================================
    13_accents.css – усиление контраста (без новых цветов)
@@ -4670,51 +4582,34 @@ select:focus-visible {
     <div class="container">
         <h2 class="section-title"><span class="emoji">📜</span> Мои сертификаты и дипломы</h2>
         <div class="carousel-wrapper">
-            <button class="carousel-btn carousel-prev" aria-label="Назад">❮</button>
             <div class="carousel-viewport">
                 <div class="carousel-track" id="carouselTrack">
                     <!-- 1. Вертикальный -->
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-01_thumb.webp" alt="HR-эксперт"
-                                                     loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-01_thumb.webp" alt="HR-эксперт" loading="lazy"></div>
                     <!-- 2. Горизонтальный -->
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-01_thumb.webp"
-                                                                alt="Подбор персонала" loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-01_thumb.webp" alt="Подбор персонала" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-02_thumb.webp" alt="Коуч"
-                                                     loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-02_thumb.webp"
-                                                                alt="Онбординг" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-02_thumb.webp" alt="Коуч" loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-02_thumb.webp" alt="Онбординг" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-03_thumb.webp" alt="Бизнес-тренер"
-                                                     loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-03_thumb.webp"
-                                                                alt="Трудовое право" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-03_thumb.webp" alt="Бизнес-тренер" loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-03_thumb.webp" alt="Трудовое право" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-04_thumb.webp" alt="Профориентация"
-                                                     loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-04_thumb.webp"
-                                                                alt="Оценка персонала" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-04_thumb.webp" alt="Профориентация" loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-04_thumb.webp" alt="Оценка персонала" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-05_thumb.webp"
-                                                     alt="Психологическое консультирование" loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-05_thumb.webp"
-                                                                alt="Удержание талантов" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-05_thumb.webp" alt="Психологическое консультирование" loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-05_thumb.webp" alt="Удержание талантов" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-06_thumb.webp" alt="HR-аналитика"
-                                                     loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-06_thumb.webp"
-                                                                alt="HR-бренд" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-06_thumb.webp" alt="HR-аналитика" loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-06_thumb.webp" alt="HR-бренд" loading="lazy"></div>
 
-                    <div class="carousel-slide"><img src="assets/images/certs/vert-07_thumb.webp"
-                                                     alt="Управление персоналом" loading="lazy"></div>
-                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-07_thumb.webp"
-                                                                alt="Цифровые HR" loading="lazy"></div>
+                    <div class="carousel-slide"><img src="assets/images/certs/vert-07_thumb.webp" alt="Управление персоналом" loading="lazy"></div>
+                    <div class="carousel-slide horizontal"><img src="assets/images/certs/horiz-07_thumb.webp" alt="Цифровые HR" loading="lazy"></div>
                 </div>
             </div>
-            <button class="carousel-btn carousel-next" aria-label="Вперёд">❯</button>
         </div>
-        <div class="carousel-progress" id="progressBar"></div>
-        <div class="carousel-dots" id="carouselDots"></div>
+        <!-- Прогресс-бар и бегунок создаются скриптом автоматически -->
     </div>
 </section>
 <section id="services" class="section section-light" data-section-type="services" aria-labelledby="services-title">
@@ -6131,7 +6026,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 18:42:21</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 18:49:23</span>
 
             </div>
         </div>
@@ -7479,10 +7374,7 @@ window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
 // ============================================================
 // 04_certificates.js – Бесконечная карусель с прогресс-баром
-// Лента утроена (3 копии). Движение влево непрерывно.
-// Полоса прокрутки с бегунком, синхронизированная.
-// Наведение – пауза, перетаскивание – синхронизация.
-// ДОБАВЛЕНА ПОДДЕРЖКА ТАЧПАДА / СЕНСОРНОГО ЭКРАНА
+// Плавная анимация, поддержка тач-устройств, адаптивность
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -7492,10 +7384,11 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         let originalSlides = Array.from(track.children);
         if (originalSlides.length === 0) return;
 
-        const slideGap = 24;            // px
+        // Настройки
+        const SLIDE_GAP = 24;           // px между слайдами
+        const SPEED = 120;              // px/сек (скорость автопрокрутки)
         let slideWidth = 0;
-        let totalWidth = 0;
-        let containerWidth = 0;
+        let originalSetWidth = 0;       // ширина одного набора оригиналов (с отступами)
         let scrollPos = 0;
         let animationId = null;
         let isHovering = false;
@@ -7503,7 +7396,6 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         let dragStartX = 0;
         let dragStartPos = 0;
         let lastTimestamp = 0;
-        const SPEED = 140;              // px/сек
 
         // Создаём утроенную ленту (3 копии)
         function buildTripleTrack() {
@@ -7519,25 +7411,23 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         }
 
         let slides = buildTripleTrack();
-        let originalSetWidth = 0;        // ширина одного набора оригиналов (с отступами)
-        let fullTrackWidth = 0;
 
+        // Обновляем размеры (при загрузке и при изменении окна)
         function updateDimensions() {
             if (slides[0]) {
                 slideWidth = slides[0].offsetWidth;
-                if (slideWidth === 0) slideWidth = 200;
-                fullTrackWidth = slides.length * (slideWidth + slideGap);
+                if (slideWidth === 0) slideWidth = 200; // fallback
             }
-            const wrapper = track.closest('.carousel-viewport');
-            containerWidth = wrapper ? wrapper.clientWidth : track.parentElement.clientWidth;
-            originalSetWidth = originalSlides.length * (slideWidth + slideGap);
+            originalSetWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
         }
 
+        // Установка позиции (без перескоков)
         function setPosition(pos) {
             scrollPos = pos;
             track.style.transform = `translateX(${scrollPos}px)`;
         }
 
+        // Нормализация позиции для бесконечности (в пределах от -originalSetWidth до 0)
         function normalizePosition(pos) {
             let normalized = pos;
             while (normalized > 0) normalized -= originalSetWidth;
@@ -7545,12 +7435,13 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             return normalized;
         }
 
+        // Обновление прогресс-бара (бегунок)
         function updateProgressBar() {
             const progressContainer = document.querySelector('.carousel-progress-container');
             const progressMarker = document.querySelector('.carousel-progress-marker');
             if (!progressContainer || !progressMarker) return;
             let normalized = normalizePosition(scrollPos);
-            let progress = -normalized / originalSetWidth;
+            let progress = -normalized / originalSetWidth; // от 0 до 1
             const containerRect = progressContainer.getBoundingClientRect();
             const markerWidth = progressMarker.offsetWidth;
             const maxLeft = containerRect.width - markerWidth;
@@ -7558,6 +7449,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             progressMarker.style.left = `${leftPos}px`;
         }
 
+        // Создание прогресс-бара, если его нет в DOM
         function ensureProgressBar() {
             let container = document.querySelector('.carousel-progress-container');
             if (!container) {
@@ -7591,10 +7483,11 @@ window.initFormEnterSubmit = initFormEnterSubmit;
                 `;
                 progressDiv.appendChild(marker);
                 wrapper.insertAdjacentElement('afterend', progressDiv);
+                // Клик по полосе – перемотка
                 progressDiv.addEventListener('click', (e) => {
                     const rect = progressDiv.getBoundingClientRect();
                     const clickX = e.clientX - rect.left;
-                    const percent = clickX / rect.width;
+                    const percent = Math.min(1, Math.max(0, clickX / rect.width));
                     let targetNormalized = -percent * originalSetWidth;
                     let newPos = normalizePosition(scrollPos);
                     let delta = targetNormalized - newPos;
@@ -7611,6 +7504,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             return container;
         }
 
+        // Анимация (движение влево)
         function animate(now) {
             if (!animationId) return;
             if (lastTimestamp === 0) {
@@ -7624,10 +7518,8 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (!isHovering && !isDragging) {
                 let step = (SPEED * delta) / 1000;
                 let newPos = scrollPos - step;
-                const minPos = -originalSetWidth;
-                if (newPos < minPos) {
-                    newPos += originalSetWidth;
-                }
+                // Бесконечное зацикливание
+                if (newPos < -originalSetWidth) newPos += originalSetWidth;
                 setPosition(newPos);
                 updateProgressBar();
             }
@@ -7647,11 +7539,9 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             }
         }
 
-        // ----- УНИВЕРСАЛЬНЫЕ ФУНКЦИИ ПЕРЕТАСКИВАНИЯ ДЛЯ МЫШИ И ТАЧПАДА -----
-        function getClientXFromEvent(e) {
-            if (e.touches) {
-                return e.touches[0].clientX;
-            }
+        // ----- Drag & Drop для мыши и тач-устройств -----
+        function getClientX(e) {
+            if (e.touches) return e.touches[0].clientX;
             return e.clientX;
         }
 
@@ -7669,6 +7559,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (!isDragging) return;
             const dx = clientX - dragStartX;
             let newPos = dragStartPos + dx;
+            // Разрешаем уходить дальше границ, но потом нормализуем
             scrollPos = newPos;
             setPosition(scrollPos);
             updateProgressBar();
@@ -7691,24 +7582,24 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         function onMouseDown(e) {
             if (e.button !== 0) return;
             e.preventDefault();
-            onDragStart(getClientXFromEvent(e));
+            onDragStart(getClientX(e));
         }
 
         function onMouseMove(e) {
             if (!isDragging) return;
             e.preventDefault();
-            onDragMove(getClientXFromEvent(e));
+            onDragMove(getClientX(e));
         }
 
-        function onMouseUp(e) {
+        function onMouseUp() {
             onDragEnd();
         }
 
-        // Обработчики для тач-событий
+        // Обработчики для тач-устройств
         function onTouchStart(e) {
             e.preventDefault();
             if (e.touches.length === 1) {
-                onDragStart(getClientXFromEvent(e));
+                onDragStart(getClientX(e));
             }
         }
 
@@ -7716,7 +7607,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             if (!isDragging) return;
             e.preventDefault();
             if (e.touches.length === 1) {
-                onDragMove(getClientXFromEvent(e));
+                onDragMove(getClientX(e));
             }
         }
 
@@ -7724,7 +7615,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             onDragEnd();
         }
 
-        // Наведение мыши (пауза автопрокрутки)
+        // Пауза при наведении мыши
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => {
@@ -7737,35 +7628,45 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             });
         }
 
+        // Инициализация
         function init() {
             updateDimensions();
+            // Начальная позиция: второй набор оригиналов (сдвиг влево на originalSetWidth)
             scrollPos = -originalSetWidth;
             setPosition(scrollPos);
             ensureProgressBar();
             updateProgressBar();
             startAnimation();
 
+            // События для мыши
             track.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
 
+            // События для тач-устройств
             track.addEventListener('touchstart', onTouchStart, { passive: false });
             window.addEventListener('touchmove', onTouchMove, { passive: false });
             window.addEventListener('touchend', onTouchEnd);
 
+            // Адаптив при изменении размера окна
+            let resizeTimeout;
             window.addEventListener('resize', () => {
-                updateDimensions();
-                let norm = normalizePosition(scrollPos);
-                scrollPos = norm;
-                setPosition(scrollPos);
-                updateProgressBar();
-                if (!isHovering && !isDragging) {
-                    stopAnimation();
-                    startAnimation();
-                }
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    updateDimensions();
+                    let norm = normalizePosition(scrollPos);
+                    scrollPos = norm;
+                    setPosition(scrollPos);
+                    updateProgressBar();
+                    if (!isHovering && !isDragging) {
+                        stopAnimation();
+                        startAnimation();
+                    }
+                }, 150);
             });
         }
 
+        // Ждём загрузки всех изображений, чтобы корректно рассчитать ширину
         function waitForImages() {
             const imgs = slides.map(s => s.querySelector('img')).filter(Boolean);
             if (imgs.length === 0) return Promise.resolve();
@@ -7780,11 +7681,12 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         waitForImages().then(init);
     }
 
+    // Запускаем карусель, если есть элемент с id="carouselTrack"
     if (document.getElementById('carouselTrack')) {
         initInfiniteCarousel('carouselTrack');
     }
 
-    // Экспорт функции для 99_main.js (одна строка)
+    // Экспортируем функцию на случай, если нужно переинициализировать вручную
     window.initInfiniteCarousel = initInfiniteCarousel;
 })();
 // ============================================================
