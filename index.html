@@ -2342,6 +2342,42 @@ body {
         margin-top: 6px;
     }
 }
+
+/* ========== УЛУЧШЕНИЕ БЛОКА КАЛЬКУЛЯТОРА НА ТЕЛЕФОНАХ ========== */
+@media (max-width: 640px) {
+    .service-group h3 {
+        font-size: 1rem;
+    }
+    .service-select {
+        font-size: 0.95rem;
+        padding: 14px 16px;
+    }
+    .calc-qty {
+        width: 80px;
+        font-size: 0.9rem;
+    }
+    .add-service-btn {
+        font-size: 0.9rem;
+        padding: 12px 20px;
+    }
+    .cart-section h3 {
+        font-size: 1rem;
+    }
+    .calc-item .service-name {
+        font-size: 0.9rem;
+    }
+    .calc-item .service-price {
+        font-size: 0.9rem;
+    }
+    .qty-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 1rem;
+    }
+    .remove-item {
+        font-size: 1rem;
+    }
+}
 /* ==================================================================
    08_forms.css – формы обратной связи
    ================================================================== */
@@ -3033,6 +3069,66 @@ body {
         flex: 1;
         padding: 10px 16px;
         font-size: 0.9rem;
+    }
+}
+
+/* ========== УЛУЧШЕНИЕ БЛОКА РЕЗУЛЬТАТОВ КВИЗА НА ТЕЛЕФОНАХ ========== */
+@media (max-width: 640px) {
+    .quiz-results-grid {
+        gap: 16px;
+        margin: 16px 0;
+    }
+
+    .quiz-result-card {
+        padding: 20px 16px;
+        border-radius: 20px;
+    }
+
+    .quiz-result-icon {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .quiz-result-category {
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+    }
+
+    .quiz-result-title {
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.4;
+        margin-bottom: 8px;
+    }
+
+    .quiz-result-price {
+        font-size: 0.9rem;
+        padding: 4px 12px;
+        margin: 6px 0 12px;
+    }
+
+    .quiz-btn-details,
+    .quiz-btn-help {
+        padding: 12px 14px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Для очень узких экранов (≤480px) – дополнительные улучшения */
+@media (max-width: 480px) {
+    .quiz-result-card {
+        padding: 16px 12px;
+    }
+    .quiz-result-title {
+        font-size: 0.95rem;
+    }
+    .quiz-result-price {
+        font-size: 0.85rem;
+    }
+    .quiz-btn-details,
+    .quiz-btn-help {
+        padding: 10px 12px;
+        font-size: 0.85rem;
     }
 }
 /* ==================================================================
@@ -6081,7 +6177,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 17:14:36</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 17:21:02</span>
 
             </div>
         </div>
