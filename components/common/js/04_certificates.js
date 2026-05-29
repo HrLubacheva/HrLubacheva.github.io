@@ -1,9 +1,6 @@
 // ============================================================
 // 04_certificates.js – Бесконечная карусель с прогресс-баром
-// Лента утроена (3 копии). Движение влево непрерывно.
-// Полоса прокрутки с бегунком, синхронизированная.
-// Наведение – пауза, перетаскивание – синхронизация.
-// ДОБАВЛЕНА ПОДДЕРЖКА ТАЧПАДА / СЕНСОРНОГО ЭКРАНА
+// Плавная анимация, поддержка тач-устройств, адаптивность
 // ============================================================
 (function () {
     function initInfiniteCarousel(trackId) {
@@ -13,10 +10,11 @@
         let originalSlides = Array.from(track.children);
         if (originalSlides.length === 0) return;
 
-        const slideGap = 24;            // px
+        // Настройки
+        const SLIDE_GAP = 24;           // px между слайдами
+        const SPEED = 120;              // px/сек (скорость автопрокрутки)
         let slideWidth = 0;
-        let totalWidth = 0;
-        let containerWidth = 0;
+        let originalSetWidth = 0;       // ширина одного набора оригиналов (с отступами)
         let scrollPos = 0;
         let animationId = null;
         let isHovering = false;
@@ -24,7 +22,6 @@
         let dragStartX = 0;
         let dragStartPos = 0;
         let lastTimestamp = 0;
-        const SPEED = 140;              // px/сек
 
         // Создаём утроенную ленту (3 копии)
         function buildTripleTrack() {
@@ -40,25 +37,23 @@
         }
 
         let slides = buildTripleTrack();
-        let originalSetWidth = 0;        // ширина одного набора оригиналов (с отступами)
-        let fullTrackWidth = 0;
 
+        // Обновляем размеры (при загрузке и при изменении окна)
         function updateDimensions() {
             if (slides[0]) {
                 slideWidth = slides[0].offsetWidth;
-                if (slideWidth === 0) slideWidth = 200;
-                fullTrackWidth = slides.length * (slideWidth + slideGap);
+                if (slideWidth === 0) slideWidth = 200; // fallback
             }
-            const wrapper = track.closest('.carousel-viewport');
-            containerWidth = wrapper ? wrapper.clientWidth : track.parentElement.clientWidth;
-            originalSetWidth = originalSlides.length * (slideWidth + slideGap);
+            originalSetWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
         }
 
+        // Установка позиции (без перескоков)
         function setPosition(pos) {
             scrollPos = pos;
             track.style.transform = `translateX(${scrollPos}px)`;
         }
 
+        // Нормализация позиции для бесконечности (в пределах от -originalSetWidth до 0)
         function normalizePosition(pos) {
             let normalized = pos;
             while (normalized > 0) normalized -= originalSetWidth;
@@ -66,12 +61,13 @@
             return normalized;
         }
 
+        // Обновление прогресс-бара (бегунок)
         function updateProgressBar() {
             const progressContainer = document.querySelector('.carousel-progress-container');
             const progressMarker = document.querySelector('.carousel-progress-marker');
             if (!progressContainer || !progressMarker) return;
             let normalized = normalizePosition(scrollPos);
-            let progress = -normalized / originalSetWidth;
+            let progress = -normalized / originalSetWidth; // от 0 до 1
             const containerRect = progressContainer.getBoundingClientRect();
             const markerWidth = progressMarker.offsetWidth;
             const maxLeft = containerRect.width - markerWidth;
@@ -79,6 +75,7 @@
             progressMarker.style.left = `${leftPos}px`;
         }
 
+        // Создание прогресс-бара, если его нет в DOM
         function ensureProgressBar() {
             let container = document.querySelector('.carousel-progress-container');
             if (!container) {
@@ -112,10 +109,11 @@
                 `;
                 progressDiv.appendChild(marker);
                 wrapper.insertAdjacentElement('afterend', progressDiv);
+                // Клик по полосе – перемотка
                 progressDiv.addEventListener('click', (e) => {
                     const rect = progressDiv.getBoundingClientRect();
                     const clickX = e.clientX - rect.left;
-                    const percent = clickX / rect.width;
+                    const percent = Math.min(1, Math.max(0, clickX / rect.width));
                     let targetNormalized = -percent * originalSetWidth;
                     let newPos = normalizePosition(scrollPos);
                     let delta = targetNormalized - newPos;
@@ -132,6 +130,7 @@
             return container;
         }
 
+        // Анимация (движение влево)
         function animate(now) {
             if (!animationId) return;
             if (lastTimestamp === 0) {
@@ -145,10 +144,8 @@
             if (!isHovering && !isDragging) {
                 let step = (SPEED * delta) / 1000;
                 let newPos = scrollPos - step;
-                const minPos = -originalSetWidth;
-                if (newPos < minPos) {
-                    newPos += originalSetWidth;
-                }
+                // Бесконечное зацикливание
+                if (newPos < -originalSetWidth) newPos += originalSetWidth;
                 setPosition(newPos);
                 updateProgressBar();
             }
@@ -168,11 +165,9 @@
             }
         }
 
-        // ----- УНИВЕРСАЛЬНЫЕ ФУНКЦИИ ПЕРЕТАСКИВАНИЯ ДЛЯ МЫШИ И ТАЧПАДА -----
-        function getClientXFromEvent(e) {
-            if (e.touches) {
-                return e.touches[0].clientX;
-            }
+        // ----- Drag & Drop для мыши и тач-устройств -----
+        function getClientX(e) {
+            if (e.touches) return e.touches[0].clientX;
             return e.clientX;
         }
 
@@ -190,6 +185,7 @@
             if (!isDragging) return;
             const dx = clientX - dragStartX;
             let newPos = dragStartPos + dx;
+            // Разрешаем уходить дальше границ, но потом нормализуем
             scrollPos = newPos;
             setPosition(scrollPos);
             updateProgressBar();
@@ -212,24 +208,24 @@
         function onMouseDown(e) {
             if (e.button !== 0) return;
             e.preventDefault();
-            onDragStart(getClientXFromEvent(e));
+            onDragStart(getClientX(e));
         }
 
         function onMouseMove(e) {
             if (!isDragging) return;
             e.preventDefault();
-            onDragMove(getClientXFromEvent(e));
+            onDragMove(getClientX(e));
         }
 
-        function onMouseUp(e) {
+        function onMouseUp() {
             onDragEnd();
         }
 
-        // Обработчики для тач-событий
+        // Обработчики для тач-устройств
         function onTouchStart(e) {
             e.preventDefault();
             if (e.touches.length === 1) {
-                onDragStart(getClientXFromEvent(e));
+                onDragStart(getClientX(e));
             }
         }
 
@@ -237,7 +233,7 @@
             if (!isDragging) return;
             e.preventDefault();
             if (e.touches.length === 1) {
-                onDragMove(getClientXFromEvent(e));
+                onDragMove(getClientX(e));
             }
         }
 
@@ -245,7 +241,7 @@
             onDragEnd();
         }
 
-        // Наведение мыши (пауза автопрокрутки)
+        // Пауза при наведении мыши
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => {
@@ -258,35 +254,45 @@
             });
         }
 
+        // Инициализация
         function init() {
             updateDimensions();
+            // Начальная позиция: второй набор оригиналов (сдвиг влево на originalSetWidth)
             scrollPos = -originalSetWidth;
             setPosition(scrollPos);
             ensureProgressBar();
             updateProgressBar();
             startAnimation();
 
+            // События для мыши
             track.addEventListener('mousedown', onMouseDown);
             window.addEventListener('mousemove', onMouseMove);
             window.addEventListener('mouseup', onMouseUp);
 
+            // События для тач-устройств
             track.addEventListener('touchstart', onTouchStart, { passive: false });
             window.addEventListener('touchmove', onTouchMove, { passive: false });
             window.addEventListener('touchend', onTouchEnd);
 
+            // Адаптив при изменении размера окна
+            let resizeTimeout;
             window.addEventListener('resize', () => {
-                updateDimensions();
-                let norm = normalizePosition(scrollPos);
-                scrollPos = norm;
-                setPosition(scrollPos);
-                updateProgressBar();
-                if (!isHovering && !isDragging) {
-                    stopAnimation();
-                    startAnimation();
-                }
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    updateDimensions();
+                    let norm = normalizePosition(scrollPos);
+                    scrollPos = norm;
+                    setPosition(scrollPos);
+                    updateProgressBar();
+                    if (!isHovering && !isDragging) {
+                        stopAnimation();
+                        startAnimation();
+                    }
+                }, 150);
             });
         }
 
+        // Ждём загрузки всех изображений, чтобы корректно рассчитать ширину
         function waitForImages() {
             const imgs = slides.map(s => s.querySelector('img')).filter(Boolean);
             if (imgs.length === 0) return Promise.resolve();
@@ -301,10 +307,11 @@
         waitForImages().then(init);
     }
 
+    // Запускаем карусель, если есть элемент с id="carouselTrack"
     if (document.getElementById('carouselTrack')) {
         initInfiniteCarousel('carouselTrack');
     }
 
-    // Экспорт функции для 99_main.js (одна строка)
+    // Экспортируем функцию на случай, если нужно переинициализировать вручную
     window.initInfiniteCarousel = initInfiniteCarousel;
 })();

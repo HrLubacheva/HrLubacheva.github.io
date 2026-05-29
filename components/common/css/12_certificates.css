@@ -1,5 +1,5 @@
 /* ==================================================================
-   12_certificates.css – карусель сертификатов
+   12_certificates.css – карусель сертификатов (только нужное)
    ================================================================== */
 .certificates-section {
     background: var(--light-bg, #f8f9fa);
@@ -65,124 +65,20 @@
 .carousel-slide.horizontal:hover img {
     transform: scale(1.05);
 }
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: white;
-    border: none;
-    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
-    cursor: pointer;
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--primary, #2D6A9F);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    z-index: 3;
-}
-.carousel-btn:hover {
-    background: var(--primary, #2D6A9F);
-    color: white;
-    transform: translateY(-50%) scale(1.05);
-}
-.carousel-prev {
-    left: -22px;
-}
-.carousel-next {
-    right: -22px;
-}
-.carousel-progress {
-    width: 100%;
-    height: 2px;
-    background: #e2e8f0;
-    border-radius: 2px;
-    margin: 24px 0 20px;
-    overflow: hidden;
-}
-.progress-bar {
-    width: 0%;
-    height: 100%;
-    background: var(--primary, #2D6A9F);
-    border-radius: 2px;
-    transition: width 0.05s linear;
-}
-.carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-}
-.dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #cbd5e0;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.dot.active {
-    background: var(--primary, #2D6A9F);
-    width: 24px;
-    border-radius: 6px;
-}
-.dot:hover {
-    background: var(--primary-light, #4A8BC2);
-    transform: scale(1.2);
-}
 @media (max-width: 992px) {
     .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
     .carousel-slide.horizontal { max-width: 300px; }
-    .carousel-prev { left: -16px; }
-    .carousel-next { right: -16px; }
 }
 @media (max-width: 768px) {
     .carousel-slide { min-width: 100px; max-width: 180px; height: 180px; }
     .carousel-slide.horizontal { max-width: 240px; }
-    .carousel-btn { width: 36px; height: 36px; font-size: 20px; }
-    .carousel-prev { left: -12px; }
-    .carousel-next { right: -12px; }
 }
 @media (max-width: 576px) {
     .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
     .carousel-slide.horizontal { max-width: 200px; }
 }
 
-/* ========== ИНСТРУКЦИЯ ПОД КАРУСЕЛЬЮ (единый блок) ========== */
-.carousel-instruction {
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 20px;
-    margin-bottom: 10px;
-    padding: 8px 16px;
-    background: rgba(45, 106, 159, 0.06);
-    border-radius: 60px;
-    display: inline-block;
-    width: auto;
-    margin-left: auto;
-    margin-right: auto;
-    backdrop-filter: blur(4px);
-}
-.instruction-icon {
-    margin: 0 8px;
-    font-size: 1rem;
-    opacity: 0.7;
-}
-@media (max-width: 768px) {
-    .carousel-instruction {
-        font-size: 0.75rem;
-        padding: 6px 12px;
-        white-space: normal;
-    }
-    .instruction-icon {
-        margin: 0 4px;
-    }
-}
-
+/* Прогресс-бар и бегунок (создаются скриптом) */
 .carousel-progress-container {
     position: relative;
     width: 100%;
@@ -216,18 +112,34 @@
     background: var(--primary-dark, #1F4A6E);
 }
 
-/* Прогресс-бар с бегущим градиентом */
-.carousel-progress {
-    width: 100%;
-    height: 4px;
-    background: linear-gradient(90deg, #e2e8f0 0%, #e2e8f0 40%, var(--primary, #2D6A9F) 50%, #e2e8f0 60%, #e2e8f0 100%);
-    background-size: 200% 100%;
-    border-radius: 4px;
-    margin: 20px auto 10px;
-    transition: opacity 0.2s;
+/* Инструкция (опционально, можно добавить в HTML) */
+.carousel-instruction {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    background: rgba(45, 106, 159, 0.06);
+    border-radius: 60px;
+    display: inline-block;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    backdrop-filter: blur(4px);
 }
-/* Анимация будет добавлена скриптом динамически, но можно и здесь прописать */
-@keyframes progressMove {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 200% 0%; }
+.instruction-icon {
+    margin: 0 8px;
+    font-size: 1rem;
+    opacity: 0.7;
+}
+@media (max-width: 768px) {
+    .carousel-instruction {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+        white-space: normal;
+    }
+    .instruction-icon {
+        margin: 0 4px;
+    }
 }
