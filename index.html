@@ -751,10 +751,9 @@ body {
     }
 }
 /* ==================================================================
-   04_grids.css – универсальные сетки (адаптив)
+   04_grids.css – универсальные сетки (адаптив) + масштабирование + переносы
    ================================================================== */
 
-/* ========== БАЗОВЫЕ СЕТКИ ========== */
 .grid-3 {
     display: grid;
     gap: 30px;
@@ -763,7 +762,6 @@ body {
     list-style: none;
     padding-left: 0;
 }
-
 .grid-2 {
     display: grid;
     gap: 30px;
@@ -772,7 +770,6 @@ body {
     list-style: none;
     padding-left: 0;
 }
-
 .grid-1 {
     display: grid;
     gap: 20px;
@@ -781,8 +778,6 @@ body {
     list-style: none;
     padding-left: 0;
 }
-
-/* Специальная сетка для тренинга */
 .grid-training-3 {
     display: grid;
     gap: 30px;
@@ -792,36 +787,36 @@ body {
     padding-left: 0;
 }
 
-/* ========== АДАПТИВНОСТЬ ОБЩИХ СЕТОК ========== */
 @media (min-width: 992px) and (max-width: 1199px) {
-    .grid-3 {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
 }
-
-/* Планшеты (768–991px) – 2 колонки */
 @media (max-width: 991px) {
-    .grid-3 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .grid-training-3 {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-    }
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-training-3 { grid-template-columns: repeat(2, 1fr); gap: 24px; }
 }
-
-/* Телефоны (≤768px) – 1 колонка */
 @media (max-width: 768px) {
-    .grid-2,
-    .grid-3 {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 20px; }
+}
+@media (max-width: 576px) {
+    .grid-training-3 { gap: 16px; }
 }
 
-@media (max-width: 576px) {
-    .grid-training-3 {
-        gap: 16px;
+/* ========== ПОДЗАГОЛОВОК СЕКЦИИ УСЛУГ В 2 КОЛОНКИ ========== */
+@media (min-width: 768px) {
+    #services .section-subtitle {
+        column-count: 2;
+        column-gap: 40px;
+        text-align: left;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 20px;
+    }
+}
+@media (max-width: 767px) {
+    #services .section-subtitle {
+        column-count: 1;
+        text-align: center;
     }
 }
 
@@ -834,31 +829,17 @@ body {
     margin-top: 50px;
     overflow-x: auto;
 }
-.process-photo-item:first-child {
-    flex: 0.95;
-    min-width: 160px;
-}
-.process-photo-item:last-child {
-    flex: 1.1;
-    min-width: 160px;
-}
-.process-photo-item {
-    text-align: center;
-}
+.process-photo-item:first-child { flex: 0.95; min-width: 160px; }
+.process-photo-item:last-child { flex: 1.1; min-width: 160px; }
+.process-photo-item { text-align: center; }
 .process-photo-item img {
-    width: 100%;
-    height: auto;
-    max-height: 850px;
-    object-fit: contain;
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    width: 100%; height: auto; max-height: 850px;
+    object-fit: contain; border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     background: #f0f4f8;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
-.process-photo-item img:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 15px 35px rgba(45, 106, 159, 0.15);
-}
+.process-photo-item img:hover { transform: translateY(-4px); box-shadow: 0 15px 35px rgba(45,106,159,0.15); }
 .photo-caption {
     margin-top: 16px;
     font-size: 0.9rem;
@@ -870,13 +851,11 @@ body {
 }
 @media (max-width: 640px) {
     .process-photos { gap: 12px; }
-    .process-photo-item:first-child,
-    .process-photo-item:last-child { min-width: 120px; }
+    .process-photo-item:first-child, .process-photo-item:last-child { min-width: 120px; }
 }
 @media (max-width: 480px) {
     .process-photos { gap: 8px; }
-    .process-photo-item:first-child,
-    .process-photo-item:last-child { min-width: 100px; }
+    .process-photo-item:first-child, .process-photo-item:last-child { min-width: 100px; }
     .photo-caption { font-size: 0.75rem; margin-top: 10px; }
 }
 
@@ -891,11 +870,7 @@ body {
     color: var(--text-muted);
 }
 @media (max-width: 768px) {
-    .process-description {
-        margin-bottom: 30px;
-        font-size: 0.95rem;
-        padding: 0 16px;
-    }
+    .process-description { margin-bottom: 30px; font-size: 0.95rem; padding: 0 16px; }
 }
 .process-two-blocks {
     display: flex;
@@ -911,10 +886,7 @@ body {
     flex-direction: column;
     width: 100%;
 }
-.process-block-full {
-    margin: 40px 0;
-    width: 100%;
-}
+.process-block-full { margin: 40px 0; width: 100%; }
 .process-block-inner {
     border: 1px solid transparent;
     border-radius: var(--radius-lg);
@@ -923,21 +895,19 @@ body {
     width: 100%;
     box-sizing: border-box;
 }
-.process-block:hover .process-block-inner {
-    border-color: rgba(45, 106, 159, 0.15);
-}
+.process-block:hover .process-block-inner { border-color: rgba(45,106,159,0.15); }
 .process-block-header {
     text-align: center;
     margin-bottom: 32px;
     padding: 20px 16px;
-    background: linear-gradient(135deg, rgba(45, 106, 159, 0.08), rgba(74, 139, 194, 0.04));
+    background: linear-gradient(135deg, rgba(45,106,159,0.08), rgba(74,139,194,0.04));
     border-radius: 48px;
     transition: all 0.3s ease;
     width: 100%;
     box-sizing: border-box;
 }
 .process-block-header:hover {
-    background: linear-gradient(135deg, rgba(45, 106, 159, 0.12), rgba(74, 139, 194, 0.06));
+    background: linear-gradient(135deg, rgba(45,106,159,0.12), rgba(74,139,194,0.06));
 }
 .process-block-title {
     font-size: 1.6rem;
@@ -974,7 +944,7 @@ body {
     border-radius: var(--radius-lg);
     padding: 24px 20px;
     box-shadow: var(--shadow-sm);
-    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
     border: 1px solid var(--border);
     height: 100%;
     display: flex;
@@ -983,7 +953,7 @@ body {
 }
 .card-process:hover {
     transform: translateY(-6px);
-    box-shadow: 0 20px 30px -12px rgba(45, 106, 159, 0.2);
+    box-shadow: 0 20px 30px -12px rgba(45,106,159,0.2);
 }
 .process-step {
     width: 40px;
@@ -1026,15 +996,9 @@ body {
     min-height: 180px;
     padding-bottom: 20px;
 }
-.grid-training-3 .card-process p {
-    flex-grow: 1;
-    margin-bottom: 0;
-}
+.grid-training-3 .card-process p { flex-grow: 1; margin-bottom: 0; }
 @media (max-width: 576px) {
-    .grid-training-3 .card-process {
-        padding: 16px 12px;
-        min-height: 150px;
-    }
+    .grid-training-3 .card-process { padding: 16px 12px; min-height: 150px; }
     .grid-training-3 .card-process h4 { font-size: 1rem; margin-bottom: 8px; }
     .grid-training-3 .card-process p { font-size: 0.8rem; line-height: 1.3; }
     .grid-training-3 .process-step { width: 32px; height: 32px; font-size: 0.85rem; margin-bottom: 10px; }
@@ -1063,9 +1027,7 @@ body {
 /* ========== ИСПРАВЛЕНИЕ: убираем выход за границы на мобильных ========== */
 @media (max-width: 768px) {
     .process-block { min-width: auto; width: 100%; }
-    .grid-2 .card,
-    .grid-3 .card,
-    .card {
+    .grid-2 .card, .grid-3 .card, .card {
         min-width: auto;
         width: 100%;
         box-sizing: border-box;
@@ -1073,7 +1035,6 @@ body {
 }
 
 /* ========== СПИСКИ УСЛУГ В КАРТОЧКАХ (СЕКЦИЯ #services) ========== */
-/* Две колонки на десктопе и планшетах */
 @media (min-width: 768px) {
     .card-service .service-list {
         display: grid;
@@ -1086,7 +1047,10 @@ body {
     .card-service .service-list li {
         position: relative;
         padding-left: 1.2em;
-        word-break: break-word;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+        word-break: normal;
         overflow-wrap: break-word;
         white-space: normal;
     }
@@ -1098,28 +1062,34 @@ body {
         font-weight: bold;
     }
 }
-/* На мобильных – одна колонка */
 @media (max-width: 767px) {
-    .card-service .service-list {
-        grid-template-columns: 1fr;
-    }
+    .card-service .service-list { grid-template-columns: 1fr; }
 }
-/* Защита от вылезания и масштабирование на узких экранах */
+
+/* ========== ВЕРТИКАЛЬНОЕ ВЫРАВНИВАНИЕ КАРТОЧЕК УСЛУГ ========== */
+.card-service {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.card-service .service-list {
+    margin-top: auto;
+    margin-bottom: 0;
+}
+.card-service h3 {
+    margin-bottom: 0.75rem;
+}
+
+/* ========== ПЛАВНОЕ МАСШТАБИРОВАНИЕ ТЕКСТА ========== */
+.card-service h3 {
+    font-size: clamp(1rem, 4vw, 1.4rem);
+}
+.card-service .service-list li {
+    font-size: clamp(0.75rem, 3.5vw, 0.95rem);
+}
 @media (max-width: 480px) {
-    .card-service .service-list li {
-        font-size: 0.85rem;
-        line-height: 1.4;
-    }
-    .card-service h3 {
-        font-size: 1.1rem;
-    }
-}
-@media (max-width: 360px) {
-    .card-service .service-list li {
-        font-size: 0.75rem;
-    }
-    .card-service h3 {
-        font-size: 1rem;
+    .card-service {
+        padding: 18px 14px !important;
     }
 }
 /* ==================================================================
@@ -3583,6 +3553,27 @@ section[id] {
         white-space: normal;
     }
 }
+
+/* ========== ПРАВИЛЬНЫЕ ПЕРЕНОСЫ ДЛЯ ВСЕГО САЙТА (русский язык) ========== */
+body,
+.card,
+.card-service,
+.card-role,
+.process-description,
+.section-subtitle,
+.quiz-question p,
+.quiz-option,
+.quiz-result-title,
+.service-list li,
+.callback-form .form-field,
+.price-table td,
+.price-table th {
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    word-break: normal;
+    overflow-wrap: break-word;
+}
 /* ==================================================================
    11_pricelist.css – полный прайс-лист (аккордеоны)
    ================================================================== */
@@ -3717,17 +3708,21 @@ section[id] {
     }
 }
 /* ==================================================================
-   12_certificates.css – карусель сертификатов (только нужное)
+   12_certificates.css – карусель сертификатов (без hover-эффектов, с прожилками)
    ================================================================== */
 .certificates-section {
     background: var(--light-bg, #f8f9fa);
-    padding: 60px 0;
+    padding: 60px 0 40px;
 }
 .carousel-wrapper {
     position: relative;
     display: flex;
     align-items: center;
     margin: 40px 0 20px;
+    cursor: grab;
+}
+.carousel-wrapper:active {
+    cursor: grabbing;
 }
 .carousel-viewport {
     overflow-x: hidden;
@@ -3749,39 +3744,36 @@ section[id] {
     background: transparent;
     border-radius: var(--radius-md, 16px);
     overflow: hidden;
-    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.08), var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
 }
 .carousel-slide:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
+    transform: none;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.08), var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
 }
 .carousel-slide img {
     height: 100%;
     width: auto;
     max-width: 100%;
     object-fit: cover;
-    transform: scale(1.02);
-    transition: transform 0.25s ease;
     display: block;
     background: transparent;
+    transition: none;
 }
 .carousel-slide:hover img {
-    transform: scale(1.05);
+    transform: none;
 }
 .carousel-slide.horizontal {
     max-width: 360px;
 }
 .carousel-slide.horizontal img {
     object-fit: cover;
-    transform: scale(1.02);
     background: transparent;
 }
 .carousel-slide.horizontal:hover img {
-    transform: scale(1.05);
+    transform: none;
 }
 @media (max-width: 992px) {
     .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
@@ -3795,8 +3787,6 @@ section[id] {
     .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
     .carousel-slide.horizontal { max-width: 200px; }
 }
-
-/* Прогресс-бар и бегунок (создаются скриптом) */
 .carousel-progress-container {
     position: relative;
     width: 100%;
@@ -3829,8 +3819,6 @@ section[id] {
     transform: translateY(-50%) scale(1.2);
     background: var(--primary-dark, #1F4A6E);
 }
-
-/* Инструкция (опционально, можно добавить в HTML) */
 .carousel-instruction {
     text-align: center;
     font-size: 0.85rem;
@@ -3860,9 +3848,6 @@ section[id] {
     .instruction-icon {
         margin: 0 4px;
     }
-}
-.certificates-section {
-    padding-bottom: 40px;
 }
 /* ==================================================================
    13_accents.css – усиление контраста (без новых цветов)
@@ -3930,6 +3915,79 @@ section[id] {
 }
 .social-icons a:focus-visible {
     border-radius: 50%;
+}
+
+/* ==================================================================
+   ДОПОЛНИТЕЛЬНЫЕ ЭФФЕКТЫ ДЛЯ ПОДДЕРЖАНИЯ ИНТЕРЕСА
+   ================================================================== */
+.card-service {
+    position: relative;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.card-service:hover {
+    box-shadow: 0 20px 35px -12px rgba(45, 106, 159, 0.25);
+    transform: translateY(-4px);
+}
+.card-service:hover::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    padding: 2px;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.8;
+}
+@keyframes softPulse {
+    0% { box-shadow: 0 0 0 0 rgba(45, 106, 159, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(45, 106, 159, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(45, 106, 159, 0); }
+}
+.hero-buttons .btn-secondary,
+.quiz-btn-select,
+.quiz-btn-help {
+    animation: softPulse 2s infinite;
+}
+.hero-buttons .btn-secondary:hover,
+.quiz-btn-select:hover,
+.quiz-btn-help:hover {
+    animation: none;
+}
+.footer-social a {
+    position: relative;
+    overflow: hidden;
+}
+.footer-social a::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+.footer-social a:hover::before {
+    width: 100%;
+    height: 100%;
+}
+.nav-links a {
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+.nav-links a:hover {
+    transform: translateY(-2px);
+}
+.fade-up {
+    transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+.tab-btn.active {
+    box-shadow: 0 4px 12px rgba(45, 106, 159, 0.3), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 /* ==================================================================
    14_modal.css – модальные окна (материалы, политика)
@@ -4554,10 +4612,10 @@ select:focus-visible {
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Подбор персонала (Junior → C-level)</li>
-                        <li>Онбординг и оценка</li>
-                        <li>Аутсорсинг подбора</li>
                         <li>Кадровый аудит</li>
+                        <li>Онбординг и оценка</li>
                         <li>Развитие</li>
+                        <li>Аутсорсинг подбора</li>
                         <li>Удержание</li>
                     </ul>
                 </div>
@@ -4568,9 +4626,9 @@ select:focus-visible {
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Карьерная стратегия</li>
+                        <li>Переговоры о зарплате</li>
                         <li>Упаковка резюме</li>
                         <li>Подготовка к интервью</li>
-                        <li>Переговоры о зарплате</li>
                         <li>Обход ИИ-фильтров АТС</li>
                     </ul>
                 </div>
@@ -4581,8 +4639,8 @@ select:focus-visible {
                 <div itemprop="description">
                     <ul class="service-list">
                         <li>Корпоративные тренинги (офлайн | онлайн)</li>
-                        <li>Развитие управленческих навыков</li>
                         <li>Мастер-классы</li>
+                        <li>Развитие управленческих навыков</li>
                         <li>Стратегические сессии</li>
                         <li>Коучинг топ-менеджеров</li>
                     </ul>
@@ -5954,7 +6012,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 19:28:50</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 19:52:24</span>
 
             </div>
         </div>
