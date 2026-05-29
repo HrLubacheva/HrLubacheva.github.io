@@ -824,9 +824,10 @@ body {
     }
 }
 
+/* Убираем принудительные две колонки на планшетах */
 @media (min-width: 480px) and (max-width: 767px) {
     .grid-2 {
-        grid-template-columns: repeat(1, 1fr);
+        grid-template-columns: 1fr;
     }
 }
 
@@ -1184,6 +1185,21 @@ body {
         height: 32px;
         font-size: 0.85rem;
         margin-bottom: 10px;
+    }
+}
+
+/* ========== ИСПРАВЛЕНИЕ: убираем выход за границы на мобильных ========== */
+@media (max-width: 768px) {
+    .process-block {
+        min-width: auto;
+        width: 100%;
+    }
+    .grid-2 .card,
+    .grid-3 .card,
+    .card {
+        min-width: auto;
+        width: 100%;
+        box-sizing: border-box;
     }
 }
 /* ==================================================================
@@ -5535,7 +5551,7 @@ select:focus-visible {
             <div class="footer-meta">
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
-                </a> <span class="footer-version">⚡ Версия 29.05.2026 16:05:50</span>
+                </a> <span class="footer-version">⚡ Версия 29.05.2026 16:08:42</span>
 
             </div>
         </div>
