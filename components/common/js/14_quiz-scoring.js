@@ -158,6 +158,7 @@
         return { services: result };
     };
 
+    // Для обратной совместимости
     window.getTopTwoServices = function(answersArr) {
         const top = window.getTopServices(answersArr);
         const services = top.services;

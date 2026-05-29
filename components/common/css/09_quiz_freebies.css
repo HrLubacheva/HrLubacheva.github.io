@@ -215,7 +215,7 @@
     margin-top: 8px;
 }
 
-/* ========== КАРТОЧКИ РЕЗУЛЬТАТОВ КВИЗА – КОМПАКТНЫЕ И СБАЛАНСИРОВАННЫЕ ========== */
+/* ========== КАРТОЧКИ РЕЗУЛЬТАТОВ КВИЗА ========== */
 .quiz-results-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -364,6 +364,18 @@
     border: 2px solid #28a745;
     background: #f0fff4;
     box-shadow: 0 8px 20px rgba(40,167,69,0.15);
+}
+
+/* Затемнение невыбранных карточек при наличии выбора */
+.quiz-results-grid.has-selected .quiz-result-card:not(.selected) {
+    opacity: 0.6;
+    filter: grayscale(0.2);
+    transition: all 0.2s ease;
+}
+
+.quiz-results-grid.has-selected .quiz-result-card:not(.selected):hover {
+    opacity: 0.8;
+    filter: grayscale(0.1);
 }
 
 /* Адаптив для планшетов */
