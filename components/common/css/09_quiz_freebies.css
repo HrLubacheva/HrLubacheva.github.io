@@ -460,3 +460,63 @@
         font-size: 0.9rem;
     }
 }
+
+/* ========== УЛУЧШЕНИЕ БЛОКА РЕЗУЛЬТАТОВ КВИЗА НА ТЕЛЕФОНАХ ========== */
+@media (max-width: 640px) {
+    .quiz-results-grid {
+        gap: 16px;
+        margin: 16px 0;
+    }
+
+    .quiz-result-card {
+        padding: 20px 16px;
+        border-radius: 20px;
+    }
+
+    .quiz-result-icon {
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .quiz-result-category {
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+    }
+
+    .quiz-result-title {
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.4;
+        margin-bottom: 8px;
+    }
+
+    .quiz-result-price {
+        font-size: 0.9rem;
+        padding: 4px 12px;
+        margin: 6px 0 12px;
+    }
+
+    .quiz-btn-details,
+    .quiz-btn-help {
+        padding: 12px 14px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Для очень узких экранов (≤480px) – дополнительные улучшения */
+@media (max-width: 480px) {
+    .quiz-result-card {
+        padding: 16px 12px;
+    }
+    .quiz-result-title {
+        font-size: 0.95rem;
+    }
+    .quiz-result-price {
+        font-size: 0.85rem;
+    }
+    .quiz-btn-details,
+    .quiz-btn-help {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+}

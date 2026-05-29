@@ -1,5 +1,13 @@
-import psutil
 import time
+
+try:
+    import psutil
+except ImportError:
+    print("❌ Библиотека psutil не установлена.")
+    print("   Установите её командой: pip install psutil")
+    print("   Или запустите скрипт с правами администратора и выполните: pip install psutil")
+    input("\nНажмите Enter для выхода...")
+    exit(1)
 
 def print_processes():
     print("\n" + "=" * 80)
