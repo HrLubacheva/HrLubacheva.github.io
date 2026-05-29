@@ -2,7 +2,7 @@
    04_grids.css – универсальные сетки (адаптив)
    ================================================================== */
 
-/* Базовые сетки */
+/* ========== БАЗОВЫЕ СЕТКИ ========== */
 .grid-3 {
     display: grid;
     gap: 30px;
@@ -40,7 +40,7 @@
     padding-left: 0;
 }
 
-/* Адаптивность общих сеток */
+/* ========== АДАПТИВНОСТЬ ОБЩИХ СЕТОК ========== */
 @media (min-width: 992px) and (max-width: 1199px) {
     .grid-3 {
         grid-template-columns: repeat(2, 1fr);
@@ -73,7 +73,7 @@
     }
 }
 
-/* ========== Фотографии процесса ========== */
+/* ========== ФОТОГРАФИИ ПРОЦЕССА ========== */
 .process-photos {
     display: flex;
     flex-wrap: nowrap;
@@ -128,7 +128,7 @@
     .photo-caption { font-size: 0.75rem; margin-top: 10px; }
 }
 
-/* ========== Процесс работы – блоки с карточками ========== */
+/* ========== ПРОЦЕСС РАБОТЫ – БЛОКИ С КАРТОЧКАМИ ========== */
 .process-description {
     text-align: center;
     margin-bottom: 40px;
@@ -307,6 +307,7 @@
     .card-process p { font-size: 0.8rem; }
     .process-step { width: 32px; height: 32px; font-size: 0.85rem; margin-bottom: 10px; }
 }
+
 /* ========== ИСПРАВЛЕНИЕ: убираем выход за границы на мобильных ========== */
 @media (max-width: 768px) {
     .process-block { min-width: auto; width: 100%; }
@@ -316,5 +317,45 @@
         min-width: auto;
         width: 100%;
         box-sizing: border-box;
+    }
+}
+
+/* ========== СПИСКИ УСЛУГ В КАРТОЧКАХ (СЕКЦИЯ #services) ========== */
+/* Две колонки на десктопе и планшетах */
+@media (min-width: 768px) {
+    .card-service .service-list {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px 20px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .card-service .service-list li {
+        position: relative;
+        padding-left: 1.2em;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+    .card-service .service-list li::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: var(--primary);
+        font-weight: bold;
+    }
+}
+/* На мобильных – одна колонка */
+@media (max-width: 767px) {
+    .card-service .service-list {
+        grid-template-columns: 1fr;
+    }
+}
+/* Дополнительная защита для узких экранов */
+@media (max-width: 480px) {
+    .card-service .service-list li {
+        font-size: 0.85rem;
+        line-height: 1.4;
     }
 }
