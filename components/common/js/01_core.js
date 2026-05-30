@@ -289,7 +289,7 @@ function simpleHash(str) {
 }
 
 // Периодическая отправка накопленных запросов (раз в минуту)
-function retryFailedRequests() {
+function retryFailedRequests() {}
     // отключаем сохранение и повторные попытки
     // try { ... } catch ...
 }
@@ -298,6 +298,7 @@ function retryFailedRequests() {
 setInterval(retryFailedRequests, 60000);
 
 // При загрузке страницы тоже пробуем отправить накопленное
+setInterval(retryFailedRequests, 60000);
 window.addEventListener('load', () => {
     setTimeout(retryFailedRequests, 5000);
 });
