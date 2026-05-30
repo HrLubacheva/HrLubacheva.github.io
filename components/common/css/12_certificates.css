@@ -1,7 +1,5 @@
 /* ==================================================================
    12_certificates.css – карусель сертификатов
-   Ширина слайда подстраивается под картинку,
-   изображение слегка увеличено для обрезки полей
    ================================================================== */
 .certificates-section {
     background: var(--light-bg, #f8f9fa);
@@ -27,14 +25,14 @@
 
 .carousel-slide {
     flex: 0 0 auto;
-    height: 260px;          /* единая высота */
-    width: auto;            /* ширина подстраивается */
+    height: 260px;
+    width: auto;
     display: flex;
     align-items: center;
     justify-content: center;
     background: transparent;
     border-radius: 12px;
-    overflow: hidden;       /* чтобы при увеличении изображения края обрезались */
+    overflow: hidden;
 }
 
 .carousel-slide img {
@@ -43,15 +41,14 @@
     object-fit: contain;
     display: block;
     border-radius: 8px;
-    transform: scale(1.02);  /* лёгкое увеличение – обрезка полей */
+    transform: scale(1.02);
     transition: transform 0.3s ease;
 }
 
 .carousel-slide:hover img {
-    transform: scale(1.05);   /* при наведении чуть больше – для интерактива */
+    transform: scale(1.05);
 }
 
-/* Прогресс-бар */
 .carousel-progress-container {
     position: relative;
     width: 100%;
@@ -74,7 +71,6 @@
     transition: width 0.05s linear;
 }
 
-/* Адаптив: уменьшаем высоту на мобильных */
 @media (max-width: 768px) {
     .carousel-slide {
         height: 200px;

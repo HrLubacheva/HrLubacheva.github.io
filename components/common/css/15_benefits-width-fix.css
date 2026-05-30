@@ -1,0 +1,17 @@
+/* ==================================================================
+   15_benefits-width-fix.css – фиксирует ширину колонок (50% на 50%) на ПК
+   ================================================================== */
+@media (min-width: 992px) {
+    .benefits-two-columns {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 60px;
+        align-items: flex-start; /* высоту будет выравнивать JS */
+    }
+    .benefits-column {
+        flex: 0 0 calc(50% - 30px) !important;
+        max-width: calc(50% - 30px) !important;
+        width: auto !important;
+        min-width: 0;
+    }
+}

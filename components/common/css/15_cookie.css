@@ -69,12 +69,10 @@
     font-weight: 600;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
-
 .cookie-consent__buttons .btn-primary:hover {
     background: linear-gradient(135deg, var(--primary-dark), var(--primary));
     box-shadow: 0 4px 12px rgba(45,106,159,0.4);
 }
-
 .cookie-consent__buttons .btn-secondary {
     background: transparent;
     border: 1px solid var(--primary-light);
@@ -82,14 +80,12 @@
     padding: 8px 20px;
     font-weight: 600;
 }
-
 .cookie-consent__buttons .btn-secondary:hover {
     background: rgba(74, 139, 194, 0.15);
     border-color: white;
     color: white;
 }
 
-/* Анимация появления */
 @keyframes cookieSlideUp {
     from {
         transform: translateY(100%);
@@ -100,12 +96,10 @@
         opacity: 1;
     }
 }
-
 .cookie-consent {
     animation: cookieSlideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
 
-/* Адаптив для мобильных */
 @media (max-width: 640px) {
     .cookie-consent {
         padding: 16px;

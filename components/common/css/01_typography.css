@@ -1,5 +1,5 @@
 /* ==================================================================
-   01_typography.css – типографика
+   01_typography.css – типографика (только базовые стили)
    ================================================================== */
 .section-title {
     font-size: 2.2rem;
@@ -83,42 +83,4 @@
     font-size: 0.85rem;
     color: var(--text-muted);
     margin-top: 15px;
-}
-
-@media (max-width: 768px) {
-    .section-title {
-        font-size: 1.8rem;
-        margin-bottom: 32px;
-    }
-    .hero-title {
-        font-size: 2rem;
-    }
-    .process-title {
-        font-size: 1.5rem;
-    }
-    .card-title {
-        font-size: 1.3rem;
-    }
-}
-
-@media (max-width: 360px) {
-    .section-title {
-        font-size: 1.5rem;
-        margin-bottom: 24px;
-    }
-    .hero-title {
-        font-size: 1.6rem;
-    }
-    .hero-subtitle {
-        font-size: 1rem;
-    }
-    .process-title {
-        font-size: 1.3rem;
-    }
-    .card-title {
-        font-size: 1.1rem;
-    }
-    .small-note {
-        font-size: 0.75rem;
-    }
 }

@@ -84,18 +84,3 @@
     color: var(--primary);
     font-weight: bold;
 }
-
-@media (max-width: 768px) {
-    .card {
-        padding: 24px 20px;
-    }
-    .card:active {
-        transform: translateY(-2px);
-    }
-    .card-benefit .card-title {
-        font-size: 1.3rem;
-    }
-    .card-benefit p {
-        font-size: 0.95rem;
-    }
-}

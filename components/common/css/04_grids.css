@@ -19,12 +19,7 @@
 @media (max-width: 991px) {
     .grid-3, .grid-training-3 { grid-template-columns: repeat(2, 1fr); gap: 24px; }
 }
-@media (max-width: 768px) {
-    .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 20px; }
-}
-@media (max-width: 576px) {
-    .grid-training-3 { gap: 16px; }
-}
+/* Медиа-запрос для max-width: 768px удалён – он в 99_responsive.css */
 
 /* ========== КАРТОЧКИ ПРОЦЕССА ========== */
 .card-process {
@@ -157,7 +152,7 @@
     margin-top: auto;
 }
 
-/* ========== ФОТОГРАФИИ ПРОЦЕССА (Как мы будем работать вместе) ========== */
+/* ========== ФОТОГРАФИИ ПРОЦЕССА ========== */
 .process-photos {
     display: flex;
     flex-wrap: nowrap;
@@ -202,24 +197,15 @@
     width: 100%;
 }
 @media (max-width: 640px) {
-    .process-photos {
-        gap: 12px;
-    }
-    .process-photo-item:first-child,
-    .process-photo-item:last-child {
-        min-width: 120px;
-    }
+    .process-photos { gap: 12px; }
+    .process-photo-item:first-child, .process-photo-item:last-child { min-width: 120px; }
 }
 @media (max-width: 480px) {
-    .process-photos {
-        gap: 8px;
-    }
-    .process-photo-item:first-child,
-    .process-photo-item:last-child {
-        min-width: 100px;
-    }
-    .photo-caption {
-        font-size: 0.75rem;
-        margin-top: 10px;
-    }
+    .process-photos { gap: 8px; }
+    .process-photo-item:first-child, .process-photo-item:last-child { min-width: 100px; }
+    .photo-caption { font-size: 0.75rem; margin-top: 10px; }
+}
+
+.process-description {
+    text-align: center !important;
 }

@@ -197,21 +197,6 @@
         top: 0.75rem;
         right: 0.75rem;
     }
-    .form-row-three, .form-row-two {
-        flex-direction: column;
-        gap: 0;
-    }
-    .form-row-three .form-field,
-    .form-row-two .form-field {
-        min-width: auto;
-    }
-    .form-row-messages {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .form-messages {
-        text-align: center;
-    }
 }
 .callback-note {
     text-align: center;

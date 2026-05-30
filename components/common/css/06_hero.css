@@ -1,5 +1,5 @@
 /* ==================================================================
-   06_hero.css – главный экран
+   06_hero.css – главный экран (только базовые стили)
    ================================================================== */
 .hero-grid {
     display: flex;
@@ -9,7 +9,9 @@
     flex-wrap: wrap;
 }
 
-.hero-content { flex: 1.2; }
+.hero-content {
+    flex: 1.2;
+}
 
 .hero-text {
     font-size: 1rem;
@@ -79,7 +81,6 @@
 .hero-tv-badge:hover {
     box-shadow: var(--shadow-md);
 }
-
 .hero-tv-badge:focus-visible {
     outline-color: white;
 }
@@ -88,36 +89,5 @@
     .hero-image img {
         max-width: 480px;
         width: auto;
-    }
-}
-@media (max-width: 768px) {
-    .hero-grid {
-        flex-direction: column;
-        text-align: center;
-    }
-    .hero-image {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-    }
-    .hero-image img {
-        max-width: 280px;
-        margin: 0 auto;
-    }
-    .hero-buttons {
-        flex-direction: column;
-        gap: 10px;
-    }
-    .hero-buttons .btn-primary,
-    .hero-buttons .btn-secondary {
-        width: 100%;
-        text-align: center;
-    }
-    .hero-note {
-        margin-top: 20px;
-    }
-    .hero-tv-badge {
-        margin: 0 auto 20px auto;
-        width: fit-content;
     }
 }

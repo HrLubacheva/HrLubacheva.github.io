@@ -39,7 +39,6 @@
     color: white;
     box-shadow: 0 4px 12px rgba(45,106,159,0.3);
 }
-/* ВАЖНО: правило для .quiz-option.selected удалено – оно перенесено в 13_accents.css */
 .quiz-nav {
     display: flex;
     justify-content: space-between;
@@ -139,14 +138,6 @@
     .freebies-grid .freebie-item:last-child {
         grid-column: span 1;
         max-width: 100%;
-    }
-}
-@media (max-width: 480px) {
-    .freebies-grid {
-        gap: 20px;
-    }
-    .freebie-item {
-        padding: 0 8px;
     }
 }
 .freebie-item {
@@ -398,85 +389,6 @@
     color: var(--primary-dark);
 }
 
-@media (max-width: 768px) {
-    .quiz-card {
-        padding: 0 8px;
-    }
-    .quiz-question p {
-        font-size: 1rem;
-    }
-    .quiz-option {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-        min-width: 120px;
-    }
-    .quiz-nav button {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-    }
-    .quiz-result-card {
-        padding: 12px 12px;
-    }
-    .quiz-result-icon {
-        font-size: 24px;
-    }
-    .quiz-result-category {
-        font-size: 0.65rem;
-        padding: 2px 6px;
-    }
-    .quiz-result-title {
-        font-size: 0.9rem;
-    }
-    .quiz-result-price {
-        font-size: 0.8rem;
-        padding: 2px 8px;
-    }
-    .quiz-btn-select, .quiz-btn-cart, .quiz-btn-help {
-        padding: 6px 8px;
-        font-size: 0.7rem;
-    }
-    .help-duration-badge {
-        top: 8px;
-        right: 8px;
-        font-size: 0.6rem;
-        padding: 2px 8px;
-    }
-    .quiz-result-gift {
-        font-size: 0.6rem;
-        padding: 2px 6px;
-    }
-    .quiz-price-wrapper {
-        gap: 6px;
-    }
-}
-@media (max-width: 480px) {
-    .quiz-option {
-        flex: 1 1 calc(50% - 8px);
-        padding: 8px 12px;
-        font-size: 0.85rem;
-    }
-    .quiz-nav {
-        flex-direction: column;
-        gap: 10px;
-    }
-    .quiz-nav button {
-        width: 100%;
-    }
-    .quiz-result-title-row {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
-    .quiz-price-wrapper {
-        justify-content: flex-start;
-    }
-    .quiz-result-buttons {
-        flex-direction: column;
-    }
-    .quiz-btn-select, .quiz-btn-cart, .quiz-btn-help {
-        width: 100%;
-    }
-}
 .quiz-option {
     touch-action: manipulation;
     -webkit-tap-highlight-color: rgba(0,0,0,0.05);
@@ -485,11 +397,4 @@
     min-width: 120px;
     padding: 12px 20px;
     font-size: 1rem;
-}
-@media (max-width: 480px) {
-    .quiz-nav button {
-        flex: 1;
-        padding: 10px 16px;
-        font-size: 0.9rem;
-    }
 }

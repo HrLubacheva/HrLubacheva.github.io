@@ -1,12 +1,14 @@
 /* ==================================================================
-   05_stats_benefits.css – статистика и преимущества (уменьшенная высота, улучшенный вид)
+   05_stats_benefits.css – статистика и преимущества (адаптивная версия)
    ================================================================== */
+
 /* ========== СТАТИСТИКА ========== */
 .stats-grid {
     display: grid;
     gap: 30px;
     margin: 40px 0;
 }
+
 @media (min-width: 576px) and (max-width: 991px) {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -25,28 +27,13 @@
         gap: 12px;
         margin: 30px 0;
     }
-    .card-stat {
-        padding: 16px 8px;
-    }
-    .stat-number {
-        font-size: 1.4rem;
-    }
-    .stat-plus {
-        font-size: 1.1rem;
-    }
-    .stat-label {
-        font-size: 0.7rem;
-    }
-    .stat-number-wrapper {
-        gap: 2px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
 }
+
 .card-stat {
     text-align: center;
     padding: 28px 20px;
 }
+
 .stat-number-wrapper {
     display: flex;
     align-items: baseline;
@@ -54,34 +41,29 @@
     gap: 4px;
     margin-bottom: 12px;
     white-space: nowrap;
-    flex-wrap: nowrap;
 }
+
 .stat-number {
-    font-size: 2.8rem;
+    font-size: clamp(1.3rem, 8vw, 2.8rem);
     font-weight: 800;
     color: var(--primary);
     line-height: 1.2;
 }
+
 .stat-plus {
-    font-size: 2rem;
+    font-size: clamp(1rem, 6vw, 2rem);
     font-weight: 700;
     color: var(--primary);
     line-height: 1.2;
 }
+
 .stat-label {
     font-size: 1rem;
     color: var(--text-muted);
     font-weight: 500;
 }
-@media (max-width: 360px) {
-    .stat-number-wrapper {
-        white-space: normal;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-}
 
-/* ========== ПРЕИМУЩЕСТВА – СТРОГО 2 КОЛОНКИ 50% НА 50% ========== */
+/* ========== ПРЕИМУЩЕСТВА – ДВЕ КОЛОНКИ НА ДЕСКТОПЕ, ОДНА НА МОБИЛЬНЫХ ========== */
 .benefits-two-columns {
     display: flex;
     flex-wrap: wrap;
@@ -109,6 +91,7 @@
         width: 100%;
     }
 }
+
 .benefits-column {
     position: relative;
     padding: 8px 0;
@@ -142,9 +125,9 @@
     text-align: center;
     margin-bottom: 28px;
     padding: 18px 16px;
-    background: linear-gradient(135deg, rgba(45, 106, 159, 0.25), rgba(74, 139, 194, 0.12));
+    background: linear-gradient(135deg, rgba(45,106,159,0.25), rgba(74,139,194,0.12));
     border-radius: 28px;
-    border: 1px solid rgba(45, 106, 159, 0.4);
+    border: 1px solid rgba(45,106,159,0.4);
     backdrop-filter: blur(4px);
     transition: all 0.3s ease;
     display: flex;
@@ -155,9 +138,9 @@
 }
 .benefits-column-header:hover {
     transform: translateY(-2px);
-    border-color: rgba(45, 106, 159, 0.7);
-    background: linear-gradient(135deg, rgba(45, 106, 159, 0.35), rgba(74, 139, 194, 0.2));
-    box-shadow: 0 10px 20px rgba(45, 106, 159, 0.15);
+    border-color: rgba(45,106,159,0.7);
+    background: linear-gradient(135deg, rgba(45,106,159,0.35), rgba(74,139,194,0.2));
+    box-shadow: 0 10px 20px rgba(45,106,159,0.15);
 }
 .benefits-column-icon {
     font-size: 2.5rem;
@@ -187,6 +170,7 @@
     flex-direction: column;
     gap: 18px;
 }
+
 .benefit-card {
     background: white;
     border-radius: 24px;
@@ -203,15 +187,8 @@
     width: 100%;
     box-sizing: border-box;
     hyphens: auto;
-    word-break: normal;
-    overflow-wrap: break-word;
+    word-break: break-word;
     min-height: 180px;
-}
-@media (max-width: 991px) {
-    .benefit-card {
-        min-height: auto;
-        padding: 16px 14px;
-    }
 }
 .benefit-card::before {
     content: '';
@@ -239,7 +216,7 @@
 }
 .benefit-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 15px 25px rgba(0,0,0,0.1);
 }
 .benefit-card:hover::after {
     content: '';
@@ -274,6 +251,41 @@
     color: var(--primary);
 }
 
+.benefits-two-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 60px;
+}
+@media (min-width: 992px) {
+    .benefits-two-columns {
+        gap: 60px;
+    }
+    .benefits-column {
+        flex: 0 0 calc(50% - 30px);
+        max-width: calc(50% - 30px);
+        min-width: 0;
+        width: auto;
+    }
+}
+
+/* === Базовый блок преимуществ === */
+.benefits-two-columns {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 60px;
+    margin: 40px 0;
+}
+
+/* На широких экранах (от 992px) — 2 колонки */
+@media (min-width: 992px) {
+    .benefits-column {
+        flex: 0 0 calc(50% - 30px); /* Ширина 50% минус половина gap */
+        max-width: calc(50% - 30px);
+        min-width: 0; /* Чтобы контент не вылезал */
+    }
+}
+
+/* На планшетах и телефонах (до 991px) — 1 колонка */
 @media (max-width: 991px) {
     .benefits-two-columns {
         flex-direction: column;
@@ -281,108 +293,50 @@
     }
     .benefits-column {
         width: 100%;
-        min-width: auto;
         max-width: 100%;
-        flex: 1 1 100%;
-    }
-    .benefits-column:first-child::before,
-    .benefits-column:last-child::after {
-        display: none;
-    }
-    .benefits-column-header {
-        min-height: auto;
-        padding: 18px 14px;
-        margin-bottom: 24px;
-    }
-    .benefits-column-title {
-        font-size: 1.3rem;
-    }
-    .benefits-column-icon {
-        font-size: 2rem;
-    }
-    .benefits-stack {
-        gap: 16px;
-    }
-    .benefit-card {
-        min-height: auto;
-        padding: 14px 14px;
-    }
-    .benefit-card h4 {
-        font-size: 1.1rem;
-        margin-bottom: 8px;
-    }
-    .benefit-card p {
-        font-size: 0.85rem;
-        line-height: 1.4;
-    }
-    .benefit-card h4::after {
-        width: 30px;
-        margin: 8px auto 0;
-    }
-}
-@media (max-width: 480px) {
-    .benefit-card {
-        padding: 12px 12px;
-    }
-    .benefit-card h4 {
-        font-size: 1rem;
-    }
-    .benefit-card p {
-        font-size: 0.8rem;
-    }
-    .benefits-column-title {
-        font-size: 1.2rem;
-    }
-}
-@media (max-width: 360px) {
-    .benefit-card {
-        padding: 10px 10px;
-    }
-    .benefit-card h4 {
-        font-size: 0.95rem;
-    }
-    .benefit-card p {
-        font-size: 0.75rem;
-        line-height: 1.35;
     }
 }
 
-@media (max-width: 640px) {
-    .stats-grid {
-        gap: 16px;
-        margin: 20px 0;
+/* Выравнивание правой колонки по высоте левой */
+@media (min-width: 992px) {
+    .benefits-two-columns {
+        align-items: stretch !important;  /* растягиваем дочерние элементы */
     }
-    .card-stat {
-        padding: 16px 8px;
+    .benefits-column {
+        display: flex;
+        flex-direction: column;
     }
-    .stat-number {
-        font-size: 1.8rem;
-    }
-    .stat-plus {
-        font-size: 1.4rem;
-    }
-    .stat-label {
-        font-size: 0.75rem;
-    }
-    .stat-number-wrapper {
-        gap: 2px;
-        margin-bottom: 6px;
+    .benefits-stack {
+        flex: 1;  /* заставляет стек внутри колонки растягиваться */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; /* опционально, равномерное распределение */
     }
 }
-@media (max-width: 480px) {
-    .stats-grid {
-        gap: 12px;
+
+/* ==================================================================
+   15_benefits-width-fix.css – фиксирует ширину колонок (50% на 50%) на ПК
+   ИСПРАВЛЕНО: выравнивание высоты правой колонки по левой
+   ================================================================== */
+@media (min-width: 992px) {
+    .benefits-two-columns {
+        display: flex !important;
+        flex-wrap: wrap;
+        gap: 60px;
+        align-items: stretch !important;   /* ← главное изменение: вместо flex-start */
     }
-    .card-stat {
-        padding: 12px 6px;
+    .benefits-column {
+        flex: 0 0 calc(50% - 30px) !important;
+        max-width: calc(50% - 30px) !important;
+        width: auto !important;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
     }
-    .stat-number {
-        font-size: 1.4rem;
-    }
-    .stat-plus {
-        font-size: 1.1rem;
-    }
-    .stat-label {
-        font-size: 0.65rem;
+    .benefits-stack {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
     }
 }
