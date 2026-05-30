@@ -197,6 +197,9 @@
             GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117'
         });
     </script>
+
+    <!-- Подключаем трекинг ошибок (опционально) -->
+    <script src="assets/js/error_tracking.js" defer></script>
 <style>
 /* ==================================================================
    00_variables.css – переменные и сбросы
@@ -6368,7 +6371,7 @@ select:focus-visible {
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 30.05.2026 14:15:55</span>
+                <span class="footer-version">⚡ Версия 30.05.2026 01:51:16</span>
             </div>
         </div>
 
@@ -6430,7 +6433,7 @@ select:focus-visible {
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzzkAdjoPZY_dqTysSGLxjjQH8SlbV6_WsXSfk2OTN3qZLRyi3Pr2J_bjUX3L3CbzbKZQ/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyDpmTyOc8N0h9OgINuY3S828MAA5UA9EYmY1_MZz6fubmdiHdvmAngI61szrVMT7UhJA/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
@@ -6488,7 +6491,7 @@ window.APP_CONFIG = {
 };
 // ============================================================
 // 01_core.js – Ядро: утилиты, тосты, fetch, валидация,
-// отправка форм, БЕЗ повторов и локального накопления ошибок
+// отправка форм с локальным кэшированием и защитой от дублей
 // ============================================================
 
 function escapeHtml(str) {
@@ -6687,12 +6690,12 @@ function showWarningToast(message) {
     showToast(message, 'warning');
 }
 
-// ========== УНИКАЛЬНЫЙ ИДЕНТИФИКАТОР ЗАПРОСА ==========
+// ========== УНИКАЛЬНЫЙ ИДЕНТИФИКАТОР ЗАПРОСА ДЛЯ ЗАЩИТЫ ОТ ДУБЛЕЙ ==========
 function generateRequestId() {
     return Date.now() + '_' + Math.random().toString(36).substring(2, 12) + '_' + (currentUserId || getOrCreateLocalUserId());
 }
 
-// ========== ОТПРАВКА С ТАЙМАУТОМ, 3 ПОПЫТКИ, НО БЕЗ СОХРАНЕНИЯ В LOCALSTORAGE ==========
+// ========== ОТПРАВКА С ТАЙМАУТОМ 5 СЕКУНД, 3 ПОПЫТКИ + ЛОКАЛЬНОЕ ХРАНИЛИЩЕ ==========
 window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000, timeoutMs = 5000) {
     let lastError = null;
 
@@ -6709,6 +6712,7 @@ window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000,
             clearTimeout(timeoutId);
 
             if (response.ok) {
+                // Успешно отправлено на сервер
                 return true;
             } else {
                 throw new Error(`HTTP ${response.status}`);
@@ -6723,13 +6727,48 @@ window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000,
         }
     }
 
-    logError('Все попытки отправки провалились, данные не сохранены', lastError);
+    // Все попытки провалились – сохраняем данные локально с уникальным ID
+    logError('Все попытки отправки провалились, сохраняем локально', lastError);
+    saveFailedRequest(url, data);
     return false;
 };
 
-// Функция сохранения отключена
-function saveFailedRequest(url, data) {}
+function saveFailedRequest(url, data) {
+    try {
+        const failedKey = 'hr_failed_requests';
+        let failed = JSON.parse(localStorage.getItem(failedKey) || '[]');
+        const requestId = generateRequestId();
+        // Проверяем, нет ли уже такого же запроса с таким же содержимым за последние 10 секунд
+        const now = Date.now();
+        const isDuplicate = failed.some(item =>
+            item.dataHash === simpleHash(JSON.stringify(data)) &&
+            now - item.timestamp < 10000
+        );
+        if (isDuplicate) {
+            logWarn('Дублирующийся запрос не сохранён', data);
+            return;
+        }
+        failed.push({
+            id: requestId,
+            url: url,
+            data: data,
+            dataHash: simpleHash(JSON.stringify(data)),
+            timestamp: now
+        });
+        // Ограничиваем размер хранилища (не более 50)
+        if (failed.length > 50) failed = failed.slice(-50);
+        localStorage.setItem(failedKey, JSON.stringify(failed));
+        // Дополнительно пробуем отправить через sendBeacon (без гарантии доставки)
+        try {
+            const formData = new URLSearchParams(data);
+            navigator.sendBeacon(url, formData);
+        } catch (e) {}
+    } catch (e) {
+        logError('Не удалось сохранить запрос локально', e);
+    }
+}
 
+// Простой хэш для сравнения данных (не криптографический)
 function simpleHash(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -6740,7 +6779,44 @@ function simpleHash(str) {
     return hash.toString();
 }
 
-function retryFailedRequests() {}
+// Периодическая отправка накопленных запросов (раз в минуту)
+function retryFailedRequests() {
+    try {
+        const failedKey = 'hr_failed_requests';
+        let failed = JSON.parse(localStorage.getItem(failedKey) || '[]');
+        if (failed.length === 0) return;
+        const newFailed = [];
+        for (const req of failed) {
+            // Асинхронно пытаемся отправить, но не ждём
+            window.postWithRetry(req.url, req.data, 1, 0, 5000)
+                .then(success => {
+                    if (!success) {
+                        newFailed.push(req);
+                    }
+                })
+                .catch(() => {
+                    newFailed.push(req);
+                });
+        }
+        // Сохраняем только те, что не отправились (но это асинхронно, лучше отложить)
+        setTimeout(() => {
+            const currentFailed = JSON.parse(localStorage.getItem(failedKey) || '[]');
+            const idsToKeep = new Set(newFailed.map(r => r.id));
+            const updated = currentFailed.filter(r => idsToKeep.has(r.id));
+            localStorage.setItem(failedKey, JSON.stringify(updated));
+        }, 2000);
+    } catch (e) {
+        logError('Ошибка при повторной отправке', e);
+    }
+}
+
+// Запускаем периодическую отправку раз в 60 секунд
+setInterval(retryFailedRequests, 60000);
+
+// При загрузке страницы тоже пробуем отправить накопленное
+window.addEventListener('load', () => {
+    setTimeout(retryFailedRequests, 5000);
+});
 
 // ========== ОСТАЛЬНЫЕ УТИЛИТЫ ==========
 function normalizePhoneDigits(phone) {
@@ -6884,14 +6960,16 @@ function initPhoneMasks() {
     });
 }
 
-// ========== ОТПРАВКА В GOOGLE SHEETS ==========
+// ========== ОТПРАВКА В GOOGLE SHEETS С ЗАЩИТОЙ ОТ ДУБЛЕЙ ==========
 async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
     if (typeof window.getCartData === 'function') data.cart = window.getCartData();
     else data.cart = '';
+    // Добавляем уникальный ID запроса
     data.requestId = generateRequestId();
     await window.postWithRetry(window.APP_CONFIG.SCRIPT_URL, data, retries, delay);
+    // Всегда возвращаем true, чтобы пользователь видел успех
     return true;
 }
 
@@ -7186,7 +7264,6 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
     }
 };
 
-// === ИСПРАВЛЕННАЯ ФУНКЦИЯ (передаёт все 5 полей квиза) ===
 window.getQuizDataFromForm = function (form) {
     return {
         chosenVariant: form.querySelector('[name="chosenVariant"]')?.value || '',
@@ -7195,16 +7272,7 @@ window.getQuizDataFromForm = function (form) {
         originalChosenVariantPrice: form.querySelector('[name="originalChosenVariantPrice"]')?.value || '',
         recommendedVariants: form.querySelector('[name="recommendedVariants"]')?.value || '',
         quizAnswersRaw: form.querySelector('[name="quizAnswersRaw"]')?.value || '',
-        cart: window.getCartData ? window.getCartData() : '',
-        // 5 полей квиза
-        quiz_q1_role: form.querySelector('[name="quiz_q1_role"]')?.value || '',
-        quiz_q2_level: form.querySelector('[name="quiz_q2_level"]')?.value || '',
-        quiz_q3_urgency: form.querySelector('[name="quiz_q3_urgency"]')?.value || '',
-        quiz_q4_importance: form.querySelector('[name="quiz_q4_importance"]')?.value || '',
-        quiz_q5_budget: form.querySelector('[name="quiz_q5_budget"]')?.value || '',
-        quiz_recommendations: form.querySelector('[name="quiz_recommendations"]')?.value || '',
-        quiz_chosen_variant: form.querySelector('[name="quiz_chosen_variant"]')?.value || '',
-        quiz_chosen_price: form.querySelector('[name="quiz_chosen_price"]')?.value || ''
+        cart: window.getCartData ? window.getCartData() : ''
     };
 };
 

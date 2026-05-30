@@ -1,5 +1,6 @@
 // ============================================================
-// 01_core.js – Ядро с увеличенным таймаутом и передачей IP
+// 01_core.js – Ядро: утилиты, тосты, fetch, валидация,
+// отправка форм с локальным кэшированием и защитой от дублей
 // ============================================================
 
 function escapeHtml(str) {
@@ -21,12 +22,15 @@ let originalConsoleLog = null;
 function log(...args) {
     if (IS_DEV) console.log(...args);
 }
+
 function logError(...args) {
     console.error(...args);
 }
+
 function logWarn(...args) {
     if (IS_DEV) console.warn(...args);
 }
+
 window.IS_DEV = IS_DEV;
 
 window.enableLogs = function () {
@@ -59,6 +63,7 @@ function getOrCreateLocalUserId() {
 }
 
 let currentUserId = null;
+
 async function initUserId() {
     currentUserId = getOrCreateLocalUserId();
     return currentUserId;
@@ -66,7 +71,7 @@ async function initUserId() {
 
 async function fetchWithRetry(url, options = {}, retries = null, timeout = null) {
     const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
-    const timeoutMs = timeout !== null ? timeout : 20000;
+    const timeoutMs = timeout !== null ? timeout : (window.APP_CONFIG?.CONSTANTS?.FETCH_TIMEOUT || 10000);
     const baseDelay = window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000;
     const maxDelay = window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_MAX || 5000;
     let lastError = null;
@@ -89,8 +94,120 @@ async function fetchWithRetry(url, options = {}, retries = null, timeout = null)
     throw lastError;
 }
 
-window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000, timeoutMs = 20000) {
+async function fetchTextWithRetry(url, retries = 3, timeout = 10000) {
+    const response = await fetchWithRetry(url, {}, retries, timeout);
+    return response.text();
+}
+
+async function loadWithCache(cacheKey, fetchFn, ttl = null) {
+    const cacheTtl = ttl !== null ? ttl : (window.APP_CONFIG?.CONSTANTS?.CACHE_TTL || 10 * 60 * 1000);
+    try {
+        const cached = localStorage.getItem(cacheKey);
+        if (cached) {
+            try {
+                const {data, timestamp} = JSON.parse(cached);
+                if (Date.now() - timestamp < cacheTtl) return data;
+            } catch (e) {
+                if (IS_DEV) console.warn(e);
+            }
+        }
+    } catch (e) {}
+    const data = await fetchFn();
+    try {
+        localStorage.setItem(cacheKey, JSON.stringify({data, timestamp: Date.now()}));
+    } catch (e) {}
+    return data;
+}
+
+let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
+
+function showLoading(message = 'Загрузка...') {
+    if (isLoadingActive) return;
+    isLoadingActive = true;
+    if (!loadingStylesAdded) {
+        const style = document.createElement('style');
+        style.textContent = `
+            .loading-indicator {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(0,0,0,0.85);
+                backdrop-filter: blur(8px);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 40px;
+                font-size: 14px;
+                z-index: 10001;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            }
+            .loading-spinner {
+                width: 20px;
+                height: 20px;
+                border: 2px solid rgba(255,255,255,0.3);
+                border-top-color: white;
+                border-radius: 50%;
+                animation: loading-spin 0.8s linear infinite;
+            }
+            @keyframes loading-spin { to { transform: rotate(360deg); } }
+        `;
+        document.head.appendChild(style);
+        loadingStylesAdded = true;
+    }
+    loadingIndicator = document.createElement('div');
+    loadingIndicator.className = 'loading-indicator';
+    loadingIndicator.innerHTML = `<div class="loading-spinner"></div><div class="loading-text">${escapeHtml(message)}</div>`;
+    document.body.appendChild(loadingIndicator);
+}
+
+function hideLoading() {
+    if (!isLoadingActive) return;
+    isLoadingActive = false;
+    if (loadingIndicator) loadingIndicator.remove();
+}
+
+function showToast(message, type = 'error') {
+    const existingToast = document.querySelector('.custom-toast');
+    if (existingToast) existingToast.remove();
+    const toast = document.createElement('div');
+    toast.className = `custom-toast custom-toast-${type}`;
+    let icon = '⚠️';
+    if (type === 'success') icon = '✅';
+    if (type === 'warning') icon = '🔔';
+    if (type === 'error') icon = '❌';
+    toast.innerHTML = `${icon} ${escapeHtml(message)}`;
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000);
+}
+
+function showErrorToast(message) {
+    showToast(message, 'error');
+}
+
+function showSuccessToast(message) {
+    showToast(message, 'success');
+}
+
+function showWarningToast(message) {
+    showToast(message, 'warning');
+}
+
+// ========== УНИКАЛЬНЫЙ ИДЕНТИФИКАТОР ЗАПРОСА ДЛЯ ЗАЩИТЫ ОТ ДУБЛЕЙ ==========
+function generateRequestId() {
+    return Date.now() + '_' + Math.random().toString(36).substring(2, 12) + '_' + (currentUserId || getOrCreateLocalUserId());
+}
+
+// ========== ОТПРАВКА С ТАЙМАУТОМ 5 СЕКУНД, 3 ПОПЫТКИ + ЛОКАЛЬНОЕ ХРАНИЛИЩЕ ==========
+window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000, timeoutMs = 5000) {
     let lastError = null;
+
     for (let attempt = 1; attempt <= retries; attempt++) {
         try {
             const controller = new AbortController();
@@ -98,12 +215,17 @@ window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000,
             const response = await fetch(url, {
                 method: 'POST',
                 body: new URLSearchParams(data),
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 signal: controller.signal
             });
             clearTimeout(timeoutId);
-            if (response.ok) return true;
-            throw new Error(`HTTP ${response.status}`);
+
+            if (response.ok) {
+                // Успешно отправлено на сервер
+                return true;
+            } else {
+                throw new Error(`HTTP ${response.status}`);
+            }
         } catch (err) {
             lastError = err;
             logError(`Попытка ${attempt} не удалась:`, err);
@@ -113,14 +235,99 @@ window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000,
             }
         }
     }
-    logError('Все попытки отправки провалились', lastError);
+
+    // Все попытки провалились – сохраняем данные локально с уникальным ID
+    logError('Все попытки отправки провалились, сохраняем локально', lastError);
+    saveFailedRequest(url, data);
     return false;
 };
 
-function saveFailedRequest(url, data) {}
-function simpleHash(str) { let hash = 0; for (let i = 0; i < str.length; i++) { const char = str.charCodeAt(i); hash = ((hash << 5) - hash) + char; hash |= 0; } return hash.toString(); }
-function retryFailedRequests() {}
+function saveFailedRequest(url, data) {
+    try {
+        const failedKey = 'hr_failed_requests';
+        let failed = JSON.parse(localStorage.getItem(failedKey) || '[]');
+        const requestId = generateRequestId();
+        // Проверяем, нет ли уже такого же запроса с таким же содержимым за последние 10 секунд
+        const now = Date.now();
+        const isDuplicate = failed.some(item =>
+            item.dataHash === simpleHash(JSON.stringify(data)) &&
+            now - item.timestamp < 10000
+        );
+        if (isDuplicate) {
+            logWarn('Дублирующийся запрос не сохранён', data);
+            return;
+        }
+        failed.push({
+            id: requestId,
+            url: url,
+            data: data,
+            dataHash: simpleHash(JSON.stringify(data)),
+            timestamp: now
+        });
+        // Ограничиваем размер хранилища (не более 50)
+        if (failed.length > 50) failed = failed.slice(-50);
+        localStorage.setItem(failedKey, JSON.stringify(failed));
+        // Дополнительно пробуем отправить через sendBeacon (без гарантии доставки)
+        try {
+            const formData = new URLSearchParams(data);
+            navigator.sendBeacon(url, formData);
+        } catch (e) {}
+    } catch (e) {
+        logError('Не удалось сохранить запрос локально', e);
+    }
+}
 
+// Простой хэш для сравнения данных (не криптографический)
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash |= 0;
+    }
+    return hash.toString();
+}
+
+// Периодическая отправка накопленных запросов (раз в минуту)
+function retryFailedRequests() {
+    try {
+        const failedKey = 'hr_failed_requests';
+        let failed = JSON.parse(localStorage.getItem(failedKey) || '[]');
+        if (failed.length === 0) return;
+        const newFailed = [];
+        for (const req of failed) {
+            // Асинхронно пытаемся отправить, но не ждём
+            window.postWithRetry(req.url, req.data, 1, 0, 5000)
+                .then(success => {
+                    if (!success) {
+                        newFailed.push(req);
+                    }
+                })
+                .catch(() => {
+                    newFailed.push(req);
+                });
+        }
+        // Сохраняем только те, что не отправились (но это асинхронно, лучше отложить)
+        setTimeout(() => {
+            const currentFailed = JSON.parse(localStorage.getItem(failedKey) || '[]');
+            const idsToKeep = new Set(newFailed.map(r => r.id));
+            const updated = currentFailed.filter(r => idsToKeep.has(r.id));
+            localStorage.setItem(failedKey, JSON.stringify(updated));
+        }, 2000);
+    } catch (e) {
+        logError('Ошибка при повторной отправке', e);
+    }
+}
+
+// Запускаем периодическую отправку раз в 60 секунд
+setInterval(retryFailedRequests, 60000);
+
+// При загрузке страницы тоже пробуем отправить накопленное
+window.addEventListener('load', () => {
+    setTimeout(retryFailedRequests, 5000);
+});
+
+// ========== ОСТАЛЬНЫЕ УТИЛИТЫ ==========
 function normalizePhoneDigits(phone) {
     let digits = phone.replace(/\D/g, '');
     if (digits.length === 0) return '';
@@ -262,13 +469,16 @@ function initPhoneMasks() {
     });
 }
 
+// ========== ОТПРАВКА В GOOGLE SHEETS С ЗАЩИТОЙ ОТ ДУБЛЕЙ ==========
 async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
     if (typeof window.getCartData === 'function') data.cart = window.getCartData();
     else data.cart = '';
+    // Добавляем уникальный ID запроса
     data.requestId = generateRequestId();
     await window.postWithRetry(window.APP_CONFIG.SCRIPT_URL, data, retries, delay);
+    // Всегда возвращаем true, чтобы пользователь видел успех
     return true;
 }
 
@@ -299,6 +509,7 @@ function formatPhoneNumber(input) {
 }
 
 window.sessionStartTime = Date.now();
+
 function getTimeOnSite() {
     if (!window.sessionStartTime) return '-';
     const seconds = Math.floor((Date.now() - window.sessionStartTime) / 1000);
@@ -307,6 +518,7 @@ function getTimeOnSite() {
     const secs = seconds % 60;
     return `${minutes} мин ${secs} сек`;
 }
+
 window.getTimeOnSite = getTimeOnSite;
 
 function getVisitStats() {
@@ -323,20 +535,27 @@ function getVisitStats() {
                 visits = JSON.parse(stored);
                 const monthAgo = now.getTime() - oneMonth;
                 visits = visits.filter(v => v > monthAgo);
-            } catch (e) {}
+            } catch (e) {
+                if (IS_DEV) console.warn(e);
+                visits = [];
+            }
         }
-    } catch(e) {}
+    } catch (e) {}
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
     if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
-    try { localStorage.setItem(visitsKey, JSON.stringify(visits)); } catch(e) {}
+    try {
+        localStorage.setItem(visitsKey, JSON.stringify(visits));
+    } catch (e) {}
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
     return {week: visits.filter(v => v > weekAgo).length, month: visits.filter(v => v > monthAgo).length, total: visits.length};
 }
+
 function getVisitStatsText() {
     const stats = getVisitStats();
     return `📊 Визиты: ${stats.week} за неделю, ${stats.month} за месяц`;
 }
+
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
 
@@ -350,11 +569,14 @@ function getUTMParams() {
         term: urlParams.get('utm_term') || '-'
     };
 }
+
 window.getUTMParams = getUTMParams;
+
 function getUTMText() {
     const u = getUTMParams();
     return `📊 UTM: source=${u.source}, medium=${u.medium}, campaign=${u.campaign}, content=${u.content}, term=${u.term}`;
 }
+
 window.getUTMText = getUTMText;
 
 function getDeviceInfo() {
@@ -378,11 +600,14 @@ function getDeviceInfo() {
     else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
     return {device, browser, os};
 }
+
 window.getDeviceInfo = getDeviceInfo;
+
 function getDeviceText() {
     const d = getDeviceInfo();
     return `📱 Устройство: ${d.device}, браузер: ${d.browser}, ОС: ${d.os}`;
 }
+
 window.getDeviceText = getDeviceText;
 
 function getPageInfo() {
@@ -392,11 +617,14 @@ function getPageInfo() {
         fullUrl: window.location.href
     };
 }
+
 window.getPageInfo = getPageInfo;
+
 function getPageText() {
     const p = getPageInfo();
     return `📄 Страница: ${p.page}\n🔗 Referrer: ${p.referrer || '-'}`;
 }
+
 window.getPageText = getPageText;
 
 async function getGeoData() {
@@ -409,9 +637,9 @@ async function getGeoData() {
             try {
                 cached = JSON.parse(raw);
                 if (cached && typeof cached === 'object') return cached;
-            } catch(e) {}
+            } catch (e) {}
         }
-    } catch(e) {}
+    } catch (e) {}
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Ошибка геолокации');
@@ -423,16 +651,20 @@ async function getGeoData() {
             country: data.country_name || '-',
             geoText: `${data.city || ''} ${data.region || ''} ${data.country_name || ''} (${data.ip || ''})`.trim().replace(/  +/g, ' ') || '-'
         };
-        try { localStorage.setItem(geoKey, JSON.stringify(result)); } catch(e) {}
+        try {
+            localStorage.setItem(geoKey, JSON.stringify(result));
+        } catch (e) {}
         return result;
-    } catch(e) {
+    } catch (e) {
         if (IS_DEV) console.warn(e);
         return {ip: '-', city: '-', region: '-', country: '-', geoText: '-'};
     }
 }
+
 window.getGeoData = getGeoData;
 
 window._actionLocks = window._actionLocks || {};
+
 window.isActionLocked = function(actionKey, durationMs = 60000) {
     const lockedUntil = window._actionLocks[actionKey];
     if (lockedUntil && Date.now() < lockedUntil) {
@@ -442,6 +674,7 @@ window.isActionLocked = function(actionKey, durationMs = 60000) {
     }
     return false;
 };
+
 window.lockAction = function(actionKey, durationMs = 60000) {
     window._actionLocks[actionKey] = Date.now() + durationMs;
     setTimeout(() => {
@@ -451,7 +684,6 @@ window.lockAction = function(actionKey, durationMs = 60000) {
     }, durationMs + 1000);
 };
 
-// ========== ГЛАВНАЯ ФУНКЦИЯ ОТПРАВКИ (с IP) ==========
 window.submitForm = async function (formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
     if (!form) return false;
@@ -466,6 +698,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
 
     try {
         form._isSubmitting = true;
+
         if (submitBtn) {
             submitBtn.disabled = true;
             submitBtn.classList.add('loading');
@@ -482,10 +715,12 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
         if (getAdditionalData) additional = await getAdditionalData(form);
 
         if (phone) phone = normalizePhoneDigits(phone);
+
         if (!phone && formType !== 'Запрос материалов') {
             showErrorToast('Введите номер телефона');
             throw new Error('Телефон обязателен');
         }
+
         const maxDigits = window.APP_CONFIG?.CONSTANTS?.MAX_PHONE_DIGITS || 11;
         if (phone && phone.length !== maxDigits) {
             showErrorToast('Некорректный номер телефона. Введите 11 цифр.');
@@ -508,7 +743,6 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             page: window.getPageText(),
             geo: geo.geoText,
             userId: window.getOrCreateLocalUserId(),
-            ip: geo.ip,           // ← передаём реальный IP пользователя
             ...additional
         };
 
@@ -547,15 +781,7 @@ window.getQuizDataFromForm = function (form) {
         originalChosenVariantPrice: form.querySelector('[name="originalChosenVariantPrice"]')?.value || '',
         recommendedVariants: form.querySelector('[name="recommendedVariants"]')?.value || '',
         quizAnswersRaw: form.querySelector('[name="quizAnswersRaw"]')?.value || '',
-        cart: window.getCartData ? window.getCartData() : '',
-        quiz_q1_role: form.querySelector('[name="quiz_q1_role"]')?.value || '',
-        quiz_q2_level: form.querySelector('[name="quiz_q2_level"]')?.value || '',
-        quiz_q3_urgency: form.querySelector('[name="quiz_q3_urgency"]')?.value || '',
-        quiz_q4_importance: form.querySelector('[name="quiz_q4_importance"]')?.value || '',
-        quiz_q5_budget: form.querySelector('[name="quiz_q5_budget"]')?.value || '',
-        quiz_recommendations: form.querySelector('[name="quiz_recommendations"]')?.value || '',
-        quiz_chosen_variant: form.querySelector('[name="quiz_chosen_variant"]')?.value || '',
-        quiz_chosen_price: form.querySelector('[name="quiz_chosen_price"]')?.value || ''
+        cart: window.getCartData ? window.getCartData() : ''
     };
 };
 
@@ -571,7 +797,8 @@ function initShareButtons() {
                 const text = getSiteShareText();
                 navigator.clipboard.writeText(text).then(() => {
                     window.showSuccessToast('✅ Ссылка на сайт скопирована');
-                }).catch(() => {
+                })
+                .catch(() => {
                     window.showErrorToast('❌ Не удалось скопировать');
                 });
             };
@@ -581,6 +808,7 @@ function initShareButtons() {
 }
 
 window.initLogs = [];
+
 let currentLogLevel = window.APP_CONFIG?.CONSTANTS?.LOG_LEVEL || 0;
 if (window.location.search.includes('debug=1') || localStorage.getItem('hr_debug_mode') === 'true') {
     currentLogLevel = Math.max(currentLogLevel, 5);
@@ -665,7 +893,3 @@ window.initShareButtons = initShareButtons;
 window.applyPhoneMask = applyPhoneMask;
 window.initPhoneMasks = initPhoneMasks;
 window.logInit = logInit;
-
-function generateRequestId() {
-    return Date.now() + '_' + Math.random().toString(36).substring(2, 12) + '_' + (currentUserId || getOrCreateLocalUserId());
-}
