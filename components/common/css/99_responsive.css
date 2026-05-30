@@ -1,7 +1,5 @@
 /* ==================================================================
    99_responsive.css – глобальные адаптивные правки (мобильная версия)
-   Блок "Почему выбирают меня" на десктопе не трогаем – ширину и высоту
-   выравниваем отдельными файлами.
    ================================================================== */
 
 /* Глобальные сбросы для всех экранов (не только мобильных) */
@@ -435,8 +433,9 @@
     height: 100%;
 }
 
-
-/* === Принудительное выравнивание колонок преимуществ === */
+/* ==================================================================
+   ФИНАЛЬНОЕ ВЫРАВНИВАНИЕ КОЛОНОК (БЕЗ РАСТЯЖЕНИЯ КАРТОЧЕК) + ХАРДКОД СТРОК
+   ================================================================== */
 @media (min-width: 992px) {
     .benefits-two-columns {
         display: flex !important;
@@ -446,17 +445,28 @@
     .benefits-column {
         display: flex !important;
         flex-direction: column !important;
-        flex: 1 !important;               /* чтобы обе колонки были одинаковой ширины */
-        min-width: 0;
+        /* ширина уже задана в 15_benefits-width-fix.css, не переопределяем здесь */
     }
     .benefits-stack {
-        flex: 1 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start;
+        display: block !important;
     }
-    /* Если вы хотите, чтобы карточки не растягивались по высоте, а только фон колонки */
-    .benefit-card {
-        height: auto !important;
+    .benefit-card h4 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 2.6em;
+        line-height: 1.3;
+        margin-bottom: 10px;
+    }
+    .benefit-card p {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        height: 4.2em;
+        line-height: 1.4;
     }
 }

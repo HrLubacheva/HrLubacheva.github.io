@@ -1,17 +1,14 @@
 /* ==================================================================
-   15_benefits-width-fix.css – фиксирует ширину колонок (50% на 50%) на ПК
+   15_benefits-width-fix.css – ТОЛЬКО ШИРИНА КОЛОНОК (без выравнивания высоты)
    ================================================================== */
 @media (min-width: 992px) {
     .benefits-two-columns {
-        display: flex !important;
-        flex-wrap: wrap;
         gap: 60px;
-        align-items: flex-start; /* высоту будет выравнивать JS */
     }
     .benefits-column {
-        flex: 0 0 calc(50% - 30px) !important;
-        max-width: calc(50% - 30px) !important;
-        width: auto !important;
+        flex: 0 0 calc(50% - 30px);
+        max-width: calc(50% - 30px);
+        width: auto;
         min-width: 0;
     }
 }
