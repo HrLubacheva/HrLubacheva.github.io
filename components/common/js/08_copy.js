@@ -1,6 +1,3 @@
-// ============================================================
-// 08_copy.js – Копирование телефона и никнейма в буфер
-// ============================================================
 function initCopyButtons() {
     logInit('initCopyButtons started', 'INFO', '', 3);
     document.querySelectorAll('.copyable-phone, .copyable-text').forEach(el => {

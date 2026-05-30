@@ -1,6 +1,3 @@
-// ============================================================
-// 07_navigation.js – Бургер-меню для мобильных устройств
-// ============================================================
 function initBurgerMenu() {
     logInit('initBurgerMenu started', 'INFO', '', 3);
     const burger = document.getElementById('burgerMenu');
@@ -50,6 +47,5 @@ function initBurgerMenu() {
 
 function initNavigation() { initBurgerMenu(); }
 
-// Единая точка экспорта (глобальные функции)
 window.initBurgerMenu = initBurgerMenu;
 window.initNavigation = initNavigation;

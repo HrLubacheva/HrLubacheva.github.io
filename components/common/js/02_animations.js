@@ -7,7 +7,6 @@ function initAnimations() {
         return;
     }
 
-    // Убедимся, что изначально класс visible не стоит
     elements.forEach(el => el.classList.remove('visible'));
 
     const observer = new IntersectionObserver((entries) => {

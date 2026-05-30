@@ -5,7 +5,7 @@ function initCallbackForm() {
     logInit('initCallbackForm started', 'INFO', '', 3);
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
-    const FORM_MESSAGE_HIDE_DELAY = C.FORM_MESSAGE_HIDE_DELAY || 5000;
+    const FORM_MESSAGE_HIDE_DELAY = 5000; // не было в конфиге, оставим
 
     const callbackForm = document.getElementById('callbackForm');
     const callbackMessages = document.getElementById('callbackFormMessages');
@@ -202,8 +202,6 @@ function initCallbackForm() {
                 isValid = false;
             }
 
-            // УДАЛЕНА ПРОВЕРКА КОРЗИНЫ – отправляем даже с пустой корзиной
-
             if (!isValid) return;
 
             if (window.normalizePhoneDigits) {
@@ -220,7 +218,7 @@ function initCallbackForm() {
             try {
                 await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
                     const quizData = window.getQuizDataFromForm(form);
-                    return { ...quizData, cart: window.getCartData ? window.getCartData() : '' };
+                    return { ...quizData, cart: typeof window.getCartData === 'function' ? window.getCartData() : '' };
                 });
                 logInit('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
             } catch (err) {
@@ -246,7 +244,7 @@ function initCallbackForm() {
             const actionKey = 'copy_cart';
             if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
             logInit('Копирование корзины', 'INFO', '', 4);
-            const cartText = window.getCartData ? window.getCartData() : '';
+            const cartText = typeof window.getCartData === 'function' ? window.getCartData() : '';
             if (!cartText || cartText === 'Корзина пуста') {
                 window.showWarningToast('🛒 Корзина пуста. Добавьте услуги.');
                 return;

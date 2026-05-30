@@ -1,6 +1,6 @@
 // ============================================================
 // 15_quiz.js – Квиз: динамические вопросы, сохранение ответов даже без выбора
-// Карточка помощи: бейдж 15 минут сверху справа, подарок слева от цены
+// Исправления: полное экранирование всех пользовательских данных, безопасная сборка HTML
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -275,11 +275,11 @@
             const serviceName = esc(s.service);
             const displayName = esc(s.formatted);
             const numericPrice = extractNumericPrice(s.price);
-            const benefit = benefitTags[serviceName] || '';
+            const benefit = benefitTags[serviceName] ? esc(benefitTags[serviceName]) : '';
 
             cardsHtml += `
                 <div class="quiz-result-card" data-service-name="${serviceName}" data-price="${numericPrice !== null ? numericPrice : ''}">
-                    ${benefit ? `<div class="quiz-benefit-badge">${esc(benefit)}</div>` : ''}
+                    ${benefit ? `<div class="quiz-benefit-badge">${benefit}</div>` : ''}
                     <div class="quiz-result-header">
                         <div class="quiz-result-icon">${i === 0 ? '🏆' : '🥈'}</div>
                         <div class="quiz-result-category">${esc(category)}</div>

@@ -192,9 +192,7 @@
                 } finally {
                     sendBtn.disabled = false;
                     sendBtn.innerText = originalText;
-                    setTimeout(() => {
-                        isModalSending = false;
-                    }, 500);
+                    isModalSending = false;
                 }
             };
             sendBtn.addEventListener('click', sendBtn._sendHandler);
@@ -214,27 +212,25 @@
         logInit('initMaterialsEmailButtons finished', 'INFO', '', 4);
     }
 
-    // ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ПОДСВЕТКИ МЕНЮ ==========
-    function initActiveNav() {
-        const navLinks = document.querySelectorAll('.nav-links a');
-        if (!navLinks.length) return;
+    // Обновление активного пункта меню с debounce для производительности
+    let updateActiveNavTimeout = null;
+    function updateActiveNav() {
+        if (updateActiveNavTimeout) clearTimeout(updateActiveNavTimeout);
+        updateActiveNavTimeout = setTimeout(() => {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            if (!navLinks.length) return;
 
-        // Список id секций, которые есть в меню (соответствие href без #)
-        const menuSectionIds = Array.from(navLinks).map(link => {
-            const href = link.getAttribute('href');
-            return href ? href.substring(1) : null;
-        }).filter(Boolean);
+            const menuSectionIds = Array.from(navLinks).map(link => {
+                const href = link.getAttribute('href');
+                return href ? href.substring(1) : null;
+            }).filter(Boolean);
 
-        // Функция проверки, видна ли секция (хотя бы частично)
-        function isSectionVisible(section) {
-            const rect = section.getBoundingClientRect();
-            return rect.top < window.innerHeight && rect.bottom > 0;
-        }
+            function isSectionVisible(section) {
+                const rect = section.getBoundingClientRect();
+                return rect.top < window.innerHeight && rect.bottom > 0;
+            }
 
-        function updateActiveNav() {
             let activeId = null;
-
-            // Приоритет: если секция #home видна хотя бы на 10% и её верх не уехал далеко
             const homeSection = document.getElementById('home');
             if (homeSection) {
                 const rect = homeSection.getBoundingClientRect();
@@ -245,18 +241,14 @@
                 }
             }
 
-            // Если home не активна, ищем среди секций, которые есть в меню
             if (!activeId) {
                 let bestSection = null;
                 let bestTop = Infinity;
-
                 for (const id of menuSectionIds) {
                     const section = document.getElementById(id);
                     if (!section) continue;
                     const rect = section.getBoundingClientRect();
-                    // Если секция видима (хотя бы частично)
                     if (isSectionVisible(section)) {
-                        // Берём ту, чья верхняя граница ближе всего к верху (но не отрицательная далеко)
                         const top = rect.top;
                         if (top >= 0 && top < bestTop) {
                             bestTop = top;
@@ -264,11 +256,8 @@
                         }
                     }
                 }
-
-                if (bestSection) {
-                    activeId = bestSection.id;
-                } else {
-                    // Если ни одна секция из меню не видна, пытаемся найти ближайшую сверху (последнюю, чей низ положительный)
+                if (bestSection) activeId = bestSection.id;
+                else {
                     let lastVisibleId = null;
                     let lastVisibleBottom = -Infinity;
                     for (const id of menuSectionIds) {
@@ -286,17 +275,17 @@
                 }
             }
 
-            // Обновляем классы у ссылок
             navLinks.forEach(link => {
                 const href = link.getAttribute('href');
-                if (href === `#${activeId}`) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
-                }
+                if (href === `#${activeId}`) link.classList.add('active');
+                else link.classList.remove('active');
             });
-        }
+        }, 50);
+    }
 
+    window.updateActiveNav = updateActiveNav;
+
+    function initActiveNav() {
         window.addEventListener('scroll', updateActiveNav);
         window.addEventListener('resize', updateActiveNav);
         updateActiveNav();
@@ -368,26 +357,39 @@
         const originalInitCalculator = window.initCalculator;
         const originalInitQuiz = window.initQuiz;
 
-        window.initCalculator = async function () {
-            logInit('Переопределённый initCalculator запущен', 'INFO', '', 3);
-            await originalInitCalculator();
-            logInit('originalInitCalculator завершён', 'INFO', '', 3);
-            setTimeout(reinitAnimations, 100);
-            setTimeout(animateStats, 150);
-        };
-        window.initQuiz = function () {
-            logInit('Переопределённый initQuiz запущен', 'INFO', '', 3);
-            originalInitQuiz();
-            setTimeout(reinitAnimations, 150);
-            setTimeout(animateStats, 200);
-        };
+        if (typeof originalInitCalculator === 'function') {
+            window.initCalculator = async function () {
+                logInit('Переопределённый initCalculator запущен', 'INFO', '', 3);
+                await originalInitCalculator();
+                logInit('originalInitCalculator завершён', 'INFO', '', 3);
+                setTimeout(reinitAnimations, 100);
+                setTimeout(animateStats, 150);
+            };
+        } else {
+            logInit('originalInitCalculator не найден, пропускаем', 'WARN', '', 2);
+        }
 
-        logInit('Запуск window.initCalculator()', 'INFO', '', 3);
-        window.initCalculator();
-        logInit('Запуск window.initQuiz()', 'INFO', '', 3);
-        window.initQuiz();
+        if (typeof originalInitQuiz === 'function') {
+            window.initQuiz = function () {
+                logInit('Переопределённый initQuiz запущен', 'INFO', '', 3);
+                originalInitQuiz();
+                setTimeout(reinitAnimations, 150);
+                setTimeout(animateStats, 200);
+            };
+        } else {
+            logInit('originalInitQuiz не найден, пропускаем', 'WARN', '', 2);
+        }
 
-        initActiveNav();    // <--- ИСПРАВЛЕННАЯ ПОДСВЕТКА
+        if (typeof window.initCalculator === 'function') {
+            logInit('Запуск window.initCalculator()', 'INFO', '', 3);
+            window.initCalculator();
+        }
+        if (typeof window.initQuiz === 'function') {
+            logInit('Запуск window.initQuiz()', 'INFO', '', 3);
+            window.initQuiz();
+        }
+
+        initActiveNav();
         initFormValidation();
         initScrollTopButton();
         initMaterialsEmailButtons();

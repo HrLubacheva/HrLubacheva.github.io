@@ -1,73 +1,57 @@
 /* ==================================================================
-   12_certificates.css – карусель сертификатов (плавная волна)
+   12_certificates.css – карусель сертификатов
+   Ширина слайда подстраивается под картинку,
+   изображение слегка увеличено для обрезки полей
    ================================================================== */
 .certificates-section {
     background: var(--light-bg, #f8f9fa);
     padding: 60px 0 40px;
 }
+
 .carousel-wrapper {
     position: relative;
-    display: flex;
-    align-items: center;
-    margin: 40px 0 20px;
-    cursor: grab;
-}
-.carousel-wrapper:active {
-    cursor: grabbing;
-}
-.carousel-viewport {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
     width: 100%;
-    border-radius: var(--radius-lg, 28px);
+    user-select: none;
 }
+
+.carousel-viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
 .carousel-track {
     display: flex;
-    gap: 24px;
-    scroll-snap-stop: always;
+    gap: 20px;
     will-change: transform;
 }
+
 .carousel-slide {
-    scroll-snap-align: start;
     flex: 0 0 auto;
-    min-width: 140px;
-    max-width: 260px;
-    height: 260px;
-    background: transparent;
-    border-radius: var(--radius-md, 16px);
-    overflow: hidden;
+    height: 260px;          /* единая высота */
+    width: auto;            /* ширина подстраивается */
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transition: box-shadow 0.2s ease;
+    background: transparent;
+    border-radius: 12px;
+    overflow: hidden;       /* чтобы при увеличении изображения края обрезались */
 }
+
 .carousel-slide img {
     height: 100%;
     width: auto;
-    max-width: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
-    background: transparent;
-}
-.carousel-slide.horizontal {
-    max-width: 360px;
-}
-@media (max-width: 992px) {
-    .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
-    .carousel-slide.horizontal { max-width: 300px; }
-}
-@media (max-width: 768px) {
-    .carousel-slide { min-width: 100px; max-width: 180px; height: 180px; }
-    .carousel-slide.horizontal { max-width: 240px; }
-}
-@media (max-width: 576px) {
-    .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
-    .carousel-slide.horizontal { max-width: 200px; }
+    border-radius: 8px;
+    transform: scale(1.02);  /* лёгкое увеличение – обрезка полей */
+    transition: transform 0.3s ease;
 }
 
+.carousel-slide:hover img {
+    transform: scale(1.05);   /* при наведении чуть больше – для интерактива */
+}
+
+/* Прогресс-бар */
 .carousel-progress-container {
     position: relative;
     width: 100%;
@@ -78,6 +62,7 @@
     cursor: pointer;
     overflow: hidden;
 }
+
 .carousel-progress-fill {
     position: absolute;
     top: 0;
@@ -86,42 +71,18 @@
     width: 0%;
     background: linear-gradient(90deg, var(--primary), var(--primary-light));
     border-radius: 4px;
-    transition: width 0.1s linear;
-    will-change: width;
+    transition: width 0.05s linear;
 }
-.carousel-progress-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 30px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: waveMove 1.5s ease-in-out infinite;
-    pointer-events: none;
-}
-@keyframes waveMove {
-    0% { transform: translateX(-30px); }
-    100% { transform: translateX(100%); }
-}
-.carousel-instruction {
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 20px;
-    margin-bottom: 10px;
-    padding: 8px 16px;
-    background: rgba(45, 106, 159, 0.06);
-    border-radius: 60px;
-    display: inline-block;
-    width: auto;
-    margin-left: auto;
-    margin-right: auto;
-    backdrop-filter: blur(4px);
-}
+
+/* Адаптив: уменьшаем высоту на мобильных */
 @media (max-width: 768px) {
-    .carousel-instruction {
-        font-size: 0.75rem;
-        padding: 6px 12px;
+    .carousel-slide {
+        height: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-slide {
+        height: 160px;
     }
 }

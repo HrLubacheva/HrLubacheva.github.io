@@ -1,6 +1,3 @@
-// ============================================================
-// 06_cookie-consent.js – Управление согласием на cookie
-// ============================================================
 function initCookieConsent() {
     logInit('initCookieConsent started', 'INFO', '', 3);
     let consent = null;

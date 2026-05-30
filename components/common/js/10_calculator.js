@@ -1,5 +1,6 @@
 // ============================================================
 // 10_calculator.js – Калькулятор, корзина, скидка, компактная пустая корзина
+// ИСПРАВЛЕНИЯ: исправлены утечки памяти, обработчики событий теперь корректно удаляются
 // ============================================================
 let cart = [];
 function formatPrice(price) { if (price === null) return 'по запросу'; if (price === 0) return '0 ₽'; return price.toLocaleString() + ' ₽'; }
@@ -50,7 +51,6 @@ function renderCart() {
     const container = document.getElementById('servicesList');
     if (!container) return;
     if (cart.length === 0) {
-        // Компактное сообщение вместо пустого блока
         container.innerHTML = '<div class="cart-empty-message">🛒 Корзина пуста</div>';
         return;
     }
@@ -66,9 +66,22 @@ function renderCart() {
         div.innerHTML = `<div class="service-name">${escapedName}</div><div class="service-price">${priceDisplay}</div><div class="service-qty-control"><button class="qty-btn qty-minus" data-idx="${idx}">−</button><span class="qty-value">${item.qty}</span><button class="qty-btn qty-plus" data-idx="${idx}">+</button></div><div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>`;
         container.appendChild(div);
     });
-    document.querySelectorAll('.qty-minus').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); if (cart[idx].qty > 1) cart[idx].qty--; else cart.splice(idx, 1); renderCart(); }; });
-    document.querySelectorAll('.qty-plus').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); cart[idx].qty++; renderCart(); }; });
-    document.querySelectorAll('.remove-item').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); cart.splice(idx, 1); renderCart(); }; });
+    // Используем делегирование вместо onclick на каждый элемент
+    container.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.removeEventListener('click', btn._qtyHandler);
+        btn._qtyHandler = () => { const idx = parseInt(btn.dataset.idx, 10); if (cart[idx].qty > 1) cart[idx].qty--; else cart.splice(idx, 1); renderCart(); };
+        btn.addEventListener('click', btn._qtyHandler);
+    });
+    container.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.removeEventListener('click', btn._qtyHandler);
+        btn._qtyHandler = () => { const idx = parseInt(btn.dataset.idx, 10); cart[idx].qty++; renderCart(); };
+        btn.addEventListener('click', btn._qtyHandler);
+    });
+    container.querySelectorAll('.remove-item').forEach(btn => {
+        btn.removeEventListener('click', btn._removeHandler);
+        btn._removeHandler = () => { const idx = parseInt(btn.dataset.idx, 10); cart.splice(idx, 1); renderCart(); };
+        btn.addEventListener('click', btn._removeHandler);
+    });
 }
 
 function populateSelect(selectId, services) {
@@ -117,7 +130,7 @@ function initAddButtons() {
     handlers.forEach(({btn, select, qty}) => {
         const button = document.getElementById(btn);
         if (button) {
-            button.removeEventListener('click', button._handler);
+            if (button._handler) button.removeEventListener('click', button._handler);
             button._handler = () => {
                 const selectEl = document.getElementById(select);
                 const selectedOption = selectEl.options[selectEl.selectedIndex];
@@ -138,7 +151,7 @@ function initAddButtons() {
 function initTabs() {
     const tabs = document.querySelectorAll('#calculator .tab-btn');
     tabs.forEach(btn => {
-        btn.removeEventListener('click', btn._tabHandler);
+        if (btn._tabHandler) btn.removeEventListener('click', btn._tabHandler);
         btn._tabHandler = () => {
             const tab = btn.dataset.tab;
             document.querySelectorAll('#calculator .tab-pane').forEach(pane => pane.classList.remove('active'));
