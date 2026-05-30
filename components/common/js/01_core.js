@@ -1,6 +1,6 @@
 // ============================================================
 // 01_core.js – Ядро: утилиты, тосты, fetch, валидация,
-// отправка форм с локальным кэшированием и защитой от дублей
+// отправка форм, БЕЗ повторов и локального накопления ошибок
 // ============================================================
 
 function escapeHtml(str) {
@@ -199,12 +199,12 @@ function showWarningToast(message) {
     showToast(message, 'warning');
 }
 
-// ========== УНИКАЛЬНЫЙ ИДЕНТИФИКАТОР ЗАПРОСА ДЛЯ ЗАЩИТЫ ОТ ДУБЛЕЙ ==========
+// ========== УНИКАЛЬНЫЙ ИДЕНТИФИКАТОР ЗАПРОСА ==========
 function generateRequestId() {
     return Date.now() + '_' + Math.random().toString(36).substring(2, 12) + '_' + (currentUserId || getOrCreateLocalUserId());
 }
 
-// ========== ОТПРАВКА С ТАЙМАУТОМ 5 СЕКУНД, 3 ПОПЫТКИ + ЛОКАЛЬНОЕ ХРАНИЛИЩЕ ==========
+// ========== ОТПРАВКА С ТАЙМАУТОМ, 3 ПОПЫТКИ, НО БЕЗ СОХРАНЕНИЯ В LOCALSTORAGE ==========
 window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000, timeoutMs = 5000) {
     let lastError = null;
 
@@ -221,7 +221,6 @@ window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000,
             clearTimeout(timeoutId);
 
             if (response.ok) {
-                // Успешно отправлено на сервер
                 return true;
             } else {
                 throw new Error(`HTTP ${response.status}`);
@@ -236,48 +235,17 @@ window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000,
         }
     }
 
-    // Все попытки провалились – сохраняем данные локально с уникальным ID
-    logError('Все попытки отправки провалились, сохраняем локально', lastError);
-    saveFailedRequest(url, data);
+    // Больше НЕ сохраняем запросы локально (чтобы не было бесконечных повторов)
+    logError('Все попытки отправки провалились, данные не сохранены', lastError);
     return false;
 };
 
+// Функция сохранения отключена (ничего не делает)
 function saveFailedRequest(url, data) {
-    try {
-        const failedKey = 'hr_failed_requests';
-        let failed = JSON.parse(localStorage.getItem(failedKey) || '[]');
-        const requestId = generateRequestId();
-        // Проверяем, нет ли уже такого же запроса с таким же содержимым за последние 10 секунд
-        const now = Date.now();
-        const isDuplicate = failed.some(item =>
-            item.dataHash === simpleHash(JSON.stringify(data)) &&
-            now - item.timestamp < 10000
-        );
-        if (isDuplicate) {
-            logWarn('Дублирующийся запрос не сохранён', data);
-            return;
-        }
-        failed.push({
-            id: requestId,
-            url: url,
-            data: data,
-            dataHash: simpleHash(JSON.stringify(data)),
-            timestamp: now
-        });
-        // Ограничиваем размер хранилища (не более 50)
-        if (failed.length > 50) failed = failed.slice(-50);
-        localStorage.setItem(failedKey, JSON.stringify(failed));
-        // Дополнительно пробуем отправить через sendBeacon (без гарантии доставки)
-        try {
-            const formData = new URLSearchParams(data);
-            navigator.sendBeacon(url, formData);
-        } catch (e) {}
-    } catch (e) {
-        logError('Не удалось сохранить запрос локально', e);
-    }
+    // Отключено – никаких записей в localStorage
 }
 
-// Простой хэш для сравнения данных (не криптографический)
+// Простой хэш (используется только для отключённой логики, но оставим)
 function simpleHash(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -288,20 +256,12 @@ function simpleHash(str) {
     return hash.toString();
 }
 
-// Периодическая отправка накопленных запросов (раз в минуту)
-function retryFailedRequests() {}
-    // отключаем сохранение и повторные попытки
-    // try { ... } catch ...
+// Периодическая отправка накопленных запросов ПОЛНОСТЬЮ ОТКЛЮЧЕНА
+function retryFailedRequests() {
+    // Функция ничего не делает
 }
 
-// Запускаем периодическую отправку раз в 60 секунд
-setInterval(retryFailedRequests, 60000);
-
-// При загрузке страницы тоже пробуем отправить накопленное
-setInterval(retryFailedRequests, 60000);
-window.addEventListener('load', () => {
-    setTimeout(retryFailedRequests, 5000);
-});
+// НЕТ вызовов setInterval и addEventListener – они удалены
 
 // ========== ОСТАЛЬНЫЕ УТИЛИТЫ ==========
 function normalizePhoneDigits(phone) {
@@ -445,16 +405,14 @@ function initPhoneMasks() {
     });
 }
 
-// ========== ОТПРАВКА В GOOGLE SHEETS С ЗАЩИТОЙ ОТ ДУБЛЕЙ ==========
+// ========== ОТПРАВКА В GOOGLE SHEETS ==========
 async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
     if (typeof window.getCartData === 'function') data.cart = window.getCartData();
     else data.cart = '';
-    // Добавляем уникальный ID запроса
     data.requestId = generateRequestId();
     await window.postWithRetry(window.APP_CONFIG.SCRIPT_URL, data, retries, delay);
-    // Всегда возвращаем true, чтобы пользователь видел успех
     return true;
 }
 
