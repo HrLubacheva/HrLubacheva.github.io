@@ -290,33 +290,8 @@ function simpleHash(str) {
 
 // Периодическая отправка накопленных запросов (раз в минуту)
 function retryFailedRequests() {
-    try {
-        const failedKey = 'hr_failed_requests';
-        let failed = JSON.parse(localStorage.getItem(failedKey) || '[]');
-        if (failed.length === 0) return;
-        const newFailed = [];
-        for (const req of failed) {
-            // Асинхронно пытаемся отправить, но не ждём
-            window.postWithRetry(req.url, req.data, 1, 0, 5000)
-                .then(success => {
-                    if (!success) {
-                        newFailed.push(req);
-                    }
-                })
-                .catch(() => {
-                    newFailed.push(req);
-                });
-        }
-        // Сохраняем только те, что не отправились (но это асинхронно, лучше отложить)
-        setTimeout(() => {
-            const currentFailed = JSON.parse(localStorage.getItem(failedKey) || '[]');
-            const idsToKeep = new Set(newFailed.map(r => r.id));
-            const updated = currentFailed.filter(r => idsToKeep.has(r.id));
-            localStorage.setItem(failedKey, JSON.stringify(updated));
-        }, 2000);
-    } catch (e) {
-        logError('Ошибка при повторной отправке', e);
-    }
+    // отключаем сохранение и повторные попытки
+    // try { ... } catch ...
 }
 
 // Запускаем периодическую отправку раз в 60 секунд
