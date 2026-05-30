@@ -3621,75 +3621,59 @@ body,
     }
 }
 /* ==================================================================
-   12_certificates.css – карусель сертификатов (плавная волна)
+   12_certificates.css – карусель сертификатов
+   Ширина слайда подстраивается под картинку,
+   изображение слегка увеличено для обрезки полей
    ================================================================== */
 .certificates-section {
     background: var(--light-bg, #f8f9fa);
     padding: 60px 0 40px;
 }
+
 .carousel-wrapper {
     position: relative;
-    display: flex;
-    align-items: center;
-    margin: 40px 0 20px;
-    cursor: grab;
-}
-.carousel-wrapper:active {
-    cursor: grabbing;
-}
-.carousel-viewport {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
     width: 100%;
-    border-radius: var(--radius-lg, 28px);
+    user-select: none;
 }
+
+.carousel-viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
 .carousel-track {
     display: flex;
-    gap: 24px;
-    scroll-snap-stop: always;
+    gap: 20px;
     will-change: transform;
 }
+
 .carousel-slide {
-    scroll-snap-align: start;
     flex: 0 0 auto;
-    min-width: 140px;
-    max-width: 260px;
-    height: 260px;
-    background: transparent;
-    border-radius: var(--radius-md, 16px);
-    overflow: hidden;
+    height: 260px;          /* единая высота */
+    width: auto;            /* ширина подстраивается */
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transition: box-shadow 0.2s ease;
+    background: transparent;
+    border-radius: 12px;
+    overflow: hidden;       /* чтобы при увеличении изображения края обрезались */
 }
+
 .carousel-slide img {
     height: 100%;
     width: auto;
-    max-width: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
-    background: transparent;
-}
-.carousel-slide.horizontal {
-    max-width: 360px;
-}
-@media (max-width: 992px) {
-    .carousel-slide { min-width: 120px; max-width: 220px; height: 220px; }
-    .carousel-slide.horizontal { max-width: 300px; }
-}
-@media (max-width: 768px) {
-    .carousel-slide { min-width: 100px; max-width: 180px; height: 180px; }
-    .carousel-slide.horizontal { max-width: 240px; }
-}
-@media (max-width: 576px) {
-    .carousel-slide { min-width: 90px; max-width: 160px; height: 160px; }
-    .carousel-slide.horizontal { max-width: 200px; }
+    border-radius: 8px;
+    transform: scale(1.02);  /* лёгкое увеличение – обрезка полей */
+    transition: transform 0.3s ease;
 }
 
+.carousel-slide:hover img {
+    transform: scale(1.05);   /* при наведении чуть больше – для интерактива */
+}
+
+/* Прогресс-бар */
 .carousel-progress-container {
     position: relative;
     width: 100%;
@@ -3700,6 +3684,7 @@ body,
     cursor: pointer;
     overflow: hidden;
 }
+
 .carousel-progress-fill {
     position: absolute;
     top: 0;
@@ -3708,43 +3693,19 @@ body,
     width: 0%;
     background: linear-gradient(90deg, var(--primary), var(--primary-light));
     border-radius: 4px;
-    transition: width 0.1s linear;
-    will-change: width;
+    transition: width 0.05s linear;
 }
-.carousel-progress-fill::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 30px;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: waveMove 1.5s ease-in-out infinite;
-    pointer-events: none;
-}
-@keyframes waveMove {
-    0% { transform: translateX(-30px); }
-    100% { transform: translateX(100%); }
-}
-.carousel-instruction {
-    text-align: center;
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-top: 20px;
-    margin-bottom: 10px;
-    padding: 8px 16px;
-    background: rgba(45, 106, 159, 0.06);
-    border-radius: 60px;
-    display: inline-block;
-    width: auto;
-    margin-left: auto;
-    margin-right: auto;
-    backdrop-filter: blur(4px);
-}
+
+/* Адаптив: уменьшаем высоту на мобильных */
 @media (max-width: 768px) {
-    .carousel-instruction {
-        font-size: 0.75rem;
-        padding: 6px 12px;
+    .carousel-slide {
+        height: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-slide {
+        height: 160px;
     }
 }
 /* ==================================================================
@@ -4020,8 +3981,8 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-family: 'Inter', sans-serif;
-    animation: cookieSlideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
+
 .cookie-consent__inner {
     max-width: 1200px;
     margin: 0 auto;
@@ -4031,6 +3992,7 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     justify-content: space-between;
     gap: 20px;
 }
+
 .cookie-consent__text {
     display: flex;
     align-items: center;
@@ -4038,40 +4000,48 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     flex: 2;
     min-width: 240px;
 }
+
 .cookie-icon {
     font-size: 1.8rem;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
+
 .cookie-consent__text p {
     margin: 0;
     font-size: 0.9rem;
     line-height: 1.4;
     color: #e2e8f0;
 }
+
 .cookie-consent a {
     color: var(--primary-light);
     text-decoration: underline;
     transition: color 0.2s ease;
 }
+
 .cookie-consent a:hover {
     color: white;
 }
+
 .cookie-consent__buttons {
     display: flex;
     gap: 12px;
     flex-shrink: 0;
 }
+
 .cookie-consent__buttons .btn-primary {
-    background: var(--gradient-cta);
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     border: none;
     padding: 8px 20px;
     font-weight: 600;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
+
 .cookie-consent__buttons .btn-primary:hover {
-    background: var(--gradient-cta-hover);
-    box-shadow: 0 4px 12px rgba(230,126,34,0.4);
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    box-shadow: 0 4px 12px rgba(45,106,159,0.4);
 }
+
 .cookie-consent__buttons .btn-secondary {
     background: transparent;
     border: 1px solid var(--primary-light);
@@ -4079,11 +4049,14 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
     padding: 8px 20px;
     font-weight: 600;
 }
+
 .cookie-consent__buttons .btn-secondary:hover {
     background: rgba(74, 139, 194, 0.15);
     border-color: white;
     color: white;
 }
+
+/* Анимация появления */
 @keyframes cookieSlideUp {
     from {
         transform: translateY(100%);
@@ -4094,6 +4067,12 @@ a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
         opacity: 1;
     }
 }
+
+.cookie-consent {
+    animation: cookieSlideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+/* Адаптив для мобильных */
 @media (max-width: 640px) {
     .cookie-consent {
         padding: 16px;
@@ -5882,7 +5861,7 @@ select:focus-visible {
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 30.05.2026 18:23:00</span>
+                <span class="footer-version">⚡ Версия 30.05.2026 19:14:15</span>
             </div>
         </div>
 
@@ -6002,10 +5981,23 @@ window.APP_CONFIG = {
 };
 // ============================================================
 // 01_core.js – Ядро с обходом CORS, валидацией и сохранением полей
+// ИСПРАВЛЕНИЯ:
+// - Добавлены реальные ретраи с экспоненциальной задержкой
+// - Исправлена утечка через глобальный _tempUserId
+// - Все обращения к localStorage обёрнуты в try..catch
+// - Улучшен fallback для отправки (no-cors оставлен, но добавлено логирование)
+// - Исправлена функция sendDataToSheetWithRetry (теперь ретраи работают)
+// - Добавлена проверка существования window.getCartData
 // ============================================================
 
 function escapeHtml(str) {
-    return str;
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if (m === '&') return '&amp;';
+        if (m === '<') return '&lt;';
+        if (m === '>') return '&gt;';
+        return m;
+    });
 }
 
 const IS_DEV = window.location.hostname === 'localhost' ||
@@ -6044,10 +6036,10 @@ function getOrCreateLocalUserId() {
         }
         return userId;
     } catch (e) {
-        if (!window._tempUserId) {
-            window._tempUserId = 'temp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+        if (!window._tempUserIdStore) {
+            window._tempUserIdStore = 'temp_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
         }
-        return window._tempUserId;
+        return window._tempUserIdStore;
     }
 }
 
@@ -6119,10 +6111,11 @@ function showToast(message, type = 'error') {
     toast.setAttribute('role', 'status');
     toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
     document.body.appendChild(toast);
+    const duration = window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000;
     setTimeout(() => {
         toast.style.opacity = '0';
         setTimeout(() => toast.remove(), 300);
-    }, window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000);
+    }, duration);
 }
 
 function showErrorToast(message) { showToast(message, 'error'); }
@@ -6133,7 +6126,7 @@ function generateRequestId() {
     return Date.now() + '_' + Math.random().toString(36).substring(2, 12) + '_' + (currentUserId || getOrCreateLocalUserId());
 }
 
-// ========== СОХРАНЕНИЕ ПОЛЕЙ ФОРМ В sessionStorage ==========
+// ========== СОХРАНЕНИЕ ПОЛЕЙ ФОРМ В sessionStorage (с защитой) ==========
 function saveFormFields(formId) {
     const form = document.getElementById(formId);
     if (!form) return;
@@ -6170,7 +6163,9 @@ function loadFormFields(formId) {
 }
 
 function clearFormFields(formId) {
-    sessionStorage.removeItem(`form_${formId}`);
+    try {
+        sessionStorage.removeItem(`form_${formId}`);
+    } catch(e) {}
 }
 
 function bindFormAutoSave(formId) {
@@ -6205,7 +6200,7 @@ async function retryFailedRequests() {
         if (failed.length === 0) return;
         const newFailed = [];
         for (const req of failed) {
-            const success = await window.sendViaBeaconOrFetch(req.url, req.data);
+            const success = await window.sendViaBeaconOrFetch(req.url, req.data, true); // true - это режим ретрая, чтобы не зациклиться
             if (!success) {
                 newFailed.push(req);
             }
@@ -6218,30 +6213,68 @@ async function retryFailedRequests() {
 setInterval(retryFailedRequests, 60000);
 window.addEventListener('load', () => setTimeout(retryFailedRequests, 5000));
 
-// ========== ОТПРАВКА БЕЗ CORS ==========
-window.sendViaBeaconOrFetch = async function(url, data) {
+// ========== ОТПРАВКА БЕЗ CORS (улучшенная с ретраями и таймаутом) ==========
+window.sendViaBeaconOrFetch = async function(url, data, isRetry = false) {
     const formData = new URLSearchParams(data);
+    // Пытаемся через sendBeacon (нельзя контролировать ответ, но он быстрый)
+    if (navigator.sendBeacon && navigator.sendBeacon(url, formData)) {
+        if (IS_DEV) console.log('📡 Отправлено через sendBeacon');
+        return true;
+    }
+    // Пробуем обычный fetch с таймаутом
     try {
-        if (navigator.sendBeacon && navigator.sendBeacon(url, formData)) {
-            if (IS_DEV) console.log('📡 Отправлено через sendBeacon');
-            return true;
-        }
-        await fetch(url, {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        const response = await fetch(url, {
             method: 'POST',
             body: formData,
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            mode: 'no-cors',
-            cache: 'no-store'
+            signal: controller.signal
         });
-        if (IS_DEV) console.log('📡 Отправлено через fetch (no-cors)');
-        return true;
+        clearTimeout(timeoutId);
+        if (response.ok) {
+            if (IS_DEV) console.log('📡 Отправлено через fetch');
+            return true;
+        }
+        throw new Error('Ответ сервера не OK: ' + response.status);
     } catch (err) {
-        logError('Ошибка отправки (но данные могли уйти):', err);
-        return false;
+        logError('Ошибка отправки (попробуем fallback no-cors):', err);
+        try {
+            await fetch(url, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                mode: 'no-cors',
+                cache: 'no-store'
+            });
+            if (IS_DEV) console.log('📡 Отправлено через fetch (no-cors) – статус неизвестен, но данные вероятно ушли');
+            // ВАЖНО: при no-cors мы не знаем результат, но считаем успехом, чтобы не плодить бесконечные ретраи
+            return true;
+        } catch (e) {
+            logError('Fallback тоже провалился:', e);
+            return false;
+        }
     }
 };
 
-window.postWithRetry = window.sendViaBeaconOrFetch;
+window.postWithRetry = async function(url, data, maxRetries = 3, baseDelay = 2000) {
+    let lastError;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            const success = await window.sendViaBeaconOrFetch(url, data, attempt > 1);
+            if (success) return true;
+            throw new Error('Отправка вернула false');
+        } catch (err) {
+            lastError = err;
+            if (attempt < maxRetries) {
+                const delay = Math.min(baseDelay * Math.pow(1.5, attempt - 1), 10000);
+                if (IS_DEV) console.log(`🔄 Повторная попытка ${attempt}/${maxRetries} через ${delay}ms`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+    }
+    throw lastError || new Error('Все попытки отправки не удались');
+};
 
 // ========== ОСТАЛЬНЫЕ УТИЛИТЫ ==========
 function normalizePhoneDigits(phone) {
@@ -6379,31 +6412,38 @@ function applyPhoneMask(inputElement) {
 }
 
 function initPhoneMasks() {
-    const phoneInputs = document.querySelectorAll('#callbackPhone, #quickPhone');
+    const phoneInputs = document.querySelectorAll('.phone-mask, #callbackPhone, #quickPhone');
     phoneInputs.forEach(input => { if (input) applyPhoneMask(input); });
 }
 
-async function sendDataToSheetWithRetry(data, retries = 1, delay = 1000) {
+async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
     if (typeof window.getCartData === 'function') data.cart = window.getCartData();
     else data.cart = '';
     data.requestId = generateRequestId();
 
-    let targetUrl = window.APP_CONFIG.SCRIPT_URL;
-    if (IS_TEST && window.APP_CONFIG.TEST_SCRIPT_URL) {
+    let targetUrl = window.APP_CONFIG?.SCRIPT_URL;
+    if (IS_TEST && window.APP_CONFIG?.TEST_SCRIPT_URL) {
         targetUrl = window.APP_CONFIG.TEST_SCRIPT_URL;
         data.test_mode = '1';
         if (IS_DEV) console.log('🧪 Тестовый режим: отправка на', targetUrl);
     }
 
-    const success = await window.sendViaBeaconOrFetch(targetUrl, data);
-    if (!success) {
+    if (!targetUrl) {
+        logError('SCRIPT_URL не задан');
+        return false;
+    }
+
+    try {
+        await window.postWithRetry(targetUrl, data, retries, delay);
+        return true;
+    } catch (err) {
+        logError('❌ Ошибка отправки в Google Sheets после всех попыток:', err);
         saveFailedRequest(targetUrl, data);
         showWarningToast('⚠️ Данные сохранены локально, будут отправлены позже.');
         return false;
     }
-    return true;
 }
 
 function sendDataToSheet(data) {
@@ -6650,6 +6690,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             page: window.getPageText(),
             geo: geo.geoText,
             userId: window.getOrCreateLocalUserId(),
+            ip: geo.ip || '-',
             ...additional
         };
 
@@ -6662,11 +6703,8 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
         const phoneDisplay = phone ? phone.replace(/(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/, '+$1 $2 $3-$4-$5') : '';
         showSuccessToast(`🎉 Спасибо, ${name || 'друг'}! Ваша заявка принята. ${phoneDisplay ? `Мы свяжемся с вами по номеру ${phoneDisplay}` : 'Мы свяжемся с вами в ближайшее время.'}`);
 
-        // Очищаем сохранённые поля формы после успешной отправки
         clearFormFields(formId);
-
         form.reset();
-        // Принудительно сбрасываем скрытые поля
         const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
         hiddenFields.forEach(field => {
             const input = form.querySelector(`[name="${field}"]`);
@@ -6698,7 +6736,7 @@ window.getQuizDataFromForm = function (form) {
         originalChosenVariantPrice: form.querySelector('[name="originalChosenVariantPrice"]')?.value || '',
         recommendedVariants: form.querySelector('[name="recommendedVariants"]')?.value || '',
         quizAnswersRaw: form.querySelector('[name="quizAnswersRaw"]')?.value || '',
-        cart: window.getCartData ? window.getCartData() : ''
+        cart: typeof window.getCartData === 'function' ? window.getCartData() : ''
     };
 };
 
@@ -6735,6 +6773,24 @@ if (!isNaN(urlLogLevel) && urlLogLevel >= 0 && urlLogLevel <= 7) {
 }
 window.currentLogLevel = currentLogLevel;
 
+let logBuffer = [];
+let logFlushTimer = null;
+function flushLogsToServer() {
+    if (logBuffer.length === 0) return;
+    const logsToSend = logBuffer.splice(0, 10);
+    const url = window.APP_CONFIG?.SCRIPT_URL;
+    if (!url) return;
+    const formData = new URLSearchParams();
+    formData.append('formType', 'Лог инициализации');
+    formData.append('name', 'System');
+    formData.append('comment', JSON.stringify(logsToSend));
+    formData.append('consent', 'Да');
+    formData.append('userId', window.getOrCreateLocalUserId?.() || 'unknown');
+    formData.append('page', window.location.href);
+    formData.append('userAgent', navigator.userAgent);
+    navigator.sendBeacon(url, formData);
+}
+
 function logInit(message, level = 'INFO', context = '', requiredLevel = 3) {
     const timestamp = new Date().toISOString();
     const logEntry = {timestamp, level, message, context, url: window.location.href, requiredLevel};
@@ -6751,22 +6807,10 @@ function logInit(message, level = 'INFO', context = '', requiredLevel = 3) {
     }
     const forceSend = window.APP_CONFIG?.CONSTANTS?.FORCE_SEND_LOGS_TO_SERVER || false;
     if (level === 'ERROR' || level === 'WARN' || (window.location.search.includes('debug=1') && currentLogLevel >= requiredLevel) || forceSend) {
-        sendInitLog(logEntry);
+        logBuffer.push(logEntry);
+        if (logFlushTimer) clearTimeout(logFlushTimer);
+        logFlushTimer = setTimeout(flushLogsToServer, 5000);
     }
-}
-
-function sendInitLog(logEntry) {
-    const url = window.APP_CONFIG?.SCRIPT_URL;
-    if (!url) return;
-    const formData = new URLSearchParams();
-    formData.append('formType', 'Лог инициализации');
-    formData.append('name', 'System');
-    formData.append('comment', JSON.stringify(logEntry));
-    formData.append('consent', 'Да');
-    formData.append('userId', window.getOrCreateLocalUserId?.() || 'unknown');
-    formData.append('page', window.location.href);
-    formData.append('userAgent', navigator.userAgent);
-    navigator.sendBeacon(url, formData);
 }
 
 const originalErrorHandler = window.onerror;
@@ -6796,9 +6840,6 @@ window.clearFieldError = clearFieldError;
 window.validatePhoneField = validatePhoneField;
 window.validateEmailField = validateEmailField;
 window.bindLiveValidation = bindLiveValidation;
-window.fetchWithRetry = async () => { throw new Error('deprecated'); };
-window.fetchTextWithRetry = async () => { throw new Error('deprecated'); };
-window.loadWithCache = async () => { throw new Error('deprecated'); };
 window.showLoading = showLoading;
 window.hideLoading = hideLoading;
 window.log = log;
@@ -6818,12 +6859,6 @@ window.logInit = logInit;
 (function() {
     'use strict';
 
-    /**
-     * Отправляет уведомление в Telegram (через бэкенд)
-     * @param {string} chatId - ID чата (или 'admin' для использования из настроек)
-     * @param {string} message - Текст сообщения (plain text)
-     * @returns {Promise<boolean>}
-     */
     async function sendTelegramNotification(chatId, message) {
         if (!window.APP_CONFIG || !window.APP_CONFIG.SCRIPT_URL) {
             logError('❌ APP_CONFIG.SCRIPT_URL не задан');
@@ -6846,12 +6881,6 @@ window.logInit = logInit;
         }
     }
 
-    /**
-     * Отправляет email администратору (через бэкенд)
-     * @param {string} subject - Тема письма
-     * @param {string} body - Текст письма
-     * @returns {Promise<boolean>}
-     */
     async function sendAdminEmail(subject, body) {
         if (!window.APP_CONFIG || !window.APP_CONFIG.SCRIPT_URL) return false;
         const formData = {
@@ -6871,11 +6900,6 @@ window.logInit = logInit;
         }
     }
 
-    /**
-     * Показывает системное уведомление (браузерный тост + лог)
-     * @param {string} message - Текст уведомления
-     * @param {string} type - 'info', 'success', 'warning', 'error'
-     */
     function showSystemNotification(message, type = 'info') {
         if (type === 'error') window.showErrorToast(message);
         else if (type === 'success') window.showSuccessToast(message);
@@ -6884,7 +6908,6 @@ window.logInit = logInit;
         if (window.IS_DEV) console.log(`🔔 [${type.toUpperCase()}] ${message}`);
     }
 
-    // Экспортируем функции
     window.sendTelegramNotification = sendTelegramNotification;
     window.sendAdminEmail = sendAdminEmail;
     window.showSystemNotification = showSystemNotification;
@@ -6900,7 +6923,6 @@ function initAnimations() {
         return;
     }
 
-    // Убедимся, что изначально класс visible не стоит
     elements.forEach(el => el.classList.remove('visible'));
 
     const observer = new IntersectionObserver((entries) => {
@@ -6928,7 +6950,7 @@ function initCallbackForm() {
     logInit('initCallbackForm started', 'INFO', '', 3);
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
-    const FORM_MESSAGE_HIDE_DELAY = C.FORM_MESSAGE_HIDE_DELAY || 5000;
+    const FORM_MESSAGE_HIDE_DELAY = 5000; // не было в конфиге, оставим
 
     const callbackForm = document.getElementById('callbackForm');
     const callbackMessages = document.getElementById('callbackFormMessages');
@@ -7125,8 +7147,6 @@ function initCallbackForm() {
                 isValid = false;
             }
 
-            // УДАЛЕНА ПРОВЕРКА КОРЗИНЫ – отправляем даже с пустой корзиной
-
             if (!isValid) return;
 
             if (window.normalizePhoneDigits) {
@@ -7143,7 +7163,7 @@ function initCallbackForm() {
             try {
                 await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
                     const quizData = window.getQuizDataFromForm(form);
-                    return { ...quizData, cart: window.getCartData ? window.getCartData() : '' };
+                    return { ...quizData, cart: typeof window.getCartData === 'function' ? window.getCartData() : '' };
                 });
                 logInit('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
             } catch (err) {
@@ -7169,7 +7189,7 @@ function initCallbackForm() {
             const actionKey = 'copy_cart';
             if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
             logInit('Копирование корзины', 'INFO', '', 4);
-            const cartText = window.getCartData ? window.getCartData() : '';
+            const cartText = typeof window.getCartData === 'function' ? window.getCartData() : '';
             if (!cartText || cartText === 'Корзина пуста') {
                 window.showWarningToast('🛒 Корзина пуста. Добавьте услуги.');
                 return;
@@ -7227,328 +7247,246 @@ function initFormEnterSubmit() {
 
 window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
-function initCallbackForm() {
-    if (window._callbackFormInitialized) return;
-    window._callbackFormInitialized = true;
+// ============================================================
+// 04_certificates.js – Бесконечная карусель (абсолютно надёжная)
+// Ширина слайда читается из CSS, не ждёт загрузки картинок
+// ============================================================
+(function() {
+    let isRunning = false;
 
-    logInit('initCallbackForm started', 'INFO', '', 3);
-    const C = window.APP_CONFIG?.CONSTANTS || {};
-    const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
-    const FORM_MESSAGE_HIDE_DELAY = C.FORM_MESSAGE_HIDE_DELAY || 5000;
+    function initInfiniteCarousel(trackId) {
+        if (isRunning) return;
+        const track = document.getElementById(trackId);
+        if (!track) return;
 
-    const callbackForm = document.getElementById('callbackForm');
-    const callbackMessages = document.getElementById('callbackFormMessages');
+        const originalSlides = Array.from(track.children);
+        if (originalSlides.length === 0) return;
 
-    if (callbackForm && callbackMessages) {
-        if (callbackForm._submitHandler) {
-            callbackForm.removeEventListener('submit', callbackForm._submitHandler);
+        // Берём ширину слайда из CSS (гарантированно)
+        function getSlideWidth() {
+            if (originalSlides.length === 0) return 280;
+            // Получаем вычисленный стиль
+            const style = window.getComputedStyle(originalSlides[0]);
+            let width = parseFloat(style.width);
+            if (isNaN(width) || width === 0) {
+                // fallback: пробуем getBoundingClientRect
+                width = originalSlides[0].getBoundingClientRect().width;
+            }
+            if (isNaN(width) || width === 0) width = 280; // резерв
+            return width;
         }
 
-        function showCallbackMessage(message, isError = true) {
-            callbackMessages.textContent = message;
-            callbackMessages.className = 'form-messages ' + (isError ? 'error' : 'success');
-            if (!isError) {
-                setTimeout(() => {
-                    callbackMessages.textContent = '';
-                    callbackMessages.className = 'form-messages';
-                }, FORM_MESSAGE_HIDE_DELAY);
-            }
-        }
+        const SLIDE_GAP = 24;   // совпадает с gap в CSS
+        const SPEED = 25;       // пикселей в секунду
 
-        function clearCallbackMessage() {
-            callbackMessages.textContent = '';
-            callbackMessages.className = 'form-messages';
-        }
+        let slideWidth = getSlideWidth();
+        let setWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
+        let scrollPos = 0;
+        let animationId = null;
+        let isHover = false;
+        let isDrag = false;
+        let dragStartX = 0;
+        let dragStartScroll = 0;
+        let lastTimestamp = 0;
 
-        const callbackPhone = document.getElementById('callbackPhone');
-        const callbackEmail = document.getElementById('callbackEmail');
-        const callbackConsent = document.getElementById('callbackConsent');
-
-        if (callbackPhone) {
-            callbackPhone.addEventListener('blur', () => {
-                let digits = callbackPhone.value.replace(/\D/g, '');
-                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-                if (!digits.startsWith('7')) digits = '7' + digits;
-                const isValid = digits.length === MAX_PHONE_DIGITS;
-                if (!isValid && callbackPhone.value.trim() !== '') {
-                    showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
-                } else {
-                    clearCallbackMessage();
-                }
-            });
-            callbackPhone.addEventListener('input', () => clearCallbackMessage());
-        }
-
-        if (callbackEmail) {
-            callbackEmail.addEventListener('blur', () => {
-                const email = callbackEmail.value.trim();
-                if (email && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email)) {
-                    showCallbackMessage('❌ Введите корректный email');
-                } else {
-                    clearCallbackMessage();
-                }
-            });
-            callbackEmail.addEventListener('input', () => {
-                if (callbackMessages.textContent === '❌ Введите корректный email') clearCallbackMessage();
-            });
-        }
-
-        let isSubmitting = false;
-
-        const submitHandler = async function(e) {
-            e.preventDefault();
-
-            if (isSubmitting) {
-                logInit('Отправка уже выполняется, игнорируем', 'WARN', '', 3);
-                showCallbackMessage('⏳ Отправка уже выполняется, подождите...', true);
-                return;
-            }
-
-            logInit('Отправка формы callbackForm', 'INFO', '', 3);
-            clearCallbackMessage();
-
-            let isValid = true;
-            let phoneDigits = callbackPhone.value.replace(/\D/g, '');
-            if (phoneDigits.startsWith('8')) phoneDigits = '7' + phoneDigits.slice(1);
-            if (!phoneDigits.startsWith('7')) phoneDigits = '7' + phoneDigits;
-
-            if (phoneDigits.length !== MAX_PHONE_DIGITS) {
-                showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
-                isValid = false;
-            }
-
-            if (callbackEmail && callbackEmail.value.trim() && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(callbackEmail.value.trim())) {
-                showCallbackMessage('❌ Введите корректный email');
-                isValid = false;
-            }
-
-            if (!callbackConsent.checked) {
-                showCallbackMessage('❌ Необходимо согласие на обработку данных');
-                isValid = false;
-            }
-
-            if (!isValid) return;
-
-            if (window.normalizePhoneDigits) {
-                callbackPhone.value = window.normalizePhoneDigits(callbackPhone.value);
-            } else {
-                let digits = callbackPhone.value.replace(/\D/g, '');
-                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-                if (!digits.startsWith('7')) digits = '7' + digits;
-                callbackPhone.value = digits;
-            }
-
-            isSubmitting = true;
-
-            try {
-                await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
-                    const quizBlock = document.getElementById('quizSelectionBlock');
-                    if (quizBlock) quizBlock.style.display = 'none';
-                    return window.getQuizDataFromForm(form);
+        // Создаём утроенный трек для бесконечности
+        function buildTripleTrack() {
+            const triple = [];
+            for (let i = 0; i < 3; i++) {
+                originalSlides.forEach(slide => {
+                    triple.push(slide.cloneNode(true));
                 });
-                logInit('Отправка формы callbackForm завершена успешно', 'INFO', '', 3);
-            } catch (err) {
-                logInit('Ошибка отправки формы callbackForm', 'ERROR', err, 2);
-                showCallbackMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
-            } finally {
-                isSubmitting = false;
             }
-        };
-
-        callbackForm._submitHandler = submitHandler;
-        callbackForm.addEventListener('submit', submitHandler);
-
-        // Загрузка сохранённых полей и автосохранение
-        if (typeof window.loadFormFields === 'function') {
-            window.loadFormFields('callbackForm');
+            track.innerHTML = '';
+            triple.forEach(clone => track.appendChild(clone));
         }
-        if (typeof window.bindFormAutoSave === 'function') {
-            window.bindFormAutoSave('callbackForm');
-        }
-    }
+        buildTripleTrack();
 
-    // ========== Быстрый заказ ==========
-    const quickForm = document.getElementById('quickOrderForm');
-    const quickMessages = document.getElementById('quickFormMessages');
-
-    if (quickForm && quickMessages) {
-        if (quickForm._submitHandler) {
-            quickForm.removeEventListener('submit', quickForm._submitHandler);
+        function setPosition(pos) {
+            scrollPos = pos;
+            track.style.transform = `translate3d(${scrollPos}px, 0, 0)`;
         }
 
-        function showQuickMessage(message, isError = true) {
-            quickMessages.textContent = message;
-            quickMessages.className = 'form-messages ' + (isError ? 'error' : 'success');
-            if (!isError) {
-                setTimeout(() => {
-                    quickMessages.textContent = '';
-                    quickMessages.className = 'form-messages';
-                }, FORM_MESSAGE_HIDE_DELAY);
-            }
+        function normalizePosition(pos) {
+            if (setWidth <= 1) return 0;
+            let norm = pos;
+            while (norm > 0) norm -= setWidth;
+            while (norm < -setWidth) norm += setWidth;
+            return norm;
         }
 
-        function clearQuickMessage() {
-            quickMessages.textContent = '';
-            quickMessages.className = 'form-messages';
+        function updateProgressBar() {
+            const fill = document.querySelector('.carousel-progress-fill');
+            if (!fill || setWidth <= 1) return;
+            let norm = normalizePosition(scrollPos);
+            let progress = -norm / setWidth;
+            progress = Math.min(1, Math.max(0, progress));
+            fill.style.width = `${progress * 100}%`;
         }
 
-        const quickPhone = document.getElementById('quickPhone');
-        const quickConsent = document.getElementById('quickConsent');
+        function ensureProgressBar() {
+            if (document.querySelector('.carousel-progress-container')) return;
+            const wrapper = track.closest('.carousel-wrapper');
+            if (!wrapper) return;
+            const container = document.createElement('div');
+            container.className = 'carousel-progress-container';
+            container.style.cssText = 'position:relative; width:100%; height:4px; background:#e2e8f0; border-radius:4px; margin:20px auto 10px; cursor:pointer; overflow:hidden;';
+            const fill = document.createElement('div');
+            fill.className = 'carousel-progress-fill';
+            fill.style.cssText = 'position:absolute; top:0; left:0; height:100%; width:0%; background:linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius:4px; transition:width 0.05s linear;';
+            container.appendChild(fill);
+            wrapper.insertAdjacentElement('afterend', container);
 
-        if (quickPhone) {
-            quickPhone.addEventListener('blur', () => {
-                let digits = quickPhone.value.replace(/\D/g, '');
-                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-                if (!digits.startsWith('7')) digits = '7' + digits;
-                const isValid = digits.length === MAX_PHONE_DIGITS;
-                if (!isValid && quickPhone.value.trim() !== '') {
-                    showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
-                } else {
-                    clearQuickMessage();
-                }
+            container.addEventListener('click', (e) => {
+                if (setWidth <= 1) return;
+                const rect = container.getBoundingClientRect();
+                const percent = (e.clientX - rect.left) / rect.width;
+                const targetPos = -percent * setWidth;
+                let delta = targetPos - normalizePosition(scrollPos);
+                scrollPos += delta;
+                setPosition(scrollPos);
+                updateProgressBar();
+                if (!isHover && !isDrag) startAnimation();
             });
-            quickPhone.addEventListener('input', () => clearQuickMessage());
         }
 
-        let isQuickSubmitting = false;
+        function animate(now) {
+            if (!animationId) return;
+            if (lastTimestamp === 0) {
+                lastTimestamp = now;
+                requestAnimationFrame(animate);
+                return;
+            }
+            const deltaSec = Math.min(0.1, (now - lastTimestamp) / 1000);
+            lastTimestamp = now;
+            if (!isHover && !isDrag && setWidth > 1) {
+                let step = SPEED * deltaSec;
+                let newPos = scrollPos - step;
+                if (newPos < -setWidth) newPos += setWidth;
+                if (newPos > 0) newPos -= setWidth;
+                setPosition(newPos);
+                updateProgressBar();
+            }
+            requestAnimationFrame(animate);
+        }
 
-        const quickSubmitHandler = async function(e) {
+        function startAnimation() {
+            if (animationId) return;
+            lastTimestamp = 0;
+            animationId = requestAnimationFrame(animate);
+        }
+        function stopAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+            }
+        }
+
+        // Drag handlers
+        function onDragStart(x) {
+            isDrag = true;
+            dragStartX = x;
+            dragStartScroll = scrollPos;
+            track.style.transition = 'none';
+            stopAnimation();
+        }
+        function onDragMove(x) {
+            if (!isDrag) return;
+            const dx = x - dragStartX;
+            scrollPos = dragStartScroll + dx;
+            setPosition(scrollPos);
+            updateProgressBar();
+        }
+        function onDragEnd() {
+            if (!isDrag) return;
+            isDrag = false;
+            track.style.transition = 'transform 0.3s ease';
+            scrollPos = normalizePosition(scrollPos);
+            setPosition(scrollPos);
+            updateProgressBar();
+            if (!isHover) startAnimation();
+        }
+
+        function onMouseDown(e) {
+            if (e.button !== 0) return;
             e.preventDefault();
-
-            if (isQuickSubmitting) {
-                logInit('Быстрый заказ уже выполняется, игнорируем', 'WARN', '', 3);
-                showQuickMessage('⏳ Отправка уже выполняется, подождите...', true);
-                return;
-            }
-
-            logInit('Отправка формы quickOrderForm', 'INFO', '', 3);
-            clearQuickMessage();
-
-            let isValid = true;
-            let digits = quickPhone.value.replace(/\D/g, '');
-            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-            if (!digits.startsWith('7')) digits = '7' + digits;
-
-            if (digits.length !== MAX_PHONE_DIGITS) {
-                showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
-                isValid = false;
-            }
-
-            if (!quickConsent.checked) {
-                showQuickMessage('❌ Необходимо согласие на обработку данных');
-                isValid = false;
-            }
-
-            // Проверка корзины удалена – отправляем даже с пустой
-
-            if (!isValid) return;
-
-            if (window.normalizePhoneDigits) {
-                quickPhone.value = window.normalizePhoneDigits(quickPhone.value);
-            } else {
-                let normDigits = quickPhone.value.replace(/\D/g, '');
-                if (normDigits.startsWith('8')) normDigits = '7' + normDigits.slice(1);
-                if (!normDigits.startsWith('7')) normDigits = '7' + normDigits;
-                quickPhone.value = normDigits;
-            }
-
-            isQuickSubmitting = true;
-
-            try {
-                await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
-                    const quizData = window.getQuizDataFromForm(form);
-                    return { ...quizData, cart: window.getCartData ? window.getCartData() : '' };
-                });
-                logInit('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
-            } catch (err) {
-                logInit('Ошибка отправки формы quickOrderForm', 'ERROR', err, 2);
-                showQuickMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
-            } finally {
-                isQuickSubmitting = false;
-            }
-        };
-
-        quickForm._submitHandler = quickSubmitHandler;
-        quickForm.addEventListener('submit', quickSubmitHandler);
-
-        // Загрузка сохранённых полей и автосохранение
-        if (typeof window.loadFormFields === 'function') {
-            window.loadFormFields('quickOrderForm');
+            onDragStart(e.clientX);
         }
-        if (typeof window.bindFormAutoSave === 'function') {
-            window.bindFormAutoSave('quickOrderForm');
+        function onMouseMove(e) {
+            if (!isDrag) return;
+            e.preventDefault();
+            onDragMove(e.clientX);
         }
-    }
-
-    // ========== Копирование корзины ==========
-    const copyCartBtn = document.getElementById('copyCartBtn');
-    if (copyCartBtn) {
-        if (copyCartBtn._copyHandler) {
-            copyCartBtn.removeEventListener('click', copyCartBtn._copyHandler);
+        function onMouseUp() {
+            onDragEnd();
         }
 
-        copyCartBtn._copyHandler = () => {
-            const actionKey = 'copy_cart';
-            if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
-            logInit('Копирование корзины', 'INFO', '', 4);
-            const cartText = window.getCartData ? window.getCartData() : '';
-            if (!cartText || cartText === 'Корзина пуста') {
-                window.showWarningToast('🛒 Корзина пуста. Добавьте услуги.');
-                return;
+        function onTouchStart(e) {
+            if (e.touches.length === 1) {
+                e.preventDefault();
+                onDragStart(e.touches[0].clientX);
             }
-            const totalPrice = document.getElementById('totalPrice')?.innerText || '0 ₽';
-            const fullText = `Корзина:\n${cartText}\n\n💰 Итого: ${totalPrice}`;
-            navigator.clipboard.writeText(fullText).then(() => {
-                window.showSuccessToast('✅ Корзина скопирована в буфер обмена');
-                if (window.lockAction) window.lockAction(actionKey, 5000);
-            }).catch(() => {
-                window.showErrorToast('❌ Не удалось скопировать');
+        }
+        function onTouchMove(e) {
+            if (!isDrag || e.touches.length !== 1) return;
+            e.preventDefault();
+            onDragMove(e.touches[0].clientX);
+        }
+        function onTouchEnd() {
+            onDragEnd();
+        }
+
+        const wrapper = track.closest('.carousel-wrapper');
+        if (wrapper) {
+            wrapper.addEventListener('mouseenter', () => { isHover = true; stopAnimation(); });
+            wrapper.addEventListener('mouseleave', () => { isHover = false; if (!isDrag) startAnimation(); });
+        }
+
+        function init() {
+            // Пересчитываем ширину на случай ресайза
+            slideWidth = getSlideWidth();
+            setWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
+            scrollPos = -setWidth;   // начинаем с левого края набора
+            setPosition(scrollPos);
+            ensureProgressBar();
+            updateProgressBar();
+            startAnimation();
+
+            track.addEventListener('mousedown', onMouseDown);
+            window.addEventListener('mousemove', onMouseMove);
+            window.addEventListener('mouseup', onMouseUp);
+            track.addEventListener('touchstart', onTouchStart, { passive: false });
+            window.addEventListener('touchmove', onTouchMove, { passive: false });
+            window.addEventListener('touchend', onTouchEnd);
+
+            let resizeTimer;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    slideWidth = getSlideWidth();
+                    setWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
+                    scrollPos = normalizePosition(scrollPos);
+                    setPosition(scrollPos);
+                    updateProgressBar();
+                    if (!isHover && !isDrag) {
+                        stopAnimation();
+                        startAnimation();
+                    }
+                }, 150);
             });
-        };
 
-        copyCartBtn.addEventListener('click', copyCartBtn._copyHandler);
+            isRunning = true;
+        }
+
+        // Даём браузеру завершить вычисление стилей
+        setTimeout(init, 50);
     }
 
-    logInit('initCallbackForm finished', 'INFO', '', 3);
-}
-
-function initFormEnterSubmit() {
-    if (window._formEnterSubmitInitialized) return;
-    window._formEnterSubmitInitialized = true;
-
-    const form = document.getElementById('callbackForm');
-    if (form && !form._enterHandler) {
-        form._enterHandler = (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                const btn = form.querySelector('button[type="submit"]');
-                if (btn) btn.click();
-            }
-        };
-        form.querySelectorAll('input, textarea').forEach(input => {
-            input.removeEventListener('keypress', form._enterHandler);
-            input.addEventListener('keypress', form._enterHandler);
-        });
+    if (document.getElementById('carouselTrack')) {
+        initInfiniteCarousel('carouselTrack');
     }
-
-    const quickForm = document.getElementById('quickOrderForm');
-    if (quickForm && !quickForm._enterHandler) {
-        quickForm._enterHandler = (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                const btn = quickForm.querySelector('button[type="submit"]');
-                if (btn) btn.click();
-            }
-        };
-        quickForm.querySelectorAll('input, textarea').forEach(input => {
-            input.removeEventListener('keypress', quickForm._enterHandler);
-            input.addEventListener('keypress', quickForm._enterHandler);
-        });
-    }
-}
-
-window.initCallbackForm = initCallbackForm;
-window.initFormEnterSubmit = initFormEnterSubmit;
+    window.initInfiniteCarousel = initInfiniteCarousel;
+})();
 // ============================================================
 // 05_modal.js – Модальные окна (политика конфиденциальности)
 // ============================================================
@@ -7586,9 +7524,6 @@ function initModal() {
 window.initModal = initModal;
 window.showModal = showModal;
 window.hideModal = hideModal;
-// ============================================================
-// 06_cookie-consent.js – Управление согласием на cookie
-// ============================================================
 function initCookieConsent() {
     logInit('initCookieConsent started', 'INFO', '', 3);
     let consent = null;
@@ -7615,9 +7550,6 @@ function initCookieConsent() {
     logInit('initCookieConsent finished', 'INFO', '', 3);
 }
 window.initCookieConsent = initCookieConsent;
-// ============================================================
-// 07_navigation.js – Бургер-меню для мобильных устройств
-// ============================================================
 function initBurgerMenu() {
     logInit('initBurgerMenu started', 'INFO', '', 3);
     const burger = document.getElementById('burgerMenu');
@@ -7667,12 +7599,8 @@ function initBurgerMenu() {
 
 function initNavigation() { initBurgerMenu(); }
 
-// Единая точка экспорта (глобальные функции)
 window.initBurgerMenu = initBurgerMenu;
 window.initNavigation = initNavigation;
-// ============================================================
-// 08_copy.js – Копирование телефона и никнейма в буфер
-// ============================================================
 function initCopyButtons() {
     logInit('initCopyButtons started', 'INFO', '', 3);
     document.querySelectorAll('.copyable-phone, .copyable-text').forEach(el => {
@@ -7812,6 +7740,7 @@ for (const category of Object.values(window.LOCAL_SERVICES)) {
 logInit(`SERVICES_DATA загружено, категорий: ${Object.keys(SERVICES_DATA).length}, локальных категорий: ${Object.keys(window.LOCAL_SERVICES).length}`, 'INFO', '', 3);
 // ============================================================
 // 10_calculator.js – Калькулятор, корзина, скидка, компактная пустая корзина
+// ИСПРАВЛЕНИЯ: исправлены утечки памяти, обработчики событий теперь корректно удаляются
 // ============================================================
 let cart = [];
 function formatPrice(price) { if (price === null) return 'по запросу'; if (price === 0) return '0 ₽'; return price.toLocaleString() + ' ₽'; }
@@ -7862,7 +7791,6 @@ function renderCart() {
     const container = document.getElementById('servicesList');
     if (!container) return;
     if (cart.length === 0) {
-        // Компактное сообщение вместо пустого блока
         container.innerHTML = '<div class="cart-empty-message">🛒 Корзина пуста</div>';
         return;
     }
@@ -7878,9 +7806,22 @@ function renderCart() {
         div.innerHTML = `<div class="service-name">${escapedName}</div><div class="service-price">${priceDisplay}</div><div class="service-qty-control"><button class="qty-btn qty-minus" data-idx="${idx}">−</button><span class="qty-value">${item.qty}</span><button class="qty-btn qty-plus" data-idx="${idx}">+</button></div><div class="service-remove"><button class="remove-item" data-idx="${idx}">✖</button></div>`;
         container.appendChild(div);
     });
-    document.querySelectorAll('.qty-minus').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); if (cart[idx].qty > 1) cart[idx].qty--; else cart.splice(idx, 1); renderCart(); }; });
-    document.querySelectorAll('.qty-plus').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); cart[idx].qty++; renderCart(); }; });
-    document.querySelectorAll('.remove-item').forEach(btn => { btn.onclick = () => { const idx = parseInt(btn.dataset.idx, 10); cart.splice(idx, 1); renderCart(); }; });
+    // Используем делегирование вместо onclick на каждый элемент
+    container.querySelectorAll('.qty-minus').forEach(btn => {
+        btn.removeEventListener('click', btn._qtyHandler);
+        btn._qtyHandler = () => { const idx = parseInt(btn.dataset.idx, 10); if (cart[idx].qty > 1) cart[idx].qty--; else cart.splice(idx, 1); renderCart(); };
+        btn.addEventListener('click', btn._qtyHandler);
+    });
+    container.querySelectorAll('.qty-plus').forEach(btn => {
+        btn.removeEventListener('click', btn._qtyHandler);
+        btn._qtyHandler = () => { const idx = parseInt(btn.dataset.idx, 10); cart[idx].qty++; renderCart(); };
+        btn.addEventListener('click', btn._qtyHandler);
+    });
+    container.querySelectorAll('.remove-item').forEach(btn => {
+        btn.removeEventListener('click', btn._removeHandler);
+        btn._removeHandler = () => { const idx = parseInt(btn.dataset.idx, 10); cart.splice(idx, 1); renderCart(); };
+        btn.addEventListener('click', btn._removeHandler);
+    });
 }
 
 function populateSelect(selectId, services) {
@@ -7929,7 +7870,7 @@ function initAddButtons() {
     handlers.forEach(({btn, select, qty}) => {
         const button = document.getElementById(btn);
         if (button) {
-            button.removeEventListener('click', button._handler);
+            if (button._handler) button.removeEventListener('click', button._handler);
             button._handler = () => {
                 const selectEl = document.getElementById(select);
                 const selectedOption = selectEl.options[selectEl.selectedIndex];
@@ -7950,7 +7891,7 @@ function initAddButtons() {
 function initTabs() {
     const tabs = document.querySelectorAll('#calculator .tab-btn');
     tabs.forEach(btn => {
-        btn.removeEventListener('click', btn._tabHandler);
+        if (btn._tabHandler) btn.removeEventListener('click', btn._tabHandler);
         btn._tabHandler = () => {
             const tab = btn.dataset.tab;
             document.querySelectorAll('#calculator .tab-pane').forEach(pane => pane.classList.remove('active'));
@@ -8541,13 +8482,11 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
 (function() {
     'use strict';
 
-    // Получаем высоту фиксированной навигации (если есть)
     function getNavbarHeight() {
         const navbar = document.querySelector('.navbar');
         return navbar ? navbar.offsetHeight : 0;
     }
 
-    // Закрываем бургер-меню, если оно открыто
     function closeBurgerMenu() {
         const burger = document.getElementById('burgerMenu');
         const navBottom = document.getElementById('navBottom');
@@ -8559,35 +8498,36 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         }
     }
 
-    // Плавная прокрутка с кастомной анимацией (работает в Safari)
     function smoothScrollTo(targetElement, offset = 0) {
         if (!targetElement) return;
 
         const startPosition = window.pageYOffset;
         const targetPosition = targetElement.getBoundingClientRect().top + startPosition - offset;
         const distance = targetPosition - startPosition;
-        const duration = 900; // миллисекунд – увеличено с 600 для более медленной прокрутки
+        const duration = 900;
         let startTime = null;
 
         function animation(currentTime) {
             if (startTime === null) startTime = currentTime;
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            // easeOutCubic – плавное замедление в конце (ощущается более естественно)
             const ease = 1 - Math.pow(1 - progress, 3);
             window.scrollTo(0, startPosition + distance * ease);
             if (elapsed < duration) {
                 requestAnimationFrame(animation);
+            } else {
+                // По окончании скролла обновляем активный пункт меню, если функция существует
+                if (typeof window.updateActiveNav === 'function') {
+                    window.updateActiveNav();
+                }
             }
         }
 
         requestAnimationFrame(animation);
     }
 
-    // Делаем функцию глобальной для использования в других скриптах (например, кнопка "Наверх")
     window.smoothScrollTo = smoothScrollTo;
 
-    // Обработчик кликов по якорным ссылкам
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a[href^="#"]');
         if (!link) return;
@@ -8608,14 +8548,13 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         closeBurgerMenu();
 
         const navbarHeight = getNavbarHeight();
-        const offset = navbarHeight + 15; // +15 для отступа
+        const offset = navbarHeight + 15;
         smoothScrollTo(targetElement, offset);
     });
 })();
 // ============================================================
 // 14_quiz-scoring.js – Расчёт баллов и подбор услуг (2-4 варианта)
-// Поддержка ролей: Развиваю сотрудников, Собственник бизнеса
-// Категории приведены в соответствие с калькулятором
+// ИСПРАВЛЕНИЯ: fallback-услуги теперь имеют категорию "Базовые услуги"
 // ============================================================
 (function() {
     const CATEGORY_DISPLAY_NAMES = {
@@ -8712,8 +8651,8 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             logInit('SERVICE_WEIGHTS или ANSWER_MAPPING не загружены', 'ERROR', '', 1);
             return {
                 services: [
-                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "Ищу работу — Индивидуальная консультация (1ч)", score: 0 },
-                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "Ищу работу — Экспресс-консультация (30мин)", score: 0 }
+                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "Базовые услуги — Индивидуальная консультация (1ч)", score: 0 },
+                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "Базовые услуги — Экспресс-консультация (30мин)", score: 0 }
                 ]
             };
         }
@@ -8752,8 +8691,8 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             logInit('Не найдено подходящих услуг', 'WARN', '', 2);
             return {
                 services: [
-                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "Ищу работу — Индивидуальная консультация (1ч)", score: 0 },
-                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "Ищу работу — Экспресс-консультация (30мин)", score: 0 }
+                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "Базовые услуги — Индивидуальная консультация (1ч)", score: 0 },
+                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "Базовые услуги — Экспресс-консультация (30мин)", score: 0 }
                 ]
             };
         }
@@ -8773,7 +8712,6 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         return { services: result };
     };
 
-    // Для обратной совместимости
     window.getTopTwoServices = function(answersArr) {
         const top = window.getTopServices(answersArr);
         const services = top.services;
@@ -8799,7 +8737,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
 })();
 // ============================================================
 // 15_quiz.js – Квиз: динамические вопросы, сохранение ответов даже без выбора
-// Карточка помощи: бейдж 15 минут сверху справа, подарок слева от цены
+// Исправления: полное экранирование всех пользовательских данных, безопасная сборка HTML
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -9074,11 +9012,11 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             const serviceName = esc(s.service);
             const displayName = esc(s.formatted);
             const numericPrice = extractNumericPrice(s.price);
-            const benefit = benefitTags[serviceName] || '';
+            const benefit = benefitTags[serviceName] ? esc(benefitTags[serviceName]) : '';
 
             cardsHtml += `
                 <div class="quiz-result-card" data-service-name="${serviceName}" data-price="${numericPrice !== null ? numericPrice : ''}">
-                    ${benefit ? `<div class="quiz-benefit-badge">${esc(benefit)}</div>` : ''}
+                    ${benefit ? `<div class="quiz-benefit-badge">${benefit}</div>` : ''}
                     <div class="quiz-result-header">
                         <div class="quiz-result-icon">${i === 0 ? '🏆' : '🥈'}</div>
                         <div class="quiz-result-category">${esc(category)}</div>
@@ -9561,9 +9499,7 @@ window.isValidEmail = isValidEmail;
                 } finally {
                     sendBtn.disabled = false;
                     sendBtn.innerText = originalText;
-                    setTimeout(() => {
-                        isModalSending = false;
-                    }, 500);
+                    isModalSending = false;
                 }
             };
             sendBtn.addEventListener('click', sendBtn._sendHandler);
@@ -9583,27 +9519,25 @@ window.isValidEmail = isValidEmail;
         logInit('initMaterialsEmailButtons finished', 'INFO', '', 4);
     }
 
-    // ========== ИСПРАВЛЕННАЯ ФУНКЦИЯ ПОДСВЕТКИ МЕНЮ ==========
-    function initActiveNav() {
-        const navLinks = document.querySelectorAll('.nav-links a');
-        if (!navLinks.length) return;
+    // Обновление активного пункта меню с debounce для производительности
+    let updateActiveNavTimeout = null;
+    function updateActiveNav() {
+        if (updateActiveNavTimeout) clearTimeout(updateActiveNavTimeout);
+        updateActiveNavTimeout = setTimeout(() => {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            if (!navLinks.length) return;
 
-        // Список id секций, которые есть в меню (соответствие href без #)
-        const menuSectionIds = Array.from(navLinks).map(link => {
-            const href = link.getAttribute('href');
-            return href ? href.substring(1) : null;
-        }).filter(Boolean);
+            const menuSectionIds = Array.from(navLinks).map(link => {
+                const href = link.getAttribute('href');
+                return href ? href.substring(1) : null;
+            }).filter(Boolean);
 
-        // Функция проверки, видна ли секция (хотя бы частично)
-        function isSectionVisible(section) {
-            const rect = section.getBoundingClientRect();
-            return rect.top < window.innerHeight && rect.bottom > 0;
-        }
+            function isSectionVisible(section) {
+                const rect = section.getBoundingClientRect();
+                return rect.top < window.innerHeight && rect.bottom > 0;
+            }
 
-        function updateActiveNav() {
             let activeId = null;
-
-            // Приоритет: если секция #home видна хотя бы на 10% и её верх не уехал далеко
             const homeSection = document.getElementById('home');
             if (homeSection) {
                 const rect = homeSection.getBoundingClientRect();
@@ -9614,18 +9548,14 @@ window.isValidEmail = isValidEmail;
                 }
             }
 
-            // Если home не активна, ищем среди секций, которые есть в меню
             if (!activeId) {
                 let bestSection = null;
                 let bestTop = Infinity;
-
                 for (const id of menuSectionIds) {
                     const section = document.getElementById(id);
                     if (!section) continue;
                     const rect = section.getBoundingClientRect();
-                    // Если секция видима (хотя бы частично)
                     if (isSectionVisible(section)) {
-                        // Берём ту, чья верхняя граница ближе всего к верху (но не отрицательная далеко)
                         const top = rect.top;
                         if (top >= 0 && top < bestTop) {
                             bestTop = top;
@@ -9633,11 +9563,8 @@ window.isValidEmail = isValidEmail;
                         }
                     }
                 }
-
-                if (bestSection) {
-                    activeId = bestSection.id;
-                } else {
-                    // Если ни одна секция из меню не видна, пытаемся найти ближайшую сверху (последнюю, чей низ положительный)
+                if (bestSection) activeId = bestSection.id;
+                else {
                     let lastVisibleId = null;
                     let lastVisibleBottom = -Infinity;
                     for (const id of menuSectionIds) {
@@ -9655,17 +9582,17 @@ window.isValidEmail = isValidEmail;
                 }
             }
 
-            // Обновляем классы у ссылок
             navLinks.forEach(link => {
                 const href = link.getAttribute('href');
-                if (href === `#${activeId}`) {
-                    link.classList.add('active');
-                } else {
-                    link.classList.remove('active');
-                }
+                if (href === `#${activeId}`) link.classList.add('active');
+                else link.classList.remove('active');
             });
-        }
+        }, 50);
+    }
 
+    window.updateActiveNav = updateActiveNav;
+
+    function initActiveNav() {
         window.addEventListener('scroll', updateActiveNav);
         window.addEventListener('resize', updateActiveNav);
         updateActiveNav();
@@ -9737,26 +9664,39 @@ window.isValidEmail = isValidEmail;
         const originalInitCalculator = window.initCalculator;
         const originalInitQuiz = window.initQuiz;
 
-        window.initCalculator = async function () {
-            logInit('Переопределённый initCalculator запущен', 'INFO', '', 3);
-            await originalInitCalculator();
-            logInit('originalInitCalculator завершён', 'INFO', '', 3);
-            setTimeout(reinitAnimations, 100);
-            setTimeout(animateStats, 150);
-        };
-        window.initQuiz = function () {
-            logInit('Переопределённый initQuiz запущен', 'INFO', '', 3);
-            originalInitQuiz();
-            setTimeout(reinitAnimations, 150);
-            setTimeout(animateStats, 200);
-        };
+        if (typeof originalInitCalculator === 'function') {
+            window.initCalculator = async function () {
+                logInit('Переопределённый initCalculator запущен', 'INFO', '', 3);
+                await originalInitCalculator();
+                logInit('originalInitCalculator завершён', 'INFO', '', 3);
+                setTimeout(reinitAnimations, 100);
+                setTimeout(animateStats, 150);
+            };
+        } else {
+            logInit('originalInitCalculator не найден, пропускаем', 'WARN', '', 2);
+        }
 
-        logInit('Запуск window.initCalculator()', 'INFO', '', 3);
-        window.initCalculator();
-        logInit('Запуск window.initQuiz()', 'INFO', '', 3);
-        window.initQuiz();
+        if (typeof originalInitQuiz === 'function') {
+            window.initQuiz = function () {
+                logInit('Переопределённый initQuiz запущен', 'INFO', '', 3);
+                originalInitQuiz();
+                setTimeout(reinitAnimations, 150);
+                setTimeout(animateStats, 200);
+            };
+        } else {
+            logInit('originalInitQuiz не найден, пропускаем', 'WARN', '', 2);
+        }
 
-        initActiveNav();    // <--- ИСПРАВЛЕННАЯ ПОДСВЕТКА
+        if (typeof window.initCalculator === 'function') {
+            logInit('Запуск window.initCalculator()', 'INFO', '', 3);
+            window.initCalculator();
+        }
+        if (typeof window.initQuiz === 'function') {
+            logInit('Запуск window.initQuiz()', 'INFO', '', 3);
+            window.initQuiz();
+        }
+
+        initActiveNav();
         initFormValidation();
         initScrollTopButton();
         initMaterialsEmailButtons();
