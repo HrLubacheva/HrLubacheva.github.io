@@ -42,7 +42,7 @@ window.APP_CONFIG = {
         LOCALSTORAGE_GEO_KEY: 'hr_geo',
         LOCALSTORAGE_USER_ID_KEY: 'hr_user_id',
         DEFAULT_QUANTITY: 1,
-        LOG_LEVEL: 5,
+        LOG_LEVEL: 0,
         FORCE_SEND_LOGS_TO_SERVER: false,
     },
     SECTION_IDS: {
