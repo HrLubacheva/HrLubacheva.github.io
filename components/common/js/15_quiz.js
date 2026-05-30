@@ -1,8 +1,6 @@
 // ============================================================
-// 15_quiz.js – Квиз: 5 вопросов, 2 услуги + бесплатная консультация
-// Без подсветки лучшего выбора.
-// При выборе услуги -> addToCart + скролл к #cart
-// При помощи -> скролл к #callback-form
+// 15_quiz.js – Квиз: динамические вопросы, сохранение ответов даже без выбора
+// Карточка помощи: бейдж 15 минут сверху справа, подарок слева от цены
 // ============================================================
 (function () {
     let quizQuestions = [];
@@ -58,9 +56,20 @@
         }
     }
 
-    // Ищем корзину строго по id="cart"
     function getCartElement() {
         return document.getElementById('cart');
+    }
+
+    function setField(form, name, value) {
+        let input = form.querySelector(`[name="${name}"]`);
+        if (!input) {
+            input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            input.id = name;
+            form.appendChild(input);
+        }
+        input.value = value;
     }
 
     function updateFormHiddenFields(chosenText, chosenPrice, originalText, originalPrice, recommendedStr, answersArr) {
@@ -84,18 +93,6 @@
             setField(form, 'quiz_chosen_variant', chosenText);
             setField(form, 'quiz_chosen_price', chosenPrice);
         });
-    }
-
-    function setField(form, name, value) {
-        let input = form.querySelector(`[name="${name}"]`);
-        if (!input) {
-            input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = name;
-            input.id = name;
-            form.appendChild(input);
-        }
-        input.value = value;
     }
 
     function updateSelectionBlock(variantText, variantPrice) {
@@ -126,12 +123,15 @@
         else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
 
-    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Рост в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Найти себя / определиться с путём"] };
-    const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
-    const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Собственник бизнеса", "Директор / Managing Director"] };
-    const URGENCY_QUESTION = { text: "3. Как быстро нужен результат?", options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Ежемесячно / на постоянной основе", "Планирую постепенно"] };
-    const IMPORTANCE_QUESTION = { text: "4. Что для вас важнее всего?", options: ["Зарплата", "Условия/удаленка", "Карьерный рост", "Команда и ценности", "Баланс работы и жизни"] };
-    const BUDGET_QUESTION = { text: "5. Бюджет на консультацию/подбор?", options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"] };
+    // Вопросы
+    const FIRST_QUESTION = { text: "1. Ваша роль?", options: ["Ищу работу", "Хочу сменить профессию", "Хочу вырасти в текущей компании", "Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса", "Найти себя / определиться с путём"] };
+    const LEVEL_JOBSEEKER = { text: "2. Ваш текущий уровень?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Директор / Managing Director"] };
+    const LEVEL_RECRUITER = { text: "2. Какой уровень сотрудника ищете / развиваете?", options: ["Junior / начинающий", "Middle / опытный", "Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Директор / Managing Director"] };
+    const URGENCY_QUESTION = { text: "3. Как быстро нужен результат?", options: ["Максимально быстро", "1–2 месяца", "3–6 месяцев", "В течение года", "Планирую постепенно"] };
+    const IMPORTANCE_QUESTION = { text: "4. Что для вас важнее всего?", options: ["Доход / Прибыль бизнеса", "Условия / Удаленка / Формат работы", "Профессиональный рост / Масштабирование", "Команда и ценности", "Баланс работы и жизни"] };
+    const IMPORTANCE_FIND_MYSELF = { text: "4. Что для вас важнее всего?", options: ["Понять свои сильные стороны", "Разобраться, какая профессия подходит", "Преодолеть страх перемен", "Узнать перспективные сферы", "Составить план выхода из тупика"] };
+    const BUDGET_USER = { text: "5. Бюджет на консультацию / обучение?", options: ["До 5 000 ₽", "5 000 – 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Более 500 000 ₽"] };
+    const BUDGET_BUSINESS = { text: "5. Бюджет на подбор / развитие / консалтинг?", options: ["До 15 000 ₽", "15 000 – 50 000 ₽", "50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Более 500 000 ₽"] };
 
     let currentRole = null;
     let isSubmittingChoice = false;
@@ -147,7 +147,7 @@
             LEVEL_JOBSEEKER,
             URGENCY_QUESTION,
             IMPORTANCE_QUESTION,
-            BUDGET_QUESTION
+            BUDGET_USER
         ];
         selectedVariantText = ''; selectedVariantPrice = ''; selectedOriginalText = ''; selectedOriginalPrice = '';
         updateFormHiddenFields('', '', '', '', '', answers);
@@ -155,15 +155,29 @@
         renderQuiz();
     }
 
-    function updateSecondQuestion(role) {
+    function updateQuestionsByRole(role) {
         const businessRoles = ["Подбираю сотрудников", "Развиваю сотрудников", "Собственник бизнеса"];
         if (businessRoles.includes(role)) {
             quizQuestions[1] = {...LEVEL_RECRUITER};
         } else {
             quizQuestions[1] = {...LEVEL_JOBSEEKER};
         }
+        if (role === "Найти себя / определиться с путём") {
+            quizQuestions[3] = {...IMPORTANCE_FIND_MYSELF};
+        } else {
+            quizQuestions[3] = {...IMPORTANCE_QUESTION};
+        }
+        if (businessRoles.includes(role)) {
+            quizQuestions[4] = {...BUDGET_BUSINESS};
+        } else {
+            quizQuestions[4] = {...BUDGET_USER};
+        }
         if (answers[1] && !quizQuestions[1].options.includes(answers[1])) answers[1] = null;
-        if (currentQuestionIndex === 1 && quizState === 'questions') renderQuiz();
+        if (answers[3] && !quizQuestions[3].options.includes(answers[3])) answers[3] = null;
+        if (answers[4] && !quizQuestions[4].options.includes(answers[4])) answers[4] = null;
+        if (currentQuestionIndex === 1 || currentQuestionIndex === 3 || currentQuestionIndex === 4) {
+            renderQuiz();
+        }
     }
 
     function renderQuiz() {
@@ -188,7 +202,7 @@
                     answers[currentQuestionIndex] = selected;
                     if (currentQuestionIndex === 0) {
                         currentRole = selected;
-                        updateSecondQuestion(currentRole);
+                        updateQuestionsByRole(currentRole);
                     }
                     if (currentQuestionIndex === quizQuestions.length - 1) {
                         isAnalyzing = true;
@@ -243,6 +257,14 @@
         const recommendationsText = topTwo.map((s, idx) => `📌 Рекомендация ${idx+1}: ${s.formatted} (${s.price})`).join('\n');
         const esc = window.escapeHtml;
 
+        const answersArr = answers.slice();
+        const answersStr = answersArr.map((a, idx) => {
+            const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
+            return `${qText}: ${a || 'не выбран'}`;
+        }).join('\n');
+        updateFormHiddenFields('', '', '', '', recommendationsText, answersArr);
+        updateSelectionBlock('', '');
+
         let cardsHtml = '';
         for (let i = 0; i < topTwo.length; i++) {
             const s = topTwo[i];
@@ -257,11 +279,15 @@
 
             cardsHtml += `
                 <div class="quiz-result-card" data-service-name="${serviceName}" data-price="${numericPrice !== null ? numericPrice : ''}">
-                    <div class="quiz-result-icon">${i === 0 ? '🏆' : '🥈'}</div>
-                    <div class="quiz-result-category">${esc(category)}</div>
-                    <div class="quiz-result-title">${name}</div>
-                    ${benefit ? `<div class="quiz-result-benefit">${esc(benefit)}</div>` : ''}
-                    <div class="quiz-result-price">💰 ${price}</div>
+                    ${benefit ? `<div class="quiz-benefit-badge">${esc(benefit)}</div>` : ''}
+                    <div class="quiz-result-header">
+                        <div class="quiz-result-icon">${i === 0 ? '🏆' : '🥈'}</div>
+                        <div class="quiz-result-category">${esc(category)}</div>
+                    </div>
+                    <div class="quiz-result-title-row">
+                        <div class="quiz-result-title">${name}</div>
+                        <div class="quiz-result-price">💰 ${price}</div>
+                    </div>
                     <div class="quiz-result-buttons">
                         <button class="quiz-btn-select choose-option" data-choice="${i}" data-text="${serviceName}" data-price="${price}" data-display="${displayName}" data-numeric-price="${numericPrice !== null ? numericPrice : ''}">✅ Выбрать</button>
                     </div>
@@ -269,14 +295,23 @@
             `;
         }
 
+        // Карточка помощи – бейдж сверху справа, подарок слева от цены
         cardsHtml += `
-            <div class="quiz-result-card">
-                <div class="quiz-result-icon">🤝</div>
-                <div class="quiz-result-category">Помощь эксперта</div>
-                <div class="quiz-result-title">Бесплатная консультация</div>
-                <div class="quiz-result-price" style="background:#f5f5f5; color:#666;">🎁 15 минут</div>
+            <div class="quiz-result-card help-card">
+                <div class="help-duration-badge">15 минут</div>
+                <div class="quiz-result-header">
+                    <div class="quiz-result-icon">🤝</div>
+                    <div class="quiz-result-category">Помощь эксперта</div>
+                </div>
+                <div class="quiz-result-title-row">
+                    <div class="quiz-result-title">Экспресс-диагностика</div>
+                    <div class="quiz-price-wrapper">
+                        <span class="quiz-result-gift">🎁</span>
+                        <span class="quiz-result-price">0 ₽</span>
+                    </div>
+                </div>
                 <div class="quiz-result-buttons">
-                    <button class="quiz-btn-help choose-help" data-choice="help" data-text="Помогите выбрать (бесплатная консультация)" data-price="">Нужна помощь →</button>
+                    <button class="quiz-btn-help choose-help" data-choice="help" data-text="Экспресс-диагностика (0 ₽)" data-price="0 ₽">Нужна помощь →</button>
                 </div>
             </div>
         `;
@@ -295,7 +330,6 @@
 
         container.innerHTML = html;
 
-        // Обработчик кнопки "✅ Выбрать" – добавление в корзину + скролл к #cart
         document.querySelectorAll('.choose-option').forEach(btn => {
             btn.removeEventListener('click', btn._choiceHandler);
             btn._choiceHandler = (e) => {
@@ -306,7 +340,6 @@
                 const displayText = btn.dataset.display || variantText;
                 const numericPrice = btn.dataset.numericPrice ? parseInt(btn.dataset.numericPrice, 10) : null;
 
-                // Добавление в корзину
                 if (numericPrice !== null && numericPrice !== 0 && typeof window.addToCart === 'function') {
                     window.addToCart(variantText, numericPrice, 1);
                     window.showSuccessToast(`🛒 ${variantText} добавлен(а) в корзину`);
@@ -316,26 +349,23 @@
                     window.showSuccessToast(`✅ Выбрано: ${displayText} (добавление в корзину недоступно)`);
                 }
 
-                // Сохранение выбора
                 selectedVariantText = displayText;
                 selectedVariantPrice = variantPrice;
                 selectedOriginalText = variantText;
                 selectedOriginalPrice = variantPrice;
-                const answersArr = answers.slice();
-                const answersStr = answersArr.map((a, idx) => {
+                const answersArr2 = answers.slice();
+                const answersStr2 = answersArr2.map((a, idx) => {
                     const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
                     return `${qText}: ${a || 'не выбран'}`;
                 }).join('\n');
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendationsText, answersArr);
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendationsText, answersArr2);
                 updateSelectionBlock(selectedVariantText, selectedVariantPrice);
-                sendQuizStats(answersStr, recommendationsText, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
+                sendQuizStats(answersStr2, recommendationsText, selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice);
 
-                // Подсветка выбранной карточки
                 document.querySelectorAll('.quiz-result-card').forEach(card => card.classList.remove('selected'));
                 const currentCard = btn.closest('.quiz-result-card');
                 if (currentCard) currentCard.classList.add('selected');
 
-                // Скролл к корзине (строго по id="cart")
                 const cartElement = getCartElement();
                 if (cartElement) {
                     scrollToElement(cartElement);
@@ -348,7 +378,6 @@
             btn.addEventListener('click', btn._choiceHandler);
         });
 
-        // Обработчик "Нужна помощь?" – скролл к #callback-form
         const helpBtn = document.querySelector('.choose-help');
         if (helpBtn) {
             helpBtn.removeEventListener('click', helpBtn._helpHandler);
@@ -357,16 +386,16 @@
                 isSubmittingChoice = true;
                 selectedVariantText = '';
                 selectedVariantPrice = '';
-                selectedOriginalText = 'Помогите выбрать (бесплатная консультация)';
+                selectedOriginalText = 'Экспресс-диагностика (0 ₽)';
                 selectedOriginalPrice = '';
-                const answersArr = answers.slice();
-                const answersStr = answersArr.map((a, idx) => {
+                const answersArr2 = answers.slice();
+                const answersStr2 = answersArr2.map((a, idx) => {
                     const qText = ['Роль', 'Уровень', 'Срочность', 'Важность', 'Бюджет'][idx];
                     return `${qText}: ${a || 'не выбран'}`;
                 }).join('\n');
-                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendationsText, answersArr);
+                updateFormHiddenFields(selectedVariantText, selectedVariantPrice, selectedOriginalText, selectedOriginalPrice, recommendationsText, answersArr2);
                 updateSelectionBlock(selectedOriginalText, selectedOriginalPrice);
-                sendQuizStats(answersStr, recommendationsText, '', '', selectedOriginalText, selectedOriginalPrice);
+                sendQuizStats(answersStr2, recommendationsText, '', '', selectedOriginalText, selectedOriginalPrice);
                 window.showSuccessToast('🙏 Спасибо! Я свяжусь с вами.');
 
                 const callbackForm = document.getElementById('callback-form');
@@ -450,15 +479,27 @@
                 if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
                 const chosenVariant = document.getElementById('chosenVariant')?.value || '';
                 const chosenVariantPrice = document.getElementById('chosenVariantPrice')?.value || '';
-                const originalChosenVariant = document.getElementById('originalChosenVariant')?.value || '';
                 const recommendedVariants = document.getElementById('recommendedVariants')?.value || '';
-                if (!chosenVariant && !originalChosenVariant) { window.showWarningToast('📋 Пройдите квиз и выберите вариант, чтобы скопировать рекомендации.'); return; }
+                if (!chosenVariant) {
+                    window.showWarningToast('📋 Пройдите квиз и выберите вариант, чтобы скопировать рекомендации.');
+                    return;
+                }
                 let copyText = '🎯 Мои результаты квиза у Виктории Любачевой:\n\n';
-                if (chosenVariant) { copyText += `✅ Выбранный вариант: ${chosenVariant}`; if (chosenVariantPrice) copyText += ` (${chosenVariantPrice})`; copyText += '\n'; }
-                if (originalChosenVariant && originalChosenVariant !== chosenVariant) copyText += `📌 Исходный выбор: ${originalChosenVariant}\n`;
-                if (recommendedVariants) copyText += `\n📌 Рекомендации эксперта:\n${recommendedVariants}\n`;
+                if (chosenVariant) {
+                    copyText += `✅ Выбранный вариант: ${chosenVariant}`;
+                    if (chosenVariantPrice) copyText += ` (${chosenVariantPrice})`;
+                    copyText += '\n';
+                }
+                if (recommendedVariants) {
+                    copyText += `\n📌 Рекомендации эксперта:\n${recommendedVariants}\n`;
+                }
                 copyText += `\n🔗 ${window.location.href.split('?')[0]}`;
-                navigator.clipboard.writeText(copyText).then(() => { window.showSuccessToast('✅ Рекомендации скопированы в буфер'); if (window.lockAction) window.lockAction(actionKey, 5000); }).catch(() => { window.showErrorToast('❌ Не удалось скопировать'); });
+                navigator.clipboard.writeText(copyText).then(() => {
+                    window.showSuccessToast('✅ Рекомендации скопированы в буфер');
+                    if (window.lockAction) window.lockAction(actionKey, 5000);
+                }).catch(() => {
+                    window.showErrorToast('❌ Не удалось скопировать');
+                });
             };
             copyResultBtn.addEventListener('click', copyResultBtn._copyHandler);
         }

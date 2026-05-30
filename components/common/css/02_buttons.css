@@ -1,7 +1,6 @@
 /* ==================================================================
-   02_buttons.css – кнопки с плавными эффектами (без смещений)
+   02_buttons.css – кнопки с плавными эффектами
    ================================================================== */
-
 .btn {
     display: inline-block;
     padding: 12px 28px;
@@ -17,15 +16,15 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    background: var(--gradient-cta);
     color: white;
     box-shadow: var(--shadow-sm);
     position: relative;
     overflow: hidden;
 }
 .btn-primary:hover {
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-    box-shadow: 0 0 12px rgba(45,106,159,0.5);
+    background: var(--gradient-cta-hover);
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
 }
 .btn-primary:active {
     transform: scale(0.98);
@@ -76,19 +75,4 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-}
-.btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--accent-warm));
-    color: white;
-    box-shadow: var(--shadow-sm);
-    position: relative;
-    overflow: hidden;
-}
-.btn-primary:hover {
-    background: linear-gradient(135deg, var(--primary-dark), var(--accent-warm-light));
-    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
-}
-.btn-primary:active {
-    transform: scale(0.98);
-    transition: transform 0.05s;
 }

@@ -1,7 +1,6 @@
 /* ==================================================================
    05_stats_benefits.css – статистика и преимущества (уменьшенная высота, улучшенный вид)
    ================================================================== */
-
 /* ========== СТАТИСТИКА ========== */
 .stats-grid {
     display: grid;
@@ -84,37 +83,36 @@
 
 /* ========== ПРЕИМУЩЕСТВА – СТРОГО 2 КОЛОНКИ 50% НА 50% ========== */
 .benefits-two-columns {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 60px !important;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 60px;
 }
 @media (min-width: 992px) {
     .benefits-two-columns {
-        gap: 60px !important;
+        gap: 60px;
     }
     .benefits-column {
-        flex: 0 0 calc(50% - 30px) !important;
-        max-width: calc(50% - 30px) !important;
-        min-width: 0 !important;
-        width: auto !important;
+        flex: 0 0 calc(50% - 30px);
+        max-width: calc(50% - 30px);
+        min-width: 0;
+        width: auto;
     }
 }
 @media (max-width: 991px) {
     .benefits-two-columns {
-        flex-direction: column !important;
-        gap: 48px !important;
+        flex-direction: column;
+        gap: 48px;
     }
     .benefits-column {
-        flex: 1 1 100% !important;
-        max-width: 100% !important;
-        width: 100% !important;
+        flex: 1 1 100%;
+        max-width: 100%;
+        width: 100%;
     }
 }
 .benefits-column {
     position: relative;
     padding: 8px 0;
 }
-/* Декоративные полоски – только на десктопе */
 @media (min-width: 992px) {
     .benefits-column:first-child::before {
         content: '';
@@ -140,7 +138,6 @@
     }
 }
 
-/* ========== ЗАГОЛОВКИ КОЛОНОК – КОМПАКТНЫЕ ========== */
 .benefits-column-header {
     text-align: center;
     margin-bottom: 28px;
@@ -185,7 +182,6 @@
     margin: 0;
 }
 
-/* ========== КАРТОЧКИ – УМЕНЬШЕННАЯ ВЫСОТА, ЧИТАЕМОСТЬ ========== */
 .benefits-stack {
     display: flex;
     flex-direction: column;
@@ -206,21 +202,17 @@
     justify-content: center;
     width: 100%;
     box-sizing: border-box;
-    -webkit-hyphens: auto;
-    -ms-hyphens: auto;
     hyphens: auto;
     word-break: normal;
     overflow-wrap: break-word;
     min-height: 180px;
 }
-/* На мобильных убираем фиксированную высоту */
 @media (max-width: 991px) {
     .benefit-card {
         min-height: auto;
         padding: 16px 14px;
     }
 }
-/* Верхняя декоративная линия */
 .benefit-card::before {
     content: '';
     position: absolute;
@@ -236,7 +228,6 @@
 .benefit-card:hover::before {
     transform: scaleX(1);
 }
-/* Разделительная линия между заголовком и текстом */
 .benefit-card h4::after {
     content: '';
     display: block;
@@ -283,7 +274,6 @@
     color: var(--primary);
 }
 
-/* ========== АДАПТИВ ДЛЯ ПЛАНШЕТОВ И МОБИЛЬНЫХ ========== */
 @media (max-width: 991px) {
     .benefits-two-columns {
         flex-direction: column;
@@ -357,7 +347,6 @@
     }
 }
 
-/* ========== УМЕНЬШАЕМ СТАТИСТИКУ НА ТЕЛЕФОНАХ ========== */
 @media (max-width: 640px) {
     .stats-grid {
         gap: 16px;

@@ -14,8 +14,8 @@
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-family: 'Inter', sans-serif;
+    animation: cookieSlideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
-
 .cookie-consent__inner {
     max-width: 1200px;
     margin: 0 auto;
@@ -25,7 +25,6 @@
     justify-content: space-between;
     gap: 20px;
 }
-
 .cookie-consent__text {
     display: flex;
     align-items: center;
@@ -33,48 +32,40 @@
     flex: 2;
     min-width: 240px;
 }
-
 .cookie-icon {
     font-size: 1.8rem;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
-
 .cookie-consent__text p {
     margin: 0;
     font-size: 0.9rem;
     line-height: 1.4;
     color: #e2e8f0;
 }
-
 .cookie-consent a {
     color: var(--primary-light);
     text-decoration: underline;
     transition: color 0.2s ease;
 }
-
 .cookie-consent a:hover {
     color: white;
 }
-
 .cookie-consent__buttons {
     display: flex;
     gap: 12px;
     flex-shrink: 0;
 }
-
 .cookie-consent__buttons .btn-primary {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    background: var(--gradient-cta);
     border: none;
     padding: 8px 20px;
     font-weight: 600;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
-
 .cookie-consent__buttons .btn-primary:hover {
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-    box-shadow: 0 4px 12px rgba(45,106,159,0.4);
+    background: var(--gradient-cta-hover);
+    box-shadow: 0 4px 12px rgba(230,126,34,0.4);
 }
-
 .cookie-consent__buttons .btn-secondary {
     background: transparent;
     border: 1px solid var(--primary-light);
@@ -82,14 +73,11 @@
     padding: 8px 20px;
     font-weight: 600;
 }
-
 .cookie-consent__buttons .btn-secondary:hover {
     background: rgba(74, 139, 194, 0.15);
     border-color: white;
     color: white;
 }
-
-/* Анимация появления */
 @keyframes cookieSlideUp {
     from {
         transform: translateY(100%);
@@ -100,12 +88,6 @@
         opacity: 1;
     }
 }
-
-.cookie-consent {
-    animation: cookieSlideUp 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-}
-
-/* Адаптив для мобильных */
 @media (max-width: 640px) {
     .cookie-consent {
         padding: 16px;

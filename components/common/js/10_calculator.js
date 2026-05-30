@@ -1,5 +1,5 @@
 // ============================================================
-// 10_calculator.js – Калькулятор стоимости услуг, корзина, скидка
+// 10_calculator.js – Калькулятор, корзина, скидка, компактная пустая корзина
 // ============================================================
 let cart = [];
 function formatPrice(price) { if (price === null) return 'по запросу'; if (price === 0) return '0 ₽'; return price.toLocaleString() + ' ₽'; }
@@ -17,7 +17,6 @@ function renderCart() {
     cart.forEach(item => {
         const itemPrice = getNumericPrice(item.price);
         total += itemPrice * item.qty;
-        // Учитываем в количестве только платные услуги (price !== null и price > 0)
         if (item.price !== null && item.price > 0) {
             totalQty += item.qty;
         }
@@ -41,7 +40,7 @@ function renderCart() {
         } else if (totalQty === 0 && cart.length > 0) {
             discountDiv.innerHTML = '🔹 В корзине только услуги по запросу. Скидка не применяется.';
         } else if (cart.length === 0) {
-            discountDiv.innerHTML = '🔹 Добавьте услуги для расчёта скидки';
+            discountDiv.innerHTML = '🔹 Корзина пуста. Добавьте услуги для расчёта скидки';
         } else if (totalQty === 1 && total > 0) {
             discountDiv.innerHTML = '🔹 Добавьте ещё одну платную услугу для скидки 5%';
         } else {
@@ -50,7 +49,11 @@ function renderCart() {
     }
     const container = document.getElementById('servicesList');
     if (!container) return;
-    if (cart.length === 0) { container.innerHTML = ''; return; }
+    if (cart.length === 0) {
+        // Компактное сообщение вместо пустого блока
+        container.innerHTML = '<div class="cart-empty-message">🛒 Корзина пуста</div>';
+        return;
+    }
     container.innerHTML = '';
     cart.forEach((item, idx) => {
         const div = document.createElement('div');

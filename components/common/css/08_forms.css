@@ -121,7 +121,7 @@
     border: 1px solid #b3e6cc;
 }
 .callback-submit {
-    background: var(--primary);
+    background: var(--gradient-cta);
     font-size: 1rem;
     padding: 12px 20px;
     font-weight: 700;
@@ -129,9 +129,13 @@
     margin-top: 0.75rem;
     border: none;
     cursor: pointer;
+    border-radius: 40px;
+    color: white;
+    transition: all 0.25s ease;
 }
 .callback-submit:hover {
-    background: var(--primary-dark);
+    background: var(--gradient-cta-hover);
+    box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
 }
 .callback-subtitle {
     font-size: 0.8rem;
@@ -229,8 +233,6 @@
 .callback-telegram-alt a:hover {
     text-decoration: underline;
 }
-
-/* ========== БЕСПЛАТНЫЕ МАТЕРИАЛЫ: 3 СТОЛБЦА С АДАПТИВОМ ========== */
 .freebies-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -240,22 +242,17 @@
     margin: 0 auto 24px;
     padding: 0;
 }
-
-/* Планшеты (768–991px) – 2 столбца */
 @media (max-width: 991px) {
     .freebies-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 24px;
     }
-    /* Чтобы третий элемент не оставался один, можно центрировать, но лучше пусть будет на всю ширину */
     .freebies-grid .freebie-item:last-child {
         grid-column: span 2;
         max-width: 360px;
         margin: 0 auto;
     }
 }
-
-/* Телефоны (≤767px) – 1 столбец */
 @media (max-width: 767px) {
     .freebies-grid {
         grid-template-columns: 1fr;
@@ -266,8 +263,6 @@
         max-width: 100%;
     }
 }
-
-/* Для совсем узких экранов (≤480px) – чуть меньше отступов */
 @media (max-width: 480px) {
     .freebies-grid {
         gap: 20px;
@@ -276,20 +271,15 @@
         padding: 0 8px;
     }
 }
-
-/* Выравнивание иконок и текста по центру (уже есть в .freebie-item, но усиливаем) */
 .freebie-item {
     text-align: center;
     width: 100%;
 }
-
-/* Кнопки в блоке выбранной услуги квиза */
 .callback-quiz-selection .service-actions {
     display: flex;
     gap: 8px;
     align-items: center;
 }
-
 @media (max-width: 768px) {
     .callback-quiz-selection .service-actions {
         margin-top: 8px;
@@ -300,25 +290,6 @@
         padding: 6px 12px;
     }
 }
-
-/* Кнопки в блоке выбранной услуги квиза */
-.callback-quiz-selection .service-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
-@media (max-width: 768px) {
-    .callback-quiz-selection .service-actions {
-        margin-top: 8px;
-        justify-content: flex-end;
-    }
-    .callback-quiz-selection .service-actions button {
-        font-size: 0.8rem;
-        padding: 6px 12px;
-    }
-}
-
 @media (max-width: 400px) {
     .form-row-messages {
         flex-direction: column;

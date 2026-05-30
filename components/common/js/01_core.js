@@ -1,37 +1,24 @@
 // ============================================================
-// 01_core.js – Ядро: утилиты, тосты, fetch, валидация,
-// отправка форм с локальным кэшированием и защитой от дублей
+// 01_core.js – Ядро с обходом CORS, валидацией и сохранением полей
 // ============================================================
 
 function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function (m) {
-        if (m === '&') return '&amp;';
-        if (m === '<') return '&lt;';
-        if (m === '>') return '&gt;';
-        return m;
-    });
+    return str;
 }
 
 const IS_DEV = window.location.hostname === 'localhost' ||
     window.location.hostname === '127.0.0.1' ||
     window.location.search.includes('debug=true');
 
+const IS_TEST = window.location.search.includes('test=1');
 let originalConsoleLog = null;
 
-function log(...args) {
-    if (IS_DEV) console.log(...args);
-}
-
-function logError(...args) {
-    console.error(...args);
-}
-
-function logWarn(...args) {
-    if (IS_DEV) console.warn(...args);
-}
+function log(...args) { if (IS_DEV) console.log(...args); }
+function logError(...args) { console.error(...args); }
+function logWarn(...args) { if (IS_DEV) console.warn(...args); }
 
 window.IS_DEV = IS_DEV;
+window.IS_TEST = IS_TEST;
 
 window.enableLogs = function () {
     if (typeof originalConsoleLog === 'undefined') return;
@@ -63,60 +50,9 @@ function getOrCreateLocalUserId() {
 }
 
 let currentUserId = null;
-
 async function initUserId() {
     currentUserId = getOrCreateLocalUserId();
     return currentUserId;
-}
-
-async function fetchWithRetry(url, options = {}, retries = null, timeout = null) {
-    const maxRetries = retries !== null ? retries : (window.APP_CONFIG?.CONSTANTS?.FETCH_RETRIES || 3);
-    const timeoutMs = timeout !== null ? timeout : (window.APP_CONFIG?.CONSTANTS?.FETCH_TIMEOUT || 10000);
-    const baseDelay = window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_BASE || 2000;
-    const maxDelay = window.APP_CONFIG?.CONSTANTS?.FETCH_RETRY_DELAY_MAX || 5000;
-    let lastError = null;
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-            const response = await fetch(url, {...options, signal: controller.signal});
-            clearTimeout(timeoutId);
-            if (response.ok) return response;
-            lastError = new Error(`HTTP ${response.status}`);
-        } catch (err) {
-            lastError = err;
-        }
-        if (attempt < maxRetries) {
-            const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), maxDelay);
-            await new Promise(resolve => setTimeout(resolve, delay));
-        }
-    }
-    throw lastError;
-}
-
-async function fetchTextWithRetry(url, retries = 3, timeout = 10000) {
-    const response = await fetchWithRetry(url, {}, retries, timeout);
-    return response.text();
-}
-
-async function loadWithCache(cacheKey, fetchFn, ttl = null) {
-    const cacheTtl = ttl !== null ? ttl : (window.APP_CONFIG?.CONSTANTS?.CACHE_TTL || 10 * 60 * 1000);
-    try {
-        const cached = localStorage.getItem(cacheKey);
-        if (cached) {
-            try {
-                const {data, timestamp} = JSON.parse(cached);
-                if (Date.now() - timestamp < cacheTtl) return data;
-            } catch (e) {
-                if (IS_DEV) console.warn(e);
-            }
-        }
-    } catch (e) {}
-    const data = await fetchFn();
-    try {
-        localStorage.setItem(cacheKey, JSON.stringify({data, timestamp: Date.now()}));
-    } catch (e) {}
-    return data;
 }
 
 let loadingIndicator = null, isLoadingActive = false, loadingStylesAdded = false;
@@ -187,145 +123,123 @@ function showToast(message, type = 'error') {
     }, window.APP_CONFIG?.CONSTANTS?.TOAST_DURATION || 3000);
 }
 
-function showErrorToast(message) {
-    showToast(message, 'error');
-}
+function showErrorToast(message) { showToast(message, 'error'); }
+function showSuccessToast(message) { showToast(message, 'success'); }
+function showWarningToast(message) { showToast(message, 'warning'); }
 
-function showSuccessToast(message) {
-    showToast(message, 'success');
-}
-
-function showWarningToast(message) {
-    showToast(message, 'warning');
-}
-
-// ========== УНИКАЛЬНЫЙ ИДЕНТИФИКАТОР ЗАПРОСА ДЛЯ ЗАЩИТЫ ОТ ДУБЛЕЙ ==========
 function generateRequestId() {
     return Date.now() + '_' + Math.random().toString(36).substring(2, 12) + '_' + (currentUserId || getOrCreateLocalUserId());
 }
 
-// ========== ОТПРАВКА С ТАЙМАУТОМ 5 СЕКУНД, 3 ПОПЫТКИ + ЛОКАЛЬНОЕ ХРАНИЛИЩЕ ==========
-window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000, timeoutMs = 5000) {
-    let lastError = null;
+// ========== СОХРАНЕНИЕ ПОЛЕЙ ФОРМ В sessionStorage ==========
+function saveFormFields(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    const data = {
+        name: form.querySelector('[name="name"]')?.value || '',
+        phone: form.querySelector('[name="phone"]')?.value || '',
+        email: form.querySelector('[name="email"]')?.value || ''
+    };
+    try {
+        sessionStorage.setItem(`form_${formId}`, JSON.stringify(data));
+    } catch(e) {}
+}
 
-    for (let attempt = 1; attempt <= retries; attempt++) {
-        try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
-            const response = await fetch(url, {
-                method: 'POST',
-                body: new URLSearchParams(data),
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                signal: controller.signal
-            });
-            clearTimeout(timeoutId);
-
-            if (response.ok) {
-                // Успешно отправлено на сервер
-                return true;
-            } else {
-                throw new Error(`HTTP ${response.status}`);
-            }
-        } catch (err) {
-            lastError = err;
-            logError(`Попытка ${attempt} не удалась:`, err);
-            if (attempt < retries) {
-                const delay = Math.min(baseDelay * Math.pow(2, attempt - 1), 5000);
-                await new Promise(resolve => setTimeout(resolve, delay));
-            }
-        }
+function loadFormFields(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    let saved;
+    try {
+        saved = JSON.parse(sessionStorage.getItem(`form_${formId}`));
+    } catch(e) {}
+    if (!saved) return;
+    if (saved.name) {
+        const nameInput = form.querySelector('[name="name"]');
+        if (nameInput) nameInput.value = saved.name;
     }
+    if (saved.phone) {
+        const phoneInput = form.querySelector('[name="phone"]');
+        if (phoneInput) phoneInput.value = saved.phone;
+    }
+    if (saved.email) {
+        const emailInput = form.querySelector('[name="email"]');
+        if (emailInput) emailInput.value = saved.email;
+    }
+}
 
-    // Все попытки провалились – сохраняем данные локально с уникальным ID
-    logError('Все попытки отправки провалились, сохраняем локально', lastError);
-    saveFailedRequest(url, data);
-    return false;
-};
+function clearFormFields(formId) {
+    sessionStorage.removeItem(`form_${formId}`);
+}
 
+function bindFormAutoSave(formId) {
+    const form = document.getElementById(formId);
+    if (!form) return;
+    const inputs = form.querySelectorAll('[name="name"], [name="phone"], [name="email"]');
+    inputs.forEach(input => {
+        input.addEventListener('input', () => saveFormFields(formId));
+    });
+}
+
+// ========== ЛОКАЛЬНОЕ СОХРАНЕНИЕ НЕОТПРАВЛЕННЫХ ЗАПРОСОВ ==========
 function saveFailedRequest(url, data) {
     try {
         const failedKey = 'hr_failed_requests';
         let failed = JSON.parse(localStorage.getItem(failedKey) || '[]');
-        const requestId = generateRequestId();
-        // Проверяем, нет ли уже такого же запроса с таким же содержимым за последние 10 секунд
+        const requestId = data.requestId;
         const now = Date.now();
-        const isDuplicate = failed.some(item =>
-            item.dataHash === simpleHash(JSON.stringify(data)) &&
-            now - item.timestamp < 10000
-        );
-        if (isDuplicate) {
-            logWarn('Дублирующийся запрос не сохранён', data);
-            return;
-        }
-        failed.push({
-            id: requestId,
-            url: url,
-            data: data,
-            dataHash: simpleHash(JSON.stringify(data)),
-            timestamp: now
-        });
-        // Ограничиваем размер хранилища (не более 50)
+        const isDuplicate = failed.some(item => item.requestId === requestId && (now - item.timestamp) < 30000);
+        if (isDuplicate) return;
+        failed.push({ url, data, timestamp: now, requestId });
         if (failed.length > 50) failed = failed.slice(-50);
         localStorage.setItem(failedKey, JSON.stringify(failed));
-        // Дополнительно пробуем отправить через sendBeacon (без гарантии доставки)
-        try {
-            const formData = new URLSearchParams(data);
-            navigator.sendBeacon(url, formData);
-        } catch (e) {}
-    } catch (e) {
-        logError('Не удалось сохранить запрос локально', e);
-    }
+        if (IS_DEV) console.log('💾 Запрос сохранён локально');
+    } catch(e) { logError('Ошибка сохранения запроса', e); }
 }
 
-// Простой хэш для сравнения данных (не криптографический)
-function simpleHash(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash |= 0;
-    }
-    return hash.toString();
-}
-
-// Периодическая отправка накопленных запросов (раз в минуту)
-function retryFailedRequests() {
+async function retryFailedRequests() {
     try {
         const failedKey = 'hr_failed_requests';
         let failed = JSON.parse(localStorage.getItem(failedKey) || '[]');
         if (failed.length === 0) return;
         const newFailed = [];
         for (const req of failed) {
-            // Асинхронно пытаемся отправить, но не ждём
-            window.postWithRetry(req.url, req.data, 1, 0, 5000)
-                .then(success => {
-                    if (!success) {
-                        newFailed.push(req);
-                    }
-                })
-                .catch(() => {
-                    newFailed.push(req);
-                });
+            const success = await window.sendViaBeaconOrFetch(req.url, req.data);
+            if (!success) {
+                newFailed.push(req);
+            }
         }
-        // Сохраняем только те, что не отправились (но это асинхронно, лучше отложить)
-        setTimeout(() => {
-            const currentFailed = JSON.parse(localStorage.getItem(failedKey) || '[]');
-            const idsToKeep = new Set(newFailed.map(r => r.id));
-            const updated = currentFailed.filter(r => idsToKeep.has(r.id));
-            localStorage.setItem(failedKey, JSON.stringify(updated));
-        }, 2000);
-    } catch (e) {
-        logError('Ошибка при повторной отправке', e);
-    }
+        localStorage.setItem(failedKey, JSON.stringify(newFailed));
+        if (IS_DEV) console.log(`🔄 Повторная отправка: отправлено ${failed.length - newFailed.length}, осталось ${newFailed.length}`);
+    } catch(e) { logError('Ошибка повторной отправки', e); }
 }
 
-// Запускаем периодическую отправку раз в 60 секунд
 setInterval(retryFailedRequests, 60000);
+window.addEventListener('load', () => setTimeout(retryFailedRequests, 5000));
 
-// При загрузке страницы тоже пробуем отправить накопленное
-window.addEventListener('load', () => {
-    setTimeout(retryFailedRequests, 5000);
-});
+// ========== ОТПРАВКА БЕЗ CORS ==========
+window.sendViaBeaconOrFetch = async function(url, data) {
+    const formData = new URLSearchParams(data);
+    try {
+        if (navigator.sendBeacon && navigator.sendBeacon(url, formData)) {
+            if (IS_DEV) console.log('📡 Отправлено через sendBeacon');
+            return true;
+        }
+        await fetch(url, {
+            method: 'POST',
+            body: formData,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            mode: 'no-cors',
+            cache: 'no-store'
+        });
+        if (IS_DEV) console.log('📡 Отправлено через fetch (no-cors)');
+        return true;
+    } catch (err) {
+        logError('Ошибка отправки (но данные могли уйти):', err);
+        return false;
+    }
+};
+
+window.postWithRetry = window.sendViaBeaconOrFetch;
 
 // ========== ОСТАЛЬНЫЕ УТИЛИТЫ ==========
 function normalizePhoneDigits(phone) {
@@ -464,28 +378,36 @@ function applyPhoneMask(inputElement) {
 
 function initPhoneMasks() {
     const phoneInputs = document.querySelectorAll('#callbackPhone, #quickPhone');
-    phoneInputs.forEach(input => {
-        if (input) applyPhoneMask(input);
-    });
+    phoneInputs.forEach(input => { if (input) applyPhoneMask(input); });
 }
 
-// ========== ОТПРАВКА В GOOGLE SHEETS С ЗАЩИТОЙ ОТ ДУБЛЕЙ ==========
-async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
+async function sendDataToSheetWithRetry(data, retries = 1, delay = 1000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
     if (typeof window.getCartData === 'function') data.cart = window.getCartData();
     else data.cart = '';
-    // Добавляем уникальный ID запроса
     data.requestId = generateRequestId();
-    await window.postWithRetry(window.APP_CONFIG.SCRIPT_URL, data, retries, delay);
-    // Всегда возвращаем true, чтобы пользователь видел успех
+
+    let targetUrl = window.APP_CONFIG.SCRIPT_URL;
+    if (IS_TEST && window.APP_CONFIG.TEST_SCRIPT_URL) {
+        targetUrl = window.APP_CONFIG.TEST_SCRIPT_URL;
+        data.test_mode = '1';
+        if (IS_DEV) console.log('🧪 Тестовый режим: отправка на', targetUrl);
+    }
+
+    const success = await window.sendViaBeaconOrFetch(targetUrl, data);
+    if (!success) {
+        saveFailedRequest(targetUrl, data);
+        showWarningToast('⚠️ Данные сохранены локально, будут отправлены позже.');
+        return false;
+    }
     return true;
 }
 
 function sendDataToSheet(data) {
     sendDataToSheetWithRetry(data).catch(err => {
         logError('❌ Ошибка отправки в Google Sheets:', err);
-        showErrorToast('Ошибка связи. Попробуйте ещё раз или свяжитесь с нами напрямую.');
+        showWarningToast('⚠️ Данные сохранены локально, будут отправлены позже.');
     });
 }
 
@@ -518,7 +440,6 @@ function getTimeOnSite() {
     const secs = seconds % 60;
     return `${minutes} мин ${secs} сек`;
 }
-
 window.getTimeOnSite = getTimeOnSite;
 
 function getVisitStats() {
@@ -531,31 +452,22 @@ function getVisitStats() {
     try {
         const stored = localStorage.getItem(visitsKey);
         if (stored) {
-            try {
-                visits = JSON.parse(stored);
-                const monthAgo = now.getTime() - oneMonth;
-                visits = visits.filter(v => v > monthAgo);
-            } catch (e) {
-                if (IS_DEV) console.warn(e);
-                visits = [];
-            }
+            visits = JSON.parse(stored);
+            const monthAgo = now.getTime() - oneMonth;
+            visits = visits.filter(v => v > monthAgo);
         }
-    } catch (e) {}
+    } catch(e) {}
     const lastVisit = visits.length > 0 ? visits[visits.length - 1] : 0;
     if (now.getTime() - lastVisit > 30 * 60 * 1000) visits.push(now.getTime());
-    try {
-        localStorage.setItem(visitsKey, JSON.stringify(visits));
-    } catch (e) {}
+    try { localStorage.setItem(visitsKey, JSON.stringify(visits)); } catch(e) {}
     const weekAgo = now.getTime() - oneWeek;
     const monthAgo = now.getTime() - oneMonth;
     return {week: visits.filter(v => v > weekAgo).length, month: visits.filter(v => v > monthAgo).length, total: visits.length};
 }
-
 function getVisitStatsText() {
     const stats = getVisitStats();
     return `📊 Визиты: ${stats.week} за неделю, ${stats.month} за месяц`;
 }
-
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
 
@@ -569,14 +481,11 @@ function getUTMParams() {
         term: urlParams.get('utm_term') || '-'
     };
 }
-
 window.getUTMParams = getUTMParams;
-
 function getUTMText() {
     const u = getUTMParams();
     return `📊 UTM: source=${u.source}, medium=${u.medium}, campaign=${u.campaign}, content=${u.content}, term=${u.term}`;
 }
-
 window.getUTMText = getUTMText;
 
 function getDeviceInfo() {
@@ -600,14 +509,11 @@ function getDeviceInfo() {
     else if (ua.includes('iPhone') || ua.includes('iPad')) os = 'iOS';
     return {device, browser, os};
 }
-
 window.getDeviceInfo = getDeviceInfo;
-
 function getDeviceText() {
     const d = getDeviceInfo();
     return `📱 Устройство: ${d.device}, браузер: ${d.browser}, ОС: ${d.os}`;
 }
-
 window.getDeviceText = getDeviceText;
 
 function getPageInfo() {
@@ -617,14 +523,11 @@ function getPageInfo() {
         fullUrl: window.location.href
     };
 }
-
 window.getPageInfo = getPageInfo;
-
 function getPageText() {
     const p = getPageInfo();
     return `📄 Страница: ${p.page}\n🔗 Referrer: ${p.referrer || '-'}`;
 }
-
 window.getPageText = getPageText;
 
 async function getGeoData() {
@@ -634,12 +537,10 @@ async function getGeoData() {
     try {
         const raw = localStorage.getItem(geoKey);
         if (raw) {
-            try {
-                cached = JSON.parse(raw);
-                if (cached && typeof cached === 'object') return cached;
-            } catch (e) {}
+            cached = JSON.parse(raw);
+            if (cached && typeof cached === 'object') return cached;
         }
-    } catch (e) {}
+    } catch(e) {}
     try {
         const response = await fetch(apiUrl);
         if (!response.ok) throw new Error('Ошибка геолокации');
@@ -651,20 +552,16 @@ async function getGeoData() {
             country: data.country_name || '-',
             geoText: `${data.city || ''} ${data.region || ''} ${data.country_name || ''} (${data.ip || ''})`.trim().replace(/  +/g, ' ') || '-'
         };
-        try {
-            localStorage.setItem(geoKey, JSON.stringify(result));
-        } catch (e) {}
+        try { localStorage.setItem(geoKey, JSON.stringify(result)); } catch(e) {}
         return result;
-    } catch (e) {
+    } catch(e) {
         if (IS_DEV) console.warn(e);
         return {ip: '-', city: '-', region: '-', country: '-', geoText: '-'};
     }
 }
-
 window.getGeoData = getGeoData;
 
 window._actionLocks = window._actionLocks || {};
-
 window.isActionLocked = function(actionKey, durationMs = 60000) {
     const lockedUntil = window._actionLocks[actionKey];
     if (lockedUntil && Date.now() < lockedUntil) {
@@ -674,7 +571,6 @@ window.isActionLocked = function(actionKey, durationMs = 60000) {
     }
     return false;
 };
-
 window.lockAction = function(actionKey, durationMs = 60000) {
     window._actionLocks[actionKey] = Date.now() + durationMs;
     setTimeout(() => {
@@ -684,9 +580,17 @@ window.lockAction = function(actionKey, durationMs = 60000) {
     }, durationMs + 1000);
 };
 
+window._lastSubmitTime = {};
+
 window.submitForm = async function (formId, formType, getAdditionalData = null) {
     const form = document.getElementById(formId);
     if (!form) return false;
+
+    const now = Date.now();
+    if (window._lastSubmitTime[formId] && now - window._lastSubmitTime[formId] < 5000) {
+        showWarningToast('⏳ Пожалуйста, подождите несколько секунд перед повторной отправкой');
+        return false;
+    }
 
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.innerText : 'Отправить';
@@ -698,6 +602,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
 
     try {
         form._isSubmitting = true;
+        window._lastSubmitTime[formId] = now;
 
         if (submitBtn) {
             submitBtn.disabled = true;
@@ -746,10 +651,20 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             ...additional
         };
 
-        await window.sendDataToSheetWithRetry(formData);
-        showSuccessToast(`Спасибо! ${name ? name : ''} Мы свяжемся с вами.`);
-        form.reset();
+        if (IS_DEV || window.location.search.includes('debug=1')) {
+            console.log('📋 Отправка формы:', formType, formData);
+        }
 
+        await window.sendDataToSheetWithRetry(formData);
+
+        const phoneDisplay = phone ? phone.replace(/(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/, '+$1 $2 $3-$4-$5') : '';
+        showSuccessToast(`🎉 Спасибо, ${name || 'друг'}! Ваша заявка принята. ${phoneDisplay ? `Мы свяжемся с вами по номеру ${phoneDisplay}` : 'Мы свяжемся с вами в ближайшее время.'}`);
+
+        // Очищаем сохранённые поля формы после успешной отправки
+        clearFormFields(formId);
+
+        form.reset();
+        // Принудительно сбрасываем скрытые поля
         const hiddenFields = ['chosenVariant', 'chosenVariantPrice', 'originalChosenVariant', 'originalChosenVariantPrice', 'recommendedVariants', 'quizAnswersRaw'];
         hiddenFields.forEach(field => {
             const input = form.querySelector(`[name="${field}"]`);
@@ -760,7 +675,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
     } catch (err) {
         logError('Ошибка отправки:', err);
         if (!err.message || !err.message.includes('Телефон')) {
-            showErrorToast('Не удалось отправить заявку. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
+            showErrorToast('❌ Не удалось отправить заявку. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
         }
         return false;
     } finally {
@@ -788,7 +703,7 @@ window.getQuizDataFromForm = function (form) {
 function initShareButtons() {
     const shareButtons = document.querySelectorAll('#shareButtonContacts, .floating-share-btn button');
     const getSiteShareText = () => {
-        return `Виктория Любачева | Карьерный консультант\n\n✅ 24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.\n✅ Диагностика запроса: 15 минут.\n\n🔗 ${window.location.href.split('?')[0]}`;
+        return `Виктория Любачева | Карьерный консультант\n\n✅ 24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.\n\n🔗 ${window.location.href.split('?')[0]}`;
     };
     shareButtons.forEach(btn => {
         if (btn) {
@@ -797,8 +712,7 @@ function initShareButtons() {
                 const text = getSiteShareText();
                 navigator.clipboard.writeText(text).then(() => {
                     window.showSuccessToast('✅ Ссылка на сайт скопирована');
-                })
-                .catch(() => {
+                }).catch(() => {
                     window.showErrorToast('❌ Не удалось скопировать');
                 });
             };
@@ -808,7 +722,6 @@ function initShareButtons() {
 }
 
 window.initLogs = [];
-
 let currentLogLevel = window.APP_CONFIG?.CONSTANTS?.LOG_LEVEL || 0;
 if (window.location.search.includes('debug=1') || localStorage.getItem('hr_debug_mode') === 'true') {
     currentLogLevel = Math.max(currentLogLevel, 5);
@@ -865,6 +778,10 @@ window.onunhandledrejection = function (event) {
     if (originalUnhandledRejection) originalUnhandledRejection(event);
 };
 
+window.saveFormFields = saveFormFields;
+window.loadFormFields = loadFormFields;
+window.clearFormFields = clearFormFields;
+window.bindFormAutoSave = bindFormAutoSave;
 window.escapeHtml = escapeHtml;
 window.getOrCreateLocalUserId = getOrCreateLocalUserId;
 window.initUserId = initUserId;
@@ -877,9 +794,9 @@ window.clearFieldError = clearFieldError;
 window.validatePhoneField = validatePhoneField;
 window.validateEmailField = validateEmailField;
 window.bindLiveValidation = bindLiveValidation;
-window.fetchWithRetry = fetchWithRetry;
-window.fetchTextWithRetry = fetchTextWithRetry;
-window.loadWithCache = loadWithCache;
+window.fetchWithRetry = async () => { throw new Error('deprecated'); };
+window.fetchTextWithRetry = async () => { throw new Error('deprecated'); };
+window.loadWithCache = async () => { throw new Error('deprecated'); };
 window.showLoading = showLoading;
 window.hideLoading = hideLoading;
 window.log = log;

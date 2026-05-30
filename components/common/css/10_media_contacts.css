@@ -347,14 +347,14 @@ footer a:hover {
     color: white;
 }
 
-/* ========== Глобальные правила для ссылок (без прыжков) ========== */
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
     text-decoration: none;
     border-bottom: 1px solid transparent;
     transition: border-bottom-color 0.2s ease, color 0.2s ease;
 }
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a):hover {
-    border-bottom-color: var(--primary);
+    border-bottom-color: var(--accent-warm);
+    color: var(--accent-warm);
 }
 .contact-line a {
     color: #90cdf4;
@@ -517,7 +517,6 @@ section[id] {
     padding: 60px 0;
 }
 
-/* ========== ДОПОЛНИТЕЛЬНАЯ АДАПТАЦИЯ ДЛЯ САМЫХ УЗКИХ ЭКРАНОВ ========== */
 @media (max-width: 400px) {
     .btn, .btn-primary, .btn-secondary {
         width: 100%;
@@ -541,7 +540,6 @@ section[id] {
     }
 }
 
-/* ========== ИСПРАВЛЕНИЕ БЛОКА УСЛУГ НА МОБИЛЬНЫХ ========== */
 @media (max-width: 768px) {
     #services .card-service,
     #services .card {
@@ -564,7 +562,6 @@ section[id] {
     }
 }
 
-/* ========== ПРАВИЛЬНЫЕ ПЕРЕНОСЫ ДЛЯ ВСЕГО САЙТА (русский язык) ========== */
 body,
 .card,
 .card-service,
@@ -585,34 +582,28 @@ body,
     overflow-wrap: break-word;
 }
 
-/* ========== КНОПКИ НА ТЁМНОМ ФОНЕ ========== */
 .section-dark .btn-primary,
 .section-dark .btn-secondary {
     transition: all 0.3s ease;
 }
-
 .section-dark .btn-secondary {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.8);
     color: white;
 }
-
 .section-dark .btn-secondary:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: white;
     color: white;
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
 }
-
 .section-dark .btn-primary {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
-
 .section-dark .btn-primary:hover {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
 }
 
-/* ========== УМЕНЬШЕННЫЕ ОТСТУПЫ СЕКЦИЙ НА МОБИЛЬНЫХ ========== */
 @media (max-width: 768px) {
     .section,
     .section-light,
@@ -620,11 +611,9 @@ body,
     section:not(.certificates-section) {
         padding: 40px 0 !important;
     }
-    /* Для секции сертификатов оставляем чуть больше, чтобы карусель не прижималась */
     .certificates-section {
         padding: 40px 0 30px !important;
     }
-    /* Герой-секция – чуть меньше отступов сверху и снизу */
     .hero-grid {
         padding: 30px 0 !important;
     }

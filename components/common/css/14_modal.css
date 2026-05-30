@@ -88,9 +88,14 @@
     }
 }
 #sendMaterialsBtn {
-    background: var(--primary, #2D6A9F);
+    background: var(--gradient-cta);
     color: white;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: all 0.25s ease;
 }
 #sendMaterialsBtn:hover {
-    background: var(--primary-dark, #1F4A6E);
+    background: var(--gradient-cta-hover);
+    box-shadow: 0 4px 12px rgba(230, 126, 34, 0.3);
 }

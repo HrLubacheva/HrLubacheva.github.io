@@ -1,17 +1,17 @@
 /* ==================================================================
-   07_calculator.css – калькулятор, корзина, вкладки (плавные эффекты)
+   07_calculator.css – калькулятор (упрощённые кнопки, без оранжевого)
    ================================================================== */
 .calculator-section {
     padding: 60px 0;
-    background: var(--light-bg, #f8f9fa);
+    background: #f0f2f5;
 }
 .calculator-card {
     max-width: 900px;
-    background: var(--surface-soft);
+    background: #ffffff;
     border-radius: var(--radius-lg);
     padding: 40px;
     margin: 0 auto;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-sm);
 }
 .calculator-tabs {
     display: flex;
@@ -21,24 +21,24 @@
     justify-content: center;
 }
 .tab-btn {
-    background: var(--light-bg);
-    border: none;
+    background: #eef2f5;
+    border: 1px solid #d0d7de;
     padding: 12px 24px;
     border-radius: 40px;
     cursor: pointer;
     font-weight: 600;
     color: var(--text-dark);
     font-size: 0.9rem;
-    transition: background 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+    transition: all 0.25s ease;
 }
 .tab-btn:hover {
     background: #e2e8f0;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
+/* Активный таб – синий градиент (без оранжевого) */
 .tab-btn.active {
-    background: var(--primary);
+    background: var(--gradient-blue);
     color: white;
-    box-shadow: 0 4px 12px rgba(45,106,159,0.2);
+    box-shadow: 0 2px 8px rgba(45,106,159,0.2);
 }
 .tab-pane {
     display: none;
@@ -111,15 +111,16 @@
     border-color: var(--primary);
     box-shadow: 0 0 0 3px rgba(45,106,159,0.2);
 }
+/* Кнопка добавления – спокойный синий градиент (без оранжевого) */
 .add-service-btn {
-    background: var(--primary);
+    background: var(--gradient-blue);
     border: none;
     padding: 14px 28px;
     border-radius: 50px;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: background 0.25s ease, box-shadow 0.25s ease;
+    transition: all 0.25s ease;
     color: white;
     display: inline-flex;
     align-items: center;
@@ -127,8 +128,8 @@
     white-space: nowrap;
 }
 .add-service-btn:hover {
-    background: var(--primary-dark);
-    box-shadow: 0 0 10px rgba(45,106,159,0.4);
+    background: var(--gradient-blue-hover);
+    box-shadow: 0 4px 12px rgba(45,106,159,0.3);
 }
 .add-service-btn:active {
     transform: scale(0.98);
@@ -137,9 +138,10 @@
 .total-block {
     margin-top: 24px;
     padding: 14px 20px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: #f8f9fa;
     border-radius: 18px;
     text-align: right;
+    border: 1px solid #e9ecef;
 }
 .total-block > div:first-child {
     font-size: 1.25rem;
@@ -272,7 +274,6 @@
     margin-top: 15px;
 }
 
-/* ========== АДАПТАЦИЯ КАЛЬКУЛЯТОРА, КОРЗИНЫ ДЛЯ МОБИЛЬНЫХ ========== */
 @media (max-width: 640px) {
     .calculator-card {
         max-width: 100%;
@@ -312,7 +313,6 @@
     .calculator-section {
         padding: 40px 0;
     }
-    /* Корзина: название и цена в одной строке */
     .calc-item {
         display: flex;
         flex-wrap: wrap;
@@ -337,7 +337,6 @@
     .calc-item .service-remove {
         margin-top: 6px;
     }
-    /* Дополнительные улучшения */
     .service-select {
         font-size: 0.95rem;
         padding: 14px 16px;
@@ -371,46 +370,4 @@
     .add-service {
         gap: 8px;
     }
-}
-
-/* ========== ПРИГЛУШЁННЫЙ КАЛЬКУЛЯТОР ========== */
-
-/* Фон секции калькулятора – делаем нейтральным, без резкого контраста */
-.calculator-section {
-    background: #f0f2f5; /* чуть темнее, чем было #f8f9fa */
-}
-
-/* Карточка калькулятора – убираем ярко-белый, делаем слегка сероватым */
-.calculator-card {
-    background: #ffffff;
-    box-shadow: var(--shadow-sm);
-    /* если была яркая тень – убавляем */
-}
-
-/* Активные табы – делаем не оранжевыми, а тёмно-синими (как было) */
-.calculator-tabs .tab-btn.active {
-    background: var(--primary);
-    color: white;
-    box-shadow: 0 2px 8px rgba(45,106,159,0.2);
-}
-
-/* Кнопки "Добавить" – возвращаем синий градиент, без оранжевого */
-.add-service-btn {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-}
-.add-service-btn:hover {
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-    box-shadow: 0 4px 12px rgba(45,106,159,0.3);
-}
-
-/* Общий блок итого – делаем чуть приглушённее */
-.total-block {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-}
-
-/* Корзина – убираем излишние тени */
-.services-list .calc-item {
-    background: #fefefe;
-    border-bottom: 1px solid #eef2f5;
 }

@@ -1,7 +1,8 @@
 /* ==================================================================
-   00_variables.css – переменные и сбросы
+   00_variables.css – переменные и сбросы (гибридный градиент для кнопок)
    ================================================================== */
 :root {
+    /* Основные цвета (синий акцент) */
     --primary: #2D6A9F;
     --primary-dark: #1F4A6E;
     --primary-light: #4A8BC2;
@@ -14,11 +15,36 @@
     --text-dark: #1a202c;
     --text-light: #f8f9fa;
     --text-muted: #4a5568;
+
+    /* Тёплый акцент для кнопок и CTA */
+    --accent-warm: #E67E22;
+    --accent-warm-light: #F39C12;
+
+    /* Гибридный градиент (синий → оранжевый) для всех основных кнопок */
+    --gradient-cta: linear-gradient(135deg, var(--primary), var(--accent-warm));
+    --gradient-cta-hover: linear-gradient(135deg, var(--primary-dark), var(--accent-warm-light));
+
+    /* Чисто синий градиент (для заголовков, декоративных линий) */
+    --gradient-blue: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    --gradient-blue-hover: linear-gradient(135deg, var(--primary-dark), var(--primary));
+
+    /* Тени */
     --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
     --shadow-md: 0 8px 24px rgba(0,0,0,0.1);
     --shadow-lg: 0 20px 30px -12px rgba(0,0,0,0.15);
+
+    /* Радиусы */
     --radius-md: 16px;
     --radius-lg: 28px;
+
+    /* Отступы */
+    --space-xs: 8px;
+    --space-sm: 16px;
+    --space-md: 24px;
+    --space-lg: 32px;
+    --space-xl: 48px;
+
+    /* Прочее */
     --transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
     --breakpoint-mobile: 768px;
     --breakpoint-tablet: 992px;
@@ -66,14 +92,6 @@ body {
     white-space: nowrap;
 }
 
-.visually-hidden-image {
-    position: absolute;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-}
-
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -83,12 +101,4 @@ body {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
-}
-
-:root {
-    /* существующие переменные ... */
-
-    --accent-warm: #E67E22;      /* тёплый оранжевый */
-    --accent-warm-light: #F39C12; /* светлый вариант */
-    --accent-gradient: linear-gradient(135deg, var(--primary), var(--accent-warm));
 }

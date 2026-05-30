@@ -202,11 +202,7 @@ function initCallbackForm() {
                 isValid = false;
             }
 
-            const cartData = window.getCartData ? window.getCartData() : '';
-            if (!cartData || cartData === 'Корзина пуста') {
-                showQuickMessage('🛒 Добавьте хотя бы одну услугу в корзину');
-                isValid = false;
-            }
+            // УДАЛЕНА ПРОВЕРКА КОРЗИНЫ – отправляем даже с пустой корзиной
 
             if (!isValid) return;
 
@@ -224,7 +220,7 @@ function initCallbackForm() {
             try {
                 await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
                     const quizData = window.getQuizDataFromForm(form);
-                    return { ...quizData, cart: cartData };
+                    return { ...quizData, cart: window.getCartData ? window.getCartData() : '' };
                 });
                 logInit('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
             } catch (err) {
@@ -239,7 +235,7 @@ function initCallbackForm() {
         quickForm.addEventListener('submit', quickSubmitHandler);
     }
 
-    // ========== Копирование корзины (с короткой блокировкой 5 секунд) ==========
+    // ========== Копирование корзины ==========
     const copyCartBtn = document.getElementById('copyCartBtn');
     if (copyCartBtn) {
         if (copyCartBtn._copyHandler) {

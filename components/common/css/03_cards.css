@@ -1,7 +1,6 @@
 /* ==================================================================
    03_cards.css – единая система карточек
    ================================================================== */
-
 .card {
     background: var(--surface-soft);
     border-radius: var(--radius-lg);
@@ -62,24 +61,6 @@
     transform: translateY(-4px);
 }
 
-.card-process {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-.card-process .process-step {
-    width: 40px;
-    height: 40px;
-    background: var(--primary);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
 .card-role p,
 .card-service p {
     color: var(--text-dark);
@@ -117,13 +98,4 @@
     .card-benefit p {
         font-size: 0.95rem;
     }
-}
-
-.card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.25);
-}
-
-.card-service:hover {
-    box-shadow: 0 20px 35px -12px rgba(230, 126, 34, 0.2);
 }

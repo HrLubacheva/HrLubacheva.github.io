@@ -1,17 +1,18 @@
 // ============================================================
 // 14_quiz-scoring.js – Расчёт баллов и подбор услуг (2-4 варианта)
 // Поддержка ролей: Развиваю сотрудников, Собственник бизнеса
+// Категории приведены в соответствие с калькулятором
 // ============================================================
 (function() {
     const CATEGORY_DISPLAY_NAMES = {
-        business_recruitment: '🔍 Подбор персонала',
-        business_retention: '📊 Удержание и развитие',
-        individual_base: '👤 Базовые услуги',
-        individual_standard: '👔 Карьерный консалтинг',
-        individual_premium: '💎 Премиум сопровождение',
-        training: '🎓 Обучение и тренинги',
-        corporate: '🏢 Корпоративным клиентам',
-        author_courses: '📚 Авторские программы'
+        business_recruitment: 'Подбор персонала',
+        business_retention: 'Удержание и развитие',
+        individual_base: 'Ищу работу',
+        individual_standard: 'Карьерный рост',
+        individual_premium: 'Премиум',
+        training: 'Тренинги',
+        corporate: 'HR под ключ',
+        author_courses: 'Авторские курсы'
     };
 
     function buildServiceCategoryMap() {
@@ -41,9 +42,9 @@
     function getUserPriceSegment(answersArr) {
         const level = answersArr[1];
         const budget = answersArr[4];
-        const expensiveLevels = ["Senior / ведущий", "Lead / руководитель", "Директор / Managing Director", "Топ-менеджер (C-level)", "Собственник бизнеса"];
+        const expensiveLevels = ["Senior / ведущий", "Lead / руководитель", "Топ-менеджер (C-level)", "Директор / Managing Director"];
         const isExpensiveByLevel = expensiveLevels.includes(level);
-        const expensiveBudgets = ["50 000 – 100 000 ₽", "100 000 – 300 000 ₽", "300 000 – 500 000 ₽", "Выше 500 000 ₽"];
+        const expensiveBudgets = ["50 000 – 100 000 ₽", "100 000 – 300 000 ₽"];
         const isExpensiveByBudget = expensiveBudgets.includes(budget);
         if (isExpensiveByLevel || isExpensiveByBudget) return "expensive";
         const cheapLevels = ["Junior / начинающий", "Middle / опытный"];
@@ -97,8 +98,8 @@
             logInit('SERVICE_WEIGHTS или ANSWER_MAPPING не загружены', 'ERROR', '', 1);
             return {
                 services: [
-                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)", score: 0 },
-                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "👤 Базовые услуги — Экспресс-консультация (30мин)", score: 0 }
+                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "Ищу работу — Индивидуальная консультация (1ч)", score: 0 },
+                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "Ищу работу — Экспресс-консультация (30мин)", score: 0 }
                 ]
             };
         }
@@ -112,7 +113,7 @@
         if (userRole === "Подбираю сотрудников") userKeys.push("role_business");
         else if (userRole === "Развиваю сотрудников") userKeys.push("role_develop_employees");
         else if (userRole === "Собственник бизнеса") userKeys.push("role_business_owner");
-        else if (userRole === "Рост в текущей компании") userKeys.push("role_growth");
+        else if (userRole === "Хочу вырасти в текущей компании") userKeys.push("role_growth");
         else if (userRole === "Хочу сменить профессию") userKeys.push("role_career_change");
         else if (userRole === "Ищу работу") userKeys.push("role_job_seeker");
 
@@ -137,8 +138,8 @@
             logInit('Не найдено подходящих услуг', 'WARN', '', 2);
             return {
                 services: [
-                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "👔 Карьерный консалтинг — Индивидуальная консультация (1ч)", score: 0 },
-                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "👤 Базовые услуги — Экспресс-консультация (30мин)", score: 0 }
+                    { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "Ищу работу — Индивидуальная консультация (1ч)", score: 0 },
+                    { service: "Экспресс-консультация (30мин)", price: "3 500 ₽", formatted: "Ищу работу — Экспресс-консультация (30мин)", score: 0 }
                 ]
             };
         }

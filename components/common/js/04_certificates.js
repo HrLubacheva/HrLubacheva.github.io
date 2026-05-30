@@ -1,246 +1,322 @@
-// ============================================================
-// 04_certificates.js – Бесконечная плавная карусель
-// Прогресс-бар: плавная полоса (волна) без дерганий
-// ============================================================
-(function () {
-    function initInfiniteCarousel(trackId) {
-        const track = document.getElementById(trackId);
-        if (!track) return;
+function initCallbackForm() {
+    if (window._callbackFormInitialized) return;
+    window._callbackFormInitialized = true;
 
-        let originalSlides = Array.from(track.children);
-        if (originalSlides.length === 0) return;
+    logInit('initCallbackForm started', 'INFO', '', 3);
+    const C = window.APP_CONFIG?.CONSTANTS || {};
+    const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
+    const FORM_MESSAGE_HIDE_DELAY = C.FORM_MESSAGE_HIDE_DELAY || 5000;
 
-        // Настройки
-        const SLIDE_GAP = 24;
-        const SPEED_PX_PER_SEC = 25; // очень медленно и плавно
-        let slideWidth = 0;
-        let originalSetWidth = 0;
-        let scrollPos = 0;
-        let animationId = null;
-        let isHovering = false;
-        let isDragging = false;
-        let dragStartX = 0;
-        let dragStartPos = 0;
-        let lastTimestamp = 0;
+    const callbackForm = document.getElementById('callbackForm');
+    const callbackMessages = document.getElementById('callbackFormMessages');
 
-        // Утроение ленты
-        function buildTripleTrack() {
-            const triple = [];
-            for (let i = 0; i < 3; i++) {
-                originalSlides.forEach(slide => {
-                    triple.push(slide.cloneNode(true));
-                });
+    if (callbackForm && callbackMessages) {
+        if (callbackForm._submitHandler) {
+            callbackForm.removeEventListener('submit', callbackForm._submitHandler);
+        }
+
+        function showCallbackMessage(message, isError = true) {
+            callbackMessages.textContent = message;
+            callbackMessages.className = 'form-messages ' + (isError ? 'error' : 'success');
+            if (!isError) {
+                setTimeout(() => {
+                    callbackMessages.textContent = '';
+                    callbackMessages.className = 'form-messages';
+                }, FORM_MESSAGE_HIDE_DELAY);
             }
-            track.innerHTML = '';
-            triple.forEach(clone => track.appendChild(clone));
-            return Array.from(track.children);
         }
 
-        let slides = buildTripleTrack();
-
-        function updateDimensions() {
-            if (slides[0]) {
-                slideWidth = slides[0].offsetWidth;
-                if (slideWidth === 0) slideWidth = 200;
-            }
-            originalSetWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
+        function clearCallbackMessage() {
+            callbackMessages.textContent = '';
+            callbackMessages.className = 'form-messages';
         }
 
-        function setPosition(pos) {
-            scrollPos = pos;
-            // Используем translate3d для аппаратного ускорения
-            track.style.transform = `translate3d(${scrollPos}px, 0, 0)`;
-        }
+        const callbackPhone = document.getElementById('callbackPhone');
+        const callbackEmail = document.getElementById('callbackEmail');
+        const callbackConsent = document.getElementById('callbackConsent');
 
-        function normalizePosition(pos) {
-            let norm = pos;
-            while (norm > 0) norm -= originalSetWidth;
-            while (norm < -originalSetWidth) norm += originalSetWidth;
-            return norm;
-        }
-
-        // Обновление прогресс-бара (ширина полосы)
-        function updateProgressBar() {
-            const fill = document.querySelector('.carousel-progress-fill');
-            if (!fill) return;
-            let norm = normalizePosition(scrollPos);
-            let progress = -norm / originalSetWidth;
-            // Ограничиваем от 0 до 1
-            progress = Math.min(1, Math.max(0, progress));
-            fill.style.width = `${progress * 100}%`;
-        }
-
-        function ensureProgressBar() {
-            if (document.querySelector('.carousel-progress-container')) return;
-            const wrapper = track.closest('.carousel-wrapper');
-            if (!wrapper) return;
-            const container = document.createElement('div');
-            container.className = 'carousel-progress-container';
-            container.style.cssText = 'position:relative; width:100%; height:4px; background:#e2e8f0; border-radius:4px; margin:20px auto 10px; cursor:pointer; overflow:hidden;';
-            const fill = document.createElement('div');
-            fill.className = 'carousel-progress-fill';
-            fill.style.cssText = 'position:absolute; top:0; left:0; height:100%; width:0%; background:linear-gradient(90deg, var(--primary), var(--primary-light)); border-radius:4px; transition:width 0.05s linear; will-change:width;';
-            container.appendChild(fill);
-            wrapper.insertAdjacentElement('afterend', container);
-
-            // Клик для перемотки
-            container.addEventListener('click', (e) => {
-                const rect = container.getBoundingClientRect();
-                const percent = (e.clientX - rect.left) / rect.width;
-                const targetNorm = -percent * originalSetWidth;
-                let delta = targetNorm - normalizePosition(scrollPos);
-                scrollPos += delta;
-                setPosition(scrollPos);
-                updateProgressBar();
-                if (!isHovering && !isDragging) {
-                    stopAnimation();
-                    startAnimation();
+        if (callbackPhone) {
+            callbackPhone.addEventListener('blur', () => {
+                let digits = callbackPhone.value.replace(/\D/g, '');
+                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+                if (!digits.startsWith('7')) digits = '7' + digits;
+                const isValid = digits.length === MAX_PHONE_DIGITS;
+                if (!isValid && callbackPhone.value.trim() !== '') {
+                    showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                } else {
+                    clearCallbackMessage();
                 }
             });
+            callbackPhone.addEventListener('input', () => clearCallbackMessage());
         }
 
-        function animate(now) {
-            if (!animationId) return;
-            if (lastTimestamp === 0) {
-                lastTimestamp = now;
-                requestAnimationFrame(animate);
-                return;
-            }
-            const deltaSec = Math.min(0.1, (now - lastTimestamp) / 1000);
-            lastTimestamp = now;
-            if (!isHovering && !isDragging) {
-                let step = SPEED_PX_PER_SEC * deltaSec;
-                let newPos = scrollPos - step;
-                if (newPos < -originalSetWidth) newPos += originalSetWidth;
-                setPosition(newPos);
-                updateProgressBar();
-            }
-            requestAnimationFrame(animate);
-        }
-
-        function startAnimation() {
-            if (animationId) return;
-            lastTimestamp = 0;
-            animationId = requestAnimationFrame(animate);
-        }
-        function stopAnimation() {
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-                animationId = null;
-            }
-        }
-
-        // Drag & drop с аппаратным ускорением
-        function getClientX(e) {
-            return e.touches ? e.touches[0].clientX : e.clientX;
-        }
-
-        function onDragStart(x) {
-            isDragging = true;
-            dragStartX = x;
-            dragStartPos = scrollPos;
-            track.style.transition = 'none';
-            stopAnimation();
-        }
-
-        function onDragMove(x) {
-            if (!isDragging) return;
-            const dx = x - dragStartX;
-            scrollPos = dragStartPos + dx;
-            setPosition(scrollPos);
-            updateProgressBar();
-        }
-
-        function onDragEnd() {
-            if (!isDragging) return;
-            isDragging = false;
-            track.style.transition = 'transform 0.3s ease';
-            scrollPos = normalizePosition(scrollPos);
-            setPosition(scrollPos);
-            updateProgressBar();
-            if (!isHovering) startAnimation();
-        }
-
-        function onMouseDown(e) {
-            if (e.button !== 0) return;
-            e.preventDefault();
-            onDragStart(getClientX(e));
-        }
-        function onMouseMove(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-            onDragMove(getClientX(e));
-        }
-        function onMouseUp() {
-            onDragEnd();
-        }
-
-        function onTouchStart(e) {
-            if (e.touches.length === 1) {
-                onDragStart(getClientX(e));
-            }
-        }
-        function onTouchMove(e) {
-            if (!isDragging) return;
-            if (e.touches.length === 1) {
-                e.preventDefault();
-                onDragMove(getClientX(e));
-            }
-        }
-        function onTouchEnd() {
-            onDragEnd();
-        }
-
-        const wrapper = track.closest('.carousel-wrapper');
-        if (wrapper) {
-            wrapper.addEventListener('mouseenter', () => { isHovering = true; stopAnimation(); });
-            wrapper.addEventListener('mouseleave', () => { isHovering = false; if (!isDragging) startAnimation(); });
-        }
-
-        function init() {
-            updateDimensions();
-            scrollPos = -originalSetWidth;
-            setPosition(scrollPos);
-            ensureProgressBar();
-            updateProgressBar();
-            startAnimation();
-
-            track.addEventListener('mousedown', onMouseDown);
-            window.addEventListener('mousemove', onMouseMove);
-            window.addEventListener('mouseup', onMouseUp);
-            track.addEventListener('touchstart', onTouchStart, { passive: false });
-            window.addEventListener('touchmove', onTouchMove, { passive: false });
-            window.addEventListener('touchend', onTouchEnd);
-
-            let resizeTimeout;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    updateDimensions();
-                    scrollPos = normalizePosition(scrollPos);
-                    setPosition(scrollPos);
-                    updateProgressBar();
-                    if (!isHovering && !isDragging) {
-                        stopAnimation();
-                        startAnimation();
-                    }
-                }, 150);
+        if (callbackEmail) {
+            callbackEmail.addEventListener('blur', () => {
+                const email = callbackEmail.value.trim();
+                if (email && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email)) {
+                    showCallbackMessage('❌ Введите корректный email');
+                } else {
+                    clearCallbackMessage();
+                }
+            });
+            callbackEmail.addEventListener('input', () => {
+                if (callbackMessages.textContent === '❌ Введите корректный email') clearCallbackMessage();
             });
         }
 
-        function waitForImages() {
-            const imgs = slides.map(s => s.querySelector('img')).filter(Boolean);
-            if (!imgs.length) return Promise.resolve();
-            return Promise.all(imgs.map(img =>
-                img.complete ? Promise.resolve() : new Promise(resolve => { img.onload = resolve; img.onerror = resolve; })
-            ));
+        let isSubmitting = false;
+
+        const submitHandler = async function(e) {
+            e.preventDefault();
+
+            if (isSubmitting) {
+                logInit('Отправка уже выполняется, игнорируем', 'WARN', '', 3);
+                showCallbackMessage('⏳ Отправка уже выполняется, подождите...', true);
+                return;
+            }
+
+            logInit('Отправка формы callbackForm', 'INFO', '', 3);
+            clearCallbackMessage();
+
+            let isValid = true;
+            let phoneDigits = callbackPhone.value.replace(/\D/g, '');
+            if (phoneDigits.startsWith('8')) phoneDigits = '7' + phoneDigits.slice(1);
+            if (!phoneDigits.startsWith('7')) phoneDigits = '7' + phoneDigits;
+
+            if (phoneDigits.length !== MAX_PHONE_DIGITS) {
+                showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                isValid = false;
+            }
+
+            if (callbackEmail && callbackEmail.value.trim() && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(callbackEmail.value.trim())) {
+                showCallbackMessage('❌ Введите корректный email');
+                isValid = false;
+            }
+
+            if (!callbackConsent.checked) {
+                showCallbackMessage('❌ Необходимо согласие на обработку данных');
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            if (window.normalizePhoneDigits) {
+                callbackPhone.value = window.normalizePhoneDigits(callbackPhone.value);
+            } else {
+                let digits = callbackPhone.value.replace(/\D/g, '');
+                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+                if (!digits.startsWith('7')) digits = '7' + digits;
+                callbackPhone.value = digits;
+            }
+
+            isSubmitting = true;
+
+            try {
+                await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
+                    const quizBlock = document.getElementById('quizSelectionBlock');
+                    if (quizBlock) quizBlock.style.display = 'none';
+                    return window.getQuizDataFromForm(form);
+                });
+                logInit('Отправка формы callbackForm завершена успешно', 'INFO', '', 3);
+            } catch (err) {
+                logInit('Ошибка отправки формы callbackForm', 'ERROR', err, 2);
+                showCallbackMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
+            } finally {
+                isSubmitting = false;
+            }
+        };
+
+        callbackForm._submitHandler = submitHandler;
+        callbackForm.addEventListener('submit', submitHandler);
+
+        // Загрузка сохранённых полей и автосохранение
+        if (typeof window.loadFormFields === 'function') {
+            window.loadFormFields('callbackForm');
+        }
+        if (typeof window.bindFormAutoSave === 'function') {
+            window.bindFormAutoSave('callbackForm');
+        }
+    }
+
+    // ========== Быстрый заказ ==========
+    const quickForm = document.getElementById('quickOrderForm');
+    const quickMessages = document.getElementById('quickFormMessages');
+
+    if (quickForm && quickMessages) {
+        if (quickForm._submitHandler) {
+            quickForm.removeEventListener('submit', quickForm._submitHandler);
         }
 
-        waitForImages().then(init);
+        function showQuickMessage(message, isError = true) {
+            quickMessages.textContent = message;
+            quickMessages.className = 'form-messages ' + (isError ? 'error' : 'success');
+            if (!isError) {
+                setTimeout(() => {
+                    quickMessages.textContent = '';
+                    quickMessages.className = 'form-messages';
+                }, FORM_MESSAGE_HIDE_DELAY);
+            }
+        }
+
+        function clearQuickMessage() {
+            quickMessages.textContent = '';
+            quickMessages.className = 'form-messages';
+        }
+
+        const quickPhone = document.getElementById('quickPhone');
+        const quickConsent = document.getElementById('quickConsent');
+
+        if (quickPhone) {
+            quickPhone.addEventListener('blur', () => {
+                let digits = quickPhone.value.replace(/\D/g, '');
+                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+                if (!digits.startsWith('7')) digits = '7' + digits;
+                const isValid = digits.length === MAX_PHONE_DIGITS;
+                if (!isValid && quickPhone.value.trim() !== '') {
+                    showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                } else {
+                    clearQuickMessage();
+                }
+            });
+            quickPhone.addEventListener('input', () => clearQuickMessage());
+        }
+
+        let isQuickSubmitting = false;
+
+        const quickSubmitHandler = async function(e) {
+            e.preventDefault();
+
+            if (isQuickSubmitting) {
+                logInit('Быстрый заказ уже выполняется, игнорируем', 'WARN', '', 3);
+                showQuickMessage('⏳ Отправка уже выполняется, подождите...', true);
+                return;
+            }
+
+            logInit('Отправка формы quickOrderForm', 'INFO', '', 3);
+            clearQuickMessage();
+
+            let isValid = true;
+            let digits = quickPhone.value.replace(/\D/g, '');
+            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+            if (!digits.startsWith('7')) digits = '7' + digits;
+
+            if (digits.length !== MAX_PHONE_DIGITS) {
+                showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+                isValid = false;
+            }
+
+            if (!quickConsent.checked) {
+                showQuickMessage('❌ Необходимо согласие на обработку данных');
+                isValid = false;
+            }
+
+            // Проверка корзины удалена – отправляем даже с пустой
+
+            if (!isValid) return;
+
+            if (window.normalizePhoneDigits) {
+                quickPhone.value = window.normalizePhoneDigits(quickPhone.value);
+            } else {
+                let normDigits = quickPhone.value.replace(/\D/g, '');
+                if (normDigits.startsWith('8')) normDigits = '7' + normDigits.slice(1);
+                if (!normDigits.startsWith('7')) normDigits = '7' + normDigits;
+                quickPhone.value = normDigits;
+            }
+
+            isQuickSubmitting = true;
+
+            try {
+                await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
+                    const quizData = window.getQuizDataFromForm(form);
+                    return { ...quizData, cart: window.getCartData ? window.getCartData() : '' };
+                });
+                logInit('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
+            } catch (err) {
+                logInit('Ошибка отправки формы quickOrderForm', 'ERROR', err, 2);
+                showQuickMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
+            } finally {
+                isQuickSubmitting = false;
+            }
+        };
+
+        quickForm._submitHandler = quickSubmitHandler;
+        quickForm.addEventListener('submit', quickSubmitHandler);
+
+        // Загрузка сохранённых полей и автосохранение
+        if (typeof window.loadFormFields === 'function') {
+            window.loadFormFields('quickOrderForm');
+        }
+        if (typeof window.bindFormAutoSave === 'function') {
+            window.bindFormAutoSave('quickOrderForm');
+        }
     }
 
-    if (document.getElementById('carouselTrack')) {
-        initInfiniteCarousel('carouselTrack');
+    // ========== Копирование корзины ==========
+    const copyCartBtn = document.getElementById('copyCartBtn');
+    if (copyCartBtn) {
+        if (copyCartBtn._copyHandler) {
+            copyCartBtn.removeEventListener('click', copyCartBtn._copyHandler);
+        }
+
+        copyCartBtn._copyHandler = () => {
+            const actionKey = 'copy_cart';
+            if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
+            logInit('Копирование корзины', 'INFO', '', 4);
+            const cartText = window.getCartData ? window.getCartData() : '';
+            if (!cartText || cartText === 'Корзина пуста') {
+                window.showWarningToast('🛒 Корзина пуста. Добавьте услуги.');
+                return;
+            }
+            const totalPrice = document.getElementById('totalPrice')?.innerText || '0 ₽';
+            const fullText = `Корзина:\n${cartText}\n\n💰 Итого: ${totalPrice}`;
+            navigator.clipboard.writeText(fullText).then(() => {
+                window.showSuccessToast('✅ Корзина скопирована в буфер обмена');
+                if (window.lockAction) window.lockAction(actionKey, 5000);
+            }).catch(() => {
+                window.showErrorToast('❌ Не удалось скопировать');
+            });
+        };
+
+        copyCartBtn.addEventListener('click', copyCartBtn._copyHandler);
     }
-    window.initInfiniteCarousel = initInfiniteCarousel;
-})();
+
+    logInit('initCallbackForm finished', 'INFO', '', 3);
+}
+
+function initFormEnterSubmit() {
+    if (window._formEnterSubmitInitialized) return;
+    window._formEnterSubmitInitialized = true;
+
+    const form = document.getElementById('callbackForm');
+    if (form && !form._enterHandler) {
+        form._enterHandler = (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const btn = form.querySelector('button[type="submit"]');
+                if (btn) btn.click();
+            }
+        };
+        form.querySelectorAll('input, textarea').forEach(input => {
+            input.removeEventListener('keypress', form._enterHandler);
+            input.addEventListener('keypress', form._enterHandler);
+        });
+    }
+
+    const quickForm = document.getElementById('quickOrderForm');
+    if (quickForm && !quickForm._enterHandler) {
+        quickForm._enterHandler = (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const btn = quickForm.querySelector('button[type="submit"]');
+                if (btn) btn.click();
+            }
+        };
+        quickForm.querySelectorAll('input, textarea').forEach(input => {
+            input.removeEventListener('keypress', quickForm._enterHandler);
+            input.addEventListener('keypress', quickForm._enterHandler);
+        });
+    }
+}
+
+window.initCallbackForm = initCallbackForm;
+window.initFormEnterSubmit = initFormEnterSubmit;

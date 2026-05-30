@@ -1,7 +1,8 @@
 // ============================================================
 // 11_quiz-weights.js – Веса услуг и соответствие ответов ключам
 // Добавлены роли: Развиваю сотрудников, Собственник бизнеса, Найти себя / определиться с путём
-// Исправлены кавычки для синхронизации с SERVICES_DATA
+// Восстановлен уровень "Директор / Managing Director" (level_director)
+// Добавлен маппинг для "До 15 000 ₽" (бизнес-бюджет)
 // ============================================================
 window.SERVICE_WEIGHTS = {
     // ========== БАЗОВЫЕ УСЛУГИ ДЛЯ СОИСКАТЕЛЕЙ ==========
@@ -189,23 +190,20 @@ window.SERVICE_WEIGHTS = {
         level_director:9, level_top:10,
         urgency_3_6_months:8,
         importance_career:9,
-        budget_300000_500000:10, budget_higher:9,
         work_format_remote:7, work_format_office:9, work_format_hybrid:8
     },
     "Поиск позиции C-level": {
         role_job_seeker:10, role_business_owner:8,
-        level_top:10, level_director:9,
+        level_director:9, level_top:10,
         urgency_fast:9,
         importance_salary:9, importance_career:8,
-        budget_300000_500000:10, budget_higher:10,
         work_format_any:5
     },
     "Коучинг топ-менеджеров": {
         role_growth:9, role_develop_employees:8, role_business_owner:10,
-        level_top:10, level_director:9,
+        level_director:9, level_top:10,
         urgency_1_2_months:8,
         importance_career:9,
-        budget_300000_500000:10, budget_higher:9,
         work_format_remote:7, work_format_office:9, work_format_hybrid:8
     },
 
@@ -262,21 +260,21 @@ window.SERVICE_WEIGHTS = {
     "Аутсорсинг подбора (абонемент)": {
         role_business:10,
         urgency_monthly:10,
-        budget_100000_300000:10, budget_higher:9,
+        budget_100000_300000:10,
         industry_it:10, industry_sales:9, industry_hr:9, industry_other:8
     },
     "Хэдхантинг": {
         role_business:10,
         level_senior:9, level_lead:9,
         urgency_fast:10,
-        budget_100000_300000:10, budget_300000_500000:9,
+        budget_100000_300000:10,
         industry_it:10, industry_sales:9, industry_hr:9, industry_other:8
     },
     "IT Поиск Senior+ с гарантией": {
         role_business:10,
         level_senior:10,
         urgency_fast:10,
-        budget_100000_300000:10, budget_300000_500000:10,
+        budget_100000_300000:10,
         industry_it:10, industry_sales:5, industry_hr:5, industry_other:5
     },
     "IT Хэдхантинг Senior-специалиста": {
@@ -290,14 +288,12 @@ window.SERVICE_WEIGHTS = {
         role_business:10,
         level_senior:10, level_lead:9,
         urgency_fast:10,
-        budget_300000_500000:10, budget_higher:10,
         industry_it:10, industry_sales:5, industry_hr:5, industry_other:5
     },
     "Эксклюзивный хэдхантинг": {
         role_business:10, role_business_owner:9,
-        level_director:10, level_top:10, level_owner:9,
+        level_director:10, level_top:10,
         urgency_fast:10,
-        budget_higher:10, budget_300000_500000:10,
         industry_it:10, industry_sales:9, industry_hr:9, industry_other:9
     },
     "Подбор специалиста": {
@@ -350,7 +346,7 @@ window.SERVICE_WEIGHTS = {
     },
     "Стратегическая сессия с собственниками": {
         role_business:9, role_business_owner:10, role_develop_employees:9,
-        level_top:10, level_director:9,
+        level_director:9, level_top:10,
         urgency_1_2_months:8,
         importance_career:9,
         budget_100000_300000:10,
@@ -361,7 +357,6 @@ window.SERVICE_WEIGHTS = {
         level_director:10, level_top:10,
         urgency_3_6_months:9,
         importance_career:10,
-        budget_300000_500000:10,
         industry_any:9
     },
     "Абонемент на HR-консультации": {
@@ -490,17 +485,18 @@ window.ANSWER_MAPPING = {
     "Ищу работу": "role_job_seeker",
     "Хочу сменить профессию": "role_career_change",
     "Рост в текущей компании": "role_growth",
+    "Хочу вырасти в текущей компании": "role_growth",
     "Подбираю сотрудников": "role_business",
     "Развиваю сотрудников": "role_develop_employees",
+    "Собственник бизнеса": "role_business_owner",
     "Найти себя / определиться с путём": "role_career_change",
     // Уровни
     "Junior / начинающий": "level_junior",
     "Middle / опытный": "level_middle",
     "Senior / ведущий": "level_senior",
     "Lead / руководитель": "level_lead",
-    "Директор / Managing Director": "level_director",
     "Топ-менеджер (C-level)": "level_top",
-    "Собственник бизнеса": "level_owner",
+    "Директор / Managing Director": "level_director",
     // Срочность
     "Максимально быстро": "urgency_fast",
     "1–2 месяца": "urgency_1_2_months",
@@ -509,11 +505,17 @@ window.ANSWER_MAPPING = {
     "Ежемесячно / на постоянной основе": "urgency_monthly",
     "Планирую постепенно": "urgency_slow",
     // Важность
-    "Зарплата": "importance_salary",
-    "Условия/удаленка": "importance_conditions",
-    "Карьерный рост": "importance_career",
+    "Доход / Прибыль бизнеса": "importance_salary",
+    "Условия / Удаленка / Формат работы": "importance_conditions",
+    "Профессиональный рост / Масштабирование": "importance_career",
     "Команда и ценности": "importance_team",
     "Баланс работы и жизни": "importance_balance",
+    // Важность для "Найти себя"
+    "Понять свои сильные стороны": "importance_strengths",
+    "Разобраться, какая профессия подходит": "importance_profession",
+    "Преодолеть страх перемен": "importance_fear",
+    "Узнать перспективные сферы": "importance_perspective",
+    "Составить план выхода из тупика": "importance_plan",
     // Бюджет
     "До 5 000 ₽": "budget_low",
     "5 000 – 15 000 ₽": "budget_5000_15000",
@@ -521,7 +523,8 @@ window.ANSWER_MAPPING = {
     "50 000 – 100 000 ₽": "budget_50000_100000",
     "100 000 – 300 000 ₽": "budget_100000_300000",
     "300 000 – 500 000 ₽": "budget_300000_500000",
-    "Выше 500 000 ₽": "budget_higher",
+    "Более 500 000 ₽": "budget_higher",
+    "До 15 000 ₽": "budget_5000_15000",   // для бизнес-бюджета
     // Отрасль
     "IT / Технологии": "industry_it",
     "Продажи / Маркетинг": "industry_sales",
@@ -533,4 +536,4 @@ window.ANSWER_MAPPING = {
     "Гибридный (смешанный)": "work_format_hybrid"
 };
 
-if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены (с полной поддержкой развития сотрудников, собственников и поиска себя)");
+if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены (восстановлен level_director, добавлен маппинг для До 15 000 ₽)");
