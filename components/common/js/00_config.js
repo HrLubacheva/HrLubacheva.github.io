@@ -2,7 +2,7 @@
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyWIgJy2kkmWKuJsddLEYL71UXyXyi-_GVIWvKBFhCk630j43zYPaiGweS83BZ2IFcvKg/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzzkAdjoPZY_dqTysSGLxjjQH8SlbV6_WsXSfk2OTN3qZLRyi3Pr2J_bjUX3L3CbzbKZQ/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
