@@ -6368,7 +6368,7 @@ select:focus-visible {
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 30.05.2026 10:29:28</span>
+                <span class="footer-version">⚡ Версия 30.05.2026 10:30:19</span>
             </div>
         </div>
 
@@ -6777,7 +6777,7 @@ function simpleHash(str) {
 }
 
 // Периодическая отправка накопленных запросов (раз в минуту)
-function retryFailedRequests() {
+function retryFailedRequests() {}
     // отключаем сохранение и повторные попытки
     // try { ... } catch ...
 }
@@ -6786,6 +6786,7 @@ function retryFailedRequests() {
 setInterval(retryFailedRequests, 60000);
 
 // При загрузке страницы тоже пробуем отправить накопленное
+setInterval(retryFailedRequests, 60000);
 window.addEventListener('load', () => {
     setTimeout(retryFailedRequests, 5000);
 });
