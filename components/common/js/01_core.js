@@ -235,13 +235,17 @@ window.postWithRetry = async function (url, data, retries = 3, baseDelay = 2000,
         }
     }
 
+    // Больше НЕ сохраняем запросы локально (чтобы не было бесконечных повторов)
     logError('Все попытки отправки провалились, данные не сохранены', lastError);
     return false;
 };
 
-// Функция сохранения отключена
-function saveFailedRequest(url, data) {}
+// Функция сохранения отключена (ничего не делает)
+function saveFailedRequest(url, data) {
+    // Отключено – никаких записей в localStorage
+}
 
+// Простой хэш (используется только для отключённой логики, но оставим)
 function simpleHash(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -252,7 +256,12 @@ function simpleHash(str) {
     return hash.toString();
 }
 
-function retryFailedRequests() {}
+// Периодическая отправка накопленных запросов ПОЛНОСТЬЮ ОТКЛЮЧЕНА
+function retryFailedRequests() {
+    // Функция ничего не делает
+}
+
+// НЕТ вызовов setInterval и addEventListener – они удалены
 
 // ========== ОСТАЛЬНЫЕ УТИЛИТЫ ==========
 function normalizePhoneDigits(phone) {
@@ -698,7 +707,6 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
     }
 };
 
-// === ИСПРАВЛЕННАЯ ФУНКЦИЯ (передаёт все поля квиза) ===
 window.getQuizDataFromForm = function (form) {
     return {
         chosenVariant: form.querySelector('[name="chosenVariant"]')?.value || '',
@@ -707,16 +715,7 @@ window.getQuizDataFromForm = function (form) {
         originalChosenVariantPrice: form.querySelector('[name="originalChosenVariantPrice"]')?.value || '',
         recommendedVariants: form.querySelector('[name="recommendedVariants"]')?.value || '',
         quizAnswersRaw: form.querySelector('[name="quizAnswersRaw"]')?.value || '',
-        cart: window.getCartData ? window.getCartData() : '',
-        // 5 полей квиза
-        quiz_q1_role: form.querySelector('[name="quiz_q1_role"]')?.value || '',
-        quiz_q2_level: form.querySelector('[name="quiz_q2_level"]')?.value || '',
-        quiz_q3_urgency: form.querySelector('[name="quiz_q3_urgency"]')?.value || '',
-        quiz_q4_importance: form.querySelector('[name="quiz_q4_importance"]')?.value || '',
-        quiz_q5_budget: form.querySelector('[name="quiz_q5_budget"]')?.value || '',
-        quiz_recommendations: form.querySelector('[name="quiz_recommendations"]')?.value || '',
-        quiz_chosen_variant: form.querySelector('[name="quiz_chosen_variant"]')?.value || '',
-        quiz_chosen_price: form.querySelector('[name="quiz_chosen_price"]')?.value || ''
+        cart: window.getCartData ? window.getCartData() : ''
     };
 };
 
