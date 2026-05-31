@@ -420,3 +420,8 @@
         }, 200);
     });
 })();
+
+
+if (typeof initAnimations === 'function') {
+    initAnimations();
+}

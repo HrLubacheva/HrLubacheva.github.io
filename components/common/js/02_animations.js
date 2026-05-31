@@ -7,7 +7,13 @@ function initAnimations() {
         return;
     }
 
+    // Убираем класс visible, чтобы анимация была всегда
     elements.forEach(el => el.classList.remove('visible'));
+
+    // Небольшая задержка для мобильных устройств
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const rootMargin = isMobile ? '0px 0px -50px 0px' : '0px 0px -50px 0px';
+    const threshold = isMobile ? 0.05 : 0.1;
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -18,11 +24,25 @@ function initAnimations() {
             }
         });
     }, {
-        threshold: 0.1,
-        rootMargin: '0px 0px 0px 0px'
+        threshold: threshold,
+        rootMargin: rootMargin
     });
 
     elements.forEach(el => observer.observe(el));
+
+    // Дополнительная проверка: если элемент уже виден на момент загрузки
+    window.addEventListener('load', function() {
+        elements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            // Если элемент уже в пределах экрана (или чуть ниже), активируем
+            if (rect.top < windowHeight - 50) {
+                el.classList.add('visible');
+                observer.unobserve(el);
+            }
+        });
+    });
+
     logInit('initAnimations finished', 'INFO', '', 3);
 }
 

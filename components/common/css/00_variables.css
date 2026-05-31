@@ -102,3 +102,6 @@ body {
         scroll-behavior: auto !important;
     }
 }
+.fade-up {
+    will-change: opacity, transform;
+}
