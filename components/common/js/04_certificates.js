@@ -5,7 +5,7 @@
     let isRunning = false;
     let currentAnimationId = null;
     let carouselPaused = false;
-    let isMoving = false; // защита от повторных кликов
+    let isMoving = false;
 
     function initInfiniteCarousel(trackId) {
         if (isRunning) return;
@@ -15,7 +15,6 @@
         const originalSlides = Array.from(track.children);
         if (originalSlides.length === 0) return;
 
-        // Получаем актуальную ширину слайда (учитывая gap)
         function getSlideWidth() {
             if (originalSlides.length === 0) return 280;
             const style = window.getComputedStyle(originalSlides[0]);
@@ -27,8 +26,8 @@
             return width;
         }
 
-        const SLIDE_GAP = 24;   // должен совпадать с gap в CSS
-        const SPEED = 25;       // пикселей в секунду
+        const SLIDE_GAP = 24;
+        const SPEED = 25;
 
         let slideWidth = getSlideWidth();
         let setWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
@@ -39,7 +38,6 @@
         let dragStartScroll = 0;
         let lastTimestamp = 0;
 
-        // Утраиваем трек для бесконечности
         function buildTripleTrack() {
             const triple = [];
             for (let i = 0; i < 3; i++) {
@@ -162,7 +160,6 @@
         function onTouchStart(e) { if (e.touches.length === 1) { e.preventDefault(); onDragStart(e.touches[0].clientX); } }
         function onTouchMove(e) {
             if (!isDrag || e.touches.length !== 1) return;
-            // Не блокируем вертикальную прокрутку страницы
             onDragMove(e.touches[0].clientX);
         }
         function onTouchEnd() { onDragEnd(); }
@@ -176,7 +173,7 @@
             });
         }
 
-        // Остановка анимации, когда карусель не в видимой области
+        // Остановка анимации, когда карусель не видна
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -204,7 +201,7 @@
                 if (isMoving) return;
                 isMoving = true;
                 const wasPlaying = !carouselPaused && !isHover && !isDrag;
-                stopAnimation(); // временно останавливаем автопрокрутку
+                stopAnimation();
                 let newPos = scrollPos - (slideWidth + SLIDE_GAP);
                 if (newPos < -setWidth) newPos += setWidth;
                 setPosition(newPos);
