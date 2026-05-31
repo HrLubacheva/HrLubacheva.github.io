@@ -1,5 +1,6 @@
 /* ==================================================================
    99_responsive.css – глобальные адаптивные правки (мобильная версия)
+   Включая уменьшение отступов между секциями
    ================================================================== */
 
 /* Глобальные сбросы для всех экранов (не только мобильных) */
@@ -409,4 +410,166 @@
     width: 100%;
     margin-left: auto;
     margin-right: auto;
+}
+
+/* ========== ГЛОБАЛЬНЫЕ ОТСТУПЫ МЕЖДУ СЕКЦИЯМИ (БОЛЕЕ ПЛОТНО) ========== */
+section {
+    margin: 0;
+}
+.section,
+.section-light,
+section:not(.section-dark):not(.certificates-section) {
+    padding: 50px 0 30px 0;
+}
+.section-dark {
+    padding: 70px 0 50px 0;
+}
+#home .hero-grid {
+    padding: 40px 0 20px 0;
+}
+#roles .section-title {
+    margin-bottom: 30px;
+}
+#roles .section-subtitle {
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+#roles .grid-3 {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+#services .section-title {
+    margin-bottom: 30px;
+}
+#services .grid-3 {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+#process .section-title {
+    margin-bottom: 30px;
+}
+.process-two-blocks {
+    margin-top: 20px;
+}
+#stats .section-title {
+    margin-bottom: 30px;
+}
+.stats-grid {
+    margin: 20px 0 30px;
+}
+#quiz .quiz-card {
+    margin-top: 20px;
+}
+#callback-form .calendar-card {
+    margin: 20px 0 30px;
+}
+#media .section-title {
+    margin-bottom: 30px;
+}
+.media-grid {
+    margin: 20px 0 0;
+}
+#contacts .section-title {
+    margin-bottom: 30px;
+}
+.contact-block {
+    padding: 20px 0;
+}
+
+/* Мобильные: ещё плотнее и убираем лишний воздух после фото */
+@media (max-width: 768px) {
+    .section,
+    .section-light,
+    section:not(.section-dark):not(.certificates-section) {
+        padding: 35px 0 25px 0;
+    }
+    .section-dark {
+        padding: 50px 0 35px 0;
+    }
+    #home .hero-grid {
+        padding: 30px 0 0 0 !important;  /* совсем убираем нижний отступ */
+    }
+    #roles {
+        padding-top: 0 !important;
+    }
+    #roles .section-title {
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+    #roles .grid-3 {
+        margin-top: 0;
+    }
+    .section-title {
+        margin-bottom: 25px;
+    }
+}
+
+/* ========== ДЕСКТОП: УМЕНЬШАЕМ ОТСТУПЫ МЕЖДУ СЕКЦИЯМИ ========== */
+@media (min-width: 992px) {
+    /* Основные секции (без тёмной фоновой) */
+    .section,
+    .section-light,
+    section:not(.section-dark):not(.certificates-section) {
+        padding: 40px 0 25px 0;  /* было 50px 0 30px – уменьшаем */
+    }
+    /* Тёмная секция («Почему выбирают меня») */
+    .section-dark {
+        padding: 55px 0 40px 0;  /* было 70px 0 50px – уменьшаем */
+    }
+    /* Герой – убираем нижний отступ, чтобы плотнее к следующему блоку */
+    #home .hero-grid {
+        padding: 40px 0 10px 0;   /* было 40px 0 20px – убираем ещё */
+    }
+    /* Заголовки секций – уменьшаем отступ снизу */
+    .section-title {
+        margin-bottom: 30px;      /* было 48px – делаем меньше */
+    }
+    /* Сетка ролей – убираем лишние отступы сверху */
+    #roles .grid-3 {
+        margin-top: 10px;
+    }
+    /* Сетка услуг – аналогично */
+    #services .grid-3 {
+        margin-top: 10px;
+    }
+    /* Процесс работы */
+    .process-two-blocks {
+        margin-top: 10px;
+    }
+    /* Статистика */
+    .stats-grid {
+        margin: 15px 0 25px;
+    }
+    /* Квиз и форма обратной связи */
+    #quiz .quiz-card,
+    #callback-form .calendar-card {
+        margin-top: 10px;
+    }
+    /* Медиа-секция */
+    .media-grid {
+        margin-top: 10px;
+    }
+    /* Контакты */
+    .contact-block {
+        padding: 15px 0 25px;
+    }
+}
+
+/* ========== ЦЕНТРИРОВАНИЕ СЕКЦИИ ЭКСПРЕСС-ДИАГНОСТИКИ ========== */
+#callback-form {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+#callback-form .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+#callback-form .calendar-card {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
 }

@@ -287,3 +287,22 @@
         text-align: center;
     }
 }
+
+/* ========== ЦЕНТРИРОВАНИЕ БЛОКА ЭКСПРЕСС-ДИАГНОСТИКИ ========== */
+#callback-form .calendar-card {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+}
+
+/* Для мобильных – дополнительное центрирование */
+@media (max-width: 768px) {
+    #callback-form .calendar-card {
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
