@@ -66,65 +66,69 @@ function initCallbackForm() {
 
         let isSubmitting = false;
 
-        const submitHandler = async function(e) {
-            e.preventDefault();
+const submitHandler = async function(e) {
+  e.preventDefault();
 
-            if (isSubmitting) {
-                logInit('Отправка уже выполняется, игнорируем', 'WARN', '', 3);
-                showCallbackMessage('⏳ Отправка уже выполняется, подождите...', true);
-                return;
-            }
+  // Очищаем сообщения перед отправкой
+  clearCallbackMessage();
 
-            logInit('Отправка формы callbackForm', 'INFO', '', 3);
-            clearCallbackMessage();
+  if (isSubmitting) {
+    logInit('Отправка уже выполняется, игнорируем', 'WARN', '', 3);
+    showCallbackMessage('⏳ Отправка уже выполняется, подождите...', true);
+    return;
+  }
 
-            let isValid = true;
-            let phoneDigits = callbackPhone.value.replace(/\D/g, '');
-            if (phoneDigits.startsWith('8')) phoneDigits = '7' + phoneDigits.slice(1);
-            if (!phoneDigits.startsWith('7')) phoneDigits = '7' + phoneDigits;
+  logInit('Отправка формы callbackForm', 'INFO', '', 3);
 
-            if (phoneDigits.length !== MAX_PHONE_DIGITS) {
-                showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
-                isValid = false;
-            }
+  let isValid = true;
+  let phoneDigits = callbackPhone.value.replace(/\D/g, '');
+  if (phoneDigits.startsWith('8')) phoneDigits = '7' + phoneDigits.slice(1);
+  if (!phoneDigits.startsWith('7')) phoneDigits = '7' + phoneDigits;
 
-            if (callbackEmail && callbackEmail.value.trim() && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(callbackEmail.value.trim())) {
-                showCallbackMessage('❌ Введите корректный email');
-                isValid = false;
-            }
+  if (phoneDigits.length !== MAX_PHONE_DIGITS) {
+    showCallbackMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+    isValid = false;
+  }
 
-            if (!callbackConsent.checked) {
-                showCallbackMessage('❌ Необходимо согласие на обработку данных');
-                isValid = false;
-            }
+  if (callbackEmail && callbackEmail.value.trim() && !/^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(callbackEmail.value.trim())) {
+    showCallbackMessage('❌ Введите корректный email');
+    isValid = false;
+  }
 
-            if (!isValid) return;
+  if (!callbackConsent.checked) {
+    showCallbackMessage('❌ Подтвердите согласие на обработку данных');
+    isValid = false;
+  }
 
-            if (window.normalizePhoneDigits) {
-                callbackPhone.value = window.normalizePhoneDigits(callbackPhone.value);
-            } else {
-                let digits = callbackPhone.value.replace(/\D/g, '');
-                if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-                if (!digits.startsWith('7')) digits = '7' + digits;
-                callbackPhone.value = digits;
-            }
+  if (!isValid) return;
 
-            isSubmitting = true;
+  if (window.normalizePhoneDigits) {
+    callbackPhone.value = window.normalizePhoneDigits(callbackPhone.value);
+  } else {
+    let digits = callbackPhone.value.replace(/\D/g, '');
+    if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+    if (!digits.startsWith('7')) digits = '7' + digits;
+    callbackPhone.value = digits;
+  }
 
-            try {
-                await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
-                    const quizBlock = document.getElementById('quizSelectionBlock');
-                    if (quizBlock) quizBlock.style.display = 'none';
-                    return window.getQuizDataFromForm(form);
-                });
-                logInit('Отправка формы callbackForm завершена успешно', 'INFO', '', 3);
-            } catch (err) {
-                logInit('Ошибка отправки формы callbackForm', 'ERROR', err, 2);
-                showCallbackMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
-            } finally {
-                isSubmitting = false;
-            }
-        };
+  isSubmitting = true;
+
+  try {
+    await window.submitForm('callbackForm', 'Обратный звонок', async (form) => {
+      const quizBlock = document.getElementById('quizSelectionBlock');
+      if (quizBlock) quizBlock.style.display = 'none';
+      return window.getQuizDataFromForm(form);
+    });
+    // После успешной отправки очищаем сообщение и чекбокс не трогаем
+    clearCallbackMessage();
+    logInit('Отправка формы callbackForm завершена успешно', 'INFO', '', 3);
+  } catch (err) {
+    logInit('Ошибка отправки формы callbackForm', 'ERROR', err, 2);
+    showCallbackMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
+  } finally {
+    isSubmitting = false;
+  }
+};
 
         callbackForm._submitHandler = submitHandler;
         callbackForm.addEventListener('submit', submitHandler);
@@ -174,59 +178,62 @@ function initCallbackForm() {
 
         let isQuickSubmitting = false;
 
-        const quickSubmitHandler = async function(e) {
-            e.preventDefault();
+const quickSubmitHandler = async function(e) {
+  e.preventDefault();
 
-            if (isQuickSubmitting) {
-                logInit('Быстрый заказ уже выполняется, игнорируем', 'WARN', '', 3);
-                showQuickMessage('⏳ Отправка уже выполняется, подождите...', true);
-                return;
-            }
+  // Очищаем сообщения перед отправкой
+  clearQuickMessage();
 
-            logInit('Отправка формы quickOrderForm', 'INFO', '', 3);
-            clearQuickMessage();
+  if (isQuickSubmitting) {
+    logInit('Быстрый заказ уже выполняется, игнорируем', 'WARN', '', 3);
+    showQuickMessage('⏳ Отправка уже выполняется, подождите...', true);
+    return;
+  }
 
-            let isValid = true;
-            let digits = quickPhone.value.replace(/\D/g, '');
-            if (digits.startsWith('8')) digits = '7' + digits.slice(1);
-            if (!digits.startsWith('7')) digits = '7' + digits;
+  logInit('Отправка формы quickOrderForm', 'INFO', '', 3);
 
-            if (digits.length !== MAX_PHONE_DIGITS) {
-                showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
-                isValid = false;
-            }
+  let isValid = true;
+  let digits = quickPhone.value.replace(/\D/g, '');
+  if (digits.startsWith('8')) digits = '7' + digits.slice(1);
+  if (!digits.startsWith('7')) digits = '7' + digits;
 
-            if (!quickConsent.checked) {
-                showQuickMessage('❌ Необходимо согласие на обработку данных');
-                isValid = false;
-            }
+  if (digits.length !== MAX_PHONE_DIGITS) {
+    showQuickMessage('❌ Введите 11 цифр телефона, начиная с 7, 8 или 9');
+    isValid = false;
+  }
 
-            if (!isValid) return;
+  if (!quickConsent.checked) {
+    showQuickMessage('❌ Подтвердите согласие на обработку данных');
+    isValid = false;
+  }
 
-            if (window.normalizePhoneDigits) {
-                quickPhone.value = window.normalizePhoneDigits(quickPhone.value);
-            } else {
-                let normDigits = quickPhone.value.replace(/\D/g, '');
-                if (normDigits.startsWith('8')) normDigits = '7' + normDigits.slice(1);
-                if (!normDigits.startsWith('7')) normDigits = '7' + normDigits;
-                quickPhone.value = normDigits;
-            }
+  if (!isValid) return;
 
-            isQuickSubmitting = true;
+  if (window.normalizePhoneDigits) {
+    quickPhone.value = window.normalizePhoneDigits(quickPhone.value);
+  } else {
+    let normDigits = quickPhone.value.replace(/\D/g, '');
+    if (normDigits.startsWith('8')) normDigits = '7' + normDigits.slice(1);
+    if (!normDigits.startsWith('7')) normDigits = '7' + normDigits;
+    quickPhone.value = normDigits;
+  }
 
-            try {
-                await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
-                    const quizData = window.getQuizDataFromForm(form);
-                    return { ...quizData, cart: typeof window.getCartData === 'function' ? window.getCartData() : '' };
-                });
-                logInit('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
-            } catch (err) {
-                logInit('Ошибка отправки формы quickOrderForm', 'ERROR', err, 2);
-                showQuickMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
-            } finally {
-                isQuickSubmitting = false;
-            }
-        };
+  isQuickSubmitting = true;
+
+  try {
+    await window.submitForm('quickOrderForm', 'Быстрый заказ', async (form) => {
+      const quizData = window.getQuizDataFromForm(form);
+      return { ...quizData, cart: typeof window.getCartData === 'function' ? window.getCartData() : '' };
+    });
+    clearQuickMessage();
+    logInit('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
+  } catch (err) {
+    logInit('Ошибка отправки формы quickOrderForm', 'ERROR', err, 2);
+    showQuickMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
+  } finally {
+    isQuickSubmitting = false;
+  }
+};
 
         quickForm._submitHandler = quickSubmitHandler;
         quickForm.addEventListener('submit', quickSubmitHandler);
