@@ -1,204 +1,81 @@
 /* ==================================================================
    99_responsive.css – глобальные адаптивные правки (мобильная версия)
-   (бургер-меню вынесен в отдельный файл)
+   (только общие отступы, центрирование, отключение hover)
    ================================================================== */
 
-/* Глобальные сбросы для всех экранов (не только мобильных) */
+/* Глобальные сбросы */
 .benefit-card,
 .benefits-column-header {
     min-height: auto !important;
 }
 
-/* ---------- ОЧЕНЬ МАЛЕНЬКИЕ ТЕЛЕФОНЫ (до 480px) ---------- */
+/* Очень маленькие телефоны (до 480px) */
 @media (max-width: 480px) {
     html { font-size: 90%; }
     .container { padding-left: 12px !important; padding-right: 12px !important; }
-
-    /* Глобальные заголовки (кроме героя, у него свои настройки) */
     .section-title { font-size: 1.4rem !important; margin-bottom: 24px !important; }
     .process-title { font-size: 1.3rem; }
     .card-title { font-size: 1.1rem; }
     .small-note { font-size: 0.7rem; }
-
-    /* Кнопки на всю ширину */
     .btn { width: 100%; text-align: center; padding: 10px 16px; font-size: 0.85rem; }
     .hero-buttons .btn, .callback-submit, .add-service-btn { width: 100%; }
     .hero-buttons { gap: 8px; }
-
-    /* Квиз: навигация и варианты ответов */
     .quiz-nav button { width: 100%; }
     .quiz-nav { flex-direction: column; gap: 10px; }
     .quiz-question p { font-size: 0.9rem; }
-    .quiz-options {
-        display: grid !important;
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px;
-    }
-    .quiz-option {
-        width: auto !important;
-        min-width: auto !important;
-        padding: 8px 12px;
-        font-size: 0.85rem;
-        text-align: center;
-    }
-    .quiz-option:last-child:nth-child(odd) {
-        grid-column: span 2 !important;
-    }
-
-    /* ЦЕННОСТИ (УСЛУГИ) – 1 колонка */
-    #services .grid-3 {
-        grid-template-columns: 1fr !important;
-        gap: 16px !important;
-    }
-    .card-service {
-        padding: 16px 14px !important;
-        border-radius: 20px;
-    }
-    .card-service h3 {
-        font-size: 1.1rem !important;
-        margin-bottom: 12px;
-    }
-    .card-service .service-list li {
-        font-size: 0.85rem;
-        margin-bottom: 6px;
-        line-height: 1.3;
-    }
-
-    /* Тренинг «Продай себя дорого» – 2 колонки */
-    .grid-training-3 {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px !important;
-    }
-    .grid-training-3 .card-process {
-        padding: 12px 8px !important;
-    }
-    .grid-training-3 .process-step {
-        width: 28px;
-        height: 28px;
-        font-size: 0.75rem;
-    }
-    .grid-training-3 h4 {
-        font-size: 0.85rem !important;
-    }
-    .grid-training-3 p {
-        font-size: 0.7rem !important;
-    }
-
-    /* Процесс: "Карьерная консультация" и "Подбор персонала" — 2 колонки */
-    .process-grid-2x2 {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px !important;
-    }
-    .process-grid-2x2 .card-process {
-        padding: 12px 8px !important;
-    }
-    .process-grid-2x2 .process-step {
-        width: 26px;
-        height: 26px;
-        font-size: 0.7rem;
-    }
-    .process-grid-2x2 h4 {
-        font-size: 0.85rem !important;
-    }
-    .process-grid-2x2 p {
-        font-size: 0.7rem !important;
-    }
-    .process-block {
-        min-width: auto !important;
-    }
-
-    /* Статистика */
+    .quiz-options { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; gap: 12px; }
+    .quiz-option { width: auto !important; min-width: auto !important; padding: 8px 12px; font-size: 0.85rem; text-align: center; }
+    .quiz-option:last-child:nth-child(odd) { grid-column: span 2 !important; }
+    #services .grid-3 { grid-template-columns: 1fr !important; gap: 16px !important; }
+    .card-service { padding: 16px 14px !important; border-radius: 20px; }
+    .card-service h3 { font-size: 1.1rem !important; margin-bottom: 12px; }
+    .card-service .service-list li { font-size: 0.85rem; margin-bottom: 6px; line-height: 1.3; }
     .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
     .card-stat { padding: 12px 6px !important; }
     .stat-number { font-size: 1.2rem; }
     .stat-plus { font-size: 0.9rem; }
     .stat-label { font-size: 0.65rem; }
-
-    /* Карточки и преимущества */
     .card { padding: 16px !important; }
     .benefit-card { padding: 10px 12px !important; }
     .benefit-card h4 { font-size: 0.9rem; }
     .benefit-card p { font-size: 0.75rem; }
     .benefits-column-title { font-size: 1.1rem; }
-    .benefits-column-header {
-        padding: 8px 6px !important;
-        margin-bottom: 12px !important;
-        min-height: auto !important;
-        border-radius: 20px;
-    }
-    .benefits-column-icon {
-        font-size: 1.6rem !important;
-        margin-bottom: 2px;
-    }
-    .benefits-column-title {
-        font-size: 1rem !important;
-        margin-bottom: 2px;
-    }
-    .benefits-column-desc {
-        font-size: 0.7rem !important;
-    }
-
-    /* Формы */
+    .benefits-column-header { padding: 8px 6px !important; margin-bottom: 12px !important; min-height: auto !important; border-radius: 20px; }
+    .benefits-column-icon { font-size: 1.6rem !important; margin-bottom: 2px; }
+    .benefits-column-title { font-size: 1rem !important; margin-bottom: 2px; }
+    .benefits-column-desc { font-size: 0.7rem !important; }
     .form-field { padding: 10px 14px; font-size: 0.85rem; }
     .form-row-three, .form-row-two { flex-direction: column; gap: 0; }
     .form-row-three .form-field, .form-row-two .form-field { min-width: auto; }
     .form-row-messages { flex-direction: column; align-items: stretch; }
     .form-messages { text-align: center; }
-
-    /* Карусель */
     .carousel-slide { height: 140px !important; }
     .carousel-slide img { transform: scale(1); }
-
-    /* Калькулятор */
     .calculator-card { padding: 16px 12px !important; }
     .add-service { flex-direction: column; align-items: stretch; gap: 8px; }
     .service-select, .calc-qty, .add-service-btn { width: 100%; }
     .service-select { min-height: 48px; }
-
-    /* Прайс-лист */
     .price-summary { font-size: 1rem !important; padding: 10px 12px !important; }
     .price-table th, .price-table td { padding: 8px 10px !important; font-size: 0.7rem !important; }
-
-    /* Футер */
     .site-footer { padding: 20px 0 16px !important; margin-top: 30px !important; }
     .footer-links { gap: 12px !important; }
     .footer-link { font-size: 0.7rem !important; }
-
-    /* Медиа */
     .media-description { padding: 16px 12px !important; }
     .media-description h3 { font-size: 1.1rem !important; }
-
-    /* Бесплатные материалы */
     .checklist-card { padding: 24px 16px !important; }
     .freebie-icon { width: 48px; height: 48px; }
-
-    /* РОЛИ (Экспертиза в деталях) */
-    .cells-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px !important;
-    }
-    .card-role {
-        padding: 14px 10px !important;
-        text-align: center;
-    }
+    .cells-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
+    .card-role { padding: 14px 10px !important; text-align: center; }
     .card-role h3 { font-size: 1rem !important; }
     .card-role strong { font-size: 0.8rem !important; }
     .card-role p { font-size: 0.75rem !important; }
-
-    /* Блок выбора услуги */
     .callback-quiz-selection { padding: 10px !important; }
     .callback-quiz-selection .service-name { font-size: 0.85rem; }
-
-    /* Корзина */
     .cart-section { margin-top: 20px; }
     #copyCartBtn { width: 100%; }
-
-    /* Контакты */
     .contact-line { font-size: 0.85rem !important; word-break: break-word; }
     .share-site-btn, .telegram-button-container .btn-primary { width: 100%; }
 }
-
-/* ---------- ДОПОЛНИТЕЛЬНОЕ УВЕЛИЧЕНИЕ ДЛЯ ЭКРАНОВ 320-360px ---------- */
 @media (max-width: 360px) {
     html { font-size: 95%; }
     .section-title { font-size: 1.3rem !important; }
@@ -207,86 +84,29 @@
     .stat-label { font-size: 0.6rem !important; }
     .consent-checkbox label { font-size: 0.75rem !important; }
 }
-
-/* ---------- ТЕЛЕФОНЫ ПОБОЛЬШЕ И ПЛАНШЕТЫ (481px – 768px) ---------- */
 @media (min-width: 481px) and (max-width: 768px) {
     .container { padding-left: 16px; padding-right: 16px; }
     .section-title { font-size: 1.8rem; }
     .btn { width: auto; }
     .grid-2 { grid-template-columns: repeat(2, 1fr); }
     .grid-3 { grid-template-columns: repeat(2, 1fr); }
-    .grid-training-3 { grid-template-columns: repeat(2, 1fr); }
     .carousel-slide { height: 200px; }
     .price-table th, .price-table td { padding: 10px 12px; font-size: 0.8rem; }
     .cells-grid { grid-template-columns: repeat(2, 1fr); }
 }
-
-/* ---------- ГЕРОЙ: только отступы и центрирование (размеры шрифтов не трогаем) ---------- */
 @media (max-width: 768px) {
-    .hero-grid {
-        flex-direction: column !important;
-        align-items: center !important;
-        text-align: center;
-        gap: 20px !important;
-        padding: 30px 0 !important;
-    }
-    .hero-content {
-        order: 1;
-        width: 100%;
-    }
-    .hero-image {
-        order: 2;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        margin-top: 0;
-    }
-    .hero-image img {
-        max-width: 280px;
-        width: 100%;
-        height: auto;
-        border-radius: 20px;
-        margin: 0 auto;
-    }
-    .hero-tv-badge {
-        font-size: 0.8rem;
-        padding: 6px 14px;
-        margin-bottom: 16px;
-        display: inline-flex;
-        justify-content: center;
-    }
-    .hero-buttons {
-        flex-direction: column;
-        gap: 12px;
-        margin-top: 20px;
-    }
-    .hero-buttons .btn,
-    .hero-buttons .btn-primary,
-    .hero-buttons .btn-secondary {
-        width: 100%;
-        text-align: center;
-        justify-content: center;
-    }
-    .hero-quiz-link {
-        margin-top: 16px;
-    }
-    .hero-note {
-        margin-top: 16px;
-        font-size: 0.75rem;
-    }
+    .hero-grid { flex-direction: column !important; align-items: center !important; text-align: center; gap: 20px !important; padding: 30px 0 !important; }
+    .hero-content { order: 1; width: 100%; }
+    .hero-image { order: 2; width: 100%; display: flex; justify-content: center; margin-top: 0; }
+    .hero-image img { max-width: 280px; width: 100%; height: auto; border-radius: 20px; margin: 0 auto; }
+    .hero-tv-badge { font-size: 0.8rem; padding: 6px 14px; margin-bottom: 16px; display: inline-flex; justify-content: center; }
+    .hero-buttons { flex-direction: column; gap: 12px; margin-top: 20px; }
+    .hero-buttons .btn, .hero-buttons .btn-primary, .hero-buttons .btn-secondary { width: 100%; text-align: center; justify-content: center; }
+    .hero-quiz-link { margin-top: 16px; }
+    .hero-note { margin-top: 16px; font-size: 0.75rem; }
 }
-
-/* Управление переносом текста в подзаголовке секции "Роли" */
-.mobile-break {
-    display: none;
-}
-@media (max-width: 768px) {
-    .mobile-break {
-        display: inline;
-    }
-}
-
-/* ---------- ОСТАЛЬНЫЕ МЕЛКИЕ ПРАВКИ ---------- */
+.mobile-break { display: none; }
+@media (max-width: 768px) { .mobile-break { display: inline; } }
 .service-select {
     appearance: none;
     -webkit-appearance: none;
@@ -295,201 +115,59 @@
     background-position: right 16px center;
     background-size: 18px;
 }
-
-.price-table td {
-    white-space: normal !important;
-    word-break: break-word;
-}
-
+.price-table td { white-space: normal !important; word-break: break-word; }
 @media (max-width: 480px) {
-    .consent-checkbox label {
-        font-size: 0.8rem !important;
-    }
-    #copyCartBtn {
-        white-space: nowrap;
-        font-size: 0.75rem;
-        padding: 10px 12px;
-    }
+    .consent-checkbox label { font-size: 0.8rem !important; }
+    #copyCartBtn { white-space: nowrap; font-size: 0.75rem; padding: 10px 12px; }
 }
-
 @media (hover: none) and (pointer: coarse) {
-    .card:hover,
-    .card-role:hover,
-    .benefit-card:hover,
-    .btn:hover {
-        transform: none !important;
-        transition: none !important;
-    }
-    .btn-primary:hover {
-        background: var(--gradient-cta) !important;
-        box-shadow: none !important;
-    }
-    .btn-secondary:hover {
-        background: transparent !important;
-        border-color: var(--primary) !important;
-        color: var(--primary) !important;
-    }
+    .card:hover, .card-role:hover, .benefit-card:hover, .btn:hover { transform: none !important; transition: none !important; }
+    .btn-primary:hover { background: var(--gradient-cta) !important; box-shadow: none !important; }
+    .btn-secondary:hover { background: transparent !important; border-color: var(--primary) !important; color: var(--primary) !important; }
 }
-
-.card-role {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    height: 100%;
-}
-.card-role h3,
-.card-role strong,
-.card-role p {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-section {
-    margin: 0;
-}
-.section,
-.section-light,
-section:not(.section-dark):not(.certificates-section) {
-    padding: 50px 0 30px 0;
-}
-.section-dark {
-    padding: 70px 0 50px 0;
-}
-#home .hero-grid {
-    padding: 40px 0 20px 0;
-}
-#roles .section-title {
-    margin-bottom: 30px;
-}
-#roles .section-subtitle {
-    margin-top: -10px;
-    margin-bottom: 20px;
-}
-#roles .grid-3 {
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
-#services .section-title {
-    margin-bottom: 30px;
-}
-#services .grid-3 {
-    margin-top: 20px;
-    margin-bottom: 30px;
-}
-#process .section-title {
-    margin-bottom: 30px;
-}
-.process-two-blocks {
-    margin-top: 20px;
-}
-#stats .section-title {
-    margin-bottom: 30px;
-}
-.stats-grid {
-    margin: 20px 0 30px;
-}
-#quiz .quiz-card {
-    margin-top: 20px;
-}
-#callback-form .calendar-card {
-    margin: 20px 0 30px;
-}
-#media .section-title {
-    margin-bottom: 30px;
-}
-.media-grid {
-    margin: 20px 0 0;
-}
-#contacts .section-title {
-    margin-bottom: 30px;
-}
-.contact-block {
-    padding: 20px 0;
-}
-
+.card-role { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; }
+.card-role h3, .card-role strong, .card-role p { width: 100%; margin-left: auto; margin-right: auto; }
+section { margin: 0; }
+.section, .section-light, section:not(.section-dark):not(.certificates-section) { padding: 50px 0 30px 0; }
+.section-dark { padding: 70px 0 50px 0; }
+#home .hero-grid { padding: 40px 0 20px 0; }
+#roles .section-title { margin-bottom: 30px; }
+#roles .section-subtitle { margin-top: -10px; margin-bottom: 20px; }
+#roles .grid-3 { margin-top: 20px; margin-bottom: 30px; }
+#services .section-title { margin-bottom: 30px; }
+#services .grid-3 { margin-top: 20px; margin-bottom: 30px; }
+#process .section-title { margin-bottom: 30px; }
+.process-two-blocks { margin-top: 20px; }
+#stats .section-title { margin-bottom: 30px; }
+.stats-grid { margin: 20px 0 30px; }
+#quiz .quiz-card { margin-top: 20px; }
+#callback-form .calendar-card { margin: 20px 0 30px; }
+#media .section-title { margin-bottom: 30px; }
+.media-grid { margin: 20px 0 0; }
+#contacts .section-title { margin-bottom: 30px; }
+.contact-block { padding: 20px 0; }
 @media (max-width: 768px) {
-    .section,
-    .section-light,
-    section:not(.section-dark):not(.certificates-section) {
-        padding: 35px 0 25px 0;
-    }
-    .section-dark {
-        padding: 50px 0 35px 0;
-    }
-    #home .hero-grid {
-        padding: 30px 0 0 0 !important;
-    }
-    #roles {
-        padding-top: 0 !important;
-    }
-    #roles .section-title {
-        margin-top: 0;
-        margin-bottom: 20px;
-    }
-    #roles .grid-3 {
-        margin-top: 0;
-    }
-    .section-title {
-        margin-bottom: 25px;
-    }
+    .section, .section-light, section:not(.section-dark):not(.certificates-section) { padding: 35px 0 25px 0; }
+    .section-dark { padding: 50px 0 35px 0; }
+    #home .hero-grid { padding: 30px 0 0 0 !important; }
+    #roles { padding-top: 0 !important; }
+    #roles .section-title { margin-top: 0; margin-bottom: 20px; }
+    #roles .grid-3 { margin-top: 0; }
+    .section-title { margin-bottom: 25px; }
 }
-
 @media (min-width: 992px) {
-    .section,
-    .section-light,
-    section:not(.section-dark):not(.certificates-section) {
-        padding: 40px 0 25px 0;
-    }
-    .section-dark {
-        padding: 55px 0 40px 0;
-    }
-    #home .hero-grid {
-        padding: 40px 0 10px 0;
-    }
-    .section-title {
-        margin-bottom: 30px;
-    }
-    #roles .grid-3 {
-        margin-top: 10px;
-    }
-    #services .grid-3 {
-        margin-top: 10px;
-    }
-    .process-two-blocks {
-        margin-top: 10px;
-    }
-    .stats-grid {
-        margin: 15px 0 25px;
-    }
-    #quiz .quiz-card,
-    #callback-form .calendar-card {
-        margin-top: 10px;
-    }
-    .media-grid {
-        margin-top: 10px;
-    }
-    .contact-block {
-        padding: 15px 0 25px;
-    }
+    .section, .section-light, section:not(.section-dark):not(.certificates-section) { padding: 40px 0 25px 0; }
+    .section-dark { padding: 55px 0 40px 0; }
+    #home .hero-grid { padding: 40px 0 10px 0; }
+    .section-title { margin-bottom: 30px; }
+    #roles .grid-3 { margin-top: 10px; }
+    #services .grid-3 { margin-top: 10px; }
+    .process-two-blocks { margin-top: 10px; }
+    .stats-grid { margin: 15px 0 25px; }
+    #quiz .quiz-card, #callback-form .calendar-card { margin-top: 10px; }
+    .media-grid { margin-top: 10px; }
+    .contact-block { padding: 15px 0 25px; }
 }
-
-#callback-form {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-#callback-form .container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    box-sizing: border-box;
-}
-#callback-form .calendar-card {
-    margin: 0 auto;
-    width: 100%;
-    max-width: 800px;
-}
+#callback-form { display: flex; justify-content: center; width: 100%; }
+#callback-form .container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 20px; box-sizing: border-box; }
+#callback-form .calendar-card { margin: 0 auto; width: 100%; max-width: 800px; }

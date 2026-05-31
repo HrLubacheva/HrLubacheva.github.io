@@ -62,7 +62,7 @@
     max-width: 100%;
     overflow-x: visible;
     text-align: center;
-    color: var(--primary-dark);  /* явно задаём цвет */
+    color: var(--primary-dark);
 }
 
 /* ---------- ПОДЗАГОЛОВОК: на широких – строка, на узких – перенос ---------- */
@@ -74,7 +74,7 @@
     display: block;
     text-align: center;
     letter-spacing: 0.3px;
-    color: var(--primary);      /* задаём цвет */
+    color: var(--primary);
 }
 @media (max-width: 560px) {
     .hero-subtitle {

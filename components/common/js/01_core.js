@@ -843,6 +843,42 @@ window.onunhandledrejection = function (event) {
     if (originalUnhandledRejection) originalUnhandledRejection(event);
 };
 
+// ========== ГЛОБАЛЬНЫЙ ПЕРЕХВАТ ОШИБОК (без вылетов) ==========
+(function() {
+    if (window._errorHandlerInstalled) return;
+    window._errorHandlerInstalled = true;
+
+    window.addEventListener('error', function(e) {
+        // Не показываем тост на каждую ошибку, только на критичные
+        if (e.message && (e.message.includes('Script error') || e.message.includes('NetworkError'))) {
+            // Пропускаем, чтобы не раздражать
+            return;
+        }
+        console.warn('🛡️ Поймана ошибка:', e.message, e.filename, e.lineno);
+        // Показываем тост только один раз в 10 секунд, чтобы не заспамить
+        const lastErrorTime = window._lastGlobalErrorTime || 0;
+        if (Date.now() - lastErrorTime > 10000) {
+            window._lastGlobalErrorTime = Date.now();
+            if (window.showWarningToast) {
+                window.showWarningToast('⚠️ Что-то пошло не так, но мы уже чиним. Попробуйте обновить страницу.');
+            }
+        }
+        return true; // не даём ошибке вывалиться в консоль красным (но предупреждение остаётся)
+    });
+
+    window.addEventListener('unhandledrejection', function(e) {
+        console.warn('🛡️ Необработанный промис:', e.reason);
+        const lastRejectTime = window._lastUnhandledRejectionTime || 0;
+        if (Date.now() - lastRejectTime > 10000) {
+            window._lastUnhandledRejectionTime = Date.now();
+            if (window.showWarningToast) {
+                window.showWarningToast('🔄 Сервер немного задумался, попробуйте ещё раз через минуту.');
+            }
+        }
+        e.preventDefault();
+    });
+})();
+
 window.saveFormFields = saveFormFields;
 window.loadFormFields = loadFormFields;
 window.clearFormFields = clearFormFields;

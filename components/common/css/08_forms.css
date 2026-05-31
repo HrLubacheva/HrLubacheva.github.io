@@ -218,48 +218,6 @@
 .callback-telegram-alt a:hover {
     text-decoration: underline;
 }
-.freebies-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    justify-items: center;
-    align-items: start;
-    margin: 0 auto 24px;
-    padding: 0;
-}
-@media (max-width: 991px) {
-    .freebies-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-    }
-    .freebies-grid .freebie-item:last-child {
-        grid-column: span 2;
-        max-width: 360px;
-        margin: 0 auto;
-    }
-}
-@media (max-width: 767px) {
-    .freebies-grid {
-        grid-template-columns: 1fr;
-        gap: 24px;
-    }
-    .freebies-grid .freebie-item:last-child {
-        grid-column: span 1;
-        max-width: 100%;
-    }
-}
-@media (max-width: 480px) {
-    .freebies-grid {
-        gap: 20px;
-    }
-    .freebie-item {
-        padding: 0 8px;
-    }
-}
-.freebie-item {
-    text-align: center;
-    width: 100%;
-}
 .callback-quiz-selection .service-actions {
     display: flex;
     gap: 8px;
@@ -287,8 +245,6 @@
         text-align: center;
     }
 }
-
-/* ========== ЦЕНТРИРОВАНИЕ БЛОКА ЭКСПРЕСС-ДИАГНОСТИКИ ========== */
 #callback-form .calendar-card {
     margin-left: auto;
     margin-right: auto;
@@ -296,8 +252,6 @@
     max-width: 800px;
     box-sizing: border-box;
 }
-
-/* Для мобильных – дополнительное центрирование */
 @media (max-width: 768px) {
     #callback-form .calendar-card {
         margin-left: auto;

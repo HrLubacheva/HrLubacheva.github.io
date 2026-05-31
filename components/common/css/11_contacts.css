@@ -1,0 +1,57 @@
+/* ==================================================================
+   11_contacts.css – стили для блока контактов
+   ================================================================== */
+.contact-block {
+    text-align: center;
+    padding: 40px 0;
+}
+.contacts-list {
+    list-style: none;
+    padding-left: 0;
+}
+.contact-line {
+    margin: 15px 0;
+    font-size: 1.1rem;
+    color: #cbd5e0;
+}
+.contact-line a {
+    color: #90cdf4;
+    text-decoration: none;
+}
+.contact-line a:hover {
+    text-decoration: none;
+    color: white;
+}
+.copyable-phone,
+.copyable-text {
+    cursor: pointer;
+    border-bottom: 1px dashed #90cdf4;
+    display: inline-block;
+}
+.copyable-phone:hover,
+.copyable-text:hover {
+    color: white;
+    border-bottom-color: white;
+}
+.share-button-container {
+    margin-top: 30px;
+}
+.share-site-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.custom-offer {
+    margin-top: 25px;
+    font-style: italic;
+    color: #cbd5e0;
+}
+.telegram-button-container {
+    margin-top: 30px;
+}
+@media (max-width: 768px) {
+    .contact-line {
+        font-size: 1rem;
+        word-break: break-word;
+    }
+}

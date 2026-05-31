@@ -345,10 +345,6 @@
             logInit('Вызов initPhoneMasks', 'INFO', '', 3);
             window.initPhoneMasks();
         }
-        if (typeof initBurgerMenu === 'function') {
-            logInit('Вызов initBurgerMenu', 'INFO', '', 3);
-            initBurgerMenu();
-        }
         if (typeof initCallbackForm === 'function') {
             logInit('Вызов initCallbackForm', 'INFO', '', 3);
             initCallbackForm();
