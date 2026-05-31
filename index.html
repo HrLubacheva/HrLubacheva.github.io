@@ -2130,6 +2130,25 @@ body {
         text-align: center;
     }
 }
+
+/* ========== ЦЕНТРИРОВАНИЕ БЛОКА ЭКСПРЕСС-ДИАГНОСТИКИ ========== */
+#callback-form .calendar-card {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 800px;
+    box-sizing: border-box;
+}
+
+/* Для мобильных – дополнительное центрирование */
+@media (max-width: 768px) {
+    #callback-form .calendar-card {
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
 /* ==================================================================
    09_quiz_freebies.css – квиз и бесплатные материалы (плавные эффекты)
    ================================================================== */
@@ -3887,6 +3906,7 @@ select:focus-visible {
 }
 /* ==================================================================
    99_responsive.css – глобальные адаптивные правки (мобильная версия)
+   Включая уменьшение отступов между секциями
    ================================================================== */
 
 /* Глобальные сбросы для всех экранов (не только мобильных) */
@@ -4298,6 +4318,167 @@ select:focus-visible {
     margin-right: auto;
 }
 
+/* ========== ГЛОБАЛЬНЫЕ ОТСТУПЫ МЕЖДУ СЕКЦИЯМИ (БОЛЕЕ ПЛОТНО) ========== */
+section {
+    margin: 0;
+}
+.section,
+.section-light,
+section:not(.section-dark):not(.certificates-section) {
+    padding: 50px 0 30px 0;
+}
+.section-dark {
+    padding: 70px 0 50px 0;
+}
+#home .hero-grid {
+    padding: 40px 0 20px 0;
+}
+#roles .section-title {
+    margin-bottom: 30px;
+}
+#roles .section-subtitle {
+    margin-top: -10px;
+    margin-bottom: 20px;
+}
+#roles .grid-3 {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+#services .section-title {
+    margin-bottom: 30px;
+}
+#services .grid-3 {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+#process .section-title {
+    margin-bottom: 30px;
+}
+.process-two-blocks {
+    margin-top: 20px;
+}
+#stats .section-title {
+    margin-bottom: 30px;
+}
+.stats-grid {
+    margin: 20px 0 30px;
+}
+#quiz .quiz-card {
+    margin-top: 20px;
+}
+#callback-form .calendar-card {
+    margin: 20px 0 30px;
+}
+#media .section-title {
+    margin-bottom: 30px;
+}
+.media-grid {
+    margin: 20px 0 0;
+}
+#contacts .section-title {
+    margin-bottom: 30px;
+}
+.contact-block {
+    padding: 20px 0;
+}
+
+/* Мобильные: ещё плотнее и убираем лишний воздух после фото */
+@media (max-width: 768px) {
+    .section,
+    .section-light,
+    section:not(.section-dark):not(.certificates-section) {
+        padding: 35px 0 25px 0;
+    }
+    .section-dark {
+        padding: 50px 0 35px 0;
+    }
+    #home .hero-grid {
+        padding: 30px 0 0 0 !important;  /* совсем убираем нижний отступ */
+    }
+    #roles {
+        padding-top: 0 !important;
+    }
+    #roles .section-title {
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+    #roles .grid-3 {
+        margin-top: 0;
+    }
+    .section-title {
+        margin-bottom: 25px;
+    }
+}
+
+/* ========== ДЕСКТОП: УМЕНЬШАЕМ ОТСТУПЫ МЕЖДУ СЕКЦИЯМИ ========== */
+@media (min-width: 992px) {
+    /* Основные секции (без тёмной фоновой) */
+    .section,
+    .section-light,
+    section:not(.section-dark):not(.certificates-section) {
+        padding: 40px 0 25px 0;  /* было 50px 0 30px – уменьшаем */
+    }
+    /* Тёмная секция («Почему выбирают меня») */
+    .section-dark {
+        padding: 55px 0 40px 0;  /* было 70px 0 50px – уменьшаем */
+    }
+    /* Герой – убираем нижний отступ, чтобы плотнее к следующему блоку */
+    #home .hero-grid {
+        padding: 40px 0 10px 0;   /* было 40px 0 20px – убираем ещё */
+    }
+    /* Заголовки секций – уменьшаем отступ снизу */
+    .section-title {
+        margin-bottom: 30px;      /* было 48px – делаем меньше */
+    }
+    /* Сетка ролей – убираем лишние отступы сверху */
+    #roles .grid-3 {
+        margin-top: 10px;
+    }
+    /* Сетка услуг – аналогично */
+    #services .grid-3 {
+        margin-top: 10px;
+    }
+    /* Процесс работы */
+    .process-two-blocks {
+        margin-top: 10px;
+    }
+    /* Статистика */
+    .stats-grid {
+        margin: 15px 0 25px;
+    }
+    /* Квиз и форма обратной связи */
+    #quiz .quiz-card,
+    #callback-form .calendar-card {
+        margin-top: 10px;
+    }
+    /* Медиа-секция */
+    .media-grid {
+        margin-top: 10px;
+    }
+    /* Контакты */
+    .contact-block {
+        padding: 15px 0 25px;
+    }
+}
+
+/* ========== ЦЕНТРИРОВАНИЕ СЕКЦИИ ЭКСПРЕСС-ДИАГНОСТИКИ ========== */
+#callback-form {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+#callback-form .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+#callback-form .calendar-card {
+    margin: 0 auto;
+    width: 100%;
+    max-width: 800px;
+}
 </style>
 </head>
 <body>
@@ -5223,65 +5404,6 @@ select:focus-visible {
 </section>
 
 
-<section aria-labelledby="freebies-title">
-    <div class="container">
-        <div class="checklist-card fade-up">
-            <h2 class="section-title" id="freebies-title"><span class="emoji">📥</span> Бесплатный набор для уверенного старта</h2>
-            <ul class="freebies-grid" role="list">
-                <li class="freebie-item" role="listitem" itemscope itemtype="https://schema.org/CreativeWork">
-                    <div class="freebie-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" role="img" aria-label="Чек-лист иконка">
-                            <title>Чек-лист</title>
-                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
-                            <path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
-                            <path d="M9 12l2 2 4-4" />
-                        </svg>
-                    </div>
-                    <div class="freebie-title" itemprop="name">Чек-лист</div>
-                    <div class="freebie-desc" itemprop="description">«Идеальное резюме»</div>
-                    <div class="freebie-actions">
-                        <a href="assets/docs/checklist.pdf" target="_blank" class="freebie-link" aria-label="Скачать чек-лист Идеальное резюме (PDF)">скачать</a>
-                        <button class="material-email-simple freebie-link" data-material="checklist" aria-label="Получить чек-лист на email">на email</button>
-                    </div>
-                    <meta itemprop="encodingFormat" content="application/pdf">
-                </li>
-                <li class="freebie-item" role="listitem" itemscope itemtype="https://schema.org/CreativeWork">
-                    <div class="freebie-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" role="img" aria-label="Программа тренинга иконка">
-                            <title>Программа тренинга</title>
-                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-                        </svg>
-                    </div>
-                    <div class="freebie-title" itemprop="name">Программа тренинга</div>
-                    <div class="freebie-desc" itemprop="description">«Продай себя дорого»</div>
-                    <div class="freebie-actions">
-                        <a href="assets/docs/training_program.pdf" target="_blank" class="freebie-link" aria-label="Скачать программу тренинга Продай себя дорого (PDF)">скачать</a>
-                        <button class="material-email-simple freebie-link" data-material="training" aria-label="Получить программу тренинга на email">на email</button>
-                    </div>
-                    <meta itemprop="encodingFormat" content="application/pdf">
-                </li>
-                <li class="freebie-item" role="listitem">
-                    <div class="freebie-icon freebie-icon-accent">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" role="img" aria-label="Полный набор иконка">
-                            <title>Полный набор</title>
-                            <path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2H7z" />
-                        </svg>
-                    </div>
-                    <div class="freebie-title">Полный набор</div>
-                    <div class="freebie-desc">Всё сразу в ZIP</div>
-                    <div class="freebie-actions">
-                        <a href="assets/docs/docs.zip" download class="freebie-link" aria-label="Скачать полный набор материалов ZIP">скачать ZIP</a>
-                        <button class="material-email-simple freebie-link" data-material="both" aria-label="Получить полный набор на email">на email</button>
-                    </div>
-                </li>
-            </ul>
-            <p class="freebie-footer">🔐 Без спама. Отправляю на почту за 1 минуту.</p>
-        </div>
-    </div>
-</section>
-
-
 <section id="callback-form" aria-labelledby="callback-title">
     <div class="container">
         <div class="calendar-card fade-up">
@@ -5495,6 +5617,65 @@ select:focus-visible {
         </div>
     </div>
 </section>
+<section aria-labelledby="freebies-title">
+    <div class="container">
+        <div class="checklist-card fade-up">
+            <h2 class="section-title" id="freebies-title"><span class="emoji">📥</span> Спасибо, что дочитали до конца!</h2>
+            <ul class="freebies-grid" role="list">
+                <li class="freebie-item" role="listitem" itemscope itemtype="https://schema.org/CreativeWork">
+                    <div class="freebie-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" role="img" aria-label="Чек-лист иконка">
+                            <title>Чек-лист</title>
+                            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+                            <path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
+                            <path d="M9 12l2 2 4-4" />
+                        </svg>
+                    </div>
+                    <div class="freebie-title" itemprop="name">Чек-лист</div>
+                    <div class="freebie-desc" itemprop="description">«Идеальное резюме»</div>
+                    <div class="freebie-actions">
+                        <a href="assets/docs/checklist.pdf" target="_blank" class="freebie-link" aria-label="Скачать чек-лист Идеальное резюме (PDF)">скачать</a>
+                        <button class="material-email-simple freebie-link" data-material="checklist" aria-label="Получить чек-лист на email">на email</button>
+                    </div>
+                    <meta itemprop="encodingFormat" content="application/pdf">
+                </li>
+                <li class="freebie-item" role="listitem" itemscope itemtype="https://schema.org/CreativeWork">
+                    <div class="freebie-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" role="img" aria-label="Программа тренинга иконка">
+                            <title>Программа тренинга</title>
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                        </svg>
+                    </div>
+                    <div class="freebie-title" itemprop="name">Программа тренинга</div>
+                    <div class="freebie-desc" itemprop="description">«Продай себя дорого»</div>
+                    <div class="freebie-actions">
+                        <a href="assets/docs/training_program.pdf" target="_blank" class="freebie-link" aria-label="Скачать программу тренинга Продай себя дорого (PDF)">скачать</a>
+                        <button class="material-email-simple freebie-link" data-material="training" aria-label="Получить программу тренинга на email">на email</button>
+                    </div>
+                    <meta itemprop="encodingFormat" content="application/pdf">
+                </li>
+                <li class="freebie-item" role="listitem">
+                    <div class="freebie-icon freebie-icon-accent">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" role="img" aria-label="Полный набор иконка">
+                            <title>Полный набор</title>
+                            <path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2H7z" />
+                        </svg>
+                    </div>
+                    <div class="freebie-title">Полный набор</div>
+                    <div class="freebie-desc">Всё сразу в ZIP</div>
+                    <div class="freebie-actions">
+                        <a href="assets/docs/docs.zip" download class="freebie-link" aria-label="Скачать полный набор материалов ZIP">скачать ZIP</a>
+                        <button class="material-email-simple freebie-link" data-material="both" aria-label="Получить полный набор на email">на email</button>
+                    </div>
+                </li>
+            </ul>
+            <p class="freebie-footer">🔐 Без спама. Отправляю на почту за 1 минуту.</p>
+        </div>
+    </div>
+</section>
+
+
 <!-- ========== ПОЛНЫЙ ПРАЙС-ЛИСТ (ДВА АККОРДЕОНА) ========== -->
 <!-- Группировка соответствует калькулятору: для бизнеса и для соискателей -->
 <section class="price-list-section fade-up">
@@ -5991,7 +6172,7 @@ select:focus-visible {
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 31.05.2026 06:56:12</span>
+                <span class="footer-version">⚡ Версия 31.05.2026 07:10:43</span>
             </div>
         </div>
 
