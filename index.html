@@ -1010,7 +1010,7 @@ body {
     border-radius: 50%;
 }
 
-/* ========== МОБИЛЬНОЕ МЕНЮ – МАКСИМАЛЬНО НИЗКИЕ БЛОКИ ========== */
+/* ========== МОБИЛЬНОЕ МЕНЮ – БЕЗ ПРОКРУТКИ, КОМПАКТНО ========== */
 @media (max-width: 768px) {
     .burger-menu { display: block; }
 
@@ -1022,7 +1022,7 @@ body {
         height: 100vh;
         background: white;
         border-radius: 0;
-        padding: 50px 12px 20px;
+        padding: 0;               /* убираем все внутренние отступы */
         margin: 0;
         transform: translateX(100%);
         transition: transform 0.3s ease-in-out;
@@ -1030,6 +1030,9 @@ body {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
         box-shadow: none;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;  /* центрируем список по вертикали */
     }
 
     @supports (height: 100dvh) {
@@ -1043,15 +1046,20 @@ body {
     .nav-links {
         flex-direction: column;
         align-items: center;
-        gap: 4px;
+        gap: 8px;                /* небольшой зазор между ссылками */
+        padding: 10px 0;
+        width: 100%;
     }
     .nav-links a {
         font-size: 1rem;
         line-height: 1.2;
-        padding: 6px 0;
+        padding: 8px 16px;
         display: inline-block;
         width: auto;
         text-align: center;
+        background: rgba(45, 106, 159, 0.05);
+        border-radius: 40px;
+        min-width: 160px;
     }
 
     body.menu-open {
@@ -1081,20 +1089,18 @@ body {
     }
 }
 
-/* Для экранов ≤ 480px – ещё ниже */
+/* Для экранов ≤ 480px – чуть плотнее */
 @media (max-width: 480px) {
     .social-icons svg { width: 20px; height: 20px; }
     .logo { font-size: 1rem; }
-    .nav-bottom {
-        padding: 40px 10px 16px;
-    }
+
     .nav-links {
-        gap: 2px;
+        gap: 6px;
     }
     .nav-links a {
         font-size: 0.9rem;
-        line-height: 1.2;
-        padding: 5px 0;
+        padding: 6px 14px;
+        min-width: 140px;
     }
     .social-icons {
         gap: 6px;
@@ -1105,17 +1111,15 @@ body {
     }
 }
 
-/* Для самых маленьких (320px) – экстремально компактно */
+/* Для самых маленьких (320–360px) – экстремально компактно */
 @media (max-width: 360px) {
-    .nav-bottom {
-        padding: 35px 8px 12px;
-    }
     .nav-links {
-        gap: 1px;
+        gap: 4px;
     }
     .nav-links a {
         font-size: 0.85rem;
-        padding: 4px 0;
+        padding: 5px 12px;
+        min-width: 120px;
     }
 }
 /* ==================================================================
@@ -5983,7 +5987,7 @@ select:focus-visible {
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 31.05.2026 06:51:02</span>
+                <span class="footer-version">⚡ Версия 31.05.2026 06:53:02</span>
             </div>
         </div>
 
