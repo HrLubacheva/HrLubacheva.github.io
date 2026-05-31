@@ -3904,6 +3904,48 @@ select:focus-visible {
     color: initial !important;
     display: inline-block;
 }
+/* Суперлёгкое бургер-меню – без тормозов */
+@media (max-width: 768px) {
+    .nav-bottom {
+        background: #ffffff !important;          /* сплошной белый – быстрее градиента */
+        padding: 50px 20px 30px !important;
+        transition: none !important;             /* отключаем анимацию появления (если была) */
+    }
+
+    .nav-links {
+        gap: 6px !important;
+    }
+
+    .nav-links a {
+        padding: 10px 16px !important;
+        margin: 2px 0 !important;
+        font-size: 1.1rem !important;
+        background: rgba(45, 106, 159, 0.04);
+        transition: none !important;             /* убираем hover-эффекты на мобильных */
+        border-radius: 40px;
+    }
+
+    /* Убираем любые трансформации и тени */
+    .nav-links a:hover,
+    .nav-links a:active {
+        background: rgba(45, 106, 159, 0.1);
+        transform: none !important;
+    }
+
+    .nav-bottom.open {
+        box-shadow: none !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-bottom {
+        padding: 40px 16px 25px !important;
+    }
+    .nav-links a {
+        padding: 8px 14px !important;
+        font-size: 1rem !important;
+    }
+}
 /* ==================================================================
    99_responsive.css – глобальные адаптивные правки (мобильная версия)
    Включая уменьшение отступов между секциями
@@ -6172,7 +6214,7 @@ section:not(.section-dark):not(.certificates-section) {
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 31.05.2026 10:10:02</span>
+                <span class="footer-version">⚡ Версия 31.05.2026 10:13:49</span>
             </div>
         </div>
 
