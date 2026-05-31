@@ -1,6 +1,5 @@
 /* ==================================================================
    99_responsive.css – глобальные адаптивные правки (мобильная версия)
-   Включая уменьшение отступов между секциями
    (бургер-меню вынесен в отдельный файл)
    ================================================================== */
 
@@ -30,8 +29,6 @@
     .quiz-nav button { width: 100%; }
     .quiz-nav { flex-direction: column; gap: 10px; }
     .quiz-question p { font-size: 0.9rem; }
-
-    /* Варианты ответов квиза – 2 колонки, последний нечётный на всю ширину */
     .quiz-options {
         display: grid !important;
         grid-template-columns: repeat(2, 1fr) !important;
@@ -48,7 +45,7 @@
         grid-column: span 2 !important;
     }
 
-    /* ЦЕННОСТИ (УСЛУГИ) – 1 колонка (специально для секции #services) */
+    /* ЦЕННОСТИ (УСЛУГИ) – 1 колонка */
     #services .grid-3 {
         grid-template-columns: 1fr !important;
         gap: 16px !important;
@@ -106,8 +103,6 @@
     .process-grid-2x2 p {
         font-size: 0.7rem !important;
     }
-
-    /* Сброс минимальной ширины для блоков процесса */
     .process-block {
         min-width: auto !important;
     }
@@ -119,14 +114,12 @@
     .stat-plus { font-size: 0.9rem; }
     .stat-label { font-size: 0.65rem; }
 
-    /* Карточки и преимущества (только на мобильных) */
+    /* Карточки и преимущества */
     .card { padding: 16px !important; }
     .benefit-card { padding: 10px 12px !important; }
     .benefit-card h4 { font-size: 0.9rem; }
     .benefit-card p { font-size: 0.75rem; }
     .benefits-column-title { font-size: 1.1rem; }
-
-    /* Заголовки колонок преимуществ (иконка + заголовок + подзаголовок) – компактнее */
     .benefits-column-header {
         padding: 8px 6px !important;
         margin-bottom: 12px !important;
@@ -179,7 +172,7 @@
     .checklist-card { padding: 24px 16px !important; }
     .freebie-icon { width: 48px; height: 48px; }
 
-    /* РОЛИ (Экспертиза в деталях) – 2 колонки (через класс cells-grid) */
+    /* РОЛИ (Экспертиза в деталях) */
     .cells-grid {
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 12px !important;
@@ -192,7 +185,7 @@
     .card-role strong { font-size: 0.8rem !important; }
     .card-role p { font-size: 0.75rem !important; }
 
-    /* Блок выбора услуги (квиз, экспресс-диагностика) */
+    /* Блок выбора услуги */
     .callback-quiz-selection { padding: 10px !important; }
     .callback-quiz-selection .service-name { font-size: 0.85rem; }
 
@@ -205,7 +198,7 @@
     .share-site-btn, .telegram-button-container .btn-primary { width: 100%; }
 }
 
-/* ---------- ДОПОЛНИТЕЛЬНОЕ УВЕЛИЧЕНИЕ ДЛЯ ЭКРАНОВ 320-360px (читаемость) ---------- */
+/* ---------- ДОПОЛНИТЕЛЬНОЕ УВЕЛИЧЕНИЕ ДЛЯ ЭКРАНОВ 320-360px ---------- */
 @media (max-width: 360px) {
     html { font-size: 95%; }
     .section-title { font-size: 1.3rem !important; }
@@ -293,7 +286,7 @@
     }
 }
 
-/* ---------- ОСТАЛЬНЫЕ МЕЛКИЕ ПРАВКИ (без бургера) ---------- */
+/* ---------- ОСТАЛЬНЫЕ МЕЛКИЕ ПРАВКИ ---------- */
 .service-select {
     appearance: none;
     -webkit-appearance: none;
@@ -308,7 +301,6 @@
     word-break: break-word;
 }
 
-/* Увеличиваем текст лейбла чекбокса на телефонах */
 @media (max-width: 480px) {
     .consent-checkbox label {
         font-size: 0.8rem !important;
@@ -320,7 +312,6 @@
     }
 }
 
-/* Отключаем hover-эффекты на мобильных */
 @media (hover: none) and (pointer: coarse) {
     .card:hover,
     .card-role:hover,
@@ -340,7 +331,6 @@
     }
 }
 
-/* ---------- ВЫРАВНИВАНИЕ КАРТОЧЕК РОЛЕЙ ПО ЦЕНТРУ ---------- */
 .card-role {
     display: flex;
     flex-direction: column;
@@ -357,7 +347,6 @@
     margin-right: auto;
 }
 
-/* ========== ГЛОБАЛЬНЫЕ ОТСТУПЫ МЕЖДУ СЕКЦИЯМИ (БОЛЕЕ ПЛОТНО) ========== */
 section {
     margin: 0;
 }
@@ -421,7 +410,6 @@ section:not(.section-dark):not(.certificates-section) {
     padding: 20px 0;
 }
 
-/* Мобильные: ещё плотнее и убираем лишний воздух после фото */
 @media (max-width: 768px) {
     .section,
     .section-light,
@@ -449,7 +437,6 @@ section:not(.section-dark):not(.certificates-section) {
     }
 }
 
-/* ========== ДЕСКТОП: УМЕНЬШАЕМ ОТСТУПЫ МЕЖДУ СЕКЦИЯМИ ========== */
 @media (min-width: 992px) {
     .section,
     .section-light,
@@ -489,7 +476,6 @@ section:not(.section-dark):not(.certificates-section) {
     }
 }
 
-/* ========== ЦЕНТРИРОВАНИЕ СЕКЦИИ ЭКСПРЕСС-ДИАГНОСТИКИ ========== */
 #callback-form {
     display: flex;
     justify-content: center;
