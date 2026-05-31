@@ -1,9 +1,11 @@
 // ============================================================
-// 04_certificates.js – Бесконечная карусель (абсолютно надёжная)
-// Ширина слайда читается из CSS, не ждёт загрузки картинок
+// 04_certificates.js – Бесконечная карусель с управлением и остановкой вне вьюпорта
 // ============================================================
 (function() {
     let isRunning = false;
+    let currentAnimationId = null;
+    let carouselPaused = false;
+    let isMoving = false; // защита от повторных кликов
 
     function initInfiniteCarousel(trackId) {
         if (isRunning) return;
@@ -13,34 +15,31 @@
         const originalSlides = Array.from(track.children);
         if (originalSlides.length === 0) return;
 
-        // Берём ширину слайда из CSS (гарантированно)
+        // Получаем актуальную ширину слайда (учитывая gap)
         function getSlideWidth() {
             if (originalSlides.length === 0) return 280;
-            // Получаем вычисленный стиль
             const style = window.getComputedStyle(originalSlides[0]);
             let width = parseFloat(style.width);
             if (isNaN(width) || width === 0) {
-                // fallback: пробуем getBoundingClientRect
                 width = originalSlides[0].getBoundingClientRect().width;
             }
-            if (isNaN(width) || width === 0) width = 280; // резерв
+            if (isNaN(width) || width === 0) width = 280;
             return width;
         }
 
-        const SLIDE_GAP = 24;   // совпадает с gap в CSS
+        const SLIDE_GAP = 24;   // должен совпадать с gap в CSS
         const SPEED = 25;       // пикселей в секунду
 
         let slideWidth = getSlideWidth();
         let setWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
         let scrollPos = 0;
-        let animationId = null;
         let isHover = false;
         let isDrag = false;
         let dragStartX = 0;
         let dragStartScroll = 0;
         let lastTimestamp = 0;
 
-        // Создаём утроенный трек для бесконечности
+        // Утраиваем трек для бесконечности
         function buildTripleTrack() {
             const triple = [];
             for (let i = 0; i < 3; i++) {
@@ -97,12 +96,12 @@
                 scrollPos += delta;
                 setPosition(scrollPos);
                 updateProgressBar();
-                if (!isHover && !isDrag) startAnimation();
+                if (!isHover && !isDrag && !carouselPaused) startAnimation();
             });
         }
 
         function animate(now) {
-            if (!animationId) return;
+            if (!currentAnimationId) return;
             if (lastTimestamp === 0) {
                 lastTimestamp = now;
                 requestAnimationFrame(animate);
@@ -110,7 +109,7 @@
             }
             const deltaSec = Math.min(0.1, (now - lastTimestamp) / 1000);
             lastTimestamp = now;
-            if (!isHover && !isDrag && setWidth > 1) {
+            if (!isHover && !isDrag && !carouselPaused && setWidth > 1) {
                 let step = SPEED * deltaSec;
                 let newPos = scrollPos - step;
                 if (newPos < -setWidth) newPos += setWidth;
@@ -122,14 +121,14 @@
         }
 
         function startAnimation() {
-            if (animationId) return;
+            if (currentAnimationId) return;
             lastTimestamp = 0;
-            animationId = requestAnimationFrame(animate);
+            currentAnimationId = requestAnimationFrame(animate);
         }
         function stopAnimation() {
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-                animationId = null;
+            if (currentAnimationId) {
+                cancelAnimationFrame(currentAnimationId);
+                currentAnimationId = null;
             }
         }
 
@@ -155,49 +154,114 @@
             scrollPos = normalizePosition(scrollPos);
             setPosition(scrollPos);
             updateProgressBar();
-            if (!isHover) startAnimation();
+            if (!isHover && !carouselPaused) startAnimation();
         }
-
-        function onMouseDown(e) {
-            if (e.button !== 0) return;
-            e.preventDefault();
-            onDragStart(e.clientX);
-        }
-        function onMouseMove(e) {
-            if (!isDrag) return;
-            e.preventDefault();
-            onDragMove(e.clientX);
-        }
-        function onMouseUp() {
-            onDragEnd();
-        }
-
-        function onTouchStart(e) {
-            if (e.touches.length === 1) {
-                e.preventDefault();
-                onDragStart(e.touches[0].clientX);
-            }
-        }
+        function onMouseDown(e) { if (e.button !== 0) return; e.preventDefault(); onDragStart(e.clientX); }
+        function onMouseMove(e) { if (!isDrag) return; e.preventDefault(); onDragMove(e.clientX); }
+        function onMouseUp() { onDragEnd(); }
+        function onTouchStart(e) { if (e.touches.length === 1) { e.preventDefault(); onDragStart(e.touches[0].clientX); } }
         function onTouchMove(e) {
             if (!isDrag || e.touches.length !== 1) return;
-            e.preventDefault();
+            // Не блокируем вертикальную прокрутку страницы
             onDragMove(e.touches[0].clientX);
         }
-        function onTouchEnd() {
-            onDragEnd();
-        }
+        function onTouchEnd() { onDragEnd(); }
 
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => { isHover = true; stopAnimation(); });
-            wrapper.addEventListener('mouseleave', () => { isHover = false; if (!isDrag) startAnimation(); });
+            wrapper.addEventListener('mouseleave', () => {
+                isHover = false;
+                if (!isDrag && !carouselPaused) startAnimation();
+            });
+        }
+
+        // Остановка анимации, когда карусель не в видимой области
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (!carouselPaused && !isHover && !isDrag) startAnimation();
+                } else {
+                    stopAnimation();
+                }
+            });
+        }, { threshold: 0.1 });
+        if (wrapper) observer.observe(wrapper);
+
+        // Публичные методы управления
+        window.carouselControl = {
+            play: () => {
+                if (!carouselPaused) return;
+                carouselPaused = false;
+                if (!isHover && !isDrag) startAnimation();
+            },
+            pause: () => {
+                if (carouselPaused) return;
+                carouselPaused = true;
+                stopAnimation();
+            },
+            next: () => {
+                if (isMoving) return;
+                isMoving = true;
+                const wasPlaying = !carouselPaused && !isHover && !isDrag;
+                stopAnimation(); // временно останавливаем автопрокрутку
+                let newPos = scrollPos - (slideWidth + SLIDE_GAP);
+                if (newPos < -setWidth) newPos += setWidth;
+                setPosition(newPos);
+                updateProgressBar();
+                if (wasPlaying) startAnimation();
+                setTimeout(() => { isMoving = false; }, 100);
+            },
+            prev: () => {
+                if (isMoving) return;
+                isMoving = true;
+                const wasPlaying = !carouselPaused && !isHover && !isDrag;
+                stopAnimation();
+                let newPos = scrollPos + (slideWidth + SLIDE_GAP);
+                if (newPos > 0) newPos -= setWidth;
+                setPosition(newPos);
+                updateProgressBar();
+                if (wasPlaying) startAnimation();
+                setTimeout(() => { isMoving = false; }, 100);
+            }
+        };
+
+        // Привязываем кнопки, если они существуют
+        const prevBtn = document.getElementById('carouselPrevBtn');
+        const nextBtn = document.getElementById('carouselNextBtn');
+        const playPauseBtn = document.getElementById('carouselPlayPauseBtn');
+
+        if (prevBtn) {
+            prevBtn.removeEventListener('click', window._carouselPrevHandler);
+            window._carouselPrevHandler = () => window.carouselControl.prev();
+            prevBtn.addEventListener('click', window._carouselPrevHandler);
+        }
+        if (nextBtn) {
+            nextBtn.removeEventListener('click', window._carouselNextHandler);
+            window._carouselNextHandler = () => window.carouselControl.next();
+            nextBtn.addEventListener('click', window._carouselNextHandler);
+        }
+        if (playPauseBtn) {
+            const updateButtonText = () => {
+                playPauseBtn.textContent = carouselPaused ? '▶' : '⏸';
+            };
+            playPauseBtn.removeEventListener('click', window._carouselPlayPauseHandler);
+            window._carouselPlayPauseHandler = () => {
+                if (carouselPaused) {
+                    window.carouselControl.play();
+                } else {
+                    window.carouselControl.pause();
+                }
+                updateButtonText();
+            };
+            playPauseBtn.addEventListener('click', window._carouselPlayPauseHandler);
+            updateButtonText();
         }
 
         function init() {
-            // Пересчитываем ширину на случай ресайза
             slideWidth = getSlideWidth();
             setWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
-            scrollPos = -setWidth;   // начинаем с левого края набора
+            scrollPos = -setWidth;
             setPosition(scrollPos);
             ensureProgressBar();
             updateProgressBar();
@@ -219,17 +283,14 @@
                     scrollPos = normalizePosition(scrollPos);
                     setPosition(scrollPos);
                     updateProgressBar();
-                    if (!isHover && !isDrag) {
+                    if (!isHover && !isDrag && !carouselPaused) {
                         stopAnimation();
                         startAnimation();
                     }
                 }, 150);
             });
-
             isRunning = true;
         }
-
-        // Даём браузеру завершить вычисление стилей
         setTimeout(init, 50);
     }
 

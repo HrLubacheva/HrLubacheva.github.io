@@ -18,6 +18,9 @@ function initBurgerMenu() {
         navBottom.classList.add('open');
         body.classList.add('menu-open');
         burger.setAttribute('aria-expanded', 'true');
+        // Перемещаем фокус на первый пункт меню для клавиатурных пользователей
+        const firstLink = navBottom.querySelector('a');
+        if (firstLink) firstLink.focus();
     }
 
     function toggleMenu() {

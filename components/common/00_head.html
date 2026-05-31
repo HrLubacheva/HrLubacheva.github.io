@@ -10,11 +10,9 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <!-- CSP: добавлен frame-src для Яндекс.Метрики -->
     <meta http-equiv="Content-Security-Policy"
           content="default-src 'self'; frame-src https://mc.yandex.com https://mc.yandex.ru; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru https://www.google-analytics.com https://region1.google-analytics.com;">
 
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZJJ2SE117"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -28,7 +26,6 @@
         gtag('config', 'G-QZJJ2SE117');
     </script>
 
-    <!-- Яндекс.Метрика -->
     <script>
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments);};
@@ -65,4 +62,4 @@
 <body>
 <a href="#main-content" class="skip-link">Перейти к содержанию</a>
 <div id="top"></div>
-<div id="main-content"></div>
+<main id="main-content">
