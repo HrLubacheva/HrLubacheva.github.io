@@ -1,0 +1,427 @@
+/* ==================================================================
+   15_forms.css – формы обратной связи (без серых рамок, единый стиль)
+   Финальная версия: включает все блоки (быстрый заказ, обратная связь, квиз-селекшн)
+   ================================================================== */
+
+/* Сброс рамок у всех обёрток */
+.form-field-wrapper,
+.form-row-three,
+.form-row-two,
+.form-row-messages,
+.callback-quiz-selection,
+.calendar-card,
+.consent-checkbox,
+.modal-body,
+.modal-input-group {
+    border: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+/* Общие стили для всех полей ввода */
+.form-field,
+.modal-email-input,
+.calc-qty,
+.service-select,
+textarea.form-field {
+    width: 100%;
+    padding: 12px 18px;
+    border: 1px solid #d1d5db;
+    border-radius: 60px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    background-color: #ffffff;
+    color: #1a202c;
+    transition: all 0.2s ease;
+    box-shadow: none;
+    outline: none;
+    box-sizing: border-box;
+}
+
+textarea.form-field {
+    border-radius: 24px;
+    resize: vertical;
+}
+
+/* Фокус – синяя рамка */
+.form-field:focus,
+.modal-email-input:focus,
+.calc-qty:focus,
+.service-select:focus,
+textarea.form-field:focus {
+    border-color: var(--primary, #2D6A9F);
+    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.2);
+    outline: none;
+}
+
+/* Ошибка – красная рамка */
+.form-field.input-error,
+.modal-email-input.error {
+    border-color: #dc3545;
+    background-color: #fff8f8;
+}
+
+/* Кастомный select */
+.service-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232D6A9F' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 18px center;
+    background-size: 18px;
+    cursor: pointer;
+}
+
+/* Группы полей (ряды) */
+.form-row-three,
+.form-row-two {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+.form-row-three .form-field,
+.form-row-two .form-field {
+    flex: 1;
+    min-width: 140px;
+}
+
+/* Чекбокс согласия */
+.consent-checkbox {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+.consent-checkbox input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    border: 2px solid #cbd5e0;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+.consent-checkbox input[type="checkbox"]:checked {
+    background: var(--primary, #2D6A9F);
+    border-color: var(--primary, #2D6A9F);
+}
+.consent-checkbox input[type="checkbox"]:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+}
+.consent-checkbox label {
+    font-size: 0.9rem;
+    color: #1a202c;
+    cursor: pointer;
+}
+.consent-checkbox label a {
+    color: var(--primary, #2D6A9F);
+    text-decoration: none;
+}
+
+/* Блок сообщений об ошибках/успехе */
+.form-messages {
+    flex: 1;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-radius: 40px;
+    background-color: #f1f5f9;
+    color: #334155;
+    transition: all 0.2s;
+}
+.form-messages.error {
+    background-color: #fff0f0;
+    color: #dc3545;
+    border: 1px solid #ffc9c9;
+}
+.form-messages.success {
+    background-color: #e6ffed;
+    color: #28a745;
+    border: 1px solid #b3e6cc;
+}
+
+/* Кнопка отправки */
+.callback-submit,
+.add-service-btn {
+    background: var(--gradient-cta, linear-gradient(135deg, #2D6A9F, #E67E22));
+    border: none;
+    padding: 12px 24px;
+    border-radius: 60px;
+    font-weight: 700;
+    font-size: 1rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    width: 100%;
+    margin-top: 8px;
+}
+.callback-submit:hover,
+.add-service-btn:hover {
+    background: var(--gradient-cta-hover, linear-gradient(135deg, #1F4A6E, #F39C12));
+    transform: translateY(-1px);
+}
+.callback-submit:active,
+.add-service-btn:active {
+    transform: translateY(1px);
+}
+
+/* Блок выбора услуги из квиза */
+.callback-quiz-selection {
+    background: #f8fafc;
+    border-radius: 20px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.callback-quiz-selection .service-name {
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+.callback-quiz-selection .service-price {
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* ========== БЛОК ОПИСАНИЯ ФОРМЫ (текст и бейджи) ========== */
+.callback-features {
+    text-align: center;
+    margin: 0 0 24px 0;
+    padding: 0;
+}
+.callback-features-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-dark, #1a202c);
+    margin-bottom: 8px;
+}
+.callback-features-note {
+    font-size: 0.9rem;
+    color: var(--text-muted, #4a5568);
+    margin-bottom: 16px;
+}
+.feature-badges {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.feature-badges li {
+    font-size: 0.9rem;
+    color: var(--primary-dark, #1F4A6E);
+    background: rgba(45, 106, 159, 0.08);
+    padding: 6px 16px;
+    border-radius: 40px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+@media (max-width: 480px) {
+    .feature-badges {
+        gap: 12px;
+    }
+    .feature-badges li {
+        font-size: 0.8rem;
+        padding: 4px 12px;
+        white-space: normal;
+    }
+}
+
+/* ========== КАРТОЧКИ ФОРМ (ЕДИНЫЙ СТИЛЬ) ========== */
+.calendar-card {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 32px 28px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.3s ease;
+    border: none;
+}
+.calendar-card:hover {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+}
+.calendar-card h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, var(--primary-dark, #1F4A6E), var(--primary, #2D6A9F));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.calendar-card .text-muted-light {
+    color: #6c757d;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+/* Общие стили для форм обратной связи */
+.callback-form {
+    width: 100%;
+}
+.callback-form fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+.form-row-two,
+.form-row-three {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+.form-row-two .form-field-wrapper,
+.form-row-three .form-field-wrapper {
+    flex: 1;
+    min-width: 140px;
+}
+.form-field {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 60px;
+    font-size: 0.95rem;
+    background: #fff;
+    transition: all 0.2s;
+}
+.form-field:focus {
+    border-color: var(--primary, #2D6A9F);
+    box-shadow: 0 0 0 3px rgba(45, 106, 159, 0.15);
+    outline: none;
+}
+.form-field.phone-mask {
+    /* дополнительных стилей не требуется */
+}
+.form-textarea {
+    border-radius: 24px;
+    resize: vertical;
+}
+
+/* Чекбокс согласия (дублируем, чтобы перекрыть предыдущие стили) */
+.consent-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.consent-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary, #2D6A9F);
+    margin: 0;
+}
+.consent-checkbox label {
+    font-size: 0.85rem;
+    color: #334155;
+}
+.consent-checkbox a {
+    color: var(--primary, #2D6A9F);
+    text-decoration: none;
+    border-bottom: 1px dashed transparent;
+}
+.consent-checkbox a:hover {
+    border-bottom-color: var(--primary);
+}
+
+/* Блок сообщений */
+.form-messages {
+    font-size: 0.8rem;
+    padding: 8px 16px;
+    border-radius: 40px;
+    background: #f1f5f9;
+    color: #334155;
+}
+.form-messages.error {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+.form-messages.success {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* Кнопка отправки */
+.callback-submit {
+    background: linear-gradient(135deg, var(--primary, #2D6A9F), var(--accent-warm, #E67E22));
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 60px;
+    font-weight: 700;
+    font-size: 1rem;
+    width: 100%;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.callback-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+.callback-submit:active {
+    transform: translateY(0);
+}
+
+/* Альтернативная ссылка на Telegram */
+.callback-telegram-alt {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 0.85rem;
+}
+.callback-telegram-alt a {
+    color: var(--primary, #2D6A9F);
+    font-weight: 500;
+    text-decoration: none;
+}
+.callback-telegram-alt a:hover {
+    text-decoration: underline;
+}
+.callback-note {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #6c757d;
+    margin-top: 16px;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 640px) {
+    .calendar-card {
+        padding: 20px 16px;
+    }
+    .calendar-card h3 {
+        font-size: 1.3rem;
+    }
+    .form-row-two,
+    .form-row-three {
+        flex-direction: column;
+        gap: 12px;
+    }
+    .form-field {
+        padding: 12px 16px;
+        font-size: 0.9rem;
+    }
+    .callback-submit {
+        padding: 12px 20px;
+    }
+}

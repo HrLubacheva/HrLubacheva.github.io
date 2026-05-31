@@ -1,12 +1,5 @@
 // ============================================================
-// 01_core.js – Ядро с обходом CORS, валидацией и сохранением полей
-// ИСПРАВЛЕНИЯ:
-// - Добавлены реальные ретраи с экспоненциальной задержкой
-// - Исправлена утечка через глобальный _tempUserId
-// - Все обращения к localStorage обёрнуты в try..catch
-// - Улучшен fallback для отправки (no-cors оставлен, но добавлено логирование)
-// - Исправлена функция sendDataToSheetWithRetry (теперь ретраи работают)
-// - Добавлена проверка существования window.getCartData
+// 01_core.js – Ядро с обходом CORS, валидацией, сохранением полей + расширенная аналитика
 // ============================================================
 
 function escapeHtml(str) {
@@ -145,7 +138,6 @@ function generateRequestId() {
     return Date.now() + '_' + Math.random().toString(36).substring(2, 12) + '_' + (currentUserId || getOrCreateLocalUserId());
 }
 
-// ========== СОХРАНЕНИЕ ПОЛЕЙ ФОРМ В sessionStorage (с защитой) ==========
 function saveFormFields(formId) {
     const form = document.getElementById(formId);
     if (!form) return;
@@ -196,7 +188,6 @@ function bindFormAutoSave(formId) {
     });
 }
 
-// ========== ЛОКАЛЬНОЕ СОХРАНЕНИЕ НЕОТПРАВЛЕННЫХ ЗАПРОСОВ ==========
 function saveFailedRequest(url, data) {
     try {
         const failedKey = 'hr_failed_requests';
@@ -219,7 +210,7 @@ async function retryFailedRequests() {
         if (failed.length === 0) return;
         const newFailed = [];
         for (const req of failed) {
-            const success = await window.sendViaBeaconOrFetch(req.url, req.data, true); // true - это режим ретрая, чтобы не зациклиться
+            const success = await window.sendViaBeaconOrFetch(req.url, req.data, true);
             if (!success) {
                 newFailed.push(req);
             }
@@ -232,15 +223,12 @@ async function retryFailedRequests() {
 setInterval(retryFailedRequests, 60000);
 window.addEventListener('load', () => setTimeout(retryFailedRequests, 5000));
 
-// ========== ОТПРАВКА БЕЗ CORS (улучшенная с ретраями и таймаутом) ==========
 window.sendViaBeaconOrFetch = async function(url, data, isRetry = false) {
     const formData = new URLSearchParams(data);
-    // Пытаемся через sendBeacon (нельзя контролировать ответ, но он быстрый)
     if (navigator.sendBeacon && navigator.sendBeacon(url, formData)) {
         if (IS_DEV) console.log('📡 Отправлено через sendBeacon');
         return true;
     }
-    // Пробуем обычный fetch с таймаутом
     try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -267,7 +255,6 @@ window.sendViaBeaconOrFetch = async function(url, data, isRetry = false) {
                 cache: 'no-store'
             });
             if (IS_DEV) console.log('📡 Отправлено через fetch (no-cors) – статус неизвестен, но данные вероятно ушли');
-            // ВАЖНО: при no-cors мы не знаем результат, но считаем успехом, чтобы не плодить бесконечные ретраи
             return true;
         } catch (e) {
             logError('Fallback тоже провалился:', e);
@@ -295,7 +282,6 @@ window.postWithRetry = async function(url, data, maxRetries = 3, baseDelay = 200
     throw lastError || new Error('Все попытки отправки не удались');
 };
 
-// ========== ОСТАЛЬНЫЕ УТИЛИТЫ ==========
 function normalizePhoneDigits(phone) {
     let digits = phone.replace(/\D/g, '');
     if (digits.length === 0) return '';
@@ -435,12 +421,55 @@ function initPhoneMasks() {
     phoneInputs.forEach(input => { if (input) applyPhoneMask(input); });
 }
 
+// ========== РАСШИРЕННАЯ АНАЛИТИКА (СТАБИЛЬНЫЕ ДАННЫЕ + БАТАРЕЯ) ==========
+async function getBatteryInfo() {
+    if (!navigator.getBattery) return { level: '-', charging: '-' };
+    try {
+        const battery = await navigator.getBattery();
+        const level = Math.round(battery.level * 100);
+        const charging = battery.charging;
+        return { level: level, charging: charging };
+    } catch(e) {
+        return { level: '-', charging: '-' };
+    }
+}
+
+function getExtendedDeviceInfo() {
+    let connectionType = '-';
+    if (navigator.connection) {
+        connectionType = navigator.connection.effectiveType || '-';
+    }
+
+    return {
+        language: navigator.language || navigator.userLanguage || '-',
+        screenResolution: screen.width + 'x' + screen.height,
+        screenColorDepth: screen.colorDepth + 'bit',
+        timezone: -new Date().getTimezoneOffset() / 60,
+        timezoneName: Intl.DateTimeFormat().resolvedOptions().timeZone || '-',
+        theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
+        connection: connectionType,
+        deviceMemory: navigator.deviceMemory || '-',
+        hardwareConcurrency: navigator.hardwareConcurrency || '-'
+    };
+}
+
 async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     const userId = currentUserId || getOrCreateLocalUserId();
     data.userId = userId;
     if (typeof window.getCartData === 'function') data.cart = window.getCartData();
     else data.cart = '';
     data.requestId = generateRequestId();
+
+    const extendedInfo = getExtendedDeviceInfo();
+    data.language = extendedInfo.language;
+    data.screenResolution = extendedInfo.screenResolution;
+    data.timezone = extendedInfo.timezone;
+    data.theme = extendedInfo.theme;
+    data.connection = extendedInfo.connection;
+
+    const batteryInfo = await getBatteryInfo();
+    data.batteryLevel = batteryInfo.level;
+    data.batteryCharging = batteryInfo.charging;
 
     let targetUrl = window.APP_CONFIG?.SCRIPT_URL;
     if (IS_TEST && window.APP_CONFIG?.TEST_SCRIPT_URL) {
@@ -527,7 +556,7 @@ function getVisitStats() {
 }
 function getVisitStatsText() {
     const stats = getVisitStats();
-    return `📊 Визиты: ${stats.week} за неделю, ${stats.month} за месяц`;
+    return `за неделю: ${stats.week}, за месяц: ${stats.month}`;
 }
 window.getVisitStats = getVisitStats;
 window.getVisitStatsText = getVisitStatsText;
@@ -545,7 +574,7 @@ function getUTMParams() {
 window.getUTMParams = getUTMParams;
 function getUTMText() {
     const u = getUTMParams();
-    return `📊 UTM: source=${u.source}, medium=${u.medium}, campaign=${u.campaign}, content=${u.content}, term=${u.term}`;
+    return `source=${u.source}, medium=${u.medium}, campaign=${u.campaign}, content=${u.content}, term=${u.term}`;
 }
 window.getUTMText = getUTMText;
 
@@ -573,7 +602,7 @@ function getDeviceInfo() {
 window.getDeviceInfo = getDeviceInfo;
 function getDeviceText() {
     const d = getDeviceInfo();
-    return `📱 Устройство: ${d.device}, браузер: ${d.browser}, ОС: ${d.os}`;
+    return `${d.device}, ${d.browser}, ${d.os}`;
 }
 window.getDeviceText = getDeviceText;
 
@@ -587,7 +616,7 @@ function getPageInfo() {
 window.getPageInfo = getPageInfo;
 function getPageText() {
     const p = getPageInfo();
-    return `📄 Страница: ${p.page}\n🔗 Referrer: ${p.referrer || '-'}`;
+    return `страница: ${p.page}, реферер: ${p.referrer || '-'}`;
 }
 window.getPageText = getPageText;
 
@@ -710,6 +739,9 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             geo: geo.geoText,
             userId: window.getOrCreateLocalUserId(),
             ip: geo.ip || '-',
+            referrer: document.referrer || '-',
+            helpRequested: window.helpRequested ? 'Да' : 'Нет',
+            helpType: window.helpType || '',
             ...additional
         };
 
@@ -729,6 +761,9 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
             const input = form.querySelector(`[name="${field}"]`);
             if (input) input.value = '';
         });
+
+        window.helpRequested = false;
+        window.helpType = null;
 
         return true;
     } catch (err) {
@@ -843,19 +878,15 @@ window.onunhandledrejection = function (event) {
     if (originalUnhandledRejection) originalUnhandledRejection(event);
 };
 
-// ========== ГЛОБАЛЬНЫЙ ПЕРЕХВАТ ОШИБОК (без вылетов) ==========
 (function() {
     if (window._errorHandlerInstalled) return;
     window._errorHandlerInstalled = true;
 
     window.addEventListener('error', function(e) {
-        // Не показываем тост на каждую ошибку, только на критичные
         if (e.message && (e.message.includes('Script error') || e.message.includes('NetworkError'))) {
-            // Пропускаем, чтобы не раздражать
             return;
         }
         console.warn('🛡️ Поймана ошибка:', e.message, e.filename, e.lineno);
-        // Показываем тост только один раз в 10 секунд, чтобы не заспамить
         const lastErrorTime = window._lastGlobalErrorTime || 0;
         if (Date.now() - lastErrorTime > 10000) {
             window._lastGlobalErrorTime = Date.now();
@@ -863,7 +894,7 @@ window.onunhandledrejection = function (event) {
                 window.showWarningToast('⚠️ Что-то пошло не так, но мы уже чиним. Попробуйте обновить страницу.');
             }
         }
-        return true; // не даём ошибке вывалиться в консоль красным (но предупреждение остаётся)
+        return true;
     });
 
     window.addEventListener('unhandledrejection', function(e) {

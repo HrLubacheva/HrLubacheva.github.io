@@ -27,7 +27,7 @@
                         </div>
                         <div class="form-field-wrapper">
                             <label for="callbackPhone" class="visually-hidden">Телефон</label>
-                            <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
+                            <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field phone-mask">
                         </div>
                         <div class="form-field-wrapper">
                             <label for="callbackEmail" class="visually-hidden">Email</label>
@@ -43,7 +43,7 @@
                         </div>
                     </div>
 
-                    <!-- ЯВНЫЕ СКРЫТЫЕ ПОЛЯ ДЛЯ КВИЗА -->
+                    <!-- Скрытые поля для квиза -->
                     <input type="hidden" name="quiz_q1_role" id="quiz_q1_role">
                     <input type="hidden" name="quiz_q2_level" id="quiz_q2_level">
                     <input type="hidden" name="quiz_q3_urgency" id="quiz_q3_urgency">
@@ -54,8 +54,6 @@
                     <input type="hidden" name="quiz_recommendations" id="quiz_recommendations">
                     <input type="hidden" name="quiz_chosen_variant" id="quiz_chosen_variant">
                     <input type="hidden" name="quiz_chosen_price" id="quiz_chosen_price">
-
-                    <!-- СТАРЫЕ ПОЛЯ (для совместимости) -->
                     <input type="hidden" name="chosenVariant" id="chosenVariant">
                     <input type="hidden" name="chosenVariantPrice" id="chosenVariantPrice">
                     <input type="hidden" name="originalChosenVariant" id="originalChosenVariant">
@@ -71,7 +69,7 @@
                     <div class="form-row-messages">
                         <div class="consent-checkbox">
                             <input type="checkbox" id="callbackConsent" name="consent" required>
-                            <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
+                            <label for="callbackConsent">Я согласен на <a href="#" onclick="openPrivacyModal(event); return false;">обработку персональных данных</a></label>
                         </div>
                         <div id="callbackFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                     </div>

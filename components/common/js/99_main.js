@@ -6,22 +6,27 @@
     const STATS_ANIMATION_DURATION = C.STATS_ANIMATION_DURATION || 1500;
     const SCROLL_TOP_THRESHOLD = C.SCROLL_TOP_VISIBLE_THRESHOLD || 500;
 
+    let globalFadeObserver = null;
+
     function reinitAnimations() {
         logInit('reinitAnimations started', 'DEBUG', '', 5);
         const elements = document.querySelectorAll('.fade-up:not(.visible)');
         if (!elements.length) return;
+        if (globalFadeObserver) {
+            globalFadeObserver.disconnect();
+        }
         const isMobile = window.innerWidth <= MOBILE_BREAKPOINT;
         const threshold = isMobile ? 0.1 : 0.05;
         const rootMargin = isMobile ? '0px 0px -30px 0px' : '0px 0px -50px 0px';
-        const observer = new IntersectionObserver((entries) => {
+        globalFadeObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
+                    globalFadeObserver.unobserve(entry.target);
                 }
             });
         }, {threshold, rootMargin});
-        elements.forEach(el => observer.observe(el));
+        elements.forEach(el => globalFadeObserver.observe(el));
         logInit(`reinitAnimations обработано ${elements.length} элементов`, 'DEBUG', '', 5);
     }
 
@@ -124,95 +129,6 @@
         logInit('initScrollTopButton finished', 'INFO', '', 4);
     }
 
-    function initMaterialsEmailButtons() {
-        logInit('initMaterialsEmailButtons started', 'INFO', '', 4);
-        const buttons = document.querySelectorAll('.material-email-simple');
-        const modal = document.getElementById('materialsModal');
-        const closeBtn = document.getElementById('closeMaterialsModal');
-        const sendBtn = document.getElementById('sendMaterialsBtn');
-        let currentMaterial = null;
-        let isModalSending = false;
-        if (!modal) return;
-        buttons.forEach(btn => {
-            btn.removeEventListener('click', btn._materialsHandler);
-            btn._materialsHandler = () => {
-                currentMaterial = btn.dataset.material;
-                logInit(`Открытие модалки материалов для ${currentMaterial}`, 'INFO', '', 4);
-                modal.style.display = 'flex';
-                setTimeout(() => modal.classList.add('show'), 10);
-                document.body.classList.add('modal-open');
-                setTimeout(() => {
-                    const emailInput = document.getElementById('materialsEmail');
-                    if (emailInput) emailInput.focus();
-                }, 100);
-            };
-            btn.addEventListener('click', btn._materialsHandler);
-        });
-        if (closeBtn) {
-            closeBtn.removeEventListener('click', closeBtn._closeHandler);
-            closeBtn._closeHandler = () => {
-                modal.classList.remove('show');
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    document.body.classList.remove('modal-open');
-                    const emailInput = document.getElementById('materialsEmail');
-                    if (emailInput) emailInput.value = '';
-                    isModalSending = false;
-                }, 200);
-                logInit('Модалка материалов закрыта', 'INFO', '', 4);
-            };
-            closeBtn.addEventListener('click', closeBtn._closeHandler);
-        }
-        if (sendBtn) {
-            sendBtn.removeEventListener('click', sendBtn._sendHandler);
-            sendBtn._sendHandler = async () => {
-                if (isModalSending) {
-                    window.showWarningToast('⏳ Отправка уже выполняется, подождите...');
-                    return;
-                }
-                const email = document.getElementById('materialsEmail').value;
-                const originalText = sendBtn.innerText;
-                isModalSending = true;
-                sendBtn.disabled = true;
-                sendBtn.innerText = '⏳ Отправка...';
-                try {
-                    logInit(`Отправка материалов на email ${email}`, 'INFO', '', 4);
-                    const success = await window.sendMaterialsToEmail(email, currentMaterial);
-                    if (success) {
-                        modal.classList.remove('show');
-                        setTimeout(() => {
-                            modal.style.display = 'none';
-                            document.body.classList.remove('modal-open');
-                            const emailInput = document.getElementById('materialsEmail');
-                            if (emailInput) emailInput.value = '';
-                        }, 200);
-                    }
-                } catch (err) {
-                    if (window.IS_DEV) console.error('Ошибка отправки:', err);
-                } finally {
-                    sendBtn.disabled = false;
-                    sendBtn.innerText = originalText;
-                    isModalSending = false;
-                }
-            };
-            sendBtn.addEventListener('click', sendBtn._sendHandler);
-        }
-        window.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('show');
-                setTimeout(() => {
-                    modal.style.display = 'none';
-                    document.body.classList.remove('modal-open');
-                    const emailInput = document.getElementById('materialsEmail');
-                    if (emailInput) emailInput.value = '';
-                    isModalSending = false;
-                }, 200);
-            }
-        });
-        logInit('initMaterialsEmailButtons finished', 'INFO', '', 4);
-    }
-
-    // Обновление активного пункта меню с debounce для производительности
     let updateActiveNavTimeout = null;
     function updateActiveNav() {
         if (updateActiveNavTimeout) clearTimeout(updateActiveNavTimeout);
@@ -388,7 +304,11 @@
         initActiveNav();
         initFormValidation();
         initScrollTopButton();
-        initMaterialsEmailButtons();
+        if (typeof window.initMaterialsEmailButtons === 'function') {
+            window.initMaterialsEmailButtons();
+        } else {
+            logInit('initMaterialsEmailButtons не найдена! Убедитесь, что 20_materials-modal.js загружен.', 'WARN', '', 2);
+        }
         initCarousel();
         initErrorTrackingIfAvailable();
 
@@ -416,8 +336,3 @@
         }, 200);
     });
 })();
-
-
-if (typeof initAnimations === 'function') {
-    initAnimations();
-}

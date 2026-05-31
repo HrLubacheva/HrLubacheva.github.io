@@ -2,13 +2,17 @@
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbx338-uCSTWI556R0pfO3tgcZJ6Z924BnfJ-Xs5z4XZYZAk_AtYOFSWqDdlUdVeqT2RwQ/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbw_wOIbtz1Tr4tgudarRcFmglOWPVgsvo9RjvwM3SyKoaJytnX5FU91SIZssGQ7jUwkYg/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
     PHONE: '+79217916655',
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
+    PRIVACY_PAGE_URL: 'privacy.html',
+    CHECKLIST_URL: 'assets/docs/checklist.pdf',
+    TRAINING_PROGRAM_URL: 'assets/docs/training_program.pdf',
+    MATERIALS_ZIP_URL: 'assets/docs/docs.zip',
     CONSTANTS: {
         TOAST_DURATION: 3000,
         TOAST_FADE_DURATION: 300,

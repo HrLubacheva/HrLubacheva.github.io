@@ -1,0 +1,74 @@
+/* ==================================================================
+   09_stats.css – блок статистики (цифры)
+   ================================================================== */
+.stats-grid {
+    display: grid;
+    gap: 30px;
+    margin: 40px 0;
+}
+@media (min-width: 576px) and (max-width: 991px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+}
+@media (min-width: 992px) {
+    .stats-grid { grid-template-columns: repeat(3, 1fr); gap: 30px; }
+}
+@media (max-width: 575px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 30px 0; }
+}
+.card-stat {
+    text-align: center;
+    padding: 28px 20px;
+}
+.stat-number-wrapper {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+    margin-bottom: 12px;
+    white-space: nowrap;
+}
+.stat-number {
+    font-size: clamp(1.3rem, 8vw, 2.8rem);
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1.2;
+}
+.stat-plus {
+    font-size: clamp(1rem, 6vw, 2rem);
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.2;
+}
+.stat-label {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .stat-number {
+        font-size: clamp(2rem, 10vw, 2.8rem) !important;
+    }
+    .stat-plus {
+        font-size: clamp(1.6rem, 8vw, 2rem) !important;
+    }
+    .stat-label {
+        font-size: 1rem !important;
+        font-weight: 600;
+    }
+    .card-stat {
+        padding: 20px 10px !important;
+    }
+    .stats-grid {
+        gap: 20px !important;
+    }
+}
+
+@media (max-width: 360px) {
+    .stat-number {
+        font-size: clamp(1.8rem, 9vw, 2.5rem) !important;
+    }
+    .stat-plus {
+        font-size: clamp(1.4rem, 7vw, 1.8rem) !important;
+    }
+}

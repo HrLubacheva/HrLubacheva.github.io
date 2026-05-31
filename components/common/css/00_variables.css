@@ -24,7 +24,7 @@
     --gradient-cta: linear-gradient(135deg, var(--primary), var(--accent-warm));
     --gradient-cta-hover: linear-gradient(135deg, var(--primary-dark), var(--accent-warm-light));
 
-    /* Чисто синий градиент (для заголовков, декоративных линий) */
+    /* Чисто синий градиент (для заголовков, декоративных линий, некоторых кнопок) */
     --gradient-blue: linear-gradient(135deg, var(--primary), var(--primary-dark));
     --gradient-blue-hover: linear-gradient(135deg, var(--primary-dark), var(--primary));
 

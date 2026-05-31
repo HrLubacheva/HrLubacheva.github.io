@@ -1,0 +1,139 @@
+/* ==================================================================
+   17_media.css – стили для секции "Упоминания в СМИ"
+   ================================================================== */
+
+.media-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    align-items: stretch;
+    margin: 40px 0;
+}
+@media (max-width: 991px) {
+    .media-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+}
+@media (max-width: 576px) {
+    .media-grid {
+        gap: 16px;
+    }
+}
+
+.media-item {
+    background: white;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+.media-item:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+}
+
+.media-image {
+    width: 100%;
+    aspect-ratio: 16/9;
+    overflow: hidden;
+}
+.media-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+.media-item:hover .media-image img {
+    transform: scale(1.03);
+}
+
+.media-caption {
+    padding: 10px 12px 14px;
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: white;
+    line-height: 1.3;
+}
+.media-caption strong,
+.media-caption .media-title {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+@media (max-width: 480px) {
+    .media-caption {
+        padding: 6px 8px 10px;
+        font-size: 0.65rem;
+    }
+    .media-caption strong {
+        font-size: 0.7rem;
+    }
+}
+
+.media-description {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+.media-description-icon {
+    font-size: 3rem;
+    margin-bottom: 16px;
+}
+.media-description h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: white;
+}
+.media-description p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    color: rgba(255,255,255,0.9);
+}
+.media-stats {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+.media-stats span {
+    background: rgba(255,255,255,0.2);
+    padding: 8px 16px;
+    border-radius: 40px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+@media (max-width: 900px) {
+    .media-description {
+        order: -1;
+    }
+    .media-stats {
+        gap: 16px;
+    }
+    .media-stats span {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+}
+@media (max-width: 480px) {
+    .media-description {
+        padding: 24px 20px;
+    }
+    .media-description h3 {
+        font-size: 1.2rem;
+    }
+    .media-description p {
+        font-size: 0.85rem;
+    }
+}

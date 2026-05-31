@@ -1,0 +1,174 @@
+/* ==================================================================
+   14_pricelist.css – полный прайс-лист (аккордеоны, таблицы)
+   ================================================================== */
+
+.price-list-section {
+    margin: 2rem 0;
+}
+.price-details {
+    background: var(--surface-soft, #fff);
+    border-radius: 24px;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm, 0 4px 12px rgba(0,0,0,0.05));
+    transition: box-shadow 0.3s ease;
+    border: 1px solid var(--border, #e0e0e0);
+    overflow: hidden;
+}
+.price-details[open] {
+    box-shadow: var(--shadow-md, 0 8px 24px rgba(0,0,0,0.1));
+}
+.price-summary {
+    font-size: 1.4rem;
+    font-weight: 700;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-dark,#1F4A6E) 0%, var(--primary,#2D6A9F) 100%);
+    color: white;
+    cursor: pointer;
+    list-style: none;
+    transition: background 0.2s;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+.price-summary::-webkit-details-marker {
+    display: none;
+}
+.price-summary::marker {
+    display: none;
+}
+.price-summary::before {
+    content: '▶';
+    display: inline-block;
+    margin-right: 0.75rem;
+    font-size: 1rem;
+    transition: transform 0.2s;
+}
+.price-details[open] .price-summary::before {
+    transform: rotate(90deg);
+}
+.summary-note {
+    font-size: 0.85rem;
+    font-weight: normal;
+    opacity: 0.85;
+}
+.price-summary:hover {
+    background: linear-gradient(135deg, var(--primary,#2D6A9F) 0%, var(--primary-light,#4A8BC2) 100%);
+}
+.price-table-wrapper {
+    padding: 0.5rem 0 1rem 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+.price-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+.price-table th,
+.price-table td {
+    padding: 0.9rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border, #e0e0e0);
+    vertical-align: top;
+}
+.price-table th {
+    background-color: var(--light-bg, #f8f9fa);
+    font-weight: 600;
+    color: var(--primary-dark, #1F4A6E);
+}
+.price-table td:first-child,
+.price-table th:first-child {
+    padding-left: 1.5rem;
+}
+.price-table td:last-child,
+.price-table th:last-child {
+    text-align: right;
+    padding-right: 1.5rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+.price-table tbody tr:hover {
+    background-color: rgba(45,106,159,0.04);
+    transition: background 0.15s;
+}
+.category-separator th.category-header {
+    text-align: center;
+    background-color: rgba(45,106,159,0.12);
+    font-size: 1.05rem;
+    letter-spacing: -0.2px;
+    border-top: 2px solid var(--primary-light, #4A8BC2);
+    border-bottom: 1px solid var(--primary-light, #4A8BC2);
+    font-weight: 700;
+}
+.price-details[open] .price-table-wrapper {
+    animation: fadeSlideUp 0.5s cubic-bezier(0.2,0.9,0.4,1.1);
+}
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.price-anchors .btn-secondary {
+    transition: all 0.3s cubic-bezier(0.2,0.9,0.4,1.1);
+}
+
+@media (max-width: 640px) {
+    .price-summary {
+        font-size: 1.1rem;
+        padding: 0.8rem 1rem;
+    }
+    .price-table th,
+    .price-table td {
+        padding: 0.7rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    .price-table td:last-child,
+    .price-table th:last-child {
+        white-space: nowrap;
+        padding-right: 0.8rem;
+    }
+    .category-separator th.category-header {
+        font-size: 0.9rem;
+        padding: 0.6rem;
+    }
+}
+@media (max-width: 480px) {
+    .price-table th,
+    .price-table td {
+        padding: 0.6rem 0.6rem;
+        font-size: 0.8rem;
+    }
+    .price-table td:last-child,
+    .price-table th:last-child {
+        padding-right: 0.6rem;
+    }
+}
+@media (max-width: 360px) {
+    .price-table th,
+    .price-table td {
+        padding: 0.5rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    .price-summary {
+        font-size: 0.95rem;
+        padding: 0.6rem 0.8rem;
+    }
+    .summary-note {
+        font-size: 0.7rem;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .price-summary::before {
+        transition: none;
+    }
+    .price-details[open] .price-table-wrapper {
+        animation: none;
+    }
+}
+
+.price-table-wrapper {
+    overflow-y: hidden !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}

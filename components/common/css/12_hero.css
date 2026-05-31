@@ -1,0 +1,186 @@
+/* ==================================================================
+   12_hero.css – главный экран
+   Имя на мобильных остаётся крупным – без резких уменьшений
+   ================================================================== */
+
+.hero-grid {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    padding: 40px 0;
+    flex-wrap: wrap;
+    position: relative;
+    background: radial-gradient(circle at 10% 30%, rgba(45,106,159,0.03) 0%, rgba(255,255,255,0) 70%);
+    border-radius: 0 0 40px 40px;
+}
+@media (min-width: 769px) {
+    .hero-grid {
+        flex-wrap: nowrap;
+    }
+}
+@media (max-width: 768px) {
+    .hero-grid {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px 0 30px 0;
+        background: none;
+        border-radius: 0;
+    }
+}
+.hero-content {
+    flex: 1.2;
+}
+.hero-image {
+    flex: 1;
+    text-align: center;
+}
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 20px;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+}
+@media (min-width: 1024px) {
+    .hero-image img {
+        max-width: 480px;
+    }
+}
+.hero-text {
+    font-size: clamp(0.85rem, 3vw, 1rem);
+    margin-bottom: 24px;
+    line-height: 1.7;
+    color: var(--text-dark);
+    word-break: break-word;
+    hyphens: auto;
+    background: rgba(255,255,255,0.5);
+    padding: 8px 20px;
+    border-radius: 32px;
+    backdrop-filter: blur(2px);
+}
+.hero-text strong {
+    color: var(--primary);
+}
+.hero-title {
+    font-size: clamp(1.8rem, 6vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--primary-dark);
+    margin-bottom: 0.25em;
+    word-break: break-word;
+    hyphens: auto;
+    white-space: normal;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    position: relative;
+}
+.hero-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent-warm));
+    margin: 16px auto 0 auto;
+    border-radius: 3px;
+}
+@media (min-width: 769px) {
+    .hero-title::after {
+        margin: 16px 0 0 0;
+    }
+}
+.hero-subtitle {
+    font-size: clamp(1rem, 4vw, 1.4rem);
+    color: var(--primary);
+    margin-bottom: 1rem;
+    word-break: break-word;
+    hyphens: auto;
+    white-space: normal;
+}
+.hero-tv-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    color: white;
+    padding: 8px 20px;
+    border-radius: 60px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+    text-decoration: none;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.hero-tv-badge:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+.quiz-link {
+    color: var(--accent-warm);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.quiz-link:hover {
+    color: var(--accent-warm-light);
+    text-decoration: underline;
+}
+.hero-note {
+    margin-top: 20px;
+}
+@media (max-width: 768px) {
+    .hero-content {
+        width: 100%;
+        text-align: center;
+    }
+    .hero-buttons {
+        justify-content: center;
+        margin-top: 20px;
+        gap: 12px;
+    }
+    .hero-buttons .btn {
+        min-width: 220px;
+    }
+    .hero-tv-badge {
+        font-size: 0.8rem;
+        padding: 6px 16px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 16px;
+    }
+    .hero-text {
+        text-align: center;
+        background: none;
+        backdrop-filter: none;
+        padding: 0;
+    }
+    .hero-title::after {
+        width: 60px;
+        margin: 12px auto 0 auto;
+    }
+}
+@media (max-width: 480px) {
+    .hero-buttons .btn {
+        min-width: 100%;
+        width: 100%;
+    }
+    .hero-text {
+        font-size: 0.85rem;
+    }
+    .hero-image img {
+        max-width: 80%;
+    }
+}
+.fade-up {
+    transition: opacity 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}

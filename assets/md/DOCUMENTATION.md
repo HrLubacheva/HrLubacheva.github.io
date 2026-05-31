@@ -67,7 +67,7 @@ hrLubacheva.github.io/
 │   │   └── js/                           # Все скрипты разбиты на модули
 │   │       ├── 00_config.js              # Глобальные константы (URL, ID счётчиков, контакты)
 │   │       ├── 01_core.js                # Ядро: утилиты, тосты, fetch, валидация, гео, UTM
-│   │       ├── 02_animations.js          # Intersection Observer для fade‑up
+│   │       ├── 03_animations.js          # Intersection Observer для fade‑up
 │   │       ├── 03_forms.js               # Валидация и отправка форм, быстрый заказ
 │   │       ├── 04_certificates.js        # Карусель сертификатов (drag, wheel, autoplay)
 │   │       ├── 05_modal.js               # Открытие/закрытие модальных окон

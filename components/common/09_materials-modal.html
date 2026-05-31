@@ -1,11 +1,21 @@
-<!-- Модальное окно для отправки материалов на email -->
 <div id="materialsModal" class="modal" style="display: none;">
     <div class="modal-content">
-        <h3>📧 Получить материалы на email</h3>
-        <p>Введите ваш email, и мы отправим ссылки на скачивание.</p>
-        <input type="email" id="materialsEmail" placeholder="Ваш email" class="modal-email-input">
+        <div class="modal-header">
+            <h3>📬 Получить материалы</h3>
+            <button class="modal-close" id="closeMaterialsModalIcon" aria-label="Закрыть">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p class="modal-description">Введите ваш email, и я отправлю ссылки на скачивание прямо на почту.</p>
+            <div class="modal-input-group">
+                <label for="materialsEmail" class="modal-label">Email</label>
+                <input type="email" id="materialsEmail" class="modal-email-input" placeholder="example@domain.ru" autocomplete="email">
+            </div>
+            <div class="modal-security-note">
+                <span class="lock-icon">🔒</span> Без спама. Отправляю за 1 минуту.
+            </div>
+        </div>
         <div class="modal-buttons">
-            <button id="sendMaterialsBtn" class="btn btn-primary">Отправить</button>
+            <button id="sendMaterialsBtn" class="btn btn-primary">📧 Отправить</button>
             <button id="closeMaterialsModal" class="btn btn-secondary">Закрыть</button>
         </div>
     </div>
