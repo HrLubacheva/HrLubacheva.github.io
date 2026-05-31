@@ -63,12 +63,16 @@
 
 <script>
     (function() {
-        // Подставляем реальные URL из конфига
-        if (window.APP_CONFIG) {
-            const cfg = window.APP_CONFIG;
-            const checklistLink = document.querySelector('.checklist-download');
-            const trainingLink = document.querySelector('.training-download');
-            const zipLink = document.querySelector('.zip-download');
+        // Ждём загрузки APP_CONFIG
+        function setDownloadLinks() {
+            if (!window.APP_CONFIG) {
+                setTimeout(setDownloadLinks, 100);
+                return;
+            }
+            var cfg = window.APP_CONFIG;
+            var checklistLink = document.querySelector('.checklist-download');
+            var trainingLink = document.querySelector('.training-download');
+            var zipLink = document.querySelector('.zip-download');
             if (checklistLink && cfg.CHECKLIST_URL) {
                 checklistLink.href = cfg.CHECKLIST_URL;
                 checklistLink.setAttribute('download', '');
@@ -81,6 +85,11 @@
                 zipLink.href = cfg.MATERIALS_ZIP_URL;
                 zipLink.setAttribute('download', '');
             }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setDownloadLinks);
+        } else {
+            setDownloadLinks();
         }
     })();
 </script>
