@@ -1,21 +1,23 @@
 <div id="materialsModal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>📬 Получить материалы</h3>
+            <h3><span class="emoji">📬</span> Получить материалы</h3>
             <button class="modal-close" id="closeMaterialsModalIcon" aria-label="Закрыть">&times;</button>
         </div>
         <div class="modal-body">
-            <p class="modal-description">Введите ваш email, и я отправлю ссылки на скачивание прямо на почту.</p>
+            <div class="selected-material-info" id="selectedMaterialInfo" style="background: #f0f7ff; border-radius: 16px; padding: 12px 16px; margin-bottom: 20px; text-align: center;">
+                <!-- сюда подставится текст о выбранном материале -->
+            </div>
+            <p class="modal-description">Введите email, и я отправлю ссылки на скачивание.</p>
             <div class="modal-input-group">
-                <label for="materialsEmail" class="modal-label">Email</label>
-                <input type="email" id="materialsEmail" class="modal-email-input" placeholder="example@domain.ru" autocomplete="email">
+                <input type="email" id="materialsEmail" class="modal-email-input" placeholder="name@example.ru" autocomplete="email">
             </div>
             <div class="modal-security-note">
                 <span class="lock-icon">🔒</span> Без спама. Отправляю за 1 минуту.
             </div>
         </div>
         <div class="modal-buttons">
-            <button id="sendMaterialsBtn" class="btn btn-primary">📧 Отправить</button>
+            <button id="sendMaterialsBtn" class="btn btn-primary"><span class="emoji">📧</span> Отправить ссылки</button>
             <button id="closeMaterialsModal" class="btn btn-secondary">Закрыть</button>
         </div>
     </div>

@@ -18,7 +18,7 @@
                     <div class="freebie-title">Чек-лист</div>
                     <div class="freebie-desc">«Идеальное резюме»</div>
                     <div class="freebie-actions">
-                        <a href="#" class="freebie-link checklist-download" target="_blank">скачать</a>
+                        <a href="#" class="freebie-link checklist-download" download>скачать</a>
                         <button type="button" class="material-email-simple freebie-link" data-material="checklist">на email</button>
                     </div>
                 </li>
@@ -35,7 +35,7 @@
                     <div class="freebie-title">Программа тренинга</div>
                     <div class="freebie-desc">«Продай себя дорого»</div>
                     <div class="freebie-actions">
-                        <a href="#" class="freebie-link training-download" target="_blank">скачать</a>
+                        <a href="#" class="freebie-link training-download" download>скачать</a>
                         <button type="button" class="material-email-simple freebie-link" data-material="training">на email</button>
                     </div>
                 </li>
@@ -63,14 +63,24 @@
 
 <script>
     (function() {
+        // Подставляем реальные URL из конфига
         if (window.APP_CONFIG) {
             const cfg = window.APP_CONFIG;
             const checklistLink = document.querySelector('.checklist-download');
             const trainingLink = document.querySelector('.training-download');
             const zipLink = document.querySelector('.zip-download');
-            if (checklistLink && cfg.CHECKLIST_URL) checklistLink.href = cfg.CHECKLIST_URL;
-            if (trainingLink && cfg.TRAINING_PROGRAM_URL) trainingLink.href = cfg.TRAINING_PROGRAM_URL;
-            if (zipLink && cfg.MATERIALS_ZIP_URL) zipLink.href = cfg.MATERIALS_ZIP_URL;
+            if (checklistLink && cfg.CHECKLIST_URL) {
+                checklistLink.href = cfg.CHECKLIST_URL;
+                checklistLink.setAttribute('download', '');
+            }
+            if (trainingLink && cfg.TRAINING_PROGRAM_URL) {
+                trainingLink.href = cfg.TRAINING_PROGRAM_URL;
+                trainingLink.setAttribute('download', '');
+            }
+            if (zipLink && cfg.MATERIALS_ZIP_URL) {
+                zipLink.href = cfg.MATERIALS_ZIP_URL;
+                zipLink.setAttribute('download', '');
+            }
         }
     })();
 </script>

@@ -6,6 +6,15 @@
 
     let isSubmitting = false;
 
+    function getMaterialText(material) {
+        switch(material) {
+            case 'checklist': return '📋 Чек-лист «Идеальное резюме»';
+            case 'training': return '🎓 Программа тренинга «Продай себя дорого»';
+            case 'both': return '📋 Чек-лист + 🎓 Программа тренинга';
+            default: return 'Материалы';
+        }
+    }
+
     function initMaterialsEmailButtons() {
         const modal = document.getElementById('materialsModal');
         if (!modal) return;
@@ -15,6 +24,7 @@
         const closeIcon = document.getElementById('closeMaterialsModalIcon');
         const sendBtn = document.getElementById('sendMaterialsBtn');
         const emailInput = document.getElementById('materialsEmail');
+        const selectedInfo = document.getElementById('selectedMaterialInfo');
 
         let currentMaterial = null;
 
@@ -28,6 +38,9 @@
                     emailInput.value = '';
                     emailInput.classList.remove('error');
                 }
+                if (selectedInfo) {
+                    selectedInfo.innerHTML = '';
+                }
                 isSubmitting = false;
             }, 200);
         };
@@ -37,6 +50,12 @@
             btn._materialsHandler = (e) => {
                 e.preventDefault();
                 currentMaterial = btn.dataset.material;
+
+                // Показываем, что выбрал пользователь
+                if (selectedInfo) {
+                    selectedInfo.innerHTML = `✅ Вы выбрали:<br><strong>${getMaterialText(currentMaterial)}</strong>`;
+                }
+
                 modal.style.display = 'flex';
                 setTimeout(() => modal.classList.add('show'), 10);
                 document.body.classList.add('modal-open');
