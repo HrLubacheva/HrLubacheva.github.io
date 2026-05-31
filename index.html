@@ -1620,16 +1620,28 @@ body.menu-open {
     }
 }
 /* ==================================================================
-   06_hero.css – главный экран (полностью обновлён)
+   06_hero.css – главный экран (финальная версия)
+   Имя крупное, без переносов, без прокрутки, с лёгким сжатием
    ================================================================== */
 
-/* ---------- БАЗОВАЯ СЁТКА ---------- */
+/* ---------- СЕТКА: фото рядом до 600px ---------- */
 .hero-grid {
     display: flex;
     gap: 40px;
     align-items: center;
     padding: 60px 0;
     flex-wrap: wrap;
+}
+
+@media (min-width: 601px) {
+    .hero-grid {
+        flex-wrap: nowrap;
+    }
+}
+@media (max-width: 600px) {
+    .hero-grid {
+        flex-wrap: wrap;
+    }
 }
 
 .hero-content {
@@ -1650,32 +1662,45 @@ body.menu-open {
     object-fit: contain;
 }
 
-/* ---------- ТЕКСТ ---------- */
+/* ---------- ТЕКСТ ОПИСАНИЯ – адаптивный размер ---------- */
 .hero-text {
-    font-size: 1rem;
+    font-size: clamp(0.85rem, 3vw, 1rem);
     margin-bottom: 30px;
     line-height: 1.7;
     color: var(--text-dark);
     word-break: break-word;
     hyphens: auto;
 }
-
-/* ---------- ИМЯ: всегда одна строка, масштабируется ---------- */
-.hero-title {
-    white-space: nowrap;
-    font-size: clamp(1.2rem, 5vw, 2.8rem);
-    max-width: 100%;
-    overflow-x: visible;
+.hero-text strong {
+    color: var(--primary);
 }
 
-/* ---------- ПОДЗАГОЛОВОК: всегда одна строка, масштабируется ---------- */
+/* ---------- ИМЯ: одна строка, крупное, при необходимости уменьшается, но без переноса ---------- */
+.hero-title {
+    white-space: nowrap;
+    font-size: clamp(1.2rem, 7vw, 3.2rem);
+    letter-spacing: -0.02em;
+    max-width: 100%;
+    overflow-x: visible;
+    text-align: center;
+}
+
+/* ---------- ПОДЗАГОЛОВОК: на широких – строка, на узких – перенос ---------- */
 .hero-subtitle {
     white-space: nowrap;
-    font-size: clamp(0.7rem, 3.5vw, 1.2rem);
+    font-size: clamp(0.8rem, 3.5vw, 1.2rem);
     max-width: 100%;
     overflow-x: visible;
     display: block;
     text-align: center;
+    letter-spacing: 0.3px;
+}
+@media (max-width: 560px) {
+    .hero-subtitle {
+        white-space: normal;
+        word-break: break-word;
+        line-height: 1.4;
+    }
 }
 
 /* ---------- ТВ-БЕЙДЖ ---------- */
@@ -1709,7 +1734,6 @@ body.menu-open {
     flex-wrap: wrap;
     margin-top: 28px;
 }
-
 .quiz-link {
     color: var(--accent-warm);
     text-decoration: none;
@@ -1722,16 +1746,14 @@ body.menu-open {
     color: var(--accent-warm-light);
     text-decoration: underline;
 }
-
 .hero-quiz-link {
     margin-top: 24px;
 }
-
 .hero-note {
     margin-top: 24px;
 }
 
-/* ---------- АДАПТИВ ДЛЯ ПЛАНШЕТОВ И ТЕЛЕФОНОВ ---------- */
+/* ---------- МОБИЛЬНЫЕ УЛУЧШЕНИЯ ---------- */
 @media (max-width: 768px) {
     .hero-buttons {
         margin-top: 28px;
@@ -1742,21 +1764,16 @@ body.menu-open {
         max-width: 280px;
         width: auto;
     }
-    /* Лёгкая тень для читаемости текста на фоне фото */
     .hero-title,
     .hero-subtitle,
     .hero-text {
         text-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
 }
-
-/* Очень узкие экраны (≤360px) – чуть уменьшаем шрифт, если нужно */
-@media (max-width: 360px) {
-    .hero-title {
-        font-size: clamp(1rem, 4.5vw, 1.2rem);
-    }
-    .hero-subtitle {
-        font-size: clamp(0.6rem, 3vw, 0.7rem);
+@media (max-width: 480px) {
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.85rem;
     }
 }
 
@@ -4265,11 +4282,8 @@ select:focus-visible {
     html { font-size: 90%; }
     .container { padding-left: 12px !important; padding-right: 12px !important; }
 
-    /* Глобальные заголовки */
+    /* Глобальные заголовки (кроме героя, у него свои настройки) */
     .section-title { font-size: 1.4rem !important; margin-bottom: 24px !important; }
-    .hero-title { font-size: 1.5rem !important; }
-    .hero-subtitle { font-size: 0.9rem !important; }
-    .hero-text { font-size: 0.9rem; }
     .process-title { font-size: 1.3rem; }
     .card-title { font-size: 1.1rem; }
     .small-note { font-size: 0.7rem; }
@@ -4462,7 +4476,6 @@ select:focus-visible {
 @media (max-width: 360px) {
     html { font-size: 95%; }
     .section-title { font-size: 1.3rem !important; }
-    .hero-title { font-size: 1.4rem !important; }
     .stat-number { font-size: 1rem !important; }
     .stat-plus { font-size: 0.8rem !important; }
     .stat-label { font-size: 0.6rem !important; }
@@ -4473,7 +4486,6 @@ select:focus-visible {
 @media (min-width: 481px) and (max-width: 768px) {
     .container { padding-left: 16px; padding-right: 16px; }
     .section-title { font-size: 1.8rem; }
-    .hero-title { font-size: 2rem; }
     .btn { width: auto; }
     .grid-2 { grid-template-columns: repeat(2, 1fr); }
     .grid-3 { grid-template-columns: repeat(2, 1fr); }
@@ -4483,7 +4495,7 @@ select:focus-visible {
     .cells-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* ---------- ГЕРОЙ: ФОТО ПОД ТЕКСТОМ НА ВСЕХ ЭКРАНАХ МЕНЕЕ 768px ---------- */
+/* ---------- ГЕРОЙ: только отступы и центрирование (размеры шрифтов не трогаем) ---------- */
 @media (max-width: 768px) {
     .hero-grid {
         flex-direction: column !important;
@@ -4509,19 +4521,6 @@ select:focus-visible {
         height: auto;
         border-radius: 20px;
         margin: 0 auto;
-    }
-    .hero-title {
-        font-size: 2rem !important;
-        margin-bottom: 12px;
-    }
-    .hero-subtitle {
-        font-size: 1rem !important;
-        margin-bottom: 16px;
-    }
-    .hero-text {
-        font-size: 0.95rem;
-        margin-bottom: 20px;
-        line-height: 1.5;
     }
     .hero-tv-badge {
         font-size: 0.8rem;
@@ -4830,38 +4829,28 @@ section:not(.section-dark):not(.certificates-section) {
     <div class="container">
         <div class="hero-grid">
             <div class="hero-content cell-text fade-up" data-cell-type="text">
-                <!-- Имя с неразрывным пробелом и адаптивным размером -->
                 <h1 class="hero-title" itemprop="name">Виктория&nbsp;Любачева</h1>
-
-                <!-- Подзаголовок — всегда одна строка, масштабируется -->
                 <div class="hero-subtitle" itemprop="jobTitle">
-                    Карьерный консультант · HR‑эксперт · Бизнес‑тренер · Коуч
+                    Карьерный консультант · HR‑эксперт<wbr> · Бизнес‑тренер · Коуч
                 </div>
-
-                <!-- ТВ-бейдж -->
                 <a href="#media" class="hero-tv-badge">
                     <span class="tv-icon">📺</span>
                     <span class="tv-text">Тот самый HR из телевизора</span>
                 </a>
-
                 <div class="hero-text" itemprop="description">
                     <p><strong>Помогаю компаниям находить и развивать персонал.</strong><br>
                     Кандидатам — найти работу, построить карьеру и повысить свой доход.<br>
                     24 года в HR, 1000+ закрытых вакансий, 500+ карьерных консультаций.</p>
-
                     <p><strong>Для бизнеса</strong> — подбор, онбординг, тренинги, обучение и удержание персонала, аудит HR-процессов.<br>
                     <strong>Для специалистов и руководителей</strong> — резюме, подготовка к интервью, стратегия поиска работы, управление персоналом.</p>
                 </div>
-
                 <div class="hero-buttons">
                     <a href="https://t.me/HrLubacheva" class="btn btn-primary" target="_blank" rel="noopener noreferrer" aria-label="Написать в Telegram">Написать в Telegram</a>
                     <a href="#callback-form" class="btn btn-secondary btn-no-lift" aria-label="Записаться на экспресс-консультацию">Экспресс-консультация</a>
                 </div>
-
                 <div class="hero-quiz-link">
                     <a href="#quiz" class="quiz-link">🤔 Не знаете, с чего начать? → Квиз за 1 минуту</a>
                 </div>
-
                 <div class="small-note hero-note">Мои клиенты — люди различных профессий и разных сфер бизнеса: специалисты, руководители и собственники бизнеса.</div>
                 <div class="small-note hero-note">Работаю с профессионалами от Junior до C-level и с бизнесом любого масштаба.</div>
             </div>
@@ -6473,7 +6462,7 @@ section:not(.section-dark):not(.certificates-section) {
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 31.05.2026 10:45:49</span>
+                <span class="footer-version">⚡ Версия 31.05.2026 11:00:10</span>
             </div>
         </div>
 

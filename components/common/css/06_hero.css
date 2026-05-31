@@ -1,14 +1,26 @@
 /* ==================================================================
-   06_hero.css – главный экран (полностью обновлён)
+   06_hero.css – главный экран (финальная версия)
+   Имя крупное, без переносов, без прокрутки, с лёгким сжатием
    ================================================================== */
 
-/* ---------- БАЗОВАЯ СЁТКА ---------- */
+/* ---------- СЕТКА: фото рядом до 600px ---------- */
 .hero-grid {
     display: flex;
     gap: 40px;
     align-items: center;
     padding: 60px 0;
     flex-wrap: wrap;
+}
+
+@media (min-width: 601px) {
+    .hero-grid {
+        flex-wrap: nowrap;
+    }
+}
+@media (max-width: 600px) {
+    .hero-grid {
+        flex-wrap: wrap;
+    }
 }
 
 .hero-content {
@@ -29,32 +41,45 @@
     object-fit: contain;
 }
 
-/* ---------- ТЕКСТ ---------- */
+/* ---------- ТЕКСТ ОПИСАНИЯ – адаптивный размер ---------- */
 .hero-text {
-    font-size: 1rem;
+    font-size: clamp(0.85rem, 3vw, 1rem);
     margin-bottom: 30px;
     line-height: 1.7;
     color: var(--text-dark);
     word-break: break-word;
     hyphens: auto;
 }
-
-/* ---------- ИМЯ: всегда одна строка, масштабируется ---------- */
-.hero-title {
-    white-space: nowrap;
-    font-size: clamp(1.2rem, 5vw, 2.8rem);
-    max-width: 100%;
-    overflow-x: visible;
+.hero-text strong {
+    color: var(--primary);
 }
 
-/* ---------- ПОДЗАГОЛОВОК: всегда одна строка, масштабируется ---------- */
+/* ---------- ИМЯ: одна строка, крупное, при необходимости уменьшается, но без переноса ---------- */
+.hero-title {
+    white-space: nowrap;
+    font-size: clamp(1.2rem, 7vw, 3.2rem);
+    letter-spacing: -0.02em;
+    max-width: 100%;
+    overflow-x: visible;
+    text-align: center;
+}
+
+/* ---------- ПОДЗАГОЛОВОК: на широких – строка, на узких – перенос ---------- */
 .hero-subtitle {
     white-space: nowrap;
-    font-size: clamp(0.7rem, 3.5vw, 1.2rem);
+    font-size: clamp(0.8rem, 3.5vw, 1.2rem);
     max-width: 100%;
     overflow-x: visible;
     display: block;
     text-align: center;
+    letter-spacing: 0.3px;
+}
+@media (max-width: 560px) {
+    .hero-subtitle {
+        white-space: normal;
+        word-break: break-word;
+        line-height: 1.4;
+    }
 }
 
 /* ---------- ТВ-БЕЙДЖ ---------- */
@@ -88,7 +113,6 @@
     flex-wrap: wrap;
     margin-top: 28px;
 }
-
 .quiz-link {
     color: var(--accent-warm);
     text-decoration: none;
@@ -101,16 +125,14 @@
     color: var(--accent-warm-light);
     text-decoration: underline;
 }
-
 .hero-quiz-link {
     margin-top: 24px;
 }
-
 .hero-note {
     margin-top: 24px;
 }
 
-/* ---------- АДАПТИВ ДЛЯ ПЛАНШЕТОВ И ТЕЛЕФОНОВ ---------- */
+/* ---------- МОБИЛЬНЫЕ УЛУЧШЕНИЯ ---------- */
 @media (max-width: 768px) {
     .hero-buttons {
         margin-top: 28px;
@@ -121,21 +143,16 @@
         max-width: 280px;
         width: auto;
     }
-    /* Лёгкая тень для читаемости текста на фоне фото */
     .hero-title,
     .hero-subtitle,
     .hero-text {
         text-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
 }
-
-/* Очень узкие экраны (≤360px) – чуть уменьшаем шрифт, если нужно */
-@media (max-width: 360px) {
-    .hero-title {
-        font-size: clamp(1rem, 4.5vw, 1.2rem);
-    }
-    .hero-subtitle {
-        font-size: clamp(0.6rem, 3vw, 0.7rem);
+@media (max-width: 480px) {
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.85rem;
     }
 }
 
