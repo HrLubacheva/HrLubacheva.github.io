@@ -1620,8 +1620,10 @@ body.menu-open {
     }
 }
 /* ==================================================================
-   06_hero.css – главный экран (только базовые стили)
+   06_hero.css – главный экран (полностью обновлён)
    ================================================================== */
+
+/* ---------- БАЗОВАЯ СЁТКА ---------- */
 .hero-grid {
     display: flex;
     gap: 40px;
@@ -1632,13 +1634,6 @@ body.menu-open {
 
 .hero-content {
     flex: 1.2;
-}
-
-.hero-text {
-    font-size: 1rem;
-    margin-bottom: 30px;
-    line-height: 1.7;
-    color: var(--text-dark);
 }
 
 .hero-image {
@@ -1655,34 +1650,35 @@ body.menu-open {
     object-fit: contain;
 }
 
-.hero-buttons {
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
-    margin-top: 28px;
+/* ---------- ТЕКСТ ---------- */
+.hero-text {
+    font-size: 1rem;
+    margin-bottom: 30px;
+    line-height: 1.7;
+    color: var(--text-dark);
+    word-break: break-word;
+    hyphens: auto;
 }
 
-.hero-quiz-link {
-    margin-top: 20px;
+/* ---------- ИМЯ: всегда одна строка, масштабируется ---------- */
+.hero-title {
+    white-space: nowrap;
+    font-size: clamp(1.2rem, 5vw, 2.8rem);
+    max-width: 100%;
+    overflow-x: visible;
 }
 
-.quiz-link {
-    color: var(--accent-warm);
-    text-decoration: none;
-    font-weight: 500;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-.quiz-link:hover {
-    color: var(--accent-warm-light);
-    text-decoration: underline;
+/* ---------- ПОДЗАГОЛОВОК: всегда одна строка, масштабируется ---------- */
+.hero-subtitle {
+    white-space: nowrap;
+    font-size: clamp(0.7rem, 3.5vw, 1.2rem);
+    max-width: 100%;
+    overflow-x: visible;
+    display: block;
+    text-align: center;
 }
 
-.hero-note {
-    margin-top: 32px;
-}
-
+/* ---------- ТВ-БЕЙДЖ ---------- */
 .hero-tv-badge {
     display: inline-flex;
     align-items: center;
@@ -1706,6 +1702,65 @@ body.menu-open {
     outline-color: white;
 }
 
+/* ---------- КНОПКИ ---------- */
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+}
+
+.quiz-link {
+    color: var(--accent-warm);
+    text-decoration: none;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.quiz-link:hover {
+    color: var(--accent-warm-light);
+    text-decoration: underline;
+}
+
+.hero-quiz-link {
+    margin-top: 24px;
+}
+
+.hero-note {
+    margin-top: 24px;
+}
+
+/* ---------- АДАПТИВ ДЛЯ ПЛАНШЕТОВ И ТЕЛЕФОНОВ ---------- */
+@media (max-width: 768px) {
+    .hero-buttons {
+        margin-top: 28px;
+        gap: 16px;
+        align-items: center;
+    }
+    .hero-buttons .btn {
+        max-width: 280px;
+        width: auto;
+    }
+    /* Лёгкая тень для читаемости текста на фоне фото */
+    .hero-title,
+    .hero-subtitle,
+    .hero-text {
+        text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+}
+
+/* Очень узкие экраны (≤360px) – чуть уменьшаем шрифт, если нужно */
+@media (max-width: 360px) {
+    .hero-title {
+        font-size: clamp(1rem, 4.5vw, 1.2rem);
+    }
+    .hero-subtitle {
+        font-size: clamp(0.6rem, 3vw, 0.7rem);
+    }
+}
+
+/* Десктоп: ограничиваем ширину фото */
 @media (min-width: 1024px) {
     .hero-image img {
         max-width: 480px;
@@ -4775,10 +4830,15 @@ section:not(.section-dark):not(.certificates-section) {
     <div class="container">
         <div class="hero-grid">
             <div class="hero-content cell-text fade-up" data-cell-type="text">
-                <h1 class="hero-title" itemprop="name">Виктория Любачева</h1>
-                <div class="hero-subtitle" itemprop="jobTitle">Карьерный консультант · HR‑эксперт · Бизнес‑тренер · Коуч</div>
+                <!-- Имя с неразрывным пробелом и адаптивным размером -->
+                <h1 class="hero-title" itemprop="name">Виктория&nbsp;Любачева</h1>
 
-                <!-- ТВ-бейдж со ссылкой на медиа -->
+                <!-- Подзаголовок — всегда одна строка, масштабируется -->
+                <div class="hero-subtitle" itemprop="jobTitle">
+                    Карьерный консультант · HR‑эксперт · Бизнес‑тренер · Коуч
+                </div>
+
+                <!-- ТВ-бейдж -->
                 <a href="#media" class="hero-tv-badge">
                     <span class="tv-icon">📺</span>
                     <span class="tv-text">Тот самый HR из телевизора</span>
@@ -6413,7 +6473,7 @@ section:not(.section-dark):not(.certificates-section) {
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 31.05.2026 10:38:19</span>
+                <span class="footer-version">⚡ Версия 31.05.2026 10:45:49</span>
             </div>
         </div>
 
