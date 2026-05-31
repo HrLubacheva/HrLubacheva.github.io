@@ -146,11 +146,9 @@
     <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
     <meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=()">
-    <!-- CSP: добавлен frame-src для Яндекс.Метрики -->
     <meta http-equiv="Content-Security-Policy"
           content="default-src 'self'; frame-src https://mc.yandex.com https://mc.yandex.ru; script-src 'self' 'unsafe-inline' https://mc.yandex.ru https://mc.yandex.com https://www.googletagmanager.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://mc.yandex.ru https://mc.yandex.com; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://ipapi.co https://mc.yandex.ru https://mc.yandex.com wss://mc.yandex.com ws://mc.yandex.com wss://mc.yandex.ru ws://mc.yandex.ru https://www.google-analytics.com https://region1.google-analytics.com;">
 
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QZJJ2SE117"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -164,7 +162,6 @@
         gtag('config', 'G-QZJJ2SE117');
     </script>
 
-    <!-- Яндекс.Метрика -->
     <script>
         (function(m,e,t,r,i,k,a){
             m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments);};
@@ -874,7 +871,7 @@ body {
     text-align: center !important;
 }
 /* ==================================================================
-   05_navbar.css – навигационная панель (улучшенная)
+   05_navbar.css – навигационная панель (суперкомпактная мобильная версия)
    ================================================================== */
 .navbar {
     background: white;
@@ -1005,17 +1002,19 @@ body {
     border-radius: 50%;
 }
 
+/* ========== МОБИЛЬНОЕ МЕНЮ – МАКСИМАЛЬНО КОМПАКТНО ========== */
 @media (max-width: 768px) {
     .burger-menu { display: block; }
+
     .nav-bottom {
         position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
+        width: 100%;
+        height: 100vh;
         background: white;
         border-radius: 0;
-        padding: 80px 20px 30px;
+        padding: 55px 16px 20px;
         margin: 0;
         transform: translateX(100%);
         transition: transform 0.3s ease-in-out;
@@ -1024,18 +1023,32 @@ body {
         -webkit-overflow-scrolling: touch;
         box-shadow: none;
     }
+
+    @supports (height: 100dvh) {
+        .nav-bottom {
+            height: 100dvh;
+        }
+    }
+
     .nav-bottom.open { transform: translateX(0); }
+
     .nav-links {
         flex-direction: column;
         align-items: center;
-        gap: 25px;
+        gap: 6px;
     }
     .nav-links a {
-        font-size: 1.2rem;
-        padding: 10px 0;
+        font-size: 1rem;
+        padding: 5px 0;
         display: inline-block;
     }
-    body.menu-open { overflow: hidden; }
+
+    body.menu-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+    }
+
     .nav-top {
         flex-wrap: nowrap;
         justify-content: space-between;
@@ -1057,12 +1070,19 @@ body {
     }
 }
 
+/* Ещё более компактно для экранов ≤ 480px */
 @media (max-width: 480px) {
     .social-icons svg { width: 20px; height: 20px; }
     .logo { font-size: 1rem; }
+    .nav-bottom {
+        padding: 48px 12px 16px;
+    }
+    .nav-links {
+        gap: 4px;
+    }
     .nav-links a {
-        font-size: 1rem;
-        padding: 8px 0;
+        font-size: 0.9rem;
+        padding: 4px 0;
     }
     .social-icons {
         gap: 6px;
@@ -1070,6 +1090,20 @@ body {
     .social-icons a {
         width: 28px;
         height: 28px;
+    }
+}
+
+/* Для самых маленьких экранов (320px) – совсем минимально */
+@media (max-width: 360px) {
+    .nav-bottom {
+        padding: 40px 10px 12px;
+    }
+    .nav-links {
+        gap: 2px;
+    }
+    .nav-links a {
+        font-size: 0.85rem;
+        padding: 3px 0;
     }
 }
 /* ==================================================================
@@ -3252,6 +3286,40 @@ body,
     transition: width 0.05s linear;
 }
 
+/* Кнопки управления каруселью */
+.carousel-controls {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.carousel-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-btn:hover {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+}
+
+.carousel-btn:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+    background: var(--primary-dark);
+}
+
 @media (max-width: 768px) {
     .carousel-slide {
         height: 200px;
@@ -3261,6 +3329,11 @@ body,
 @media (max-width: 576px) {
     .carousel-slide {
         height: 160px;
+    }
+    .carousel-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
     }
 }
 /* ==================================================================
@@ -4229,7 +4302,7 @@ select:focus-visible {
 <body>
 <a href="#main-content" class="skip-link">Перейти к содержанию</a>
 <div id="top"></div>
-<div id="main-content"></div><nav class="navbar">
+<main id="main-content"><nav class="navbar">
     <div class="container">
         <div class="nav-top">
             <a href="#home" class="logo">
@@ -4483,7 +4556,13 @@ select:focus-visible {
                 </div>
             </div>
         </div>
-        <!-- Прогресс-бар и бегунок создаются скриптом автоматически -->
+        <!-- Кнопки управления каруселью -->
+        <div class="carousel-controls">
+            <button id="carouselPrevBtn" class="carousel-btn" aria-label="Предыдущий слайд">◀</button>
+            <button id="carouselPlayPauseBtn" class="carousel-btn" aria-label="Пауза/Воспроизведение">⏸</button>
+            <button id="carouselNextBtn" class="carousel-btn" aria-label="Следующий слайд">▶</button>
+        </div>
+<div class="visually-hidden" aria-live="polite" id="carouselLiveRegion"></div>
     </div>
 </section>
 <section id="services" class="section section-light" data-section-type="services" aria-labelledby="services-title">
@@ -4811,23 +4890,23 @@ select:focus-visible {
         <div class="calculator-card">
             <h2 class="section-title"><span class="emoji">💰</span> Калькулятор стоимости услуг</h2>
 
-            <div class="calculator-tabs">
-                <button class="btn tab-btn" data-tab="recruitment">🎯 Подбор персонала</button>
-                <button class="btn tab-btn" data-tab="retention">💎 Удержание и развитие</button>
-                <button class="btn tab-btn" data-tab="business-training">🎓 Бизнес-тренинги</button>
-                <button class="btn tab-btn" data-tab="corporate">🙋‍♀️ HR «под ключ»</button>
+            <div class="calculator-tabs" role="tablist" aria-label="Категории услуг для бизнеса">
+                <button class="btn tab-btn" data-tab="recruitment" role="tab" aria-selected="false" aria-controls="tab-recruitment" id="tab-recruitment-btn">🎯 Подбор персонала</button>
+                <button class="btn tab-btn" data-tab="retention" role="tab" aria-selected="false" aria-controls="tab-retention" id="tab-retention-btn">💎 Удержание и развитие</button>
+                <button class="btn tab-btn" data-tab="business-training" role="tab" aria-selected="false" aria-controls="tab-business-training" id="tab-business-training-btn">🎓 Бизнес-тренинги</button>
+                <button class="btn tab-btn" data-tab="corporate" role="tab" aria-selected="false" aria-controls="tab-corporate" id="tab-corporate-btn">🙋‍♀️ HR «под ключ»</button>
             </div>
 
-            <div class="calculator-tabs">
-                <button class="btn tab-btn active" data-tab="start">🎯 Ищу работу</button>
-                <button class="btn tab-btn" data-tab="growth">📈 Карьерный рост</button>
-                <button class="btn tab-btn" data-tab="executive">👑 Премиум</button>
-                <button class="btn tab-btn" data-tab="training">🎓 Тренинги</button>
-                <button class="btn tab-btn" data-tab="courses">📚 Авторские курсы</button>
+            <div class="calculator-tabs" role="tablist" aria-label="Категории услуг для соискателей">
+                <button class="btn tab-btn active" data-tab="start" role="tab" aria-selected="true" aria-controls="tab-start" id="tab-start-btn">🎯 Ищу работу</button>
+                <button class="btn tab-btn" data-tab="growth" role="tab" aria-selected="false" aria-controls="tab-growth" id="tab-growth-btn">📈 Карьерный рост</button>
+                <button class="btn tab-btn" data-tab="executive" role="tab" aria-selected="false" aria-controls="tab-executive" id="tab-executive-btn">👑 Премиум</button>
+                <button class="btn tab-btn" data-tab="training" role="tab" aria-selected="false" aria-controls="tab-training" id="tab-training-btn">🎓 Тренинги</button>
+                <button class="btn tab-btn" data-tab="courses" role="tab" aria-selected="false" aria-controls="tab-courses" id="tab-courses-btn">📚 Авторские курсы</button>
             </div>
 
             <!-- Подбор персонала -->
-            <div id="tab-recruitment" class="tab-pane">
+            <div id="tab-recruitment" class="tab-pane" role="tabpanel" aria-labelledby="tab-recruitment-btn">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
                     <h3 itemprop="name">🎯 Подбор персонала</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
@@ -4840,7 +4919,7 @@ select:focus-visible {
             </div>
 
             <!-- Удержание и развитие -->
-            <div id="tab-retention" class="tab-pane">
+            <div id="tab-retention" class="tab-pane" role="tabpanel" aria-labelledby="tab-retention-btn">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
                     <h3 itemprop="name">💎 Удержание и развитие</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
@@ -4853,7 +4932,7 @@ select:focus-visible {
             </div>
 
             <!-- Бизнес-тренинги -->
-            <div id="tab-business-training" class="tab-pane">
+            <div id="tab-business-training" class="tab-pane" role="tabpanel" aria-labelledby="tab-business-training-btn">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
                     <h3 itemprop="name">🎓 Бизнес-тренинги</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
@@ -4866,7 +4945,7 @@ select:focus-visible {
             </div>
 
             <!-- HR под ключ -->
-            <div id="tab-corporate" class="tab-pane">
+            <div id="tab-corporate" class="tab-pane" role="tabpanel" aria-labelledby="tab-corporate-btn">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
                     <h3 itemprop="name">🙋‍♀️ HR «под ключ»</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
@@ -4879,7 +4958,7 @@ select:focus-visible {
             </div>
 
             <!-- Ищу работу (B2C базовые) -->
-            <div id="tab-start" class="tab-pane active">
+            <div id="tab-start" class="tab-pane active" role="tabpanel" aria-labelledby="tab-start-btn">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
                     <h3 itemprop="name">🎯 Ищу работу</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
@@ -4893,7 +4972,7 @@ select:focus-visible {
             </div>
 
             <!-- Карьерный рост -->
-            <div id="tab-growth" class="tab-pane">
+            <div id="tab-growth" class="tab-pane" role="tabpanel" aria-labelledby="tab-growth-btn">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
                     <h3 itemprop="name">📈 Карьерный рост</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
@@ -4906,7 +4985,7 @@ select:focus-visible {
             </div>
 
             <!-- Премиум -->
-            <div id="tab-executive" class="tab-pane">
+            <div id="tab-executive" class="tab-pane" role="tabpanel" aria-labelledby="tab-executive-btn">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
                     <h3 itemprop="name">👑 Премиум</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
@@ -4919,7 +4998,7 @@ select:focus-visible {
             </div>
 
             <!-- Тренинги для соискателей -->
-            <div id="tab-training" class="tab-pane">
+            <div id="tab-training" class="tab-pane" role="tabpanel" aria-labelledby="tab-training-btn">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
                     <h3 itemprop="name">🎓 Тренинги</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
@@ -4932,7 +5011,7 @@ select:focus-visible {
             </div>
 
             <!-- Авторские курсы -->
-            <div id="tab-courses" class="tab-pane">
+            <div id="tab-courses" class="tab-pane" role="tabpanel" aria-labelledby="tab-courses-btn">
                 <div class="service-group" itemscope itemtype="https://schema.org/Service">
                     <h3 itemprop="name">📚 Авторские курсы</h3>
                     <meta itemprop="provider" content="Виктория Любачева">
@@ -4965,8 +5044,14 @@ select:focus-visible {
                     <fieldset>
                         <legend class="visually-hidden">Быстрый заказ</legend>
                         <div class="form-row-two">
-                            <input type="text" id="quickName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
-                            <input type="tel" id="quickPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
+                            <div class="form-field-wrapper">
+                                <label for="quickName" class="visually-hidden">Имя</label>
+                                <input type="text" id="quickName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
+                            </div>
+                            <div class="form-field-wrapper">
+                                <label for="quickPhone" class="visually-hidden">Телефон</label>
+                                <input type="tel" id="quickPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
+                            </div>
                         </div>
                         <div class="form-row-messages">
                             <div class="consent-checkbox">
@@ -5215,21 +5300,25 @@ select:focus-visible {
                     <legend class="visually-hidden">Запись на диагностику</legend>
 
                     <div class="form-row-three">
-                        <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name"
-                               class="form-field">
-                        <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric"
-                               required autocomplete="tel" class="form-field">
-                        <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email"
-                               class="form-field">
+                        <div class="form-field-wrapper">
+                            <label for="callbackName" class="visually-hidden">Имя</label>
+                            <input type="text" id="callbackName" name="name" placeholder="👤 Имя" autocomplete="name" class="form-field">
+                        </div>
+                        <div class="form-field-wrapper">
+                            <label for="callbackPhone" class="visually-hidden">Телефон</label>
+                            <input type="tel" id="callbackPhone" name="phone" placeholder="📞 Телефон" inputmode="numeric" required autocomplete="tel" class="form-field">
+                        </div>
+                        <div class="form-field-wrapper">
+                            <label for="callbackEmail" class="visually-hidden">Email</label>
+                            <input type="email" id="callbackEmail" name="email" placeholder="📧 Email" autocomplete="email" class="form-field">
+                        </div>
                     </div>
 
                     <div id="quizSelectionBlock" class="callback-quiz-selection" style="display: none;">
                         <div class="service-name"></div>
                         <div class="service-price"></div>
                         <div class="service-actions">
-                            <button type="button" id="removeQuizSelection" class="btn btn-icon remove-item"
-                                    aria-label="Удалить выбранный вариант">✖
-                            </button>
+                            <button type="button" id="removeQuizSelection" class="btn btn-icon remove-item" aria-label="Удалить выбранный вариант">✖</button>
                         </div>
                     </div>
 
@@ -5253,24 +5342,23 @@ select:focus-visible {
                     <input type="hidden" name="recommendedVariants" id="recommendedVariants">
                     <input type="hidden" name="quizAnswersRaw" id="quizAnswersRaw">
 
-                    <textarea id="callbackComment" name="comment" rows="2"
-                              placeholder="💬 Удобное время или дополнительная информация"
-                              class="form-field form-textarea"></textarea>
+                    <div class="form-field-wrapper">
+                        <label for="callbackComment" class="visually-hidden">Комментарий</label>
+                        <textarea id="callbackComment" name="comment" rows="2" placeholder="💬 Удобное время или дополнительная информация" class="form-field form-textarea"></textarea>
+                    </div>
 
                     <div class="form-row-messages">
                         <div class="consent-checkbox">
                             <input type="checkbox" id="callbackConsent" name="consent" required>
-                            <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку
-                                персональных данных</a></label>
+                            <label for="callbackConsent">Я согласен на <a href="privacy.html" target="_blank">обработку персональных данных</a></label>
                         </div>
                         <div id="callbackFormMessages" class="form-messages" role="alert" aria-live="polite"></div>
                     </div>
 
-                    <button type="submit" class="btn btn-primary btn-block callback-submit">📞 Записаться →</button>
+                    <button type="submit" class="btn btn-primary btn-block callback-submit" aria-label="Записаться на диагностику">📞 Записаться →</button>
 
                     <div class="callback-telegram-alt">
-                        ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank"
-                                                rel="noopener noreferrer">Telegram</a>
+                        ✨ Или напишите мне в <a href="https://t.me/HrLubacheva" target="_blank" rel="noopener noreferrer">Telegram</a>
                     </div>
                 </fieldset>
             </form>
@@ -5898,7 +5986,7 @@ select:focus-visible {
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 30.05.2026 22:43:48</span>
+                <span class="footer-version">⚡ Версия 31.05.2026 06:34:01</span>
             </div>
         </div>
 
@@ -7285,11 +7373,13 @@ function initFormEnterSubmit() {
 window.initCallbackForm = initCallbackForm;
 window.initFormEnterSubmit = initFormEnterSubmit;
 // ============================================================
-// 04_certificates.js – Бесконечная карусель (абсолютно надёжная)
-// Ширина слайда читается из CSS, не ждёт загрузки картинок
+// 04_certificates.js – Бесконечная карусель с управлением и остановкой вне вьюпорта
 // ============================================================
 (function() {
     let isRunning = false;
+    let currentAnimationId = null;
+    let carouselPaused = false;
+    let isMoving = false; // защита от повторных кликов
 
     function initInfiniteCarousel(trackId) {
         if (isRunning) return;
@@ -7299,34 +7389,31 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         const originalSlides = Array.from(track.children);
         if (originalSlides.length === 0) return;
 
-        // Берём ширину слайда из CSS (гарантированно)
+        // Получаем актуальную ширину слайда (учитывая gap)
         function getSlideWidth() {
             if (originalSlides.length === 0) return 280;
-            // Получаем вычисленный стиль
             const style = window.getComputedStyle(originalSlides[0]);
             let width = parseFloat(style.width);
             if (isNaN(width) || width === 0) {
-                // fallback: пробуем getBoundingClientRect
                 width = originalSlides[0].getBoundingClientRect().width;
             }
-            if (isNaN(width) || width === 0) width = 280; // резерв
+            if (isNaN(width) || width === 0) width = 280;
             return width;
         }
 
-        const SLIDE_GAP = 24;   // совпадает с gap в CSS
+        const SLIDE_GAP = 24;   // должен совпадать с gap в CSS
         const SPEED = 25;       // пикселей в секунду
 
         let slideWidth = getSlideWidth();
         let setWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
         let scrollPos = 0;
-        let animationId = null;
         let isHover = false;
         let isDrag = false;
         let dragStartX = 0;
         let dragStartScroll = 0;
         let lastTimestamp = 0;
 
-        // Создаём утроенный трек для бесконечности
+        // Утраиваем трек для бесконечности
         function buildTripleTrack() {
             const triple = [];
             for (let i = 0; i < 3; i++) {
@@ -7383,12 +7470,12 @@ window.initFormEnterSubmit = initFormEnterSubmit;
                 scrollPos += delta;
                 setPosition(scrollPos);
                 updateProgressBar();
-                if (!isHover && !isDrag) startAnimation();
+                if (!isHover && !isDrag && !carouselPaused) startAnimation();
             });
         }
 
         function animate(now) {
-            if (!animationId) return;
+            if (!currentAnimationId) return;
             if (lastTimestamp === 0) {
                 lastTimestamp = now;
                 requestAnimationFrame(animate);
@@ -7396,7 +7483,7 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             }
             const deltaSec = Math.min(0.1, (now - lastTimestamp) / 1000);
             lastTimestamp = now;
-            if (!isHover && !isDrag && setWidth > 1) {
+            if (!isHover && !isDrag && !carouselPaused && setWidth > 1) {
                 let step = SPEED * deltaSec;
                 let newPos = scrollPos - step;
                 if (newPos < -setWidth) newPos += setWidth;
@@ -7408,14 +7495,14 @@ window.initFormEnterSubmit = initFormEnterSubmit;
         }
 
         function startAnimation() {
-            if (animationId) return;
+            if (currentAnimationId) return;
             lastTimestamp = 0;
-            animationId = requestAnimationFrame(animate);
+            currentAnimationId = requestAnimationFrame(animate);
         }
         function stopAnimation() {
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-                animationId = null;
+            if (currentAnimationId) {
+                cancelAnimationFrame(currentAnimationId);
+                currentAnimationId = null;
             }
         }
 
@@ -7441,49 +7528,114 @@ window.initFormEnterSubmit = initFormEnterSubmit;
             scrollPos = normalizePosition(scrollPos);
             setPosition(scrollPos);
             updateProgressBar();
-            if (!isHover) startAnimation();
+            if (!isHover && !carouselPaused) startAnimation();
         }
-
-        function onMouseDown(e) {
-            if (e.button !== 0) return;
-            e.preventDefault();
-            onDragStart(e.clientX);
-        }
-        function onMouseMove(e) {
-            if (!isDrag) return;
-            e.preventDefault();
-            onDragMove(e.clientX);
-        }
-        function onMouseUp() {
-            onDragEnd();
-        }
-
-        function onTouchStart(e) {
-            if (e.touches.length === 1) {
-                e.preventDefault();
-                onDragStart(e.touches[0].clientX);
-            }
-        }
+        function onMouseDown(e) { if (e.button !== 0) return; e.preventDefault(); onDragStart(e.clientX); }
+        function onMouseMove(e) { if (!isDrag) return; e.preventDefault(); onDragMove(e.clientX); }
+        function onMouseUp() { onDragEnd(); }
+        function onTouchStart(e) { if (e.touches.length === 1) { e.preventDefault(); onDragStart(e.touches[0].clientX); } }
         function onTouchMove(e) {
             if (!isDrag || e.touches.length !== 1) return;
-            e.preventDefault();
+            // Не блокируем вертикальную прокрутку страницы
             onDragMove(e.touches[0].clientX);
         }
-        function onTouchEnd() {
-            onDragEnd();
-        }
+        function onTouchEnd() { onDragEnd(); }
 
         const wrapper = track.closest('.carousel-wrapper');
         if (wrapper) {
             wrapper.addEventListener('mouseenter', () => { isHover = true; stopAnimation(); });
-            wrapper.addEventListener('mouseleave', () => { isHover = false; if (!isDrag) startAnimation(); });
+            wrapper.addEventListener('mouseleave', () => {
+                isHover = false;
+                if (!isDrag && !carouselPaused) startAnimation();
+            });
+        }
+
+        // Остановка анимации, когда карусель не в видимой области
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (!carouselPaused && !isHover && !isDrag) startAnimation();
+                } else {
+                    stopAnimation();
+                }
+            });
+        }, { threshold: 0.1 });
+        if (wrapper) observer.observe(wrapper);
+
+        // Публичные методы управления
+        window.carouselControl = {
+            play: () => {
+                if (!carouselPaused) return;
+                carouselPaused = false;
+                if (!isHover && !isDrag) startAnimation();
+            },
+            pause: () => {
+                if (carouselPaused) return;
+                carouselPaused = true;
+                stopAnimation();
+            },
+            next: () => {
+                if (isMoving) return;
+                isMoving = true;
+                const wasPlaying = !carouselPaused && !isHover && !isDrag;
+                stopAnimation(); // временно останавливаем автопрокрутку
+                let newPos = scrollPos - (slideWidth + SLIDE_GAP);
+                if (newPos < -setWidth) newPos += setWidth;
+                setPosition(newPos);
+                updateProgressBar();
+                if (wasPlaying) startAnimation();
+                setTimeout(() => { isMoving = false; }, 100);
+            },
+            prev: () => {
+                if (isMoving) return;
+                isMoving = true;
+                const wasPlaying = !carouselPaused && !isHover && !isDrag;
+                stopAnimation();
+                let newPos = scrollPos + (slideWidth + SLIDE_GAP);
+                if (newPos > 0) newPos -= setWidth;
+                setPosition(newPos);
+                updateProgressBar();
+                if (wasPlaying) startAnimation();
+                setTimeout(() => { isMoving = false; }, 100);
+            }
+        };
+
+        // Привязываем кнопки, если они существуют
+        const prevBtn = document.getElementById('carouselPrevBtn');
+        const nextBtn = document.getElementById('carouselNextBtn');
+        const playPauseBtn = document.getElementById('carouselPlayPauseBtn');
+
+        if (prevBtn) {
+            prevBtn.removeEventListener('click', window._carouselPrevHandler);
+            window._carouselPrevHandler = () => window.carouselControl.prev();
+            prevBtn.addEventListener('click', window._carouselPrevHandler);
+        }
+        if (nextBtn) {
+            nextBtn.removeEventListener('click', window._carouselNextHandler);
+            window._carouselNextHandler = () => window.carouselControl.next();
+            nextBtn.addEventListener('click', window._carouselNextHandler);
+        }
+        if (playPauseBtn) {
+            const updateButtonText = () => {
+                playPauseBtn.textContent = carouselPaused ? '▶' : '⏸';
+            };
+            playPauseBtn.removeEventListener('click', window._carouselPlayPauseHandler);
+            window._carouselPlayPauseHandler = () => {
+                if (carouselPaused) {
+                    window.carouselControl.play();
+                } else {
+                    window.carouselControl.pause();
+                }
+                updateButtonText();
+            };
+            playPauseBtn.addEventListener('click', window._carouselPlayPauseHandler);
+            updateButtonText();
         }
 
         function init() {
-            // Пересчитываем ширину на случай ресайза
             slideWidth = getSlideWidth();
             setWidth = originalSlides.length * (slideWidth + SLIDE_GAP);
-            scrollPos = -setWidth;   // начинаем с левого края набора
+            scrollPos = -setWidth;
             setPosition(scrollPos);
             ensureProgressBar();
             updateProgressBar();
@@ -7505,17 +7657,14 @@ window.initFormEnterSubmit = initFormEnterSubmit;
                     scrollPos = normalizePosition(scrollPos);
                     setPosition(scrollPos);
                     updateProgressBar();
-                    if (!isHover && !isDrag) {
+                    if (!isHover && !isDrag && !carouselPaused) {
                         stopAnimation();
                         startAnimation();
                     }
                 }, 150);
             });
-
             isRunning = true;
         }
-
-        // Даём браузеру завершить вычисление стилей
         setTimeout(init, 50);
     }
 
@@ -7607,6 +7756,9 @@ function initBurgerMenu() {
         navBottom.classList.add('open');
         body.classList.add('menu-open');
         burger.setAttribute('aria-expanded', 'true');
+        // Перемещаем фокус на первый пункт меню для клавиатурных пользователей
+        const firstLink = navBottom.querySelector('a');
+        if (firstLink) firstLink.focus();
     }
 
     function toggleMenu() {
@@ -9342,6 +9494,23 @@ async function sendMaterialsToEmail(email, materialType) {
 window.sendMaterialsEmail = sendMaterialsEmail;
 window.sendMaterialsToEmail = sendMaterialsToEmail;
 window.isValidEmail = isValidEmail;
+function equalizeBenefitsColumns() {
+    if (window.innerWidth < 992) return;
+    const leftCol = document.querySelector('.benefits-two-columns .benefits-column:first-child');
+    const rightCol = document.querySelector('.benefits-two-columns .benefits-column:last-child');
+    if (!leftCol || !rightCol) return;
+    // Убираем ранее установленную высоту
+    rightCol.style.minHeight = '';
+    // Устанавливаем высоту правой колонки равной высоте левой
+    rightCol.style.minHeight = leftCol.offsetHeight + 'px';
+}
+
+// Запускаем после полной загрузки страницы
+window.addEventListener('load', equalizeBenefitsColumns);
+window.addEventListener('resize', function() {
+    clearTimeout(window._benefitsEqTimer);
+    window._benefitsEqTimer = setTimeout(equalizeBenefitsColumns, 200);
+});
 (function () {
     'use strict';
     logInit('=== НАЧАЛО 99_main.js ===', 'INFO', '', 3);
