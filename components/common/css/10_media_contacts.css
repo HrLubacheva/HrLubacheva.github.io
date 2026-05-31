@@ -1,13 +1,32 @@
 /* ==================================================================
    10_media_contacts.css – медиа, контакты, футер, общие компоненты
    ================================================================== */
+
+/* ---------- МЕДИА-СЕТКА (3 колонки на десктопе, 2 на мобильных) ---------- */
 .media-grid {
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 30px;
     align-items: stretch;
     margin: 40px 0;
 }
+
+/* Планшеты (768px – 991px) — 2 колонки */
+@media (max-width: 991px) {
+    .media-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+}
+
+/* Телефоны (до 576px) — 2 колонки, отступы меньше */
+@media (max-width: 576px) {
+    .media-grid {
+        gap: 16px;
+    }
+}
+
+/* Карточка медиа */
 .media-item {
     background: white;
     border-radius: var(--radius-lg);
@@ -19,6 +38,8 @@
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
 }
+
+/* Изображение — главное */
 .media-image {
     width: 100%;
     aspect-ratio: 16/9;
@@ -34,13 +55,38 @@
 .media-item:hover .media-image img {
     transform: scale(1.03);
 }
+
+/* Текст под фото — мелкий, служебный, не отвлекает */
 .media-caption {
-    padding: 16px 20px;
+    padding: 10px 12px 14px;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
     background: white;
+    line-height: 1.3;
 }
+/* Если внутри есть strong — чуть жирнее, но не крупнее */
+.media-caption strong,
+.media-caption .media-title {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+/* Очень маленькие экраны — текст ещё мельче */
+@media (max-width: 480px) {
+    .media-caption {
+        padding: 6px 8px 10px;
+        font-size: 0.65rem;
+    }
+    .media-caption strong {
+        font-size: 0.7rem;
+    }
+}
+
+/* Блок с описанием (если используется как отдельный элемент) */
 .media-description {
     background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     border-radius: var(--radius-lg);
@@ -80,11 +126,9 @@
     font-size: 0.85rem;
     font-weight: 500;
 }
+
+/* Адаптив для блока описания */
 @media (max-width: 900px) {
-    .media-grid {
-        grid-template-columns: 1fr;
-        gap: 24px;
-    }
     .media-description { order: -1; }
     .media-stats { gap: 16px; }
     .media-stats span {
@@ -98,6 +142,7 @@
     .media-description p { font-size: 0.85rem; }
 }
 
+/* ---------- КОНТАКТЫ ---------- */
 .contact-block {
     text-align: center;
     padding: 40px 0;
@@ -151,6 +196,7 @@
     }
 }
 
+/* ---------- ФУТЕР (общий) ---------- */
 footer {
     background: var(--dark-bg);
     color: #cbd5e0;
@@ -192,6 +238,7 @@ footer a:hover {
     .footer-copyright { font-size: 0.8rem; }
 }
 
+/* ---------- ОБЩИЕ УТИЛИТЫ ---------- */
 .fade-up {
     opacity: 0;
     transform: translateY(30px);
@@ -233,6 +280,7 @@ footer a:hover {
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
+/* ---------- ТОСТ-УВЕДОМЛЕНИЯ ---------- */
 .custom-toast {
     position: fixed;
     bottom: 30px;
@@ -276,6 +324,7 @@ footer a:hover {
     }
 }
 
+/* ---------- КАСТОМНЫЙ ДРОПДАУН ---------- */
 .custom-dropdown {
     position: relative;
     width: 100%;
@@ -347,6 +396,7 @@ footer a:hover {
     color: white;
 }
 
+/* ---------- ССЫЛКИ И ФОКУС ---------- */
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
     text-decoration: none;
     border-bottom: 1px solid transparent;
@@ -413,6 +463,7 @@ fieldset {
 legend {
     display: none;
 }
+
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -436,6 +487,7 @@ legend {
 #quizSelectionBlock .service-name:empty {
     display: none !important;
 }
+
 .floating-share-btn {
     position: fixed;
     bottom: 100px;
@@ -466,6 +518,7 @@ legend {
         right: 20px;
     }
 }
+
 .field-error-message {
     display: block;
     font-size: 0.75rem;
@@ -478,6 +531,7 @@ legend {
     border-color: #dc3545 !important;
     background-color: #fff8f8 !important;
 }
+
 .skip-link {
     position: absolute;
     top: -40px;
@@ -496,6 +550,7 @@ legend {
     outline: none;
     box-shadow: 0 0 0 3px rgba(255,255,255,0.5);
 }
+
 section[id] {
     scroll-margin-top: 80px;
 }
@@ -504,6 +559,7 @@ section[id] {
         scroll-margin-top: 70px;
     }
 }
+
 .section-dark {
     background: var(--dark-bg);
     color: #e2e8f0;

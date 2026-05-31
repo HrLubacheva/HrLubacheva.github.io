@@ -1,6 +1,7 @@
 /* ==================================================================
    99_responsive.css – глобальные адаптивные правки (мобильная версия)
    Включая уменьшение отступов между секциями
+   (бургер-меню вынесен в отдельный файл)
    ================================================================== */
 
 /* Глобальные сбросы для всех экранов (не только мобильных) */
@@ -310,45 +311,7 @@
     }
 }
 
-/* ---------- БУРГЕР-МЕНЮ ---------- */
-@media (max-width: 768px) {
-    .nav-bottom {
-        padding: 80px 20px 40px !important;
-    }
-    .nav-links a {
-        display: block !important;
-        width: 100%;
-        text-align: center;
-        padding: 14px 20px !important;
-        font-size: 1.2rem !important;
-        font-weight: 600;
-        border-radius: 40px;
-        margin: 4px 0;
-    }
-    .nav-links a:active {
-        background: rgba(45, 106, 159, 0.1);
-    }
-    .burger-menu {
-        padding: 12px !important;
-        min-width: 48px;
-        min-height: 48px;
-    }
-    .burger-menu span {
-        width: 28px;
-        height: 4px;
-    }
-}
-@media (max-width: 480px) {
-    .nav-links a {
-        font-size: 1rem !important;
-        padding: 12px 16px !important;
-    }
-    .nav-bottom {
-        padding: 80px 16px 30px !important;
-    }
-}
-
-/* ---------- ОСТАЛЬНЫЕ МЕЛКИЕ ПРАВКИ ---------- */
+/* ---------- ОСТАЛЬНЫЕ МЕЛКИЕ ПРАВКИ (без бургера) ---------- */
 .service-select {
     appearance: none;
     -webkit-appearance: none;
@@ -487,7 +450,7 @@ section:not(.section-dark):not(.certificates-section) {
         padding: 50px 0 35px 0;
     }
     #home .hero-grid {
-        padding: 30px 0 0 0 !important;  /* совсем убираем нижний отступ */
+        padding: 30px 0 0 0 !important;
     }
     #roles {
         padding-top: 0 !important;
@@ -506,50 +469,39 @@ section:not(.section-dark):not(.certificates-section) {
 
 /* ========== ДЕСКТОП: УМЕНЬШАЕМ ОТСТУПЫ МЕЖДУ СЕКЦИЯМИ ========== */
 @media (min-width: 992px) {
-    /* Основные секции (без тёмной фоновой) */
     .section,
     .section-light,
     section:not(.section-dark):not(.certificates-section) {
-        padding: 40px 0 25px 0;  /* было 50px 0 30px – уменьшаем */
+        padding: 40px 0 25px 0;
     }
-    /* Тёмная секция («Почему выбирают меня») */
     .section-dark {
-        padding: 55px 0 40px 0;  /* было 70px 0 50px – уменьшаем */
+        padding: 55px 0 40px 0;
     }
-    /* Герой – убираем нижний отступ, чтобы плотнее к следующему блоку */
     #home .hero-grid {
-        padding: 40px 0 10px 0;   /* было 40px 0 20px – убираем ещё */
+        padding: 40px 0 10px 0;
     }
-    /* Заголовки секций – уменьшаем отступ снизу */
     .section-title {
-        margin-bottom: 30px;      /* было 48px – делаем меньше */
+        margin-bottom: 30px;
     }
-    /* Сетка ролей – убираем лишние отступы сверху */
     #roles .grid-3 {
         margin-top: 10px;
     }
-    /* Сетка услуг – аналогично */
     #services .grid-3 {
         margin-top: 10px;
     }
-    /* Процесс работы */
     .process-two-blocks {
         margin-top: 10px;
     }
-    /* Статистика */
     .stats-grid {
         margin: 15px 0 25px;
     }
-    /* Квиз и форма обратной связи */
     #quiz .quiz-card,
     #callback-form .calendar-card {
         margin-top: 10px;
     }
-    /* Медиа-секция */
     .media-grid {
         margin-top: 10px;
     }
-    /* Контакты */
     .contact-block {
         padding: 15px 0 25px;
     }

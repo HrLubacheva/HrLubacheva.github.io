@@ -883,7 +883,8 @@ body {
     text-align: center !important;
 }
 /* ==================================================================
-   05_navbar.css – навигационная панель (суперкомпактная, без прокрутки)
+   05_navbar.css – навигационная панель (только десктопные стили)
+   Мобильная версия вынесена в burger.css
    ================================================================== */
 .navbar {
     background: white;
@@ -1012,119 +1013,6 @@ body {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
     border-radius: 50%;
-}
-
-/* ========== МОБИЛЬНОЕ МЕНЮ – БЕЗ ПРОКРУТКИ, КОМПАКТНО ========== */
-@media (max-width: 768px) {
-    .burger-menu { display: block; }
-
-    .nav-bottom {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100vh;
-        background: white;
-        border-radius: 0;
-        padding: 0;               /* убираем все внутренние отступы */
-        margin: 0;
-        transform: translateX(100%);
-        transition: transform 0.3s ease-in-out;
-        z-index: 999;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        box-shadow: none;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;  /* центрируем список по вертикали */
-    }
-
-    @supports (height: 100dvh) {
-        .nav-bottom {
-            height: 100dvh;
-        }
-    }
-
-    .nav-bottom.open { transform: translateX(0); }
-
-    .nav-links {
-        flex-direction: column;
-        align-items: center;
-        gap: 8px;                /* небольшой зазор между ссылками */
-        padding: 10px 0;
-        width: 100%;
-    }
-    .nav-links a {
-        font-size: 1rem;
-        line-height: 1.2;
-        padding: 8px 16px;
-        display: inline-block;
-        width: auto;
-        text-align: center;
-        background: rgba(45, 106, 159, 0.05);
-        border-radius: 40px;
-        min-width: 160px;
-    }
-
-    body.menu-open {
-        overflow: hidden;
-        position: fixed;
-        width: 100%;
-    }
-
-    .nav-top {
-        flex-wrap: nowrap;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .logo { font-size: 1.2rem; }
-    .logo-sub { font-size: 0.75rem; }
-    .social-icons {
-        flex-shrink: 0;
-        gap: 8px;
-    }
-    .social-icons a {
-        width: 32px;
-        height: 32px;
-    }
-    .social-icons svg {
-        width: 20px;
-        height: 20px;
-    }
-}
-
-/* Для экранов ≤ 480px – чуть плотнее */
-@media (max-width: 480px) {
-    .social-icons svg { width: 20px; height: 20px; }
-    .logo { font-size: 1rem; }
-
-    .nav-links {
-        gap: 6px;
-    }
-    .nav-links a {
-        font-size: 0.9rem;
-        padding: 6px 14px;
-        min-width: 140px;
-    }
-    .social-icons {
-        gap: 6px;
-    }
-    .social-icons a {
-        width: 28px;
-        height: 28px;
-    }
-}
-
-/* Для самых маленьких (320–360px) – экстремально компактно */
-@media (max-width: 360px) {
-    .nav-links {
-        gap: 4px;
-    }
-    .nav-links a {
-        font-size: 0.85rem;
-        padding: 5px 12px;
-        min-width: 120px;
-    }
 }
 /* ==================================================================
    05_stats_benefits.css – Статистика и преимущества (полностью самодостаточный)
@@ -1384,6 +1272,351 @@ body {
         justify-content: center;
         /* Убираем min-height, чтобы карточка не была принудительно высокой */
         min-height: auto;
+    }
+}
+/* ==================================================================
+   burger.css – полная стилизация навигации и бургер-меню
+   Версия с оверлеем, улучшенной индикацией и плавной анимацией
+   ================================================================== */
+
+/* ---------- ОСНОВНЫЕ СТИЛИ (ДЕСКТОП И ОБЩИЕ) ---------- */
+.navbar {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+}
+
+.nav-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    white-space: nowrap;
+    transition: transform 0.2s ease;
+}
+.logo:hover {
+    transform: scale(1.02);
+}
+.logo-sub {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--secondary);
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+.social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    transition: var(--transition);
+}
+.social-icons a:hover {
+    opacity: 0.8;
+}
+.social-icons svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    fill: none;
+}
+
+.burger-menu {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    z-index: 1002;
+}
+.burger-menu span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: var(--primary);
+    margin: 5px 0;
+    transition: 0.2s;
+}
+.burger-menu.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.burger-menu.active span:nth-child(2) {
+    opacity: 0;
+}
+.burger-menu.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -6px);
+}
+
+.nav-bottom {
+    background: var(--light-bg);
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin: 10px 0;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: var(--transition);
+    border-bottom: 1px solid transparent;
+    padding: 4px 0;
+}
+.nav-links a:hover {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+}
+.nav-links a.active {
+    color: var(--primary);
+    border-bottom-color: var(--primary);
+    font-weight: 600;
+}
+
+/* Фокусы для доступности */
+.burger-menu:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+.nav-links a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+.social-icons a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 50%;
+}
+
+/* ---------- ОВЕРЛЕЙ (затемнение фона при открытом меню) ---------- */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 998;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ---------- МОБИЛЬНАЯ ВЕРСИЯ (КОМПАКТНАЯ, С ПЛАВНОЙ АНИМАЦИЕЙ И ОВЕРЛЕЕМ) ---------- */
+@media (max-width: 768px) {
+    .burger-menu {
+        display: block;
+    }
+
+    .nav-bottom {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 85%;
+        max-width: 320px;
+        height: 100vh;
+        background: #ffffff !important;
+        border-radius: 0;
+        padding: 50px 20px 30px !important;
+        margin: 0;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1000;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-shadow: 2px 0 15px rgba(0,0,0,0.1);
+    }
+
+    @supports (height: 100dvh) {
+        .nav-bottom {
+            height: 100dvh;
+        }
+    }
+
+    .nav-bottom.open {
+        transform: translateX(0);
+    }
+
+    /* Список ссылок — компактный, но с более заметным фоном */
+    .nav-links {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px !important;
+        padding: 10px 0;
+        width: 100%;
+    }
+
+    .nav-links a {
+        font-size: 1.1rem !important;
+        line-height: 1.2;
+        padding: 12px 16px !important;
+        margin: 0 !important;
+        display: block;
+        text-align: center;
+        background: rgba(45, 106, 159, 0.06);
+        border-radius: 40px;
+        transition: background 0.2s ease, transform 0.1s ease !important;
+        border-bottom: none;
+    }
+    .nav-links a:hover,
+    .nav-links a:active {
+        background: rgba(45, 106, 159, 0.15);
+        transform: scale(1.02);
+    }
+    /* Активный пункт меню */
+    .nav-links a.active {
+        background: var(--gradient-blue);
+        color: white !important;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(45,106,159,0.3);
+    }
+    .nav-links a.active:hover {
+        background: var(--gradient-blue-hover);
+        transform: scale(1.02);
+    }
+
+    body.menu-open {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+    }
+
+    .nav-top {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .logo {
+        font-size: 1.2rem;
+    }
+    .logo-sub {
+        font-size: 0.75rem;
+    }
+    .social-icons {
+        flex-shrink: 0;
+        gap: 8px;
+    }
+    .social-icons a {
+        width: 32px;
+        height: 32px;
+    }
+    .social-icons svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Очень маленькие экраны (≤480px) */
+@media (max-width: 480px) {
+    .social-icons svg {
+        width: 20px;
+        height: 20px;
+    }
+    .logo {
+        font-size: 1rem;
+    }
+    .nav-bottom {
+        width: 90%;
+        max-width: 280px;
+        padding: 40px 16px 25px !important;
+    }
+    .nav-links {
+        gap: 6px !important;
+    }
+    .nav-links a {
+        font-size: 1rem !important;
+        padding: 10px 14px !important;
+    }
+    .social-icons {
+        gap: 6px;
+    }
+    .social-icons a {
+        width: 28px;
+        height: 28px;
+    }
+}
+
+/* Минимальные экраны (320-360px) */
+@media (max-width: 360px) {
+    .nav-links a {
+        font-size: 0.9rem !important;
+        padding: 8px 12px !important;
+    }
+}
+
+/* Дополнительные улучшения для бургер-меню */
+.menu-overlay {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+/* Если пользователь отключил анимацию – не анимируем */
+@media (prefers-reduced-motion: reduce) {
+    .menu-overlay,
+    .nav-bottom,
+    .burger-menu span {
+        transition: none !important;
+    }
+    .nav-bottom.open,
+    .menu-overlay.active {
+        transition: none !important;
+    }
+}
+
+/* Блокировка скролла body при открытом меню */
+body.menu-open {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
+/* Улучшенный оверлей – через backdrop-filter (если браузер поддерживает) */
+@supports (backdrop-filter: blur(4px)) {
+    .menu-overlay {
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(4px);
+    }
+}
+
+/* На случай, если оверлей не поддерживается – просто тёмный фон */
+@supports not (backdrop-filter: blur(4px)) {
+    .menu-overlay {
+        background: rgba(0, 0, 0, 0.7);
     }
 }
 /* ==================================================================
@@ -2552,13 +2785,32 @@ body {
 /* ==================================================================
    10_media_contacts.css – медиа, контакты, футер, общие компоненты
    ================================================================== */
+
+/* ---------- МЕДИА-СЕТКА (3 колонки на десктопе, 2 на мобильных) ---------- */
 .media-grid {
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 30px;
     align-items: stretch;
     margin: 40px 0;
 }
+
+/* Планшеты (768px – 991px) — 2 колонки */
+@media (max-width: 991px) {
+    .media-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+}
+
+/* Телефоны (до 576px) — 2 колонки, отступы меньше */
+@media (max-width: 576px) {
+    .media-grid {
+        gap: 16px;
+    }
+}
+
+/* Карточка медиа */
 .media-item {
     background: white;
     border-radius: var(--radius-lg);
@@ -2570,6 +2822,8 @@ body {
     transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
 }
+
+/* Изображение — главное */
 .media-image {
     width: 100%;
     aspect-ratio: 16/9;
@@ -2585,13 +2839,38 @@ body {
 .media-item:hover .media-image img {
     transform: scale(1.03);
 }
+
+/* Текст под фото — мелкий, служебный, не отвлекает */
 .media-caption {
-    padding: 16px 20px;
+    padding: 10px 12px 14px;
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
     background: white;
+    line-height: 1.3;
 }
+/* Если внутри есть strong — чуть жирнее, но не крупнее */
+.media-caption strong,
+.media-caption .media-title {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+/* Очень маленькие экраны — текст ещё мельче */
+@media (max-width: 480px) {
+    .media-caption {
+        padding: 6px 8px 10px;
+        font-size: 0.65rem;
+    }
+    .media-caption strong {
+        font-size: 0.7rem;
+    }
+}
+
+/* Блок с описанием (если используется как отдельный элемент) */
 .media-description {
     background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     border-radius: var(--radius-lg);
@@ -2631,11 +2910,9 @@ body {
     font-size: 0.85rem;
     font-weight: 500;
 }
+
+/* Адаптив для блока описания */
 @media (max-width: 900px) {
-    .media-grid {
-        grid-template-columns: 1fr;
-        gap: 24px;
-    }
     .media-description { order: -1; }
     .media-stats { gap: 16px; }
     .media-stats span {
@@ -2649,6 +2926,7 @@ body {
     .media-description p { font-size: 0.85rem; }
 }
 
+/* ---------- КОНТАКТЫ ---------- */
 .contact-block {
     text-align: center;
     padding: 40px 0;
@@ -2702,6 +2980,7 @@ body {
     }
 }
 
+/* ---------- ФУТЕР (общий) ---------- */
 footer {
     background: var(--dark-bg);
     color: #cbd5e0;
@@ -2743,6 +3022,7 @@ footer a:hover {
     .footer-copyright { font-size: 0.8rem; }
 }
 
+/* ---------- ОБЩИЕ УТИЛИТЫ ---------- */
 .fade-up {
     opacity: 0;
     transform: translateY(30px);
@@ -2784,6 +3064,7 @@ footer a:hover {
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
+/* ---------- ТОСТ-УВЕДОМЛЕНИЯ ---------- */
 .custom-toast {
     position: fixed;
     bottom: 30px;
@@ -2827,6 +3108,7 @@ footer a:hover {
     }
 }
 
+/* ---------- КАСТОМНЫЙ ДРОПДАУН ---------- */
 .custom-dropdown {
     position: relative;
     width: 100%;
@@ -2898,6 +3180,7 @@ footer a:hover {
     color: white;
 }
 
+/* ---------- ССЫЛКИ И ФОКУС ---------- */
 a:not(.btn-primary):not(.btn-secondary):not(.social-icons a) {
     text-decoration: none;
     border-bottom: 1px solid transparent;
@@ -2964,6 +3247,7 @@ fieldset {
 legend {
     display: none;
 }
+
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -2987,6 +3271,7 @@ legend {
 #quizSelectionBlock .service-name:empty {
     display: none !important;
 }
+
 .floating-share-btn {
     position: fixed;
     bottom: 100px;
@@ -3017,6 +3302,7 @@ legend {
         right: 20px;
     }
 }
+
 .field-error-message {
     display: block;
     font-size: 0.75rem;
@@ -3029,6 +3315,7 @@ legend {
     border-color: #dc3545 !important;
     background-color: #fff8f8 !important;
 }
+
 .skip-link {
     position: absolute;
     top: -40px;
@@ -3047,6 +3334,7 @@ legend {
     outline: none;
     box-shadow: 0 0 0 3px rgba(255,255,255,0.5);
 }
+
 section[id] {
     scroll-margin-top: 80px;
 }
@@ -3055,6 +3343,7 @@ section[id] {
         scroll-margin-top: 70px;
     }
 }
+
 .section-dark {
     background: var(--dark-bg);
     color: #e2e8f0;
@@ -3904,51 +4193,10 @@ select:focus-visible {
     color: initial !important;
     display: inline-block;
 }
-/* Суперлёгкое бургер-меню – без тормозов */
-@media (max-width: 768px) {
-    .nav-bottom {
-        background: #ffffff !important;          /* сплошной белый – быстрее градиента */
-        padding: 50px 20px 30px !important;
-        transition: none !important;             /* отключаем анимацию появления (если была) */
-    }
-
-    .nav-links {
-        gap: 6px !important;
-    }
-
-    .nav-links a {
-        padding: 10px 16px !important;
-        margin: 2px 0 !important;
-        font-size: 1.1rem !important;
-        background: rgba(45, 106, 159, 0.04);
-        transition: none !important;             /* убираем hover-эффекты на мобильных */
-        border-radius: 40px;
-    }
-
-    /* Убираем любые трансформации и тени */
-    .nav-links a:hover,
-    .nav-links a:active {
-        background: rgba(45, 106, 159, 0.1);
-        transform: none !important;
-    }
-
-    .nav-bottom.open {
-        box-shadow: none !important;
-    }
-}
-
-@media (max-width: 480px) {
-    .nav-bottom {
-        padding: 40px 16px 25px !important;
-    }
-    .nav-links a {
-        padding: 8px 14px !important;
-        font-size: 1rem !important;
-    }
-}
 /* ==================================================================
    99_responsive.css – глобальные адаптивные правки (мобильная версия)
    Включая уменьшение отступов между секциями
+   (бургер-меню вынесен в отдельный файл)
    ================================================================== */
 
 /* Глобальные сбросы для всех экранов (не только мобильных) */
@@ -4258,45 +4506,7 @@ select:focus-visible {
     }
 }
 
-/* ---------- БУРГЕР-МЕНЮ ---------- */
-@media (max-width: 768px) {
-    .nav-bottom {
-        padding: 80px 20px 40px !important;
-    }
-    .nav-links a {
-        display: block !important;
-        width: 100%;
-        text-align: center;
-        padding: 14px 20px !important;
-        font-size: 1.2rem !important;
-        font-weight: 600;
-        border-radius: 40px;
-        margin: 4px 0;
-    }
-    .nav-links a:active {
-        background: rgba(45, 106, 159, 0.1);
-    }
-    .burger-menu {
-        padding: 12px !important;
-        min-width: 48px;
-        min-height: 48px;
-    }
-    .burger-menu span {
-        width: 28px;
-        height: 4px;
-    }
-}
-@media (max-width: 480px) {
-    .nav-links a {
-        font-size: 1rem !important;
-        padding: 12px 16px !important;
-    }
-    .nav-bottom {
-        padding: 80px 16px 30px !important;
-    }
-}
-
-/* ---------- ОСТАЛЬНЫЕ МЕЛКИЕ ПРАВКИ ---------- */
+/* ---------- ОСТАЛЬНЫЕ МЕЛКИЕ ПРАВКИ (без бургера) ---------- */
 .service-select {
     appearance: none;
     -webkit-appearance: none;
@@ -4435,7 +4645,7 @@ section:not(.section-dark):not(.certificates-section) {
         padding: 50px 0 35px 0;
     }
     #home .hero-grid {
-        padding: 30px 0 0 0 !important;  /* совсем убираем нижний отступ */
+        padding: 30px 0 0 0 !important;
     }
     #roles {
         padding-top: 0 !important;
@@ -4454,50 +4664,39 @@ section:not(.section-dark):not(.certificates-section) {
 
 /* ========== ДЕСКТОП: УМЕНЬШАЕМ ОТСТУПЫ МЕЖДУ СЕКЦИЯМИ ========== */
 @media (min-width: 992px) {
-    /* Основные секции (без тёмной фоновой) */
     .section,
     .section-light,
     section:not(.section-dark):not(.certificates-section) {
-        padding: 40px 0 25px 0;  /* было 50px 0 30px – уменьшаем */
+        padding: 40px 0 25px 0;
     }
-    /* Тёмная секция («Почему выбирают меня») */
     .section-dark {
-        padding: 55px 0 40px 0;  /* было 70px 0 50px – уменьшаем */
+        padding: 55px 0 40px 0;
     }
-    /* Герой – убираем нижний отступ, чтобы плотнее к следующему блоку */
     #home .hero-grid {
-        padding: 40px 0 10px 0;   /* было 40px 0 20px – убираем ещё */
+        padding: 40px 0 10px 0;
     }
-    /* Заголовки секций – уменьшаем отступ снизу */
     .section-title {
-        margin-bottom: 30px;      /* было 48px – делаем меньше */
+        margin-bottom: 30px;
     }
-    /* Сетка ролей – убираем лишние отступы сверху */
     #roles .grid-3 {
         margin-top: 10px;
     }
-    /* Сетка услуг – аналогично */
     #services .grid-3 {
         margin-top: 10px;
     }
-    /* Процесс работы */
     .process-two-blocks {
         margin-top: 10px;
     }
-    /* Статистика */
     .stats-grid {
         margin: 15px 0 25px;
     }
-    /* Квиз и форма обратной связи */
     #quiz .quiz-card,
     #callback-form .calendar-card {
         margin-top: 10px;
     }
-    /* Медиа-секция */
     .media-grid {
         margin-top: 10px;
     }
-    /* Контакты */
     .contact-block {
         padding: 15px 0 25px;
     }
@@ -6214,7 +6413,7 @@ section:not(.section-dark):not(.certificates-section) {
                 <a href="privacy.html" target="_blank" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 31.05.2026 10:13:49</span>
+                <span class="footer-version">⚡ Версия 31.05.2026 10:38:19</span>
             </div>
         </div>
 
@@ -7955,6 +8154,65 @@ function initModal() {
 window.initModal = initModal;
 window.showModal = showModal;
 window.hideModal = hideModal;
+(function() {
+    'use strict';
+
+    // Дождались загрузки DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        const burger = document.querySelector('.burger-menu');
+        const navBottom = document.querySelector('.nav-bottom');
+        const overlay = document.getElementById('menuOverlay');
+        const body = document.body;
+
+        // Если какого-то элемента нет — выходим
+        if (!burger || !navBottom) return;
+
+        // Функция открытия/закрытия
+        function toggleMenu() {
+            burger.classList.toggle('active');
+            navBottom.classList.toggle('open');
+            if (overlay) overlay.classList.toggle('active');
+            body.classList.toggle('menu-open');
+
+            // Для доступности: говорим скринридерам, что меню открыто/закрыто
+            const expanded = navBottom.classList.contains('open');
+            burger.setAttribute('aria-expanded', expanded);
+            if (expanded) {
+                // Перемещаем фокус на первый пункт меню (опционально)
+                const firstLink = navBottom.querySelector('.nav-links a');
+                if (firstLink) firstLink.focus();
+            }
+        }
+
+        // Закрытие по клику на оверлей
+        if (overlay) {
+            overlay.addEventListener('click', toggleMenu);
+        }
+
+        // Закрытие по кнопке ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && navBottom.classList.contains('open')) {
+                toggleMenu();
+            }
+        });
+
+        // Закрытие при клике на любую ссылку в меню
+        const navLinks = navBottom.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+
+        // Открытие/закрытие по клику на бургер
+        burger.addEventListener('click', toggleMenu);
+
+        // При ресайзе окна, если ширина становится >768px и меню открыто — закрываем его (чтобы не было глюков)
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && navBottom.classList.contains('open')) {
+                toggleMenu();
+            }
+        });
+    });
+})();
 function initCookieConsent() {
     logInit('initCookieConsent started', 'INFO', '', 3);
     let consent = null;
