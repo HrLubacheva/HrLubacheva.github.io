@@ -137,11 +137,11 @@
 
     // ========== ИНИЦИАЛИЗАЦИЯ ВСЕХ АККОРДЕОНОВ ==========
     function initAllAccordions() {
-        logInit('initAllAccordions started', 'INFO', '', 3);
+        logger.init('initAllAccordions started', 'INFO', '', 3);
         initServicesAccordion();
         initProcessAccordion();
         initBenefitsAccordion();
-        logInit('initAllAccordions finished', 'INFO', '', 3);
+        logger.init('initAllAccordions finished', 'INFO', '', 3);
     }
 
     // Запускаем после загрузки DOM

@@ -2,7 +2,7 @@ function initCallbackForm() {
     if (window._callbackFormInitialized) return;
     window._callbackFormInitialized = true;
 
-    logInit('initCallbackForm started', 'INFO', '', 3);
+    logger.init('initCallbackForm started', 'INFO', '', 3);
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
     const FORM_MESSAGE_HIDE_DELAY = 5000;
@@ -73,12 +73,12 @@ const submitHandler = async function(e) {
   clearCallbackMessage();
 
   if (isSubmitting) {
-    logInit('Отправка уже выполняется, игнорируем', 'WARN', '', 3);
+    logger.init('Отправка уже выполняется, игнорируем', 'WARN', '', 3);
     showCallbackMessage('⏳ Отправка уже выполняется, подождите...', true);
     return;
   }
 
-  logInit('Отправка формы callbackForm', 'INFO', '', 3);
+  logger.init('Отправка формы callbackForm', 'INFO', '', 3);
 
   let isValid = true;
   let phoneDigits = callbackPhone.value.replace(/\D/g, '');
@@ -121,9 +121,9 @@ const submitHandler = async function(e) {
     });
     // После успешной отправки очищаем сообщение и чекбокс не трогаем
     clearCallbackMessage();
-    logInit('Отправка формы callbackForm завершена успешно', 'INFO', '', 3);
+    logger.init('Отправка формы callbackForm завершена успешно', 'INFO', '', 3);
   } catch (err) {
-    logInit('Ошибка отправки формы callbackForm', 'ERROR', err, 2);
+    logger.init('Ошибка отправки формы callbackForm', 'ERROR', err, 2);
     showCallbackMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
   } finally {
     isSubmitting = false;
@@ -185,12 +185,12 @@ const quickSubmitHandler = async function(e) {
   clearQuickMessage();
 
   if (isQuickSubmitting) {
-    logInit('Быстрый заказ уже выполняется, игнорируем', 'WARN', '', 3);
+    logger.init('Быстрый заказ уже выполняется, игнорируем', 'WARN', '', 3);
     showQuickMessage('⏳ Отправка уже выполняется, подождите...', true);
     return;
   }
 
-  logInit('Отправка формы quickOrderForm', 'INFO', '', 3);
+  logger.init('Отправка формы quickOrderForm', 'INFO', '', 3);
 
   let isValid = true;
   let digits = quickPhone.value.replace(/\D/g, '');
@@ -226,9 +226,9 @@ const quickSubmitHandler = async function(e) {
       return { ...quizData, cart: typeof window.getCartData === 'function' ? window.getCartData() : '' };
     });
     clearQuickMessage();
-    logInit('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
+    logger.init('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
   } catch (err) {
-    logInit('Ошибка отправки формы quickOrderForm', 'ERROR', err, 2);
+    logger.init('Ошибка отправки формы quickOrderForm', 'ERROR', err, 2);
     showQuickMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
   } finally {
     isQuickSubmitting = false;
@@ -248,7 +248,7 @@ const quickSubmitHandler = async function(e) {
         copyCartBtn._copyHandler = () => {
             const actionKey = 'copy_cart';
             if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
-            logInit('Копирование корзины', 'INFO', '', 4);
+            logger.init('Копирование корзины', 'INFO', '', 4);
             const cartText = typeof window.getCartData === 'function' ? window.getCartData() : '';
             if (!cartText || cartText === 'Корзина пуста') {
                 window.showWarningToast('🛒 Корзина пуста. Добавьте услуги.');
@@ -267,7 +267,7 @@ const quickSubmitHandler = async function(e) {
         copyCartBtn.addEventListener('click', copyCartBtn._copyHandler);
     }
 
-    logInit('initCallbackForm finished', 'INFO', '', 3);
+    logger.init('initCallbackForm finished', 'INFO', '', 3);
 }
 
 function initFormEnterSubmit() {

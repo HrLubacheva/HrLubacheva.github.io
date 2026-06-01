@@ -7,7 +7,7 @@ const MIN_INTERVAL_MS = 60000;
 function isValidEmail(email) { return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email); }
 
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
-    logInit(`sendMaterialsEmail: ${email}, чек-лист=${wantChecklist}, тренинг=${wantTraining}`, 'INFO', '', 4);
+    logger.init(`sendMaterialsEmail: ${email}, чек-лист=${wantChecklist}, тренинг=${wantTraining}`, 'INFO', '', 4);
 
     const actionKey = 'materials_email';
     if (window.isActionLocked && window.isActionLocked(actionKey, MIN_INTERVAL_MS)) {
@@ -38,7 +38,7 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
 let isSendingEmail = false;
 
 async function sendMaterialsToEmail(email, materialType) {
-    logInit(`sendMaterialsToEmail: ${email}, тип=${materialType}`, 'INFO', '', 4);
+    logger.init(`sendMaterialsToEmail: ${email}, тип=${materialType}`, 'INFO', '', 4);
 
     if (isSendingEmail) {
         window.showErrorToast('⏳ Отправка уже выполняется, подождите...');

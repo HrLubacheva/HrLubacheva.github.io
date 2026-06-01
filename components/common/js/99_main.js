@@ -1,6 +1,6 @@
 (function () {
     'use strict';
-    logInit('=== НАЧАЛО 99_main.js ===', 'INFO', '', 3);
+    logger.init('=== НАЧАЛО 99_main.js ===', 'INFO', '', 3);
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MOBILE_BREAKPOINT = C.BREAKPOINT_MOBILE || 768;
     const STATS_ANIMATION_DURATION = C.STATS_ANIMATION_DURATION || 1500;
@@ -9,7 +9,7 @@
     let globalFadeObserver = null;
 
     function reinitAnimations() {
-        logInit('reinitAnimations started', 'DEBUG', '', 5);
+        logger.init('reinitAnimations started', 'DEBUG', '', 5);
         const elements = document.querySelectorAll('.fade-up:not(.visible)');
         if (!elements.length) return;
         if (globalFadeObserver) {
@@ -27,15 +27,15 @@
             });
         }, {threshold, rootMargin});
         elements.forEach(el => globalFadeObserver.observe(el));
-        logInit(`reinitAnimations обработано ${elements.length} элементов`, 'DEBUG', '', 5);
+        logger.init(`reinitAnimations обработано ${elements.length} элементов`, 'DEBUG', '', 5);
     }
 
     function animateStats() {
-        logInit('animateStats started', 'INFO', '', 4);
+        logger.init('animateStats started', 'INFO', '', 4);
         const statNumbers = document.querySelectorAll('.stat-number');
         if (!statNumbers.length) return;
         if (window._statsAnimated) {
-            logInit('Статистика уже анимирована', 'DEBUG', '', 5);
+            logger.init('Статистика уже анимирована', 'DEBUG', '', 5);
             return;
         }
 
@@ -64,16 +64,16 @@
                     requestAnimationFrame(update);
                     observer.unobserve(target);
                     window._statsAnimated = true;
-                    logInit(`Статистика анимирована для ${target.getAttribute('data-target')}`, 'DEBUG', '', 5);
+                    logger.init(`Статистика анимирована для ${target.getAttribute('data-target')}`, 'DEBUG', '', 5);
                 }
             });
         }, {threshold: 0.3});
         statNumbers.forEach(el => observer.observe(el));
-        logInit('animateStats finished', 'INFO', '', 4);
+        logger.init('animateStats finished', 'INFO', '', 4);
     }
 
     function initFormValidation() {
-        logInit('initFormValidation started', 'INFO', '', 4);
+        logger.init('initFormValidation started', 'INFO', '', 4);
         const phoneInput = document.getElementById('callbackPhone');
         if (phoneInput) phoneInput.addEventListener('input', function () {
             const digits = this.value.replace(/\D/g, '');
@@ -101,11 +101,11 @@
                 this.style.boxShadow = 'none';
             }
         });
-        logInit('initFormValidation finished', 'INFO', '', 4);
+        logger.init('initFormValidation finished', 'INFO', '', 4);
     }
 
     function initScrollTopButton() {
-        logInit('initScrollTopButton started', 'INFO', '', 4);
+        logger.init('initScrollTopButton started', 'INFO', '', 4);
         const btn = document.createElement('button');
         btn.className = 'scroll-top';
         btn.innerHTML = '↑';
@@ -126,7 +126,7 @@
                 window.scrollTo({top: 0, behavior: 'smooth'});
             }
         });
-        logInit('initScrollTopButton finished', 'INFO', '', 4);
+        logger.init('initScrollTopButton finished', 'INFO', '', 4);
     }
 
     let updateActiveNavTimeout = null;
@@ -210,59 +210,59 @@
     function initCarousel() {
         if (typeof window.initInfiniteCarousel === 'function') {
             window.initInfiniteCarousel('carouselTrack');
-            logInit('Карусель сертификатов инициализирована', 'INFO', '', 4);
+            logger.init('Карусель сертификатов инициализирована', 'INFO', '', 4);
         }
     }
 
     function initErrorTrackingIfAvailable() {
         if (typeof window.initErrorTracking === 'function') {
             window.initErrorTracking();
-            logInit('ErrorTracking инициализирован через глобальную функцию', 'INFO', '', 3);
+            logger.init('ErrorTracking инициализирован через глобальную функцию', 'INFO', '', 3);
         } else if (window.ErrorTracking && typeof window.ErrorTracking.init === 'function') {
             window.ErrorTracking.init();
-            logInit('ErrorTracking инициализирован через модуль', 'INFO', '', 3);
+            logger.init('ErrorTracking инициализирован через модуль', 'INFO', '', 3);
         } else {
             window.addEventListener('load', function() {
                 if (typeof window.initErrorTracking === 'function') {
                     window.initErrorTracking();
-                    logInit('ErrorTracking инициализирован после загрузки страницы', 'INFO', '', 3);
+                    logger.init('ErrorTracking инициализирован после загрузки страницы', 'INFO', '', 3);
                 }
             });
         }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        logInit('DOMContentLoaded событие', 'INFO', '', 3);
+        logger.init('DOMContentLoaded событие', 'INFO', '', 3);
         if (typeof initUserId === 'function') {
-            logInit('Вызов initUserId', 'INFO', '', 3);
-            initUserId().catch(e => logInit(`Ошибка initUserId: ${e}`, 'ERROR', '', 1));
+            logger.init('Вызов initUserId', 'INFO', '', 3);
+            initUserId().catch(e => logger.init(`Ошибка initUserId: ${e}`, 'ERROR', '', 1));
         }
         if (typeof initModal === 'function') {
-            logInit('Вызов initModal', 'INFO', '', 3);
+            logger.init('Вызов initModal', 'INFO', '', 3);
             initModal();
         }
         if (typeof initCopyButtons === 'function') {
-            logInit('Вызов initCopyButtons', 'INFO', '', 3);
+            logger.init('Вызов initCopyButtons', 'INFO', '', 3);
             initCopyButtons();
         }
         if (typeof initFormEnterSubmit === 'function') {
-            logInit('Вызов initFormEnterSubmit', 'INFO', '', 3);
+            logger.init('Вызов initFormEnterSubmit', 'INFO', '', 3);
             initFormEnterSubmit();
         }
         if (typeof initCookieConsent === 'function') {
-            logInit('Вызов initCookieConsent', 'INFO', '', 3);
+            logger.init('Вызов initCookieConsent', 'INFO', '', 3);
             initCookieConsent();
         }
         if (typeof initShareButtons === 'function') {
-            logInit('Вызов initShareButtons', 'INFO', '', 3);
+            logger.init('Вызов initShareButtons', 'INFO', '', 3);
             initShareButtons();
         }
         if (typeof window.initPhoneMasks === 'function') {
-            logInit('Вызов initPhoneMasks', 'INFO', '', 3);
+            logger.init('Вызов initPhoneMasks', 'INFO', '', 3);
             window.initPhoneMasks();
         }
         if (typeof initCallbackForm === 'function') {
-            logInit('Вызов initCallbackForm', 'INFO', '', 3);
+            logger.init('Вызов initCallbackForm', 'INFO', '', 3);
             initCallbackForm();
         }
 
@@ -271,33 +271,33 @@
 
         if (typeof originalInitCalculator === 'function') {
             window.initCalculator = async function () {
-                logInit('Переопределённый initCalculator запущен', 'INFO', '', 3);
+                logger.init('Переопределённый initCalculator запущен', 'INFO', '', 3);
                 await originalInitCalculator();
-                logInit('originalInitCalculator завершён', 'INFO', '', 3);
+                logger.init('originalInitCalculator завершён', 'INFO', '', 3);
                 setTimeout(reinitAnimations, 100);
                 setTimeout(animateStats, 150);
             };
         } else {
-            logInit('originalInitCalculator не найден, пропускаем', 'WARN', '', 2);
+            logger.init('originalInitCalculator не найден, пропускаем', 'WARN', '', 2);
         }
 
         if (typeof originalInitQuiz === 'function') {
             window.initQuiz = function () {
-                logInit('Переопределённый initQuiz запущен', 'INFO', '', 3);
+                logger.init('Переопределённый initQuiz запущен', 'INFO', '', 3);
                 originalInitQuiz();
                 setTimeout(reinitAnimations, 150);
                 setTimeout(animateStats, 200);
             };
         } else {
-            logInit('originalInitQuiz не найден, пропускаем', 'WARN', '', 2);
+            logger.init('originalInitQuiz не найден, пропускаем', 'WARN', '', 2);
         }
 
         if (typeof window.initCalculator === 'function') {
-            logInit('Запуск window.initCalculator()', 'INFO', '', 3);
+            logger.init('Запуск window.initCalculator()', 'INFO', '', 3);
             window.initCalculator();
         }
         if (typeof window.initQuiz === 'function') {
-            logInit('Запуск window.initQuiz()', 'INFO', '', 3);
+            logger.init('Запуск window.initQuiz()', 'INFO', '', 3);
             window.initQuiz();
         }
 
@@ -307,23 +307,23 @@
         if (typeof window.initMaterialsEmailButtons === 'function') {
             window.initMaterialsEmailButtons();
         } else {
-            logInit('initMaterialsEmailButtons не найдена! Убедитесь, что 20_materials-modal.js загружен.', 'WARN', '', 2);
+            logger.init('initMaterialsEmailButtons не найдена! Убедитесь, что 20_materials-modal.js загружен.', 'WARN', '', 2);
         }
         initCarousel();
         initErrorTrackingIfAvailable();
 
         if (typeof initAnimations === 'function') {
-            logInit('Вызов initAnimations', 'INFO', '', 3);
+            logger.init('Вызов initAnimations', 'INFO', '', 3);
             initAnimations();
         } else {
-            logInit('initAnimations не найдена!', 'ERROR', '', 1);
+            logger.init('initAnimations не найдена!', 'ERROR', '', 1);
         }
         setTimeout(reinitAnimations, 100);
-        logInit('DOMContentLoaded обработчик завершён', 'INFO', '', 3);
+        logger.init('DOMContentLoaded обработчик завершён', 'INFO', '', 3);
     });
 
     window.addEventListener('load', function () {
-        logInit('Событие load', 'INFO', '', 3);
+        logger.init('Событие load', 'INFO', '', 3);
         setTimeout(function () {
             document.querySelectorAll('.fade-up').forEach(el => {
                 const rect = el.getBoundingClientRect();

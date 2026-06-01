@@ -1,9 +1,9 @@
 function initAnimations() {
-    logInit('initAnimations started', 'INFO', '', 3);
+    logger.init('initAnimations started', 'INFO', '', 3);
     const elements = document.querySelectorAll('.fade-up');
-    logInit(`Найдено элементов .fade-up: ${elements.length}`, 'INFO', '', 4);
+    logger.init(`Найдено элементов .fade-up: ${elements.length}`, 'INFO', '', 4);
     if (!elements.length) {
-        logInit('Нет элементов .fade-up, выход', 'WARN', '', 2);
+        logger.init('Нет элементов .fade-up, выход', 'WARN', '', 2);
         return;
     }
 
@@ -18,7 +18,7 @@ function initAnimations() {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
                 observer.unobserve(entry.target);
-                logInit(`Элемент .fade-up стал видимым`, 'DEBUG', '', 5);
+                logger.init(`Элемент .fade-up стал видимым`, 'DEBUG', '', 5);
             }
         });
     }, {
@@ -39,7 +39,7 @@ function initAnimations() {
         });
     });
 
-    logInit('initAnimations finished', 'INFO', '', 3);
+    logger.init('initAnimations finished', 'INFO', '', 3);
 }
 
 window.initAnimations = initAnimations;

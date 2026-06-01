@@ -118,8 +118,8 @@
         if (typeof window.getUTMText === 'function') formData.utm = window.getUTMText();
         if (typeof window.getDeviceText === 'function') formData.device = window.getDeviceText();
         if (typeof window.getPageText === 'function') formData.page = window.getPageText();
-        if (typeof window.postWithRetry === 'function') window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза', err); });
-        else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
+        if (typeof window.postWithRetry === 'function') window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => { if (window.IS_DEV) logger.warn('Ошибка отправки статистики квиза', err); });
+        else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) logger.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
 
     // Вопросы
@@ -136,7 +136,7 @@
     let isSubmittingChoice = false;
 
     function startQuiz() {
-        logInit('Квиз: startQuiz', 'INFO', '', 3);
+        logger.init('Квиз: startQuiz', 'INFO', '', 3);
         answers = [null, null, null, null, null];
         currentQuestionIndex = 0;
         quizState = 'questions';
@@ -180,7 +180,7 @@
     }
 
     function renderQuiz() {
-        logInit(`Квиз: renderQuiz, state=${quizState}, questionIndex=${currentQuestionIndex}`, 'DEBUG', '', 5);
+        logger.init(`Квиз: renderQuiz, state=${quizState}, questionIndex=${currentQuestionIndex}`, 'DEBUG', '', 5);
         const container = document.getElementById('quizContainer');
         if (!container) return;
         if (quizState === 'questions') {
@@ -247,7 +247,7 @@
     }
 
     function renderResult(recommendations) {
-        logInit('Квиз: renderResult', 'INFO', '', 3);
+        logger.init('Квиз: renderResult', 'INFO', '', 3);
         const container = document.getElementById('quizContainer');
         if (!container) return;
 
@@ -361,7 +361,7 @@
                 if (cartElement) {
                     scrollToElement(cartElement);
                 } else if (window.IS_DEV) {
-                    console.warn('Элемент #cart не найден. Скролл не выполнен.');
+                    logger.warn('Элемент #cart не найден. Скролл не выполнен.');
                 }
 
                 isSubmittingChoice = false;

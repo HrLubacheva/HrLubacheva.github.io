@@ -17,25 +17,24 @@ const IS_DEV = window.location.hostname === 'localhost' ||
     window.location.search.includes('debug=true');
 
 const IS_TEST = window.location.search.includes('test=1');
-let originalConsoleLog = null;
-
-function log(...args) { if (IS_DEV) console.log(...args); }
-function logError(...args) { console.error(...args); }
-function logWarn(...args) { if (IS_DEV) console.warn(...args); }
 
 window.IS_DEV = IS_DEV;
 window.IS_TEST = IS_TEST;
 
 window.enableLogs = function () {
-    if (typeof originalConsoleLog === 'undefined') return;
-    console.log = originalConsoleLog;
-    originalConsoleLog = null;
-    showToast('🔍 Логи включены', 'success');
+    if (typeof window.enableDebug === 'function') {
+        window.enableDebug();
+    } else {
+        logger.warn('enableDebug не доступен');
+    }
 };
+
 window.disableLogs = function () {
-    if (originalConsoleLog === null) originalConsoleLog = console.log;
-    console.log = function () {};
-    showToast('🔇 Логи отключены', 'success');
+    if (typeof window.disableDebug === 'function') {
+        window.disableDebug();
+    } else {
+        logger.warn('disableDebug не доступен');
+    }
 };
 
 function getOrCreateLocalUserId() {
@@ -199,8 +198,8 @@ function saveFailedRequest(url, data) {
         failed.push({ url, data, timestamp: now, requestId });
         if (failed.length > 50) failed = failed.slice(-50);
         localStorage.setItem(failedKey, JSON.stringify(failed));
-        if (IS_DEV) console.log('💾 Запрос сохранён локально');
-    } catch(e) { logError('Ошибка сохранения запроса', e); }
+        logger.debug('💾 Запрос сохранён локально');
+    } catch(e) { logger.error('Ошибка сохранения запроса', e); }
 }
 
 async function retryFailedRequests() {
@@ -216,8 +215,8 @@ async function retryFailedRequests() {
             }
         }
         localStorage.setItem(failedKey, JSON.stringify(newFailed));
-        if (IS_DEV) console.log(`🔄 Повторная отправка: отправлено ${failed.length - newFailed.length}, осталось ${newFailed.length}`);
-    } catch(e) { logError('Ошибка повторной отправки', e); }
+        logger.debug(`🔄 Повторная отправка: отправлено ${failed.length - newFailed.length}, осталось ${newFailed.length}`);
+    } catch(e) { logger.error('Ошибка повторной отправки', e); }
 }
 
 setInterval(retryFailedRequests, 60000);
@@ -226,7 +225,7 @@ window.addEventListener('load', () => setTimeout(retryFailedRequests, 5000));
 window.sendViaBeaconOrFetch = async function(url, data, isRetry = false) {
     const formData = new URLSearchParams(data);
     if (navigator.sendBeacon && navigator.sendBeacon(url, formData)) {
-        if (IS_DEV) console.log('📡 Отправлено через sendBeacon');
+        logger.debug('📡 Отправлено через sendBeacon');
         return true;
     }
     try {
@@ -240,12 +239,12 @@ window.sendViaBeaconOrFetch = async function(url, data, isRetry = false) {
         });
         clearTimeout(timeoutId);
         if (response.ok) {
-            if (IS_DEV) console.log('📡 Отправлено через fetch');
+            logger.debug('📡 Отправлено через fetch');
             return true;
         }
         throw new Error('Ответ сервера не OK: ' + response.status);
     } catch (err) {
-        logError('Ошибка отправки (попробуем fallback no-cors):', err);
+        logger.error('Ошибка отправки (попробуем fallback no-cors):', err);
         try {
             await fetch(url, {
                 method: 'POST',
@@ -254,10 +253,10 @@ window.sendViaBeaconOrFetch = async function(url, data, isRetry = false) {
                 mode: 'no-cors',
                 cache: 'no-store'
             });
-            if (IS_DEV) console.log('📡 Отправлено через fetch (no-cors) – статус неизвестен, но данные вероятно ушли');
+            logger.debug('📡 Отправлено через fetch (no-cors) – статус неизвестен, но данные вероятно ушли');
             return true;
         } catch (e) {
-            logError('Fallback тоже провалился:', e);
+            logger.error('Fallback тоже провалился:', e);
             return false;
         }
     }
@@ -274,7 +273,7 @@ window.postWithRetry = async function(url, data, maxRetries = 3, baseDelay = 200
             lastError = err;
             if (attempt < maxRetries) {
                 const delay = Math.min(baseDelay * Math.pow(1.5, attempt - 1), 10000);
-                if (IS_DEV) console.log(`🔄 Повторная попытка ${attempt}/${maxRetries} через ${delay}ms`);
+                logger.debug(`🔄 Повторная попытка ${attempt}/${maxRetries} через ${delay}ms`);
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
@@ -475,11 +474,11 @@ async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     if (IS_TEST && window.APP_CONFIG?.TEST_SCRIPT_URL) {
         targetUrl = window.APP_CONFIG.TEST_SCRIPT_URL;
         data.test_mode = '1';
-        if (IS_DEV) console.log('🧪 Тестовый режим: отправка на', targetUrl);
+        logger.debug('🧪 Тестовый режим: отправка на', targetUrl);
     }
 
     if (!targetUrl) {
-        logError('SCRIPT_URL не задан');
+        logger.error('SCRIPT_URL не задан');
         return false;
     }
 
@@ -487,7 +486,7 @@ async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
         await window.postWithRetry(targetUrl, data, retries, delay);
         return true;
     } catch (err) {
-        logError('❌ Ошибка отправки в Google Sheets после всех попыток:', err);
+        logger.error('❌ Ошибка отправки в Google Sheets после всех попыток:', err);
         saveFailedRequest(targetUrl, data);
         showWarningToast('⚠️ Данные сохранены локально, будут отправлены позже.');
         return false;
@@ -496,7 +495,7 @@ async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
 
 function sendDataToSheet(data) {
     sendDataToSheetWithRetry(data).catch(err => {
-        logError('❌ Ошибка отправки в Google Sheets:', err);
+        logger.error('❌ Ошибка отправки в Google Sheets:', err);
         showWarningToast('⚠️ Данные сохранены локально, будут отправлены позже.');
     });
 }
@@ -645,7 +644,7 @@ async function getGeoData() {
         try { localStorage.setItem(geoKey, JSON.stringify(result)); } catch(e) {}
         return result;
     } catch(e) {
-        if (IS_DEV) console.warn(e);
+        logger.warn(e);
         return {ip: '-', city: '-', region: '-', country: '-', geoText: '-'};
     }
 }
@@ -746,7 +745,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
         };
 
         if (IS_DEV || window.location.search.includes('debug=1')) {
-            console.log('📋 Отправка формы:', formType, formData);
+            logger.debug('📋 Отправка формы:', formType, formData);
         }
 
         await window.sendDataToSheetWithRetry(formData);
@@ -767,7 +766,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
 
         return true;
     } catch (err) {
-        logError('Ошибка отправки:', err);
+        logger.error('Ошибка отправки:', err);
         if (!err.message || !err.message.includes('Телефон')) {
             showErrorToast('❌ Не удалось отправить заявку. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
         }
@@ -815,101 +814,6 @@ function initShareButtons() {
     });
 }
 
-window.initLogs = [];
-let currentLogLevel = window.APP_CONFIG?.CONSTANTS?.LOG_LEVEL || 0;
-if (window.location.search.includes('debug=1') || localStorage.getItem('hr_debug_mode') === 'true') {
-    currentLogLevel = Math.max(currentLogLevel, 5);
-}
-const urlLogLevel = parseInt(new URLSearchParams(window.location.search).get('loglevel'));
-if (!isNaN(urlLogLevel) && urlLogLevel >= 0 && urlLogLevel <= 7) {
-    currentLogLevel = urlLogLevel;
-    localStorage.setItem('hr_log_level', urlLogLevel);
-}
-window.currentLogLevel = currentLogLevel;
-
-let logBuffer = [];
-let logFlushTimer = null;
-function flushLogsToServer() {
-    if (logBuffer.length === 0) return;
-    const logsToSend = logBuffer.splice(0, 10);
-    const url = window.APP_CONFIG?.SCRIPT_URL;
-    if (!url) return;
-    const formData = new URLSearchParams();
-    formData.append('formType', 'Лог инициализации');
-    formData.append('name', 'System');
-    formData.append('comment', JSON.stringify(logsToSend));
-    formData.append('consent', 'Да');
-    formData.append('userId', window.getOrCreateLocalUserId?.() || 'unknown');
-    formData.append('page', window.location.href);
-    formData.append('userAgent', navigator.userAgent);
-    navigator.sendBeacon(url, formData);
-}
-
-function logInit(message, level = 'INFO', context = '', requiredLevel = 3) {
-    const timestamp = new Date().toISOString();
-    const logEntry = {timestamp, level, message, context, url: window.location.href, requiredLevel};
-    window.initLogs.push(logEntry);
-    const isDebug = currentLogLevel >= requiredLevel;
-    if (isDebug) {
-        let style = '';
-        if (level === 'ERROR') style = 'color:red; font-weight:bold';
-        else if (level === 'WARN') style = 'color:orange';
-        else if (level === 'TRACE') style = 'color:gray';
-        else if (level === 'DEBUG') style = 'color:blue';
-        else style = 'color:green';
-        console.log(`%c[${timestamp}] [${level}] ${message} ${context ? '(' + context + ')' : ''}`, style);
-    }
-    const forceSend = window.APP_CONFIG?.CONSTANTS?.FORCE_SEND_LOGS_TO_SERVER || false;
-    if (level === 'ERROR' || level === 'WARN' || (window.location.search.includes('debug=1') && currentLogLevel >= requiredLevel) || forceSend) {
-        logBuffer.push(logEntry);
-        if (logFlushTimer) clearTimeout(logFlushTimer);
-        logFlushTimer = setTimeout(flushLogsToServer, 5000);
-    }
-}
-
-const originalErrorHandler = window.onerror;
-window.onerror = function (message, source, lineno, colno, error) {
-    logInit(`Uncaught error: ${message} at ${source}:${lineno}:${colno}`, 'ERROR', error?.stack, 1);
-    if (originalErrorHandler) originalErrorHandler(message, source, lineno, colno, error);
-};
-const originalUnhandledRejection = window.onunhandledrejection;
-window.onunhandledrejection = function (event) {
-    logInit(`Unhandled rejection: ${event.reason}`, 'ERROR', event.reason?.stack, 1);
-    if (originalUnhandledRejection) originalUnhandledRejection(event);
-};
-
-(function() {
-    if (window._errorHandlerInstalled) return;
-    window._errorHandlerInstalled = true;
-
-    window.addEventListener('error', function(e) {
-        if (e.message && (e.message.includes('Script error') || e.message.includes('NetworkError'))) {
-            return;
-        }
-        console.warn('🛡️ Поймана ошибка:', e.message, e.filename, e.lineno);
-        const lastErrorTime = window._lastGlobalErrorTime || 0;
-        if (Date.now() - lastErrorTime > 10000) {
-            window._lastGlobalErrorTime = Date.now();
-            if (window.showWarningToast) {
-                window.showWarningToast('⚠️ Что-то пошло не так, но мы уже чиним. Попробуйте обновить страницу.');
-            }
-        }
-        return true;
-    });
-
-    window.addEventListener('unhandledrejection', function(e) {
-        console.warn('🛡️ Необработанный промис:', e.reason);
-        const lastRejectTime = window._lastUnhandledRejectionTime || 0;
-        if (Date.now() - lastRejectTime > 10000) {
-            window._lastUnhandledRejectionTime = Date.now();
-            if (window.showWarningToast) {
-                window.showWarningToast('🔄 Сервер немного задумался, попробуйте ещё раз через минуту.');
-            }
-        }
-        e.preventDefault();
-    });
-})();
-
 window.saveFormFields = saveFormFields;
 window.loadFormFields = loadFormFields;
 window.clearFormFields = clearFormFields;
@@ -928,9 +832,6 @@ window.validateEmailField = validateEmailField;
 window.bindLiveValidation = bindLiveValidation;
 window.showLoading = showLoading;
 window.hideLoading = hideLoading;
-window.log = log;
-window.logError = logError;
-window.logWarn = logWarn;
 window.showToast = showToast;
 window.showErrorToast = showErrorToast;
 window.showSuccessToast = showSuccessToast;
@@ -938,4 +839,3 @@ window.showWarningToast = showWarningToast;
 window.initShareButtons = initShareButtons;
 window.applyPhoneMask = applyPhoneMask;
 window.initPhoneMasks = initPhoneMasks;
-window.logInit = logInit;

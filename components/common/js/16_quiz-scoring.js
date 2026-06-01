@@ -89,11 +89,11 @@
     }
 
     window.getTopServices = function(answersArr) {
-        logInit(`getTopServices вызван с answers: ${JSON.stringify(answersArr)}`, 'INFO', '', 4);
+        logger.init(`getTopServices вызван с answers: ${JSON.stringify(answersArr)}`, 'INFO', '', 4);
         let weights = window.SERVICE_WEIGHTS;
         let mapping = window.ANSWER_MAPPING;
         if (!weights || Object.keys(weights).length === 0 || !mapping) {
-            logInit('SERVICE_WEIGHTS или ANSWER_MAPPING не загружены', 'ERROR', '', 1);
+            logger.init('SERVICE_WEIGHTS или ANSWER_MAPPING не загружены', 'ERROR', '', 1);
             return {
                 services: [
                     { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "Базовые услуги — Индивидуальная консультация (1ч)", score: 0 },
@@ -133,7 +133,7 @@
         scores.sort((a, b) => b.score - a.score);
 
         if (scores.length === 0) {
-            logInit('Не найдено подходящих услуг', 'WARN', '', 2);
+            logger.init('Не найдено подходящих услуг', 'WARN', '', 2);
             return {
                 services: [
                     { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "Базовые услуги — Индивидуальная консультация (1ч)", score: 0 },
@@ -153,7 +153,7 @@
             score: s.score
         }));
 
-        logInit(`Найдено рекомендаций: ${result.length}`, 'INFO', '', 4);
+        logger.init(`Найдено рекомендаций: ${result.length}`, 'INFO', '', 4);
         return { services: result };
     };
 

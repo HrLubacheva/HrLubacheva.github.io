@@ -6,7 +6,7 @@
 
     async function sendTelegramNotification(chatId, message) {
         if (!window.APP_CONFIG || !window.APP_CONFIG.SCRIPT_URL) {
-            logError('❌ APP_CONFIG.SCRIPT_URL не задан');
+            logger.error('❌ APP_CONFIG.SCRIPT_URL не задан');
             return false;
         }
         const formData = {
@@ -18,10 +18,10 @@
         };
         try {
             await window.sendDataToSheetWithRetry(formData, 1);
-            if (window.IS_DEV) console.log('📢 Уведомление отправлено в Telegram');
+            if (window.IS_DEV) logger.info('📢 Уведомление отправлено в Telegram');
             return true;
         } catch (err) {
-            logError('Ошибка отправки уведомления в Telegram:', err);
+            logger.error('Ошибка отправки уведомления в Telegram:', err);
             return false;
         }
     }
@@ -37,10 +37,10 @@
         };
         try {
             await window.sendDataToSheetWithRetry(formData, 1);
-            if (window.IS_DEV) console.log('📧 Уведомление отправлено на email');
+            if (window.IS_DEV) logger.info('📧 Уведомление отправлено на email');
             return true;
         } catch (err) {
-            logError('Ошибка отправки email уведомления:', err);
+            logger.error('Ошибка отправки email уведомления:', err);
             return false;
         }
     }
@@ -50,12 +50,12 @@
         else if (type === 'success') window.showSuccessToast(message);
         else if (type === 'warning') window.showWarningToast(message);
         else window.showToast(message, 'info');
-        if (window.IS_DEV) console.log(`🔔 [${type.toUpperCase()}] ${message}`);
+        if (window.IS_DEV) logger.debug(`🔔 [${type.toUpperCase()}] ${message}`);
     }
 
     window.sendTelegramNotification = sendTelegramNotification;
     window.sendAdminEmail = sendAdminEmail;
     window.showSystemNotification = showSystemNotification;
 
-    if (window.IS_DEV) console.log('✅ Модуль уведомлений загружен');
+    if (window.IS_DEV) logger.info('✅ Модуль уведомлений загружен');
 })();

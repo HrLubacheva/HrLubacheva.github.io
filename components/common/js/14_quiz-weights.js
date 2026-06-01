@@ -533,4 +533,4 @@ window.ANSWER_MAPPING = {
     "Гибридный (смешанный)": "work_format_hybrid"
 };
 
-if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены");
+if (window.IS_DEV) logger.info("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены");

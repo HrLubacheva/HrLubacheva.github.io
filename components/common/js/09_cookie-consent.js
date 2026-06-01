@@ -1,7 +1,7 @@
 function initCookieConsent() {
-    logInit('initCookieConsent started', 'INFO', '', 3);
+    logger.init('initCookieConsent started', 'INFO', '', 3);
     let consent = null;
-    try { consent = localStorage.getItem('cookie_consent'); } catch(e) { if (window.IS_DEV) console.warn('localStorage недоступен', e); }
+    try { consent = localStorage.getItem('cookie_consent'); } catch(e) { if (window.IS_DEV) logger.warn('localStorage недоступен', e); }
     const banner = document.getElementById('cookieConsent');
     if (!banner) return;
     if (consent === null) banner.style.display = 'block';
@@ -13,14 +13,14 @@ function initCookieConsent() {
         banner.style.display = 'none';
         if (typeof gtag !== 'undefined') gtag('consent', 'update', { analytics_storage: 'granted' });
         if (typeof window.loadMetricsOnConsent === 'function') window.loadMetricsOnConsent();
-        logInit('Cookie согласие принято', 'INFO', '', 3);
+        logger.init('Cookie согласие принято', 'INFO', '', 3);
     });
     if (declineBtn) declineBtn.addEventListener('click', () => {
         try { localStorage.setItem('cookie_consent', 'declined'); } catch(e) {}
         banner.style.display = 'none';
         if (typeof gtag !== 'undefined') gtag('consent', 'update', { analytics_storage: 'denied' });
-        logInit('Cookie согласие отклонено', 'INFO', '', 3);
+        logger.init('Cookie согласие отклонено', 'INFO', '', 3);
     });
-    logInit('initCookieConsent finished', 'INFO', '', 3);
+    logger.init('initCookieConsent finished', 'INFO', '', 3);
 }
 window.initCookieConsent = initCookieConsent;

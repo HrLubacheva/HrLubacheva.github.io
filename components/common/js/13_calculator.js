@@ -84,7 +84,7 @@ function renderCart() {
 
 function populateSelect(selectId, services) {
     const select = document.getElementById(selectId);
-    if (!select) { if (window.IS_DEV) console.error('Select not found:', selectId); return; }
+    if (!select) { if (window.IS_DEV) logger.error('Select not found:', selectId); return; }
     select.innerHTML = '';
     services.forEach((service) => {
         const option = document.createElement('option');
@@ -101,7 +101,7 @@ function populateSelect(selectId, services) {
 }
 
 function initSelects() {
-    if (typeof SERVICES_DATA === 'undefined') { if (window.IS_DEV) console.error('SERVICES_DATA не загружен!'); return; }
+    if (typeof SERVICES_DATA === 'undefined') { if (window.IS_DEV) logger.error('SERVICES_DATA не загружен!'); return; }
     populateSelect('recruitment-select', SERVICES_DATA.recruitment);
     populateSelect('retention-select', SERVICES_DATA.retention);
     populateSelect('business-training-select', SERVICES_DATA["business-training"]);
@@ -139,10 +139,10 @@ function initAddButtons() {
                 const defaultQty = window.APP_CONFIG?.CONSTANTS?.DEFAULT_QUANTITY || 1;
                 if (isNaN(quantity) || quantity < defaultQty) quantity = defaultQty;
                 if (serviceName) window.addToCart(serviceName, price, quantity);
-                else { if (window.IS_DEV) console.error('Не удалось получить название услуги'); window.showErrorToast('❌ Ошибка: не удалось определить услугу'); }
+                else { if (window.IS_DEV) logger.error('Не удалось получить название услуги'); window.showErrorToast('❌ Ошибка: не удалось определить услугу'); }
             };
             button.addEventListener('click', button._handler);
-        } else if (window.IS_DEV) console.error('Button not found:', btn);
+        } else if (window.IS_DEV) logger.error('Button not found:', btn);
     });
 }
 
@@ -165,14 +165,14 @@ function initTabs() {
 window.getCartData = function() { if (cart.length === 0) return 'Корзина пуста'; return cart.map(item => { const price = getNumericPrice(item.price); const totalPrice = price * item.qty; let priceDisplay; if (price === 0) priceDisplay = '0 ₽'; else if (price === null) priceDisplay = 'по запросу'; else priceDisplay = totalPrice.toLocaleString() + ' ₽'; return `${item.name} x${item.qty} = ${priceDisplay}`; }).join('\n'); };
 
 function initCalculator() {
-    if (window.IS_DEV) console.log('Инициализация калькулятора...');
-    if (window._calculatorInitialized) { if (window.IS_DEV) console.log('Калькулятор уже инициализирован'); return; }
+    if (window.IS_DEV) logger.info('Инициализация калькулятора...');
+    if (window._calculatorInitialized) { if (window.IS_DEV) logger.debug('Калькулятор уже инициализирован'); return; }
     window._calculatorInitialized = true;
     if (typeof SERVICES_DATA !== 'undefined') initSelects();
-    else if (window.IS_DEV) console.error('SERVICES_DATA не загружен! Проверьте подключение services-data.js');
+    else if (window.IS_DEV) logger.error('SERVICES_DATA не загружен! Проверьте подключение services-data.js');
     initAddButtons();
     initTabs();
-    if (window.IS_DEV) console.log('Инициализация калькулятора завершена');
+    if (window.IS_DEV) logger.info('Инициализация калькулятора завершена');
 }
 
 window.initCalculator = initCalculator;

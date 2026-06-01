@@ -92,7 +92,7 @@ async function loadPrivacyPolicy() {
         html = html.replace(/<a[^>]*class="back-link"[^>]*>[\s\S]*?<\/a>/gi, '');
         container.innerHTML = html;
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         container.innerHTML = '<div style="color: red; text-align: center; padding: 20px;">Не удалось загрузить политику конфиденциальности.</div>';
     }
 }
