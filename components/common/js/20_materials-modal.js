@@ -8,9 +8,9 @@
 
     function getMaterialText(material) {
         switch(material) {
-            case 'checklist': return '📋 Чек-лист «Идеальное резюме»';
+            case 'checklist': return '📋 Шпаргалка «Как найти работу»';
             case 'training': return '🎓 Программа тренинга «Продай себя дорого»';
-            case 'both': return '📋 Чек-лист + 🎓 Программа тренинга';
+            case 'both': return '📋 Шпаргалка + 🎓 Программа тренинга';
             default: return 'Материалы';
         }
     }

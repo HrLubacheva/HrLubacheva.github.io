@@ -1,95 +1,338 @@
 <section aria-labelledby="freebies-title">
     <div class="container">
-        <div class="checklist-card fade-up">
+        <div class="checklist-card">
+            <div class="freebies-badge" aria-label="Бонус">✨ EXCLUSIVE ✨</div>
+
             <h2 class="section-title" id="freebies-title">
-                <span class="emoji">📥</span> Спасибо, что дочитали до конца!
+                <span class="emoji" aria-hidden="true">📥</span>
+                <span class="gradient-text">Спасибо, что дочитали до конца!</span>
             </h2>
-            <ul class="freebies-grid" role="list">
-                <!-- Чек-лист -->
-                <li class="freebie-item" role="listitem">
-                    <div class="freebie-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
-                            <title>Чек-лист</title>
+
+            <p class="freebies-subtitle">
+                <span class="subtitle-icon" aria-hidden="true">⭐</span>
+                То, что реально поможет в карьере
+                <span class="subtitle-icon" aria-hidden="true">⭐</span>
+            </p>
+
+            <!-- ДЕСКТОП: сетка карточек -->
+            <ul class="freebies-grid" role="list" aria-label="Доступные материалы">
+                <li class="freebie-item" data-material="checklist" data-name="Шпаргалка" role="option" tabindex="0">
+                    <div class="freebie-icon" aria-hidden="true">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
                             <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
                             <path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
                             <path d="M9 12l2 2 4-4" />
                         </svg>
                     </div>
-                    <div class="freebie-title">Чек-лист</div>
-                    <div class="freebie-desc">«Идеальное резюме»</div>
-                    <div class="freebie-actions">
-                        <a href="#" class="freebie-link checklist-download" download>скачать</a>
-                        <button type="button" class="material-email-simple freebie-link" data-material="checklist">на email</button>
-                    </div>
+                    <div class="freebie-title">Шпаргалка</div>
+                    <div class="freebie-desc">Как найти работу мечты</div>
                 </li>
-
-                <!-- Программа тренинга -->
-                <li class="freebie-item" role="listitem">
-                    <div class="freebie-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
-                            <title>Программа тренинга</title>
+                <li class="freebie-item" data-material="training" data-name="Тренинг" role="option" tabindex="0">
+                    <div class="freebie-icon" aria-hidden="true">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                         </svg>
                     </div>
-                    <div class="freebie-title">Программа тренинга</div>
-                    <div class="freebie-desc">«Продай себя дорого»</div>
-                    <div class="freebie-actions">
-                        <a href="#" class="freebie-link training-download" download>скачать</a>
-                        <button type="button" class="material-email-simple freebie-link" data-material="training">на email</button>
-                    </div>
+                    <div class="freebie-title">Тренинг</div>
+                    <div class="freebie-desc">Продай себя дорого</div>
                 </li>
-
-                <!-- Полный набор -->
-                <li class="freebie-item" role="listitem">
-                    <div class="freebie-icon freebie-icon-accent">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
-                            <title>Полный набор</title>
+                <li class="freebie-item" data-material="both" data-name="Всё сразу" role="option" tabindex="0">
+                    <div class="freebie-icon freebie-icon-accent" aria-hidden="true">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
                             <path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2H7z" />
                         </svg>
                     </div>
-                    <div class="freebie-title">Полный набор</div>
-                    <div class="freebie-desc">Всё сразу в ZIP</div>
-                    <div class="freebie-actions">
-                        <a href="#" class="freebie-link zip-download" download>скачать ZIP</a>
-                        <button type="button" class="material-email-simple freebie-link" data-material="both">на email</button>
-                    </div>
+                    <div class="freebie-title">Всё сразу</div>
+                    <div class="freebie-desc">Архив + бонус</div>
                 </li>
             </ul>
-            <p class="freebie-footer">🔐 Без спама. Отправляю на почту за 1 минуту.</p>
+
+            <!-- ТЕЛЕФОН: аккордеон -->
+            <div class="mobile-accordion">
+                <div class="accordion-item" data-material="checklist" data-name="Шпаргалка">
+                    <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+                        <span class="accordion-icon" aria-hidden="true">📋</span>
+                        <span class="accordion-title">Шпаргалка «Как найти работу»</span>
+                        <span class="accordion-arrow" aria-hidden="true">▼</span>
+                    </div>
+                    <div class="accordion-body" role="region">
+                        <div class="accordion-buttons">
+                            <a href="#" class="freebie-btn download" data-material="checklist" download>
+                                <span class="btn-icon">📥</span>
+                                <span class="btn-text">Скачать</span>
+                            </a>
+                            <button type="button" class="freebie-btn email-trigger" data-material="checklist">
+                                <span class="btn-icon">📧</span>
+                                <span class="btn-text">На почту</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item" data-material="training" data-name="Тренинг">
+                    <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+                        <span class="accordion-icon" aria-hidden="true">🎓</span>
+                        <span class="accordion-title">Тренинг «Продай себя дорого»</span>
+                        <span class="accordion-arrow" aria-hidden="true">▼</span>
+                    </div>
+                    <div class="accordion-body" role="region">
+                        <div class="accordion-buttons">
+                            <a href="#" class="freebie-btn download" data-material="training" download>
+                                <span class="btn-icon">📥</span>
+                                <span class="btn-text">Скачать</span>
+                            </a>
+                            <button type="button" class="freebie-btn email-trigger" data-material="training">
+                                <span class="btn-icon">📧</span>
+                                <span class="btn-text">На почту</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item" data-material="both" data-name="Всё сразу">
+                    <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+                        <span class="accordion-icon" aria-hidden="true">🎁</span>
+                        <span class="accordion-title">Всё сразу (ZIP + бонус)</span>
+                        <span class="accordion-arrow" aria-hidden="true">▼</span>
+                    </div>
+                    <div class="accordion-body" role="region">
+                        <div class="accordion-buttons">
+                            <a href="#" class="freebie-btn download" data-material="both" download>
+                                <span class="btn-icon">📥</span>
+                                <span class="btn-text">Скачать</span>
+                            </a>
+                            <button type="button" class="freebie-btn email-trigger" data-material="both">
+                                <span class="btn-icon">📧</span>
+                                <span class="btn-text">На почту</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Панель выбора на десктопе -->
+            <div class="freebie-action-panel" id="freebieActionPanel" style="display: none;">
+                <div class="freebie-selected-info">
+                    <span class="selected-emoji" aria-hidden="true">🎁</span>
+                    <span>Вы выбрали: <strong id="selectedMaterialName"></strong></span>
+                </div>
+                <div class="freebie-buttons-group">
+                    <div class="freebie-btn-wrapper">
+                        <a href="#" class="freebie-btn download" id="freebieDownloadBtn" download>
+                            <span class="btn-icon">📥</span>
+                            <span class="btn-text">Скачать</span>
+                        </a>
+                    </div>
+                    <div class="freebie-btn-wrapper">
+                        <button type="button" class="freebie-btn email-trigger" id="freebieEmailBtn">
+                            <span class="btn-icon">📧</span>
+                            <span class="btn-text">На почту</span>
+                        </button>
+                    </div>
+                </div>
+                <button class="freebie-reset-btn" id="freebieResetBtn">↺ Свернуть</button>
+            </div>
+
+            <p class="freebie-footer">🔐 Никакого спама. Только полезные материалы. Честно.</p>
         </div>
     </div>
 </section>
 
 <script>
-    (function() {
-        // Ждём загрузки APP_CONFIG
-        function setDownloadLinks() {
-            if (!window.APP_CONFIG) {
-                setTimeout(setDownloadLinks, 100);
+(function() {
+    // Загрузка ссылок из APP_CONFIG
+    function setLinks() {
+        if (!window.APP_CONFIG) { setTimeout(setLinks, 100); return; }
+        const urls = {
+            checklist: window.APP_CONFIG.CHECKLIST_URL,
+            training: window.APP_CONFIG.TRAINING_PROGRAM_URL,
+            both: window.APP_CONFIG.MATERIALS_ZIP_URL
+        };
+        document.querySelectorAll('.freebie-btn.download[data-material]').forEach(btn => {
+            const m = btn.dataset.material;
+            if (urls[m]) btn.href = urls[m];
+        });
+    }
+    setLinks();
+
+    let currentMaterial = null;
+
+    // ========== ДЕСКТОП: ВЫБОР КАРТОЧКИ ==========
+    const items = document.querySelectorAll('.freebie-item');
+    const panel = document.getElementById('freebieActionPanel');
+    const nameSpan = document.getElementById('selectedMaterialName');
+    const downloadBtn = document.getElementById('freebieDownloadBtn');
+    const emailBtn = document.getElementById('freebieEmailBtn');
+    const resetBtn = document.getElementById('freebieResetBtn');
+
+    if (items.length && panel) {
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                items.forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                currentMaterial = item.dataset.material;
+                nameSpan.textContent = item.dataset.name;
+                if (downloadBtn && window.APP_CONFIG) {
+                    const url = window.APP_CONFIG[{
+                        checklist: 'CHECKLIST_URL',
+                        training: 'TRAINING_PROGRAM_URL',
+                        both: 'MATERIALS_ZIP_URL'
+                    }[currentMaterial]];
+                    if (url) downloadBtn.href = url;
+                }
+                panel.style.display = 'block';
+                setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+            });
+        });
+        resetBtn?.addEventListener('click', () => {
+            items.forEach(i => i.classList.remove('selected'));
+            panel.style.display = 'none';
+            currentMaterial = null;
+        });
+        emailBtn?.addEventListener('click', () => {
+            if (!currentMaterial) return;
+            showEmailField(emailBtn, currentMaterial);
+        });
+    }
+
+    // ========== АККОРДЕОН ==========
+    document.querySelectorAll('.accordion-item').forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        header?.addEventListener('click', () => {
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.accordion-item.open').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+            header.setAttribute('aria-expanded', !isOpen);
+        });
+        const m = item.dataset.material;
+        const link = item.querySelector('.freebie-btn.download');
+        if (link && window.APP_CONFIG) {
+            const url = window.APP_CONFIG[{
+                checklist: 'CHECKLIST_URL',
+                training: 'TRAINING_PROGRAM_URL',
+                both: 'MATERIALS_ZIP_URL'
+            }[m]];
+            if (url) link.href = url;
+        }
+    });
+
+    // ========== ФОРМА EMAIL (ПЛАВНАЯ, СБРОС ПРИ ЗАКРЫТИИ) ==========
+    function showEmailField(btn, material) {
+        let container = btn.closest('.accordion-buttons, .freebie-btn-wrapper');
+        if (!container) return;
+
+        let downloadBtn = container.querySelector('.freebie-btn.download');
+        let oldForm = container.querySelector('.freebie-email-modern');
+
+        // Если форма уже открыта — закрываем и сбрасываем
+        if (oldForm) {
+            oldForm.style.animation = 'slideOut 0.2s ease forwards';
+            setTimeout(() => {
+                oldForm.remove();
+                btn.style.display = 'flex';
+                if (downloadBtn) downloadBtn.style.display = 'flex';
+                btn.classList.remove('email-active');
+                if (downloadBtn) downloadBtn.classList.remove('download-hidden');
+            }, 200);
+            return;
+        }
+
+        // Скрываем кнопку "На почту"
+        btn.style.display = 'none';
+        btn.classList.add('email-active');
+
+        // Скрываем кнопку "Скачать" (если есть)
+        if (downloadBtn) {
+            downloadBtn.style.display = 'none';
+            downloadBtn.classList.add('download-hidden');
+        }
+
+        // Создаём форму
+        const form = document.createElement('div');
+        form.className = 'freebie-email-modern';
+        form.innerHTML = `
+            <div class="email-modern-row">
+                <input type="email" class="email-modern-input" placeholder="Ваш email" autocomplete="email">
+                <button class="email-modern-send">→</button>
+            </div>
+        `;
+        container.appendChild(form);
+
+        const input = form.querySelector('input');
+        input.focus();
+        const sendBtn = form.querySelector('button');
+
+        async function sendEmail() {
+            const email = input.value.trim();
+            if (!email || !email.includes('@')) {
+                input.style.borderColor = '#dc3545';
+                input.style.boxShadow = '0 0 0 2px rgba(220,53,69,0.2)';
+                input.style.animation = 'shake 0.3s ease';
+                setTimeout(() => { input.style.animation = ''; }, 300);
                 return;
             }
-            var cfg = window.APP_CONFIG;
-            var checklistLink = document.querySelector('.checklist-download');
-            var trainingLink = document.querySelector('.training-download');
-            var zipLink = document.querySelector('.zip-download');
-            if (checklistLink && cfg.CHECKLIST_URL) {
-                checklistLink.href = cfg.CHECKLIST_URL;
-                checklistLink.setAttribute('download', '');
-            }
-            if (trainingLink && cfg.TRAINING_PROGRAM_URL) {
-                trainingLink.href = cfg.TRAINING_PROGRAM_URL;
-                trainingLink.setAttribute('download', '');
-            }
-            if (zipLink && cfg.MATERIALS_ZIP_URL) {
-                zipLink.href = cfg.MATERIALS_ZIP_URL;
-                zipLink.setAttribute('download', '');
+
+            input.style.borderColor = '#d4af37';
+            sendBtn.disabled = true;
+            sendBtn.textContent = '⏳';
+
+            try {
+                if (typeof window.sendMaterialsToEmail === 'function') {
+                    await window.sendMaterialsToEmail(email, material);
+                } else if (typeof window.sendDataToSheet === 'function') {
+                    await window.sendDataToSheet({
+                        formType: 'Запрос материалов',
+                        name: email,
+                        comment: 'Запрос материала: ' + material,
+                        consent: 'Да'
+                    });
+                }
+                form.innerHTML = '<div class="email-success">✅ Отправлено! Проверьте почту</div>';
+                setTimeout(() => {
+                    form.remove();
+                    btn.style.display = 'flex';
+                    btn.classList.remove('email-active');
+                    if (downloadBtn) {
+                        downloadBtn.style.display = 'flex';
+                        downloadBtn.classList.remove('download-hidden');
+                    }
+                }, 2000);
+            } catch(e) {
+                alert('Ошибка: ' + e.message);
+                form.remove();
+                btn.style.display = 'flex';
+                btn.classList.remove('email-active');
+                if (downloadBtn) {
+                    downloadBtn.style.display = 'flex';
+                    downloadBtn.classList.remove('download-hidden');
+                }
             }
         }
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', setDownloadLinks);
-        } else {
-            setDownloadLinks();
-        }
-    })();
+
+        sendBtn.onclick = sendEmail;
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendEmail(); });
+    }
+
+    // Обработка кнопок "На почту"
+    document.querySelectorAll('.freebie-btn.email-trigger').forEach(btn => {
+        btn.removeEventListener('click', btn._handler);
+        btn._handler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const material = btn.dataset.material;
+            if (!material) return;
+            showEmailField(btn, material);
+        };
+        btn.addEventListener('click', btn._handler);
+    });
+
+    // ========== КЛАВИАТУРА ==========
+    document.querySelectorAll('.freebie-item, .accordion-header').forEach(el => {
+        el.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                el.click();
+            }
+        });
+    });
+})();
 </script>

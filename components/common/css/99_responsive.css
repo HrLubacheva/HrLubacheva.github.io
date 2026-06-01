@@ -71,9 +71,6 @@
     .media-description { padding: 16px 12px !important; }
     .media-description h3 { font-size: 1.1rem !important; }
 
-    .checklist-card { padding: 24px 16px !important; }
-    .freebie-icon { width: 48px; height: 48px; }
-
     .cells-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
     .card-role { padding: 14px 10px !important; text-align: center; }
     .card-role h3 { font-size: 1rem !important; }

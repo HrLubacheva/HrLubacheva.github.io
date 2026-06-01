@@ -1,0 +1,442 @@
+/* ==================================================================
+   25_freebies.css – Бесплатные материалы (финальная версия)
+   ================================================================== */
+
+/* Анимации */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+@keyframes descShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+@keyframes emojiFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(20px); }
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Блок */
+.checklist-card {
+    background: linear-gradient(145deg, #fff, #fefaf5);
+    border-radius: clamp(20px, 4vw, 32px);
+    padding: clamp(20px, 5vw, 48px) clamp(16px, 4vw, 40px);
+    margin: clamp(20px, 5vw, 60px) auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    position: relative;
+    animation: fadeUp 0.6s ease-out;
+}
+.checklist-card::before, .checklist-card::after {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+.checklist-card::before {
+    top: 20px;
+    left: 20px;
+    border-top: 2px solid #d4af37;
+    border-left: 2px solid #d4af37;
+    border-radius: 16px 0 0 0;
+}
+.checklist-card::after {
+    bottom: 20px;
+    right: 20px;
+    border-bottom: 2px solid #d4af37;
+    border-right: 2px solid #d4af37;
+    border-radius: 0 0 16px 0;
+}
+.checklist-card:hover::before,
+.checklist-card:hover::after {
+    width: 90px;
+    height: 90px;
+    opacity: 0.8;
+}
+
+.freebies-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #d4af37, #f5d76e);
+    color: #5a3e00;
+    font-size: clamp(0.5rem, 2.5vw, 0.7rem);
+    font-weight: 700;
+    padding: clamp(2px, 1vw, 5px) clamp(10px, 3vw, 18px);
+    border-radius: 40px;
+    margin-bottom: clamp(16px, 4vw, 20px);
+    letter-spacing: 1px;
+}
+
+.checklist-card .section-title {
+    margin-bottom: 20px;
+}
+.checklist-card .section-title .gradient-text {
+    display: inline-block;
+    font-size: clamp(1rem, 5vw, 1.8rem);
+    font-weight: 600;
+    background: linear-gradient(90deg, #1F4A6E, #2D6A9F, #d4af37, #2D6A9F);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 4s linear infinite;
+}
+.checklist-card .section-title .emoji {
+    display: inline-block;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    margin-right: 10px;
+    vertical-align: middle;
+    animation: emojiFloat 3s ease-in-out infinite;
+}
+
+.freebies-subtitle {
+    font-size: clamp(0.6rem, 3vw, 0.9rem);
+    color: #8a8a8a;
+    margin-bottom: clamp(16px, 4vw, 40px);
+    text-align: center;
+}
+.subtitle-icon { margin: 0 8px; }
+
+.freebies-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(16px, 3vw, 28px);
+    margin-bottom: 40px;
+}
+
+.freebie-item {
+    background: #fff;
+    border-radius: clamp(20px, 3vw, 24px);
+    padding: clamp(20px, 4vw, 32px) clamp(12px, 3vw, 20px);
+    text-align: center;
+    border: 1px solid rgba(212,175,55,0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+.freebie-item:hover {
+    transform: translateY(-6px);
+    border-color: #d4af37;
+    box-shadow: 0 20px 30px -12px rgba(212,175,55,0.25);
+}
+.freebie-item.selected {
+    border: 2px solid #d4af37;
+    background: linear-gradient(145deg, #fff, #fffdf5);
+}
+
+.freebie-icon {
+    width: clamp(50px, 10vw, 70px);
+    height: clamp(50px, 10vw, 70px);
+    background: rgba(45,106,159,0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    transition: all 0.3s ease;
+}
+.freebie-item:hover .freebie-icon {
+    background: linear-gradient(135deg, #2D6A9F, #d4af37);
+}
+.freebie-item:hover .freebie-icon svg { stroke: #fff; }
+.freebie-icon svg {
+    width: clamp(24px, 5vw, 32px);
+    height: clamp(24px, 5vw, 32px);
+    stroke: #2D6A9F;
+    transition: stroke 0.3s;
+}
+.freebie-icon-accent { background: linear-gradient(135deg, #2D6A9F, #d4af37); }
+.freebie-icon-accent svg { stroke: #fff; }
+
+.freebie-title {
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    font-weight: 700;
+    color: #1F4A6E;
+    margin-bottom: 8px;
+}
+.freebie-desc {
+    font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+    font-weight: 600;
+    display: inline-block;
+    padding: 4px 0;
+    background: linear-gradient(135deg, #d4af37, #f5d76e, #b8860b, #d4af37);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: descShimmer 3s linear infinite;
+}
+
+.freebie-action-panel {
+    background: #fefaf5;
+    border-radius: clamp(20px, 3vw, 24px);
+    padding: clamp(16px, 4vw, 24px);
+    margin-top: clamp(20px, 4vw, 32px);
+    border: 1px solid rgba(212,175,55,0.3);
+}
+.freebie-selected-info {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: clamp(0.85rem, 3vw, 1rem);
+    color: #1F4A6E;
+}
+.selected-emoji {
+    font-size: clamp(1.1rem, 4vw, 1.3rem);
+    margin-right: 8px;
+    display: inline-block;
+    animation: emojiFloat 2s ease-in-out infinite;
+}
+.freebie-selected-info strong { color: #d4af37; }
+
+/* ========== КНОПКИ (ФИКСИРОВАННАЯ ШИРИНА, ОДИНАКОВЫЙ РАЗМЕР) ========== */
+.freebie-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    border: none;
+    flex-shrink: 0;
+}
+
+.freebie-btn .btn-icon {
+    font-size: 1rem;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+.freebie-btn .btn-text {
+    display: inline-block;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+.freebie-btn.download {
+    background: #fff;
+    border: 1.5px solid #2D6A9F;
+    color: #2D6A9F;
+}
+.freebie-btn.download:hover {
+    background: #2D6A9F;
+    color: #fff;
+    transform: translateY(-2px);
+}
+.freebie-btn.email-trigger {
+    background: linear-gradient(135deg, #2D6A9F, #d4af37);
+    color: #fff;
+}
+.freebie-btn.email-trigger:hover {
+    transform: translateY(-2px);
+}
+
+/* ПК — фиксированная ширина, одинаковый размер, текст исчезает плавно */
+@media (min-width: 769px) {
+    .freebie-btn {
+        width: 110px;
+        padding: 8px 0;
+    }
+    .freebie-btn .btn-text {
+        opacity: 1;
+    }
+    .freebie-btn:hover .btn-text {
+        opacity: 0;
+    }
+    .freebie-btn:hover .btn-icon {
+        transform: scale(1.05);
+    }
+}
+
+/* Телефон — ширина авто, текст всегда виден */
+@media (max-width: 768px) {
+    .freebie-btn {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+        min-height: 44px;
+        width: auto;
+    }
+    .freebie-btn .btn-text {
+        display: inline-block;
+    }
+    .freebie-btn .btn-icon {
+        font-size: 1rem;
+    }
+}
+
+.freebie-buttons-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.freebie-btn-wrapper { text-align: center; min-width: 170px; }
+
+.freebie-reset-btn {
+    display: block;
+    margin: 16px auto 0;
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 0.7rem;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.freebie-reset-btn:hover { color: #d4af37; }
+.freebie-footer {
+    text-align: center;
+    font-size: clamp(0.55rem, 2.5vw, 0.7rem);
+    color: #aaa;
+    margin-top: clamp(16px, 4vw, 28px);
+    padding-top: clamp(10px, 3vw, 16px);
+    border-top: 1px solid #eee;
+}
+
+.mobile-accordion { display: none; }
+
+/* ========== ФОРМА EMAIL ========== */
+.freebie-email-modern {
+    margin-top: 12px;
+    animation: slideIn 0.25s ease;
+}
+.email-modern-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.email-modern-input {
+    flex: 1;
+    border: 2px solid #e0e0e0;
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+.email-modern-input:focus {
+    outline: none;
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
+}
+.email-modern-send {
+    background: linear-gradient(135deg, #2D6A9F, #d4af37);
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+.email-modern-send:hover {
+    transform: scale(1.05) translateX(2px);
+    box-shadow: 0 4px 12px rgba(212,175,55,0.4);
+}
+.email-success {
+    text-align: center;
+    padding: 10px;
+    color: #28a745;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* ПК размеры формы */
+@media (min-width: 769px) {
+    .email-modern-input { padding: 12px 18px; font-size: 0.9rem; }
+    .email-modern-send { width: 44px; height: 44px; font-size: 1.4rem; }
+}
+
+/* Телефон размеры формы */
+@media (max-width: 768px) {
+    .email-modern-input { padding: 10px 14px; font-size: 0.85rem; min-height: 44px; }
+    .email-modern-send { width: 44px; height: 44px; font-size: 1.2rem; }
+}
+@media (max-width: 480px) {
+    .email-modern-input { padding: 8px 12px; font-size: 0.75rem; min-height: 38px; }
+    .email-modern-send { width: 38px; height: 38px; font-size: 1rem; }
+}
+
+/* ========== ТЕЛЕФОН — АККОРДЕОН ========== */
+@media (max-width: 768px) {
+    .freebies-grid { display: none; }
+    .mobile-accordion { display: block; }
+
+    .accordion-item {
+        background: #fff;
+        border-radius: 16px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(212,175,55,0.25);
+        overflow: hidden;
+    }
+    .accordion-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        cursor: pointer;
+    }
+    .accordion-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .accordion-title { flex: 1; font-weight: 600; font-size: 0.8rem; color: #1F4A6E; }
+    .accordion-arrow { font-size: 0.7rem; color: #d4af37; transition: transform 0.3s ease; }
+    .accordion-item.open .accordion-arrow { transform: rotate(180deg); }
+
+    .accordion-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        padding: 0 14px;
+    }
+    .accordion-item.open .accordion-body {
+        max-height: 140px;
+        padding: 0 14px 14px 14px;
+    }
+
+    .accordion-buttons {
+        display: flex;
+        gap: 10px;
+        flex-direction: row;
+        align-items: center;
+    }
+    .accordion-buttons .freebie-btn { flex: 1; justify-content: center; }
+    .freebie-footer { margin-top: 20px; padding-top: 12px; }
+}
+
+/* Ультра-маленькие телефоны */
+@media (max-width: 319px) {
+    .checklist-card { margin: 15px 8px; padding: 12px 10px; }
+    .section-title .gradient-text { font-size: 0.85rem; }
+    .accordion-title { font-size: 0.65rem; }
+    .accordion-buttons { flex-direction: column; gap: 6px; }
+    .accordion-buttons .freebie-btn { width: 100%; }
+    .email-modern-row { flex-direction: column; }
+    .email-modern-send { width: 100%; border-radius: 40px; }
+}
+
+/* Клавиатура */
+.freebie-item:focus-visible,
+.freebie-btn:focus-visible,
+.accordion-header:focus-visible {
+    outline: 3px solid #d4af37;
+    outline-offset: 2px;
+}
+.freebie-item:focus:not(:focus-visible),
+.freebie-btn:focus:not(:focus-visible) { outline: none; }

@@ -2,7 +2,7 @@
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzthtV-_tus9wVqamLKO7CD4uGZUG4HsBAlEGJlGTbWryFoR1Y2hambYul_ziiGHxi2/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyAGTC3QVCIgisjFAo4w4WpNm9Z7q7BT2EANLG6lHIkM7-49toJxFufMa7eMHRhfLANMw/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
@@ -10,9 +10,9 @@ window.APP_CONFIG = {
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
     PRIVACY_PAGE_URL: 'privacy.html',
-    CHECKLIST_URL: 'assets/docs/checklist.pdf',
-    TRAINING_PROGRAM_URL: 'assets/docs/training_program.pdf',
-    MATERIALS_ZIP_URL: 'assets/docs/docs.zip',
+CHECKLIST_URL: 'assets/docs/shpargalka.pdf',      // Шпаргалка
+TRAINING_PROGRAM_URL: 'assets/docs/trening.pdf',  // Тренинг
+MATERIALS_ZIP_URL: 'assets/docs/bonus.zip',       // Всё сразу
     CONSTANTS: {
         TOAST_DURATION: 3000,
         TOAST_FADE_DURATION: 300,
