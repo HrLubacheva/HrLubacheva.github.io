@@ -252,8 +252,8 @@
 /* ПК — фиксированная ширина, одинаковый размер, текст исчезает плавно */
 @media (min-width: 769px) {
     .freebie-btn {
-        width: 110px;
-        padding: 8px 0;
+        width: 130px;
+        padding: 10px 0;
     }
     .freebie-btn .btn-text {
         opacity: 1;
