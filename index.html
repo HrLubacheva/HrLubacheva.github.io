@@ -171,9 +171,6 @@
 
     <link rel="preload" as="image" href="assets/images/01-hero.webp">
 
-    <!-- Подключение стилей бесплатных материалов -->
-    <link rel="stylesheet" href="css/25_freebies.css">
-
     <script>
         window.APP_CONFIG = window.APP_CONFIG || {};
         Object.assign(window.APP_CONFIG, {
@@ -7042,7 +7039,7 @@ section:not(.section-dark):not(.certificates-section) {
                 <a href="#" onclick="openPrivacyModal(event); return false;" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 01.06.2026 20:56:35</span>
+                <span class="footer-version">⚡ Версия 01.06.2026 21:29:49</span>
             </div>
         </div>
         <div class="footer-bottom">
@@ -7112,6 +7109,117 @@ section:not(.section-dark):not(.certificates-section) {
         </div>
     </div>
 </div><script>
+// ============================================================
+// 00_logger.js – Умная система логирования
+// ============================================================
+
+const LOG_LEVELS = {
+    NONE: 0,
+    ERROR: 1,
+    WARN: 2,
+    INFO: 3,
+    DEBUG: 4,
+    TRACE: 5
+};
+
+// Определяем уровень логирования
+let currentLevel = LOG_LEVELS.ERROR;  // по умолчанию на проде
+
+// Проверяем режим отладки
+if (typeof window !== 'undefined') {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasDebug = urlParams.get('debug') === '1' || urlParams.get('debug') === 'true';
+    const storedDebug = localStorage.getItem('hr_debug_mode') === 'true';
+    const isLocalhost = window.location.hostname === 'localhost' ||
+                        window.location.hostname === '127.0.0.1';
+
+    if (hasDebug || storedDebug || isLocalhost) {
+        currentLevel = LOG_LEVELS.DEBUG;
+        console.log('%c🐛 Режим отладки ВКЛЮЧЁН', 'color: #2D6A9F; font-size: 12px; font-weight: bold;');
+    }
+}
+
+// Управление уровнем логирования
+window.setLogLevel = function(level) {
+    const levelMap = {
+        'none': LOG_LEVELS.NONE,
+        'error': LOG_LEVELS.ERROR,
+        'warn': LOG_LEVELS.WARN,
+        'info': LOG_LEVELS.INFO,
+        'debug': LOG_LEVELS.DEBUG,
+        'trace': LOG_LEVELS.TRACE
+    };
+    const newLevel = levelMap[level.toLowerCase()];
+    if (newLevel !== undefined) {
+        currentLevel = newLevel;
+        console.log(`📋 Уровень логирования: ${level.toUpperCase()}`);
+    }
+};
+
+window.enableDebug = function() {
+    currentLevel = LOG_LEVELS.DEBUG;
+    localStorage.setItem('hr_debug_mode', 'true');
+    console.log('%c🐛 Режим отладки ВКЛЮЧЁН', 'color: #2D6A9F; font-size: 12px; font-weight: bold;');
+};
+
+window.disableDebug = function() {
+    currentLevel = LOG_LEVELS.ERROR;
+    localStorage.setItem('hr_debug_mode', 'false');
+    console.log('%c🔇 Режим отладки ВЫКЛЮЧЁН', 'color: #E67E22; font-size: 12px; font-weight: bold;');
+};
+
+// Основной логгер
+window.logger = {
+    error: (...args) => {
+        if (currentLevel >= LOG_LEVELS.ERROR) {
+            console.error('❌', ...args);
+        }
+    },
+    warn: (...args) => {
+        if (currentLevel >= LOG_LEVELS.WARN) {
+            console.warn('⚠️', ...args);
+        }
+    },
+    info: (...args) => {
+        if (currentLevel >= LOG_LEVELS.INFO) {
+            console.log('ℹ️', ...args);
+        }
+    },
+    debug: (...args) => {
+        if (currentLevel >= LOG_LEVELS.DEBUG) {
+            console.log('🔍', ...args);
+        }
+    },
+    trace: (...args) => {
+        if (currentLevel >= LOG_LEVELS.TRACE) {
+            console.trace('🔬', ...args);
+        }
+    },
+    init: (message, level = 'INFO', context = '') => {
+        const isDev = currentLevel >= LOG_LEVELS.DEBUG;
+        if (isDev) {
+            let style = '';
+            if (level === 'ERROR') style = 'color:red; font-weight:bold';
+            else if (level === 'WARN') style = 'color:orange';
+            else if (level === 'TRACE') style = 'color:gray';
+            else if (level === 'DEBUG') style = 'color:blue';
+            else style = 'color:green';
+            console.log(`%c[${new Date().toISOString()}] [${level}] ${message} ${context ? '(' + context + ')' : ''}`, style);
+        }
+    }
+};
+
+// Перехват глобальных ошибок
+if (typeof window !== 'undefined') {
+    window.addEventListener('error', (e) => {
+        logger.error('Uncaught error:', e.message, e.filename, e.lineno);
+    });
+    window.addEventListener('unhandledrejection', (e) => {
+        logger.error('Unhandled rejection:', e.reason);
+    });
+}
+
+console.log(`📋 Логгер инициализирован. Уровень: ${Object.keys(LOG_LEVELS).find(k => LOG_LEVELS[k] === currentLevel) || 'UNKNOWN'}`);
 // ============================================================
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
@@ -7195,25 +7303,24 @@ const IS_DEV = window.location.hostname === 'localhost' ||
     window.location.search.includes('debug=true');
 
 const IS_TEST = window.location.search.includes('test=1');
-let originalConsoleLog = null;
-
-function log(...args) { if (IS_DEV) console.log(...args); }
-function logError(...args) { console.error(...args); }
-function logWarn(...args) { if (IS_DEV) console.warn(...args); }
 
 window.IS_DEV = IS_DEV;
 window.IS_TEST = IS_TEST;
 
 window.enableLogs = function () {
-    if (typeof originalConsoleLog === 'undefined') return;
-    console.log = originalConsoleLog;
-    originalConsoleLog = null;
-    showToast('🔍 Логи включены', 'success');
+    if (typeof window.enableDebug === 'function') {
+        window.enableDebug();
+    } else {
+        logger.warn('enableDebug не доступен');
+    }
 };
+
 window.disableLogs = function () {
-    if (originalConsoleLog === null) originalConsoleLog = console.log;
-    console.log = function () {};
-    showToast('🔇 Логи отключены', 'success');
+    if (typeof window.disableDebug === 'function') {
+        window.disableDebug();
+    } else {
+        logger.warn('disableDebug не доступен');
+    }
 };
 
 function getOrCreateLocalUserId() {
@@ -7377,8 +7484,8 @@ function saveFailedRequest(url, data) {
         failed.push({ url, data, timestamp: now, requestId });
         if (failed.length > 50) failed = failed.slice(-50);
         localStorage.setItem(failedKey, JSON.stringify(failed));
-        if (IS_DEV) console.log('💾 Запрос сохранён локально');
-    } catch(e) { logError('Ошибка сохранения запроса', e); }
+        logger.debug('💾 Запрос сохранён локально');
+    } catch(e) { logger.error('Ошибка сохранения запроса', e); }
 }
 
 async function retryFailedRequests() {
@@ -7394,8 +7501,8 @@ async function retryFailedRequests() {
             }
         }
         localStorage.setItem(failedKey, JSON.stringify(newFailed));
-        if (IS_DEV) console.log(`🔄 Повторная отправка: отправлено ${failed.length - newFailed.length}, осталось ${newFailed.length}`);
-    } catch(e) { logError('Ошибка повторной отправки', e); }
+        logger.debug(`🔄 Повторная отправка: отправлено ${failed.length - newFailed.length}, осталось ${newFailed.length}`);
+    } catch(e) { logger.error('Ошибка повторной отправки', e); }
 }
 
 setInterval(retryFailedRequests, 60000);
@@ -7404,7 +7511,7 @@ window.addEventListener('load', () => setTimeout(retryFailedRequests, 5000));
 window.sendViaBeaconOrFetch = async function(url, data, isRetry = false) {
     const formData = new URLSearchParams(data);
     if (navigator.sendBeacon && navigator.sendBeacon(url, formData)) {
-        if (IS_DEV) console.log('📡 Отправлено через sendBeacon');
+        logger.debug('📡 Отправлено через sendBeacon');
         return true;
     }
     try {
@@ -7418,12 +7525,12 @@ window.sendViaBeaconOrFetch = async function(url, data, isRetry = false) {
         });
         clearTimeout(timeoutId);
         if (response.ok) {
-            if (IS_DEV) console.log('📡 Отправлено через fetch');
+            logger.debug('📡 Отправлено через fetch');
             return true;
         }
         throw new Error('Ответ сервера не OK: ' + response.status);
     } catch (err) {
-        logError('Ошибка отправки (попробуем fallback no-cors):', err);
+        logger.error('Ошибка отправки (попробуем fallback no-cors):', err);
         try {
             await fetch(url, {
                 method: 'POST',
@@ -7432,10 +7539,10 @@ window.sendViaBeaconOrFetch = async function(url, data, isRetry = false) {
                 mode: 'no-cors',
                 cache: 'no-store'
             });
-            if (IS_DEV) console.log('📡 Отправлено через fetch (no-cors) – статус неизвестен, но данные вероятно ушли');
+            logger.debug('📡 Отправлено через fetch (no-cors) – статус неизвестен, но данные вероятно ушли');
             return true;
         } catch (e) {
-            logError('Fallback тоже провалился:', e);
+            logger.error('Fallback тоже провалился:', e);
             return false;
         }
     }
@@ -7452,7 +7559,7 @@ window.postWithRetry = async function(url, data, maxRetries = 3, baseDelay = 200
             lastError = err;
             if (attempt < maxRetries) {
                 const delay = Math.min(baseDelay * Math.pow(1.5, attempt - 1), 10000);
-                if (IS_DEV) console.log(`🔄 Повторная попытка ${attempt}/${maxRetries} через ${delay}ms`);
+                logger.debug(`🔄 Повторная попытка ${attempt}/${maxRetries} через ${delay}ms`);
                 await new Promise(resolve => setTimeout(resolve, delay));
             }
         }
@@ -7653,11 +7760,11 @@ async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
     if (IS_TEST && window.APP_CONFIG?.TEST_SCRIPT_URL) {
         targetUrl = window.APP_CONFIG.TEST_SCRIPT_URL;
         data.test_mode = '1';
-        if (IS_DEV) console.log('🧪 Тестовый режим: отправка на', targetUrl);
+        logger.debug('🧪 Тестовый режим: отправка на', targetUrl);
     }
 
     if (!targetUrl) {
-        logError('SCRIPT_URL не задан');
+        logger.error('SCRIPT_URL не задан');
         return false;
     }
 
@@ -7665,7 +7772,7 @@ async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
         await window.postWithRetry(targetUrl, data, retries, delay);
         return true;
     } catch (err) {
-        logError('❌ Ошибка отправки в Google Sheets после всех попыток:', err);
+        logger.error('❌ Ошибка отправки в Google Sheets после всех попыток:', err);
         saveFailedRequest(targetUrl, data);
         showWarningToast('⚠️ Данные сохранены локально, будут отправлены позже.');
         return false;
@@ -7674,7 +7781,7 @@ async function sendDataToSheetWithRetry(data, retries = 3, delay = 2000) {
 
 function sendDataToSheet(data) {
     sendDataToSheetWithRetry(data).catch(err => {
-        logError('❌ Ошибка отправки в Google Sheets:', err);
+        logger.error('❌ Ошибка отправки в Google Sheets:', err);
         showWarningToast('⚠️ Данные сохранены локально, будут отправлены позже.');
     });
 }
@@ -7823,7 +7930,7 @@ async function getGeoData() {
         try { localStorage.setItem(geoKey, JSON.stringify(result)); } catch(e) {}
         return result;
     } catch(e) {
-        if (IS_DEV) console.warn(e);
+        logger.warn(e);
         return {ip: '-', city: '-', region: '-', country: '-', geoText: '-'};
     }
 }
@@ -7924,7 +8031,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
         };
 
         if (IS_DEV || window.location.search.includes('debug=1')) {
-            console.log('📋 Отправка формы:', formType, formData);
+            logger.debug('📋 Отправка формы:', formType, formData);
         }
 
         await window.sendDataToSheetWithRetry(formData);
@@ -7945,7 +8052,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
 
         return true;
     } catch (err) {
-        logError('Ошибка отправки:', err);
+        logger.error('Ошибка отправки:', err);
         if (!err.message || !err.message.includes('Телефон')) {
             showErrorToast('❌ Не удалось отправить заявку. Пожалуйста, попробуйте позже или свяжитесь с нами напрямую.');
         }
@@ -7993,101 +8100,6 @@ function initShareButtons() {
     });
 }
 
-window.initLogs = [];
-let currentLogLevel = window.APP_CONFIG?.CONSTANTS?.LOG_LEVEL || 0;
-if (window.location.search.includes('debug=1') || localStorage.getItem('hr_debug_mode') === 'true') {
-    currentLogLevel = Math.max(currentLogLevel, 5);
-}
-const urlLogLevel = parseInt(new URLSearchParams(window.location.search).get('loglevel'));
-if (!isNaN(urlLogLevel) && urlLogLevel >= 0 && urlLogLevel <= 7) {
-    currentLogLevel = urlLogLevel;
-    localStorage.setItem('hr_log_level', urlLogLevel);
-}
-window.currentLogLevel = currentLogLevel;
-
-let logBuffer = [];
-let logFlushTimer = null;
-function flushLogsToServer() {
-    if (logBuffer.length === 0) return;
-    const logsToSend = logBuffer.splice(0, 10);
-    const url = window.APP_CONFIG?.SCRIPT_URL;
-    if (!url) return;
-    const formData = new URLSearchParams();
-    formData.append('formType', 'Лог инициализации');
-    formData.append('name', 'System');
-    formData.append('comment', JSON.stringify(logsToSend));
-    formData.append('consent', 'Да');
-    formData.append('userId', window.getOrCreateLocalUserId?.() || 'unknown');
-    formData.append('page', window.location.href);
-    formData.append('userAgent', navigator.userAgent);
-    navigator.sendBeacon(url, formData);
-}
-
-function logInit(message, level = 'INFO', context = '', requiredLevel = 3) {
-    const timestamp = new Date().toISOString();
-    const logEntry = {timestamp, level, message, context, url: window.location.href, requiredLevel};
-    window.initLogs.push(logEntry);
-    const isDebug = currentLogLevel >= requiredLevel;
-    if (isDebug) {
-        let style = '';
-        if (level === 'ERROR') style = 'color:red; font-weight:bold';
-        else if (level === 'WARN') style = 'color:orange';
-        else if (level === 'TRACE') style = 'color:gray';
-        else if (level === 'DEBUG') style = 'color:blue';
-        else style = 'color:green';
-        console.log(`%c[${timestamp}] [${level}] ${message} ${context ? '(' + context + ')' : ''}`, style);
-    }
-    const forceSend = window.APP_CONFIG?.CONSTANTS?.FORCE_SEND_LOGS_TO_SERVER || false;
-    if (level === 'ERROR' || level === 'WARN' || (window.location.search.includes('debug=1') && currentLogLevel >= requiredLevel) || forceSend) {
-        logBuffer.push(logEntry);
-        if (logFlushTimer) clearTimeout(logFlushTimer);
-        logFlushTimer = setTimeout(flushLogsToServer, 5000);
-    }
-}
-
-const originalErrorHandler = window.onerror;
-window.onerror = function (message, source, lineno, colno, error) {
-    logInit(`Uncaught error: ${message} at ${source}:${lineno}:${colno}`, 'ERROR', error?.stack, 1);
-    if (originalErrorHandler) originalErrorHandler(message, source, lineno, colno, error);
-};
-const originalUnhandledRejection = window.onunhandledrejection;
-window.onunhandledrejection = function (event) {
-    logInit(`Unhandled rejection: ${event.reason}`, 'ERROR', event.reason?.stack, 1);
-    if (originalUnhandledRejection) originalUnhandledRejection(event);
-};
-
-(function() {
-    if (window._errorHandlerInstalled) return;
-    window._errorHandlerInstalled = true;
-
-    window.addEventListener('error', function(e) {
-        if (e.message && (e.message.includes('Script error') || e.message.includes('NetworkError'))) {
-            return;
-        }
-        console.warn('🛡️ Поймана ошибка:', e.message, e.filename, e.lineno);
-        const lastErrorTime = window._lastGlobalErrorTime || 0;
-        if (Date.now() - lastErrorTime > 10000) {
-            window._lastGlobalErrorTime = Date.now();
-            if (window.showWarningToast) {
-                window.showWarningToast('⚠️ Что-то пошло не так, но мы уже чиним. Попробуйте обновить страницу.');
-            }
-        }
-        return true;
-    });
-
-    window.addEventListener('unhandledrejection', function(e) {
-        console.warn('🛡️ Необработанный промис:', e.reason);
-        const lastRejectTime = window._lastUnhandledRejectionTime || 0;
-        if (Date.now() - lastRejectTime > 10000) {
-            window._lastUnhandledRejectionTime = Date.now();
-            if (window.showWarningToast) {
-                window.showWarningToast('🔄 Сервер немного задумался, попробуйте ещё раз через минуту.');
-            }
-        }
-        e.preventDefault();
-    });
-})();
-
 window.saveFormFields = saveFormFields;
 window.loadFormFields = loadFormFields;
 window.clearFormFields = clearFormFields;
@@ -8106,9 +8118,6 @@ window.validateEmailField = validateEmailField;
 window.bindLiveValidation = bindLiveValidation;
 window.showLoading = showLoading;
 window.hideLoading = hideLoading;
-window.log = log;
-window.logError = logError;
-window.logWarn = logWarn;
 window.showToast = showToast;
 window.showErrorToast = showErrorToast;
 window.showSuccessToast = showSuccessToast;
@@ -8116,7 +8125,6 @@ window.showWarningToast = showWarningToast;
 window.initShareButtons = initShareButtons;
 window.applyPhoneMask = applyPhoneMask;
 window.initPhoneMasks = initPhoneMasks;
-window.logInit = logInit;
 // ============================================================
 // 02_notifications.js – Отправка уведомлений (Telegram, Email)
 // ============================================================
@@ -8125,7 +8133,7 @@ window.logInit = logInit;
 
     async function sendTelegramNotification(chatId, message) {
         if (!window.APP_CONFIG || !window.APP_CONFIG.SCRIPT_URL) {
-            logError('❌ APP_CONFIG.SCRIPT_URL не задан');
+            logger.error('❌ APP_CONFIG.SCRIPT_URL не задан');
             return false;
         }
         const formData = {
@@ -8137,10 +8145,10 @@ window.logInit = logInit;
         };
         try {
             await window.sendDataToSheetWithRetry(formData, 1);
-            if (window.IS_DEV) console.log('📢 Уведомление отправлено в Telegram');
+            if (window.IS_DEV) logger.info('📢 Уведомление отправлено в Telegram');
             return true;
         } catch (err) {
-            logError('Ошибка отправки уведомления в Telegram:', err);
+            logger.error('Ошибка отправки уведомления в Telegram:', err);
             return false;
         }
     }
@@ -8156,10 +8164,10 @@ window.logInit = logInit;
         };
         try {
             await window.sendDataToSheetWithRetry(formData, 1);
-            if (window.IS_DEV) console.log('📧 Уведомление отправлено на email');
+            if (window.IS_DEV) logger.info('📧 Уведомление отправлено на email');
             return true;
         } catch (err) {
-            logError('Ошибка отправки email уведомления:', err);
+            logger.error('Ошибка отправки email уведомления:', err);
             return false;
         }
     }
@@ -8169,21 +8177,21 @@ window.logInit = logInit;
         else if (type === 'success') window.showSuccessToast(message);
         else if (type === 'warning') window.showWarningToast(message);
         else window.showToast(message, 'info');
-        if (window.IS_DEV) console.log(`🔔 [${type.toUpperCase()}] ${message}`);
+        if (window.IS_DEV) logger.debug(`🔔 [${type.toUpperCase()}] ${message}`);
     }
 
     window.sendTelegramNotification = sendTelegramNotification;
     window.sendAdminEmail = sendAdminEmail;
     window.showSystemNotification = showSystemNotification;
 
-    if (window.IS_DEV) console.log('✅ Модуль уведомлений загружен');
+    if (window.IS_DEV) logger.info('✅ Модуль уведомлений загружен');
 })();
 function initAnimations() {
-    logInit('initAnimations started', 'INFO', '', 3);
+    logger.init('initAnimations started', 'INFO', '', 3);
     const elements = document.querySelectorAll('.fade-up');
-    logInit(`Найдено элементов .fade-up: ${elements.length}`, 'INFO', '', 4);
+    logger.init(`Найдено элементов .fade-up: ${elements.length}`, 'INFO', '', 4);
     if (!elements.length) {
-        logInit('Нет элементов .fade-up, выход', 'WARN', '', 2);
+        logger.init('Нет элементов .fade-up, выход', 'WARN', '', 2);
         return;
     }
 
@@ -8198,7 +8206,7 @@ function initAnimations() {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
                 observer.unobserve(entry.target);
-                logInit(`Элемент .fade-up стал видимым`, 'DEBUG', '', 5);
+                logger.init(`Элемент .fade-up стал видимым`, 'DEBUG', '', 5);
             }
         });
     }, {
@@ -8219,7 +8227,7 @@ function initAnimations() {
         });
     });
 
-    logInit('initAnimations finished', 'INFO', '', 3);
+    logger.init('initAnimations finished', 'INFO', '', 3);
 }
 
 window.initAnimations = initAnimations;
@@ -8227,7 +8235,7 @@ function initCallbackForm() {
     if (window._callbackFormInitialized) return;
     window._callbackFormInitialized = true;
 
-    logInit('initCallbackForm started', 'INFO', '', 3);
+    logger.init('initCallbackForm started', 'INFO', '', 3);
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MAX_PHONE_DIGITS = C.MAX_PHONE_DIGITS || 11;
     const FORM_MESSAGE_HIDE_DELAY = 5000;
@@ -8298,12 +8306,12 @@ const submitHandler = async function(e) {
   clearCallbackMessage();
 
   if (isSubmitting) {
-    logInit('Отправка уже выполняется, игнорируем', 'WARN', '', 3);
+    logger.init('Отправка уже выполняется, игнорируем', 'WARN', '', 3);
     showCallbackMessage('⏳ Отправка уже выполняется, подождите...', true);
     return;
   }
 
-  logInit('Отправка формы callbackForm', 'INFO', '', 3);
+  logger.init('Отправка формы callbackForm', 'INFO', '', 3);
 
   let isValid = true;
   let phoneDigits = callbackPhone.value.replace(/\D/g, '');
@@ -8346,9 +8354,9 @@ const submitHandler = async function(e) {
     });
     // После успешной отправки очищаем сообщение и чекбокс не трогаем
     clearCallbackMessage();
-    logInit('Отправка формы callbackForm завершена успешно', 'INFO', '', 3);
+    logger.init('Отправка формы callbackForm завершена успешно', 'INFO', '', 3);
   } catch (err) {
-    logInit('Ошибка отправки формы callbackForm', 'ERROR', err, 2);
+    logger.init('Ошибка отправки формы callbackForm', 'ERROR', err, 2);
     showCallbackMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
   } finally {
     isSubmitting = false;
@@ -8410,12 +8418,12 @@ const quickSubmitHandler = async function(e) {
   clearQuickMessage();
 
   if (isQuickSubmitting) {
-    logInit('Быстрый заказ уже выполняется, игнорируем', 'WARN', '', 3);
+    logger.init('Быстрый заказ уже выполняется, игнорируем', 'WARN', '', 3);
     showQuickMessage('⏳ Отправка уже выполняется, подождите...', true);
     return;
   }
 
-  logInit('Отправка формы quickOrderForm', 'INFO', '', 3);
+  logger.init('Отправка формы quickOrderForm', 'INFO', '', 3);
 
   let isValid = true;
   let digits = quickPhone.value.replace(/\D/g, '');
@@ -8451,9 +8459,9 @@ const quickSubmitHandler = async function(e) {
       return { ...quizData, cart: typeof window.getCartData === 'function' ? window.getCartData() : '' };
     });
     clearQuickMessage();
-    logInit('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
+    logger.init('Отправка формы quickOrderForm завершена успешно', 'INFO', '', 3);
   } catch (err) {
-    logInit('Ошибка отправки формы quickOrderForm', 'ERROR', err, 2);
+    logger.init('Ошибка отправки формы quickOrderForm', 'ERROR', err, 2);
     showQuickMessage('❌ Ошибка отправки. Попробуйте позже или свяжитесь напрямую.', true);
   } finally {
     isQuickSubmitting = false;
@@ -8473,7 +8481,7 @@ const quickSubmitHandler = async function(e) {
         copyCartBtn._copyHandler = () => {
             const actionKey = 'copy_cart';
             if (window.isActionLocked && window.isActionLocked(actionKey, 5000)) return;
-            logInit('Копирование корзины', 'INFO', '', 4);
+            logger.init('Копирование корзины', 'INFO', '', 4);
             const cartText = typeof window.getCartData === 'function' ? window.getCartData() : '';
             if (!cartText || cartText === 'Корзина пуста') {
                 window.showWarningToast('🛒 Корзина пуста. Добавьте услуги.');
@@ -8492,7 +8500,7 @@ const quickSubmitHandler = async function(e) {
         copyCartBtn.addEventListener('click', copyCartBtn._copyHandler);
     }
 
-    logInit('initCallbackForm finished', 'INFO', '', 3);
+    logger.init('initCallbackForm finished', 'INFO', '', 3);
 }
 
 function initFormEnterSubmit() {
@@ -8920,7 +8928,7 @@ async function loadPrivacyPolicy() {
         html = html.replace(/<a[^>]*class="back-link"[^>]*>[\s\S]*?<\/a>/gi, '');
         container.innerHTML = html;
     } catch (err) {
-        console.error(err);
+        logger.error(err);
         container.innerHTML = '<div style="color: red; text-align: center; padding: 20px;">Не удалось загрузить политику конфиденциальности.</div>';
     }
 }
@@ -9092,9 +9100,9 @@ window.initModal = initModal;
     }
 })();
 function initCookieConsent() {
-    logInit('initCookieConsent started', 'INFO', '', 3);
+    logger.init('initCookieConsent started', 'INFO', '', 3);
     let consent = null;
-    try { consent = localStorage.getItem('cookie_consent'); } catch(e) { if (window.IS_DEV) console.warn('localStorage недоступен', e); }
+    try { consent = localStorage.getItem('cookie_consent'); } catch(e) { if (window.IS_DEV) logger.warn('localStorage недоступен', e); }
     const banner = document.getElementById('cookieConsent');
     if (!banner) return;
     if (consent === null) banner.style.display = 'block';
@@ -9106,15 +9114,15 @@ function initCookieConsent() {
         banner.style.display = 'none';
         if (typeof gtag !== 'undefined') gtag('consent', 'update', { analytics_storage: 'granted' });
         if (typeof window.loadMetricsOnConsent === 'function') window.loadMetricsOnConsent();
-        logInit('Cookie согласие принято', 'INFO', '', 3);
+        logger.init('Cookie согласие принято', 'INFO', '', 3);
     });
     if (declineBtn) declineBtn.addEventListener('click', () => {
         try { localStorage.setItem('cookie_consent', 'declined'); } catch(e) {}
         banner.style.display = 'none';
         if (typeof gtag !== 'undefined') gtag('consent', 'update', { analytics_storage: 'denied' });
-        logInit('Cookie согласие отклонено', 'INFO', '', 3);
+        logger.init('Cookie согласие отклонено', 'INFO', '', 3);
     });
-    logInit('initCookieConsent finished', 'INFO', '', 3);
+    logger.init('initCookieConsent finished', 'INFO', '', 3);
 }
 window.initCookieConsent = initCookieConsent;
 (function() {
@@ -9188,22 +9196,22 @@ window.initCookieConsent = initCookieConsent;
     });
 })();
 function initCopyButtons() {
-    logInit('initCopyButtons started', 'INFO', '', 3);
+    logger.init('initCopyButtons started', 'INFO', '', 3);
     document.querySelectorAll('.copyable-phone, .copyable-text').forEach(el => {
         el.addEventListener('click', function(e) {
             e.stopPropagation();
             const textToCopy = this.getAttribute('data-copy');
             if (!textToCopy) return;
-            navigator.clipboard.writeText(textToCopy).then(() => { showToast('✅ Скопировано!'); }).catch(err => { logError('Ошибка копирования:', err); showErrorToast('Не удалось скопировать. Попробуйте вручную.'); });
+            navigator.clipboard.writeText(textToCopy).then(() => { showToast('✅ Скопировано!'); }).catch(err => { logger.error('Ошибка копирования:', err); showErrorToast('Не удалось скопировать. Попробуйте вручную.'); });
         });
     });
-    logInit('initCopyButtons finished', 'INFO', '', 3);
+    logger.init('initCopyButtons finished', 'INFO', '', 3);
 }
 window.initCopyButtons = initCopyButtons;
 // ============================================================
 // 12_services-data.js – Полный перечень услуг с ценами и группировкой
 // ============================================================
-logInit('Начало загрузки SERVICES_DATA', 'INFO', '', 3);
+logger.init('Начало загрузки SERVICES_DATA', 'INFO', '', 3);
 const SERVICES_DATA = {
     recruitment: [
         {name: "Составление вакансии (с УТП)", price: 10000},
@@ -9322,7 +9330,7 @@ window.PRICE_BOOK = {};
 for (const category of Object.values(window.LOCAL_SERVICES)) {
     for (const item of category) { if (!window.PRICE_BOOK[item.service]) window.PRICE_BOOK[item.service] = item.price; }
 }
-logInit(`SERVICES_DATA загружено, категорий: ${Object.keys(SERVICES_DATA).length}, локальных категорий: ${Object.keys(window.LOCAL_SERVICES).length}`, 'INFO', '', 3);
+logger.init(`SERVICES_DATA загружено, категорий: ${Object.keys(SERVICES_DATA).length}, локальных категорий: ${Object.keys(window.LOCAL_SERVICES).length}`, 'INFO', '', 3);
 // ============================================================
 // 13_calculator.js – Калькулятор, корзина, скидка
 // ============================================================
@@ -9409,7 +9417,7 @@ function renderCart() {
 
 function populateSelect(selectId, services) {
     const select = document.getElementById(selectId);
-    if (!select) { if (window.IS_DEV) console.error('Select not found:', selectId); return; }
+    if (!select) { if (window.IS_DEV) logger.error('Select not found:', selectId); return; }
     select.innerHTML = '';
     services.forEach((service) => {
         const option = document.createElement('option');
@@ -9426,7 +9434,7 @@ function populateSelect(selectId, services) {
 }
 
 function initSelects() {
-    if (typeof SERVICES_DATA === 'undefined') { if (window.IS_DEV) console.error('SERVICES_DATA не загружен!'); return; }
+    if (typeof SERVICES_DATA === 'undefined') { if (window.IS_DEV) logger.error('SERVICES_DATA не загружен!'); return; }
     populateSelect('recruitment-select', SERVICES_DATA.recruitment);
     populateSelect('retention-select', SERVICES_DATA.retention);
     populateSelect('business-training-select', SERVICES_DATA["business-training"]);
@@ -9464,10 +9472,10 @@ function initAddButtons() {
                 const defaultQty = window.APP_CONFIG?.CONSTANTS?.DEFAULT_QUANTITY || 1;
                 if (isNaN(quantity) || quantity < defaultQty) quantity = defaultQty;
                 if (serviceName) window.addToCart(serviceName, price, quantity);
-                else { if (window.IS_DEV) console.error('Не удалось получить название услуги'); window.showErrorToast('❌ Ошибка: не удалось определить услугу'); }
+                else { if (window.IS_DEV) logger.error('Не удалось получить название услуги'); window.showErrorToast('❌ Ошибка: не удалось определить услугу'); }
             };
             button.addEventListener('click', button._handler);
-        } else if (window.IS_DEV) console.error('Button not found:', btn);
+        } else if (window.IS_DEV) logger.error('Button not found:', btn);
     });
 }
 
@@ -9490,14 +9498,14 @@ function initTabs() {
 window.getCartData = function() { if (cart.length === 0) return 'Корзина пуста'; return cart.map(item => { const price = getNumericPrice(item.price); const totalPrice = price * item.qty; let priceDisplay; if (price === 0) priceDisplay = '0 ₽'; else if (price === null) priceDisplay = 'по запросу'; else priceDisplay = totalPrice.toLocaleString() + ' ₽'; return `${item.name} x${item.qty} = ${priceDisplay}`; }).join('\n'); };
 
 function initCalculator() {
-    if (window.IS_DEV) console.log('Инициализация калькулятора...');
-    if (window._calculatorInitialized) { if (window.IS_DEV) console.log('Калькулятор уже инициализирован'); return; }
+    if (window.IS_DEV) logger.info('Инициализация калькулятора...');
+    if (window._calculatorInitialized) { if (window.IS_DEV) logger.debug('Калькулятор уже инициализирован'); return; }
     window._calculatorInitialized = true;
     if (typeof SERVICES_DATA !== 'undefined') initSelects();
-    else if (window.IS_DEV) console.error('SERVICES_DATA не загружен! Проверьте подключение services-data.js');
+    else if (window.IS_DEV) logger.error('SERVICES_DATA не загружен! Проверьте подключение services-data.js');
     initAddButtons();
     initTabs();
-    if (window.IS_DEV) console.log('Инициализация калькулятора завершена');
+    if (window.IS_DEV) logger.info('Инициализация калькулятора завершена');
 }
 
 window.initCalculator = initCalculator;
@@ -10077,7 +10085,7 @@ window.ANSWER_MAPPING = {
     "Гибридный (смешанный)": "work_format_hybrid"
 };
 
-if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены");
+if (window.IS_DEV) logger.info("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загружены");
 (function() {
     'use strict';
 
@@ -10227,11 +10235,11 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     }
 
     window.getTopServices = function(answersArr) {
-        logInit(`getTopServices вызван с answers: ${JSON.stringify(answersArr)}`, 'INFO', '', 4);
+        logger.init(`getTopServices вызван с answers: ${JSON.stringify(answersArr)}`, 'INFO', '', 4);
         let weights = window.SERVICE_WEIGHTS;
         let mapping = window.ANSWER_MAPPING;
         if (!weights || Object.keys(weights).length === 0 || !mapping) {
-            logInit('SERVICE_WEIGHTS или ANSWER_MAPPING не загружены', 'ERROR', '', 1);
+            logger.init('SERVICE_WEIGHTS или ANSWER_MAPPING не загружены', 'ERROR', '', 1);
             return {
                 services: [
                     { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "Базовые услуги — Индивидуальная консультация (1ч)", score: 0 },
@@ -10271,7 +10279,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         scores.sort((a, b) => b.score - a.score);
 
         if (scores.length === 0) {
-            logInit('Не найдено подходящих услуг', 'WARN', '', 2);
+            logger.init('Не найдено подходящих услуг', 'WARN', '', 2);
             return {
                 services: [
                     { service: "Индивидуальная консультация (1ч)", price: "7 000 ₽", formatted: "Базовые услуги — Индивидуальная консультация (1ч)", score: 0 },
@@ -10291,7 +10299,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
             score: s.score
         }));
 
-        logInit(`Найдено рекомендаций: ${result.length}`, 'INFO', '', 4);
+        logger.init(`Найдено рекомендаций: ${result.length}`, 'INFO', '', 4);
         return { services: result };
     };
 
@@ -10438,8 +10446,8 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
         if (typeof window.getUTMText === 'function') formData.utm = window.getUTMText();
         if (typeof window.getDeviceText === 'function') formData.device = window.getDeviceText();
         if (typeof window.getPageText === 'function') formData.page = window.getPageText();
-        if (typeof window.postWithRetry === 'function') window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза', err); });
-        else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) console.warn('Ошибка отправки статистики квиза (fallback)', e); });
+        if (typeof window.postWithRetry === 'function') window.postWithRetry(scriptUrl, formData, 2, 1500).catch(err => { if (window.IS_DEV) logger.warn('Ошибка отправки статистики квиза', err); });
+        else fetch(scriptUrl, { method: 'POST', headers: {'Content-Type': 'application/x-www-form-urlencoded'}, body: new URLSearchParams(formData) }).catch(e => { if (window.IS_DEV) logger.warn('Ошибка отправки статистики квиза (fallback)', e); });
     }
 
     // Вопросы
@@ -10456,7 +10464,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     let isSubmittingChoice = false;
 
     function startQuiz() {
-        logInit('Квиз: startQuiz', 'INFO', '', 3);
+        logger.init('Квиз: startQuiz', 'INFO', '', 3);
         answers = [null, null, null, null, null];
         currentQuestionIndex = 0;
         quizState = 'questions';
@@ -10500,7 +10508,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     }
 
     function renderQuiz() {
-        logInit(`Квиз: renderQuiz, state=${quizState}, questionIndex=${currentQuestionIndex}`, 'DEBUG', '', 5);
+        logger.init(`Квиз: renderQuiz, state=${quizState}, questionIndex=${currentQuestionIndex}`, 'DEBUG', '', 5);
         const container = document.getElementById('quizContainer');
         if (!container) return;
         if (quizState === 'questions') {
@@ -10567,7 +10575,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
     }
 
     function renderResult(recommendations) {
-        logInit('Квиз: renderResult', 'INFO', '', 3);
+        logger.init('Квиз: renderResult', 'INFO', '', 3);
         const container = document.getElementById('quizContainer');
         if (!container) return;
 
@@ -10681,7 +10689,7 @@ if (window.IS_DEV) console.log("✅ SERVICE_WEIGHTS и ANSWER_MAPPING загру
                 if (cartElement) {
                     scrollToElement(cartElement);
                 } else if (window.IS_DEV) {
-                    console.warn('Элемент #cart не найден. Скролл не выполнен.');
+                    logger.warn('Элемент #cart не найден. Скролл не выполнен.');
                 }
 
                 isSubmittingChoice = false;
@@ -10825,7 +10833,7 @@ const MIN_INTERVAL_MS = 60000;
 function isValidEmail(email) { return /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/.test(email); }
 
 async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
-    logInit(`sendMaterialsEmail: ${email}, чек-лист=${wantChecklist}, тренинг=${wantTraining}`, 'INFO', '', 4);
+    logger.init(`sendMaterialsEmail: ${email}, чек-лист=${wantChecklist}, тренинг=${wantTraining}`, 'INFO', '', 4);
 
     const actionKey = 'materials_email';
     if (window.isActionLocked && window.isActionLocked(actionKey, MIN_INTERVAL_MS)) {
@@ -10856,7 +10864,7 @@ async function sendMaterialsEmail(email, wantChecklist, wantTraining) {
 let isSendingEmail = false;
 
 async function sendMaterialsToEmail(email, materialType) {
-    logInit(`sendMaterialsToEmail: ${email}, тип=${materialType}`, 'INFO', '', 4);
+    logger.init(`sendMaterialsToEmail: ${email}, тип=${materialType}`, 'INFO', '', 4);
 
     if (isSendingEmail) {
         window.showErrorToast('⏳ Отправка уже выполняется, подождите...');
@@ -11209,11 +11217,11 @@ if (document.readyState === 'loading') {
 
     // ========== ИНИЦИАЛИЗАЦИЯ ВСЕХ АККОРДЕОНОВ ==========
     function initAllAccordions() {
-        logInit('initAllAccordions started', 'INFO', '', 3);
+        logger.init('initAllAccordions started', 'INFO', '', 3);
         initServicesAccordion();
         initProcessAccordion();
         initBenefitsAccordion();
-        logInit('initAllAccordions finished', 'INFO', '', 3);
+        logger.init('initAllAccordions finished', 'INFO', '', 3);
     }
 
     // Запускаем после загрузки DOM
@@ -11231,7 +11239,7 @@ if (document.readyState === 'loading') {
 })();
 (function () {
     'use strict';
-    logInit('=== НАЧАЛО 99_main.js ===', 'INFO', '', 3);
+    logger.init('=== НАЧАЛО 99_main.js ===', 'INFO', '', 3);
     const C = window.APP_CONFIG?.CONSTANTS || {};
     const MOBILE_BREAKPOINT = C.BREAKPOINT_MOBILE || 768;
     const STATS_ANIMATION_DURATION = C.STATS_ANIMATION_DURATION || 1500;
@@ -11240,7 +11248,7 @@ if (document.readyState === 'loading') {
     let globalFadeObserver = null;
 
     function reinitAnimations() {
-        logInit('reinitAnimations started', 'DEBUG', '', 5);
+        logger.init('reinitAnimations started', 'DEBUG', '', 5);
         const elements = document.querySelectorAll('.fade-up:not(.visible)');
         if (!elements.length) return;
         if (globalFadeObserver) {
@@ -11258,15 +11266,15 @@ if (document.readyState === 'loading') {
             });
         }, {threshold, rootMargin});
         elements.forEach(el => globalFadeObserver.observe(el));
-        logInit(`reinitAnimations обработано ${elements.length} элементов`, 'DEBUG', '', 5);
+        logger.init(`reinitAnimations обработано ${elements.length} элементов`, 'DEBUG', '', 5);
     }
 
     function animateStats() {
-        logInit('animateStats started', 'INFO', '', 4);
+        logger.init('animateStats started', 'INFO', '', 4);
         const statNumbers = document.querySelectorAll('.stat-number');
         if (!statNumbers.length) return;
         if (window._statsAnimated) {
-            logInit('Статистика уже анимирована', 'DEBUG', '', 5);
+            logger.init('Статистика уже анимирована', 'DEBUG', '', 5);
             return;
         }
 
@@ -11295,16 +11303,16 @@ if (document.readyState === 'loading') {
                     requestAnimationFrame(update);
                     observer.unobserve(target);
                     window._statsAnimated = true;
-                    logInit(`Статистика анимирована для ${target.getAttribute('data-target')}`, 'DEBUG', '', 5);
+                    logger.init(`Статистика анимирована для ${target.getAttribute('data-target')}`, 'DEBUG', '', 5);
                 }
             });
         }, {threshold: 0.3});
         statNumbers.forEach(el => observer.observe(el));
-        logInit('animateStats finished', 'INFO', '', 4);
+        logger.init('animateStats finished', 'INFO', '', 4);
     }
 
     function initFormValidation() {
-        logInit('initFormValidation started', 'INFO', '', 4);
+        logger.init('initFormValidation started', 'INFO', '', 4);
         const phoneInput = document.getElementById('callbackPhone');
         if (phoneInput) phoneInput.addEventListener('input', function () {
             const digits = this.value.replace(/\D/g, '');
@@ -11332,11 +11340,11 @@ if (document.readyState === 'loading') {
                 this.style.boxShadow = 'none';
             }
         });
-        logInit('initFormValidation finished', 'INFO', '', 4);
+        logger.init('initFormValidation finished', 'INFO', '', 4);
     }
 
     function initScrollTopButton() {
-        logInit('initScrollTopButton started', 'INFO', '', 4);
+        logger.init('initScrollTopButton started', 'INFO', '', 4);
         const btn = document.createElement('button');
         btn.className = 'scroll-top';
         btn.innerHTML = '↑';
@@ -11357,7 +11365,7 @@ if (document.readyState === 'loading') {
                 window.scrollTo({top: 0, behavior: 'smooth'});
             }
         });
-        logInit('initScrollTopButton finished', 'INFO', '', 4);
+        logger.init('initScrollTopButton finished', 'INFO', '', 4);
     }
 
     let updateActiveNavTimeout = null;
@@ -11441,59 +11449,59 @@ if (document.readyState === 'loading') {
     function initCarousel() {
         if (typeof window.initInfiniteCarousel === 'function') {
             window.initInfiniteCarousel('carouselTrack');
-            logInit('Карусель сертификатов инициализирована', 'INFO', '', 4);
+            logger.init('Карусель сертификатов инициализирована', 'INFO', '', 4);
         }
     }
 
     function initErrorTrackingIfAvailable() {
         if (typeof window.initErrorTracking === 'function') {
             window.initErrorTracking();
-            logInit('ErrorTracking инициализирован через глобальную функцию', 'INFO', '', 3);
+            logger.init('ErrorTracking инициализирован через глобальную функцию', 'INFO', '', 3);
         } else if (window.ErrorTracking && typeof window.ErrorTracking.init === 'function') {
             window.ErrorTracking.init();
-            logInit('ErrorTracking инициализирован через модуль', 'INFO', '', 3);
+            logger.init('ErrorTracking инициализирован через модуль', 'INFO', '', 3);
         } else {
             window.addEventListener('load', function() {
                 if (typeof window.initErrorTracking === 'function') {
                     window.initErrorTracking();
-                    logInit('ErrorTracking инициализирован после загрузки страницы', 'INFO', '', 3);
+                    logger.init('ErrorTracking инициализирован после загрузки страницы', 'INFO', '', 3);
                 }
             });
         }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        logInit('DOMContentLoaded событие', 'INFO', '', 3);
+        logger.init('DOMContentLoaded событие', 'INFO', '', 3);
         if (typeof initUserId === 'function') {
-            logInit('Вызов initUserId', 'INFO', '', 3);
-            initUserId().catch(e => logInit(`Ошибка initUserId: ${e}`, 'ERROR', '', 1));
+            logger.init('Вызов initUserId', 'INFO', '', 3);
+            initUserId().catch(e => logger.init(`Ошибка initUserId: ${e}`, 'ERROR', '', 1));
         }
         if (typeof initModal === 'function') {
-            logInit('Вызов initModal', 'INFO', '', 3);
+            logger.init('Вызов initModal', 'INFO', '', 3);
             initModal();
         }
         if (typeof initCopyButtons === 'function') {
-            logInit('Вызов initCopyButtons', 'INFO', '', 3);
+            logger.init('Вызов initCopyButtons', 'INFO', '', 3);
             initCopyButtons();
         }
         if (typeof initFormEnterSubmit === 'function') {
-            logInit('Вызов initFormEnterSubmit', 'INFO', '', 3);
+            logger.init('Вызов initFormEnterSubmit', 'INFO', '', 3);
             initFormEnterSubmit();
         }
         if (typeof initCookieConsent === 'function') {
-            logInit('Вызов initCookieConsent', 'INFO', '', 3);
+            logger.init('Вызов initCookieConsent', 'INFO', '', 3);
             initCookieConsent();
         }
         if (typeof initShareButtons === 'function') {
-            logInit('Вызов initShareButtons', 'INFO', '', 3);
+            logger.init('Вызов initShareButtons', 'INFO', '', 3);
             initShareButtons();
         }
         if (typeof window.initPhoneMasks === 'function') {
-            logInit('Вызов initPhoneMasks', 'INFO', '', 3);
+            logger.init('Вызов initPhoneMasks', 'INFO', '', 3);
             window.initPhoneMasks();
         }
         if (typeof initCallbackForm === 'function') {
-            logInit('Вызов initCallbackForm', 'INFO', '', 3);
+            logger.init('Вызов initCallbackForm', 'INFO', '', 3);
             initCallbackForm();
         }
 
@@ -11502,33 +11510,33 @@ if (document.readyState === 'loading') {
 
         if (typeof originalInitCalculator === 'function') {
             window.initCalculator = async function () {
-                logInit('Переопределённый initCalculator запущен', 'INFO', '', 3);
+                logger.init('Переопределённый initCalculator запущен', 'INFO', '', 3);
                 await originalInitCalculator();
-                logInit('originalInitCalculator завершён', 'INFO', '', 3);
+                logger.init('originalInitCalculator завершён', 'INFO', '', 3);
                 setTimeout(reinitAnimations, 100);
                 setTimeout(animateStats, 150);
             };
         } else {
-            logInit('originalInitCalculator не найден, пропускаем', 'WARN', '', 2);
+            logger.init('originalInitCalculator не найден, пропускаем', 'WARN', '', 2);
         }
 
         if (typeof originalInitQuiz === 'function') {
             window.initQuiz = function () {
-                logInit('Переопределённый initQuiz запущен', 'INFO', '', 3);
+                logger.init('Переопределённый initQuiz запущен', 'INFO', '', 3);
                 originalInitQuiz();
                 setTimeout(reinitAnimations, 150);
                 setTimeout(animateStats, 200);
             };
         } else {
-            logInit('originalInitQuiz не найден, пропускаем', 'WARN', '', 2);
+            logger.init('originalInitQuiz не найден, пропускаем', 'WARN', '', 2);
         }
 
         if (typeof window.initCalculator === 'function') {
-            logInit('Запуск window.initCalculator()', 'INFO', '', 3);
+            logger.init('Запуск window.initCalculator()', 'INFO', '', 3);
             window.initCalculator();
         }
         if (typeof window.initQuiz === 'function') {
-            logInit('Запуск window.initQuiz()', 'INFO', '', 3);
+            logger.init('Запуск window.initQuiz()', 'INFO', '', 3);
             window.initQuiz();
         }
 
@@ -11538,23 +11546,23 @@ if (document.readyState === 'loading') {
         if (typeof window.initMaterialsEmailButtons === 'function') {
             window.initMaterialsEmailButtons();
         } else {
-            logInit('initMaterialsEmailButtons не найдена! Убедитесь, что 20_materials-modal.js загружен.', 'WARN', '', 2);
+            logger.init('initMaterialsEmailButtons не найдена! Убедитесь, что 20_materials-modal.js загружен.', 'WARN', '', 2);
         }
         initCarousel();
         initErrorTrackingIfAvailable();
 
         if (typeof initAnimations === 'function') {
-            logInit('Вызов initAnimations', 'INFO', '', 3);
+            logger.init('Вызов initAnimations', 'INFO', '', 3);
             initAnimations();
         } else {
-            logInit('initAnimations не найдена!', 'ERROR', '', 1);
+            logger.init('initAnimations не найдена!', 'ERROR', '', 1);
         }
         setTimeout(reinitAnimations, 100);
-        logInit('DOMContentLoaded обработчик завершён', 'INFO', '', 3);
+        logger.init('DOMContentLoaded обработчик завершён', 'INFO', '', 3);
     });
 
     window.addEventListener('load', function () {
-        logInit('Событие load', 'INFO', '', 3);
+        logger.init('Событие load', 'INFO', '', 3);
         setTimeout(function () {
             document.querySelectorAll('.fade-up').forEach(el => {
                 const rect = el.getBoundingClientRect();
