@@ -171,6 +171,9 @@
 
     <link rel="preload" as="image" href="assets/images/01-hero.webp">
 
+    <!-- Подключение стилей бесплатных материалов -->
+    <link rel="stylesheet" href="css/25_freebies.css">
+
     <script>
         window.APP_CONFIG = window.APP_CONFIG || {};
         Object.assign(window.APP_CONFIG, {
@@ -3292,7 +3295,7 @@ textarea.form-field:focus {
     }
 }
 /* ==================================================================
-   16_quiz_freebies.css – Квиз и бесплатные материалы
+   16_quiz_freebies.css – Квиз
    Бейджи всегда в правом верхнем углу, адаптивная сетка ответов
    Планшеты: 2 колонки для рекомендаций, карточка помощи центрируется
    ================================================================== */
@@ -3657,176 +3660,15 @@ textarea.form-field:focus {
     }
 }
 
-/* ---------- БЕСПЛАТНЫЕ МАТЕРИАЛЫ ---------- */
-.checklist-card {
-    background: linear-gradient(145deg, #ffffff 0%, #f8faff 100%);
-    border-radius: var(--radius-lg);
-    padding: 48px 32px;
-    margin: 60px 0;
-    box-shadow: var(--shadow-md);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-}
-.checklist-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
-}
-.checklist-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 6px;
-    background: var(--gradient-blue);
-}
-.checklist-card .section-title {
-    margin-bottom: 32px;
-    font-size: 2rem;
-}
-.freebies-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    justify-items: center;
-    margin: 0 auto 32px;
-}
-.freebie-item {
-    text-align: center;
-    width: 100%;
-    transition: all 0.25s ease;
-    background: rgba(255,255,255,0.7);
-    border-radius: 32px;
-    padding: 24px 16px;
-}
-.freebie-item:hover {
-    transform: translateY(-6px);
-    background: white;
-    box-shadow: var(--shadow-md);
-}
-.freebie-icon {
-    width: 80px;
-    height: 80px;
-    background: var(--light-bg);
-    border-radius: 50%;
+/* ========== КНОПКИ КВИЗА ========== */
+.quiz-nav {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-    transition: all 0.3s ease;
-}
-.freebie-item:hover .freebie-icon {
-    background: var(--primary-light);
-    transform: scale(1.05);
-}
-.freebie-icon svg {
-    width: 40px;
-    height: 40px;
-    stroke: var(--primary);
-    stroke-width: 1.5;
-}
-.freebie-icon-accent {
-    background: var(--primary);
-}
-.freebie-icon-accent svg {
-    stroke: white;
-}
-.freebie-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: var(--primary-dark);
-}
-.freebie-desc {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-}
-.freebie-actions {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-.freebie-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(45,106,159,0.08);
-    padding: 8px 16px;
-    border-radius: 40px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--primary);
-    text-decoration: none;
-    transition: all 0.2s ease;
-}
-.freebie-link:hover {
-    background: var(--primary);
-    color: white;
-    transform: translateY(-2px);
-}
-.freebie-footer {
-    text-align: center;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    border-top: 1px solid var(--border);
-    padding-top: 24px;
-    margin-top: 16px;
+    justify-content: space-between;
+    margin-top: 30px;
+    gap: 15px;
 }
 
-/* Адаптив для бесплатных материалов */
-@media (max-width: 991px) {
-    .freebies-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 24px;
-    }
-    .freebies-grid .freebie-item:last-child {
-        grid-column: span 2;
-        max-width: 360px;
-        margin: 0 auto;
-    }
-}
-@media (max-width: 767px) {
-    .checklist-card {
-        padding: 32px 20px;
-        margin: 40px 0;
-    }
-    .freebies-grid {
-        grid-template-columns: 1fr;
-    }
-    .freebies-grid .freebie-item:last-child {
-        grid-column: span 1;
-        max-width: 100%;
-    }
-}
 @media (max-width: 480px) {
-    .checklist-card {
-        padding: 24px 16px;
-    }
-    .checklist-card .section-title {
-        font-size: 1.6rem;
-    }
-    .freebie-icon {
-        width: 60px;
-        height: 60px;
-    }
-    .freebie-icon svg {
-        width: 28px;
-        height: 28px;
-    }
-    .freebie-title {
-        font-size: 1rem;
-    }
-    .freebie-desc {
-        font-size: 0.75rem;
-    }
-    .freebie-link {
-        font-size: 0.75rem;
-        padding: 5px 12px;
-    }
     .quiz-nav {
         flex-direction: column;
         gap: 10px;
@@ -4946,6 +4788,448 @@ select:focus-visible {
     display: inline-block;
 }
 /* ==================================================================
+   25_freebies.css – Бесплатные материалы (финальная версия)
+   ================================================================== */
+
+/* Анимации */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+@keyframes descShimmer {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+@keyframes emojiFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes slideOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(20px); }
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Блок */
+.checklist-card {
+    background: linear-gradient(145deg, #fff, #fefaf5);
+    border-radius: clamp(20px, 4vw, 32px);
+    padding: clamp(20px, 5vw, 48px) clamp(16px, 4vw, 40px);
+    margin: clamp(20px, 5vw, 60px) auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    position: relative;
+    animation: fadeUp 0.6s ease-out;
+}
+.checklist-card::before, .checklist-card::after {
+    content: '';
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    opacity: 0.5;
+    transition: all 0.3s ease;
+}
+.checklist-card::before {
+    top: 20px;
+    left: 20px;
+    border-top: 2px solid #d4af37;
+    border-left: 2px solid #d4af37;
+    border-radius: 16px 0 0 0;
+}
+.checklist-card::after {
+    bottom: 20px;
+    right: 20px;
+    border-bottom: 2px solid #d4af37;
+    border-right: 2px solid #d4af37;
+    border-radius: 0 0 16px 0;
+}
+.checklist-card:hover::before,
+.checklist-card:hover::after {
+    width: 90px;
+    height: 90px;
+    opacity: 0.8;
+}
+
+.freebies-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #d4af37, #f5d76e);
+    color: #5a3e00;
+    font-size: clamp(0.5rem, 2.5vw, 0.7rem);
+    font-weight: 700;
+    padding: clamp(2px, 1vw, 5px) clamp(10px, 3vw, 18px);
+    border-radius: 40px;
+    margin-bottom: clamp(16px, 4vw, 20px);
+    letter-spacing: 1px;
+}
+
+.checklist-card .section-title {
+    margin-bottom: 20px;
+}
+.checklist-card .section-title .gradient-text {
+    display: inline-block;
+    font-size: clamp(1rem, 5vw, 1.8rem);
+    font-weight: 600;
+    background: linear-gradient(90deg, #1F4A6E, #2D6A9F, #d4af37, #2D6A9F);
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 4s linear infinite;
+}
+.checklist-card .section-title .emoji {
+    display: inline-block;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    margin-right: 10px;
+    vertical-align: middle;
+    animation: emojiFloat 3s ease-in-out infinite;
+}
+
+.freebies-subtitle {
+    font-size: clamp(0.6rem, 3vw, 0.9rem);
+    color: #8a8a8a;
+    margin-bottom: clamp(16px, 4vw, 40px);
+    text-align: center;
+}
+.subtitle-icon { margin: 0 8px; }
+
+.freebies-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(16px, 3vw, 28px);
+    margin-bottom: 40px;
+}
+
+.freebie-item {
+    background: #fff;
+    border-radius: clamp(20px, 3vw, 24px);
+    padding: clamp(20px, 4vw, 32px) clamp(12px, 3vw, 20px);
+    text-align: center;
+    border: 1px solid rgba(212,175,55,0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+.freebie-item:hover {
+    transform: translateY(-6px);
+    border-color: #d4af37;
+    box-shadow: 0 20px 30px -12px rgba(212,175,55,0.25);
+}
+.freebie-item.selected {
+    border: 2px solid #d4af37;
+    background: linear-gradient(145deg, #fff, #fffdf5);
+}
+
+.freebie-icon {
+    width: clamp(50px, 10vw, 70px);
+    height: clamp(50px, 10vw, 70px);
+    background: rgba(45,106,159,0.08);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    transition: all 0.3s ease;
+}
+.freebie-item:hover .freebie-icon {
+    background: linear-gradient(135deg, #2D6A9F, #d4af37);
+}
+.freebie-item:hover .freebie-icon svg { stroke: #fff; }
+.freebie-icon svg {
+    width: clamp(24px, 5vw, 32px);
+    height: clamp(24px, 5vw, 32px);
+    stroke: #2D6A9F;
+    transition: stroke 0.3s;
+}
+.freebie-icon-accent { background: linear-gradient(135deg, #2D6A9F, #d4af37); }
+.freebie-icon-accent svg { stroke: #fff; }
+
+.freebie-title {
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    font-weight: 700;
+    color: #1F4A6E;
+    margin-bottom: 8px;
+}
+.freebie-desc {
+    font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+    font-weight: 600;
+    display: inline-block;
+    padding: 4px 0;
+    background: linear-gradient(135deg, #d4af37, #f5d76e, #b8860b, #d4af37);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: descShimmer 3s linear infinite;
+}
+
+.freebie-action-panel {
+    background: #fefaf5;
+    border-radius: clamp(20px, 3vw, 24px);
+    padding: clamp(16px, 4vw, 24px);
+    margin-top: clamp(20px, 4vw, 32px);
+    border: 1px solid rgba(212,175,55,0.3);
+}
+.freebie-selected-info {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: clamp(0.85rem, 3vw, 1rem);
+    color: #1F4A6E;
+}
+.selected-emoji {
+    font-size: clamp(1.1rem, 4vw, 1.3rem);
+    margin-right: 8px;
+    display: inline-block;
+    animation: emojiFloat 2s ease-in-out infinite;
+}
+.freebie-selected-info strong { color: #d4af37; }
+
+/* ========== КНОПКИ (ФИКСИРОВАННАЯ ШИРИНА, ОДИНАКОВЫЙ РАЗМЕР) ========== */
+.freebie-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    border: none;
+    flex-shrink: 0;
+}
+
+.freebie-btn .btn-icon {
+    font-size: 1rem;
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+}
+.freebie-btn .btn-text {
+    display: inline-block;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+.freebie-btn.download {
+    background: #fff;
+    border: 1.5px solid #2D6A9F;
+    color: #2D6A9F;
+}
+.freebie-btn.download:hover {
+    background: #2D6A9F;
+    color: #fff;
+    transform: translateY(-2px);
+}
+.freebie-btn.email-trigger {
+    background: linear-gradient(135deg, #2D6A9F, #d4af37);
+    color: #fff;
+}
+.freebie-btn.email-trigger:hover {
+    transform: translateY(-2px);
+}
+
+/* ПК — фиксированная ширина, одинаковый размер, текст исчезает плавно */
+@media (min-width: 769px) {
+    .freebie-btn {
+        width: 110px;
+        padding: 8px 0;
+    }
+    .freebie-btn .btn-text {
+        opacity: 1;
+    }
+    .freebie-btn:hover .btn-text {
+        opacity: 0;
+    }
+    .freebie-btn:hover .btn-icon {
+        transform: scale(1.05);
+    }
+}
+
+/* Телефон — ширина авто, текст всегда виден */
+@media (max-width: 768px) {
+    .freebie-btn {
+        padding: 10px 16px;
+        font-size: 0.85rem;
+        min-height: 44px;
+        width: auto;
+    }
+    .freebie-btn .btn-text {
+        display: inline-block;
+    }
+    .freebie-btn .btn-icon {
+        font-size: 1rem;
+    }
+}
+
+.freebie-buttons-group {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.freebie-btn-wrapper { text-align: center; min-width: 170px; }
+
+.freebie-reset-btn {
+    display: block;
+    margin: 16px auto 0;
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 0.7rem;
+    cursor: pointer;
+    text-decoration: underline;
+}
+.freebie-reset-btn:hover { color: #d4af37; }
+.freebie-footer {
+    text-align: center;
+    font-size: clamp(0.55rem, 2.5vw, 0.7rem);
+    color: #aaa;
+    margin-top: clamp(16px, 4vw, 28px);
+    padding-top: clamp(10px, 3vw, 16px);
+    border-top: 1px solid #eee;
+}
+
+.mobile-accordion { display: none; }
+
+/* ========== ФОРМА EMAIL ========== */
+.freebie-email-modern {
+    margin-top: 12px;
+    animation: slideIn 0.25s ease;
+}
+.email-modern-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.email-modern-input {
+    flex: 1;
+    border: 2px solid #e0e0e0;
+    border-radius: 50px;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s ease;
+    background: #fff;
+}
+.email-modern-input:focus {
+    outline: none;
+    border-color: #d4af37;
+    box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
+}
+.email-modern-send {
+    background: linear-gradient(135deg, #2D6A9F, #d4af37);
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 50%;
+}
+.email-modern-send:hover {
+    transform: scale(1.05) translateX(2px);
+    box-shadow: 0 4px 12px rgba(212,175,55,0.4);
+}
+.email-success {
+    text-align: center;
+    padding: 10px;
+    color: #28a745;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* ПК размеры формы */
+@media (min-width: 769px) {
+    .email-modern-input { padding: 12px 18px; font-size: 0.9rem; }
+    .email-modern-send { width: 44px; height: 44px; font-size: 1.4rem; }
+}
+
+/* Телефон размеры формы */
+@media (max-width: 768px) {
+    .email-modern-input { padding: 10px 14px; font-size: 0.85rem; min-height: 44px; }
+    .email-modern-send { width: 44px; height: 44px; font-size: 1.2rem; }
+}
+@media (max-width: 480px) {
+    .email-modern-input { padding: 8px 12px; font-size: 0.75rem; min-height: 38px; }
+    .email-modern-send { width: 38px; height: 38px; font-size: 1rem; }
+}
+
+/* ========== ТЕЛЕФОН — АККОРДЕОН ========== */
+@media (max-width: 768px) {
+    .freebies-grid { display: none; }
+    .mobile-accordion { display: block; }
+
+    .accordion-item {
+        background: #fff;
+        border-radius: 16px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(212,175,55,0.25);
+        overflow: hidden;
+    }
+    .accordion-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 14px;
+        cursor: pointer;
+    }
+    .accordion-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .accordion-title { flex: 1; font-weight: 600; font-size: 0.8rem; color: #1F4A6E; }
+    .accordion-arrow { font-size: 0.7rem; color: #d4af37; transition: transform 0.3s ease; }
+    .accordion-item.open .accordion-arrow { transform: rotate(180deg); }
+
+    .accordion-body {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        padding: 0 14px;
+    }
+    .accordion-item.open .accordion-body {
+        max-height: 140px;
+        padding: 0 14px 14px 14px;
+    }
+
+    .accordion-buttons {
+        display: flex;
+        gap: 10px;
+        flex-direction: row;
+        align-items: center;
+    }
+    .accordion-buttons .freebie-btn { flex: 1; justify-content: center; }
+    .freebie-footer { margin-top: 20px; padding-top: 12px; }
+}
+
+/* Ультра-маленькие телефоны */
+@media (max-width: 319px) {
+    .checklist-card { margin: 15px 8px; padding: 12px 10px; }
+    .section-title .gradient-text { font-size: 0.85rem; }
+    .accordion-title { font-size: 0.65rem; }
+    .accordion-buttons { flex-direction: column; gap: 6px; }
+    .accordion-buttons .freebie-btn { width: 100%; }
+    .email-modern-row { flex-direction: column; }
+    .email-modern-send { width: 100%; border-radius: 40px; }
+}
+
+/* Клавиатура */
+.freebie-item:focus-visible,
+.freebie-btn:focus-visible,
+.accordion-header:focus-visible {
+    outline: 3px solid #d4af37;
+    outline-offset: 2px;
+}
+.freebie-item:focus:not(:focus-visible),
+.freebie-btn:focus:not(:focus-visible) { outline: none; }
+/* ==================================================================
    99_responsive.css – глобальные адаптивные правки (мобильная версия)
    (только общие отступы, центрирование, отключение hover)
    ================================================================== */
@@ -5017,9 +5301,6 @@ select:focus-visible {
 
     .media-description { padding: 16px 12px !important; }
     .media-description h3 { font-size: 1.1rem !important; }
-
-    .checklist-card { padding: 24px 16px !important; }
-    .freebie-icon { width: 48px; height: 48px; }
 
     .cells-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
     .card-role { padding: 14px 10px !important; text-align: center; }
@@ -6218,98 +6499,341 @@ section:not(.section-dark):not(.certificates-section) {
 </section>
 <section aria-labelledby="freebies-title">
     <div class="container">
-        <div class="checklist-card fade-up">
+        <div class="checklist-card">
+            <div class="freebies-badge" aria-label="Бонус">✨ EXCLUSIVE ✨</div>
+
             <h2 class="section-title" id="freebies-title">
-                <span class="emoji">📥</span> Спасибо, что дочитали до конца!
+                <span class="emoji" aria-hidden="true">📥</span>
+                <span class="gradient-text">Спасибо, что дочитали до конца!</span>
             </h2>
-            <ul class="freebies-grid" role="list">
-                <!-- Чек-лист -->
-                <li class="freebie-item" role="listitem">
-                    <div class="freebie-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
-                            <title>Чек-лист</title>
+
+            <p class="freebies-subtitle">
+                <span class="subtitle-icon" aria-hidden="true">⭐</span>
+                То, что реально поможет в карьере
+                <span class="subtitle-icon" aria-hidden="true">⭐</span>
+            </p>
+
+            <!-- ДЕСКТОП: сетка карточек -->
+            <ul class="freebies-grid" role="list" aria-label="Доступные материалы">
+                <li class="freebie-item" data-material="checklist" data-name="Шпаргалка" role="option" tabindex="0">
+                    <div class="freebie-icon" aria-hidden="true">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
                             <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
                             <path d="M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
                             <path d="M9 12l2 2 4-4" />
                         </svg>
                     </div>
-                    <div class="freebie-title">Чек-лист</div>
-                    <div class="freebie-desc">«Идеальное резюме»</div>
-                    <div class="freebie-actions">
-                        <a href="#" class="freebie-link checklist-download" download>скачать</a>
-                        <button type="button" class="material-email-simple freebie-link" data-material="checklist">на email</button>
-                    </div>
+                    <div class="freebie-title">Шпаргалка</div>
+                    <div class="freebie-desc">Как найти работу мечты</div>
                 </li>
-
-                <!-- Программа тренинга -->
-                <li class="freebie-item" role="listitem">
-                    <div class="freebie-icon">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
-                            <title>Программа тренинга</title>
+                <li class="freebie-item" data-material="training" data-name="Тренинг" role="option" tabindex="0">
+                    <div class="freebie-icon" aria-hidden="true">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5">
                             <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
                             <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                         </svg>
                     </div>
-                    <div class="freebie-title">Программа тренинга</div>
-                    <div class="freebie-desc">«Продай себя дорого»</div>
-                    <div class="freebie-actions">
-                        <a href="#" class="freebie-link training-download" download>скачать</a>
-                        <button type="button" class="material-email-simple freebie-link" data-material="training">на email</button>
-                    </div>
+                    <div class="freebie-title">Тренинг</div>
+                    <div class="freebie-desc">Продай себя дорого</div>
                 </li>
-
-                <!-- Полный набор -->
-                <li class="freebie-item" role="listitem">
-                    <div class="freebie-icon freebie-icon-accent">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
-                            <title>Полный набор</title>
+                <li class="freebie-item" data-material="both" data-name="Всё сразу" role="option" tabindex="0">
+                    <div class="freebie-icon freebie-icon-accent" aria-hidden="true">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5">
                             <path d="M19 11H5m14 0a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2m14 0V9a2 2 0 0 0-2-2M5 11V9a2 2 0 0 1 2-2m0 0V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2H7z" />
                         </svg>
                     </div>
-                    <div class="freebie-title">Полный набор</div>
-                    <div class="freebie-desc">Всё сразу в ZIP</div>
-                    <div class="freebie-actions">
-                        <a href="#" class="freebie-link zip-download" download>скачать ZIP</a>
-                        <button type="button" class="material-email-simple freebie-link" data-material="both">на email</button>
-                    </div>
+                    <div class="freebie-title">Всё сразу</div>
+                    <div class="freebie-desc">Архив + бонус</div>
                 </li>
             </ul>
-            <p class="freebie-footer">🔐 Без спама. Отправляю на почту за 1 минуту.</p>
+
+            <!-- ТЕЛЕФОН: аккордеон -->
+            <div class="mobile-accordion">
+                <div class="accordion-item" data-material="checklist" data-name="Шпаргалка">
+                    <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+                        <span class="accordion-icon" aria-hidden="true">📋</span>
+                        <span class="accordion-title">Шпаргалка «Как найти работу»</span>
+                        <span class="accordion-arrow" aria-hidden="true">▼</span>
+                    </div>
+                    <div class="accordion-body" role="region">
+                        <div class="accordion-buttons">
+                            <a href="#" class="freebie-btn download" data-material="checklist" download>
+                                <span class="btn-icon">📥</span>
+                                <span class="btn-text">Скачать</span>
+                            </a>
+                            <button type="button" class="freebie-btn email-trigger" data-material="checklist">
+                                <span class="btn-icon">📧</span>
+                                <span class="btn-text">На почту</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item" data-material="training" data-name="Тренинг">
+                    <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+                        <span class="accordion-icon" aria-hidden="true">🎓</span>
+                        <span class="accordion-title">Тренинг «Продай себя дорого»</span>
+                        <span class="accordion-arrow" aria-hidden="true">▼</span>
+                    </div>
+                    <div class="accordion-body" role="region">
+                        <div class="accordion-buttons">
+                            <a href="#" class="freebie-btn download" data-material="training" download>
+                                <span class="btn-icon">📥</span>
+                                <span class="btn-text">Скачать</span>
+                            </a>
+                            <button type="button" class="freebie-btn email-trigger" data-material="training">
+                                <span class="btn-icon">📧</span>
+                                <span class="btn-text">На почту</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item" data-material="both" data-name="Всё сразу">
+                    <div class="accordion-header" role="button" tabindex="0" aria-expanded="false">
+                        <span class="accordion-icon" aria-hidden="true">🎁</span>
+                        <span class="accordion-title">Всё сразу (ZIP + бонус)</span>
+                        <span class="accordion-arrow" aria-hidden="true">▼</span>
+                    </div>
+                    <div class="accordion-body" role="region">
+                        <div class="accordion-buttons">
+                            <a href="#" class="freebie-btn download" data-material="both" download>
+                                <span class="btn-icon">📥</span>
+                                <span class="btn-text">Скачать</span>
+                            </a>
+                            <button type="button" class="freebie-btn email-trigger" data-material="both">
+                                <span class="btn-icon">📧</span>
+                                <span class="btn-text">На почту</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Панель выбора на десктопе -->
+            <div class="freebie-action-panel" id="freebieActionPanel" style="display: none;">
+                <div class="freebie-selected-info">
+                    <span class="selected-emoji" aria-hidden="true">🎁</span>
+                    <span>Вы выбрали: <strong id="selectedMaterialName"></strong></span>
+                </div>
+                <div class="freebie-buttons-group">
+                    <div class="freebie-btn-wrapper">
+                        <a href="#" class="freebie-btn download" id="freebieDownloadBtn" download>
+                            <span class="btn-icon">📥</span>
+                            <span class="btn-text">Скачать</span>
+                        </a>
+                    </div>
+                    <div class="freebie-btn-wrapper">
+                        <button type="button" class="freebie-btn email-trigger" id="freebieEmailBtn">
+                            <span class="btn-icon">📧</span>
+                            <span class="btn-text">На почту</span>
+                        </button>
+                    </div>
+                </div>
+                <button class="freebie-reset-btn" id="freebieResetBtn">↺ Свернуть</button>
+            </div>
+
+            <p class="freebie-footer">🔐 Никакого спама. Только полезные материалы. Честно.</p>
         </div>
     </div>
 </section>
 
 <script>
-    (function() {
-        // Ждём загрузки APP_CONFIG
-        function setDownloadLinks() {
-            if (!window.APP_CONFIG) {
-                setTimeout(setDownloadLinks, 100);
+(function() {
+    // Загрузка ссылок из APP_CONFIG
+    function setLinks() {
+        if (!window.APP_CONFIG) { setTimeout(setLinks, 100); return; }
+        const urls = {
+            checklist: window.APP_CONFIG.CHECKLIST_URL,
+            training: window.APP_CONFIG.TRAINING_PROGRAM_URL,
+            both: window.APP_CONFIG.MATERIALS_ZIP_URL
+        };
+        document.querySelectorAll('.freebie-btn.download[data-material]').forEach(btn => {
+            const m = btn.dataset.material;
+            if (urls[m]) btn.href = urls[m];
+        });
+    }
+    setLinks();
+
+    let currentMaterial = null;
+
+    // ========== ДЕСКТОП: ВЫБОР КАРТОЧКИ ==========
+    const items = document.querySelectorAll('.freebie-item');
+    const panel = document.getElementById('freebieActionPanel');
+    const nameSpan = document.getElementById('selectedMaterialName');
+    const downloadBtn = document.getElementById('freebieDownloadBtn');
+    const emailBtn = document.getElementById('freebieEmailBtn');
+    const resetBtn = document.getElementById('freebieResetBtn');
+
+    if (items.length && panel) {
+        items.forEach(item => {
+            item.addEventListener('click', () => {
+                items.forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                currentMaterial = item.dataset.material;
+                nameSpan.textContent = item.dataset.name;
+                if (downloadBtn && window.APP_CONFIG) {
+                    const url = window.APP_CONFIG[{
+                        checklist: 'CHECKLIST_URL',
+                        training: 'TRAINING_PROGRAM_URL',
+                        both: 'MATERIALS_ZIP_URL'
+                    }[currentMaterial]];
+                    if (url) downloadBtn.href = url;
+                }
+                panel.style.display = 'block';
+                setTimeout(() => panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+            });
+        });
+        resetBtn?.addEventListener('click', () => {
+            items.forEach(i => i.classList.remove('selected'));
+            panel.style.display = 'none';
+            currentMaterial = null;
+        });
+        emailBtn?.addEventListener('click', () => {
+            if (!currentMaterial) return;
+            showEmailField(emailBtn, currentMaterial);
+        });
+    }
+
+    // ========== АККОРДЕОН ==========
+    document.querySelectorAll('.accordion-item').forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        header?.addEventListener('click', () => {
+            const isOpen = item.classList.contains('open');
+            document.querySelectorAll('.accordion-item.open').forEach(i => i.classList.remove('open'));
+            if (!isOpen) item.classList.add('open');
+            header.setAttribute('aria-expanded', !isOpen);
+        });
+        const m = item.dataset.material;
+        const link = item.querySelector('.freebie-btn.download');
+        if (link && window.APP_CONFIG) {
+            const url = window.APP_CONFIG[{
+                checklist: 'CHECKLIST_URL',
+                training: 'TRAINING_PROGRAM_URL',
+                both: 'MATERIALS_ZIP_URL'
+            }[m]];
+            if (url) link.href = url;
+        }
+    });
+
+    // ========== ФОРМА EMAIL (ПЛАВНАЯ, СБРОС ПРИ ЗАКРЫТИИ) ==========
+    function showEmailField(btn, material) {
+        let container = btn.closest('.accordion-buttons, .freebie-btn-wrapper');
+        if (!container) return;
+
+        let downloadBtn = container.querySelector('.freebie-btn.download');
+        let oldForm = container.querySelector('.freebie-email-modern');
+
+        // Если форма уже открыта — закрываем и сбрасываем
+        if (oldForm) {
+            oldForm.style.animation = 'slideOut 0.2s ease forwards';
+            setTimeout(() => {
+                oldForm.remove();
+                btn.style.display = 'flex';
+                if (downloadBtn) downloadBtn.style.display = 'flex';
+                btn.classList.remove('email-active');
+                if (downloadBtn) downloadBtn.classList.remove('download-hidden');
+            }, 200);
+            return;
+        }
+
+        // Скрываем кнопку "На почту"
+        btn.style.display = 'none';
+        btn.classList.add('email-active');
+
+        // Скрываем кнопку "Скачать" (если есть)
+        if (downloadBtn) {
+            downloadBtn.style.display = 'none';
+            downloadBtn.classList.add('download-hidden');
+        }
+
+        // Создаём форму
+        const form = document.createElement('div');
+        form.className = 'freebie-email-modern';
+        form.innerHTML = `
+            <div class="email-modern-row">
+                <input type="email" class="email-modern-input" placeholder="Ваш email" autocomplete="email">
+                <button class="email-modern-send">→</button>
+            </div>
+        `;
+        container.appendChild(form);
+
+        const input = form.querySelector('input');
+        input.focus();
+        const sendBtn = form.querySelector('button');
+
+        async function sendEmail() {
+            const email = input.value.trim();
+            if (!email || !email.includes('@')) {
+                input.style.borderColor = '#dc3545';
+                input.style.boxShadow = '0 0 0 2px rgba(220,53,69,0.2)';
+                input.style.animation = 'shake 0.3s ease';
+                setTimeout(() => { input.style.animation = ''; }, 300);
                 return;
             }
-            var cfg = window.APP_CONFIG;
-            var checklistLink = document.querySelector('.checklist-download');
-            var trainingLink = document.querySelector('.training-download');
-            var zipLink = document.querySelector('.zip-download');
-            if (checklistLink && cfg.CHECKLIST_URL) {
-                checklistLink.href = cfg.CHECKLIST_URL;
-                checklistLink.setAttribute('download', '');
-            }
-            if (trainingLink && cfg.TRAINING_PROGRAM_URL) {
-                trainingLink.href = cfg.TRAINING_PROGRAM_URL;
-                trainingLink.setAttribute('download', '');
-            }
-            if (zipLink && cfg.MATERIALS_ZIP_URL) {
-                zipLink.href = cfg.MATERIALS_ZIP_URL;
-                zipLink.setAttribute('download', '');
+
+            input.style.borderColor = '#d4af37';
+            sendBtn.disabled = true;
+            sendBtn.textContent = '⏳';
+
+            try {
+                if (typeof window.sendMaterialsToEmail === 'function') {
+                    await window.sendMaterialsToEmail(email, material);
+                } else if (typeof window.sendDataToSheet === 'function') {
+                    await window.sendDataToSheet({
+                        formType: 'Запрос материалов',
+                        name: email,
+                        comment: 'Запрос материала: ' + material,
+                        consent: 'Да'
+                    });
+                }
+                form.innerHTML = '<div class="email-success">✅ Отправлено! Проверьте почту</div>';
+                setTimeout(() => {
+                    form.remove();
+                    btn.style.display = 'flex';
+                    btn.classList.remove('email-active');
+                    if (downloadBtn) {
+                        downloadBtn.style.display = 'flex';
+                        downloadBtn.classList.remove('download-hidden');
+                    }
+                }, 2000);
+            } catch(e) {
+                alert('Ошибка: ' + e.message);
+                form.remove();
+                btn.style.display = 'flex';
+                btn.classList.remove('email-active');
+                if (downloadBtn) {
+                    downloadBtn.style.display = 'flex';
+                    downloadBtn.classList.remove('download-hidden');
+                }
             }
         }
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', setDownloadLinks);
-        } else {
-            setDownloadLinks();
-        }
-    })();
+
+        sendBtn.onclick = sendEmail;
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendEmail(); });
+    }
+
+    // Обработка кнопок "На почту"
+    document.querySelectorAll('.freebie-btn.email-trigger').forEach(btn => {
+        btn.removeEventListener('click', btn._handler);
+        btn._handler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const material = btn.dataset.material;
+            if (!material) return;
+            showEmailField(btn, material);
+        };
+        btn.addEventListener('click', btn._handler);
+    });
+
+    // ========== КЛАВИАТУРА ==========
+    document.querySelectorAll('.freebie-item, .accordion-header').forEach(el => {
+        el.addEventListener('keydown', e => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                el.click();
+            }
+        });
+    });
+})();
 </script>
 <!-- ========== ПОЛНЫЙ ПРАЙС-ЛИСТ (ДВА АККОРДЕОНА) ========== -->
 <section class="price-list-section fade-up">
@@ -6518,7 +7042,7 @@ section:not(.section-dark):not(.certificates-section) {
                 <a href="#" onclick="openPrivacyModal(event); return false;" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 01.06.2026 18:25:22</span>
+                <span class="footer-version">⚡ Версия 01.06.2026 20:53:31</span>
             </div>
         </div>
         <div class="footer-bottom">
@@ -6592,7 +7116,7 @@ section:not(.section-dark):not(.certificates-section) {
 // 00_config.js – Глобальные настройки сайта
 // ============================================================
 window.APP_CONFIG = {
-    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzthtV-_tus9wVqamLKO7CD4uGZUG4HsBAlEGJlGTbWryFoR1Y2hambYul_ziiGHxi2/exec',
+    SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyAGTC3QVCIgisjFAo4w4WpNm9Z7q7BT2EANLG6lHIkM7-49toJxFufMa7eMHRhfLANMw/exec',
     TELEGRAM: 'https://t.me/HrLubacheva',
     WHATSAPP: 'https://wa.me/79217916655',
     EMAIL: 'hrlubacheva@yandex.ru',
@@ -6600,9 +7124,9 @@ window.APP_CONFIG = {
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
     PRIVACY_PAGE_URL: 'privacy.html',
-    CHECKLIST_URL: 'assets/docs/checklist.pdf',
-    TRAINING_PROGRAM_URL: 'assets/docs/training_program.pdf',
-    MATERIALS_ZIP_URL: 'assets/docs/docs.zip',
+CHECKLIST_URL: 'assets/docs/shpargalka.pdf',      // Шпаргалка
+TRAINING_PROGRAM_URL: 'assets/docs/trening.pdf',  // Тренинг
+MATERIALS_ZIP_URL: 'assets/docs/bonus.zip',       // Всё сразу
     CONSTANTS: {
         TOAST_DURATION: 3000,
         TOAST_FADE_DURATION: 300,
@@ -10412,9 +10936,9 @@ if (document.readyState === 'loading') {
 
     function getMaterialText(material) {
         switch(material) {
-            case 'checklist': return '📋 Чек-лист «Идеальное резюме»';
+            case 'checklist': return '📋 Шпаргалка «Как найти работу»';
             case 'training': return '🎓 Программа тренинга «Продай себя дорого»';
-            case 'both': return '📋 Чек-лист + 🎓 Программа тренинга';
+            case 'both': return '📋 Шпаргалка + 🎓 Программа тренинга';
             default: return 'Материалы';
         }
     }
