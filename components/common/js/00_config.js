@@ -10,9 +10,9 @@ window.APP_CONFIG = {
     YANDEX_METRIKA_ID: '109380497',
     GOOGLE_ANALYTICS_ID: 'G-QZJJ2SE117',
     PRIVACY_PAGE_URL: 'privacy.html',
-CHECKLIST_URL: 'assets/docs/shpargalka.pdf',      // Шпаргалка
-TRAINING_PROGRAM_URL: 'assets/docs/trening.pdf',  // Тренинг
-MATERIALS_ZIP_URL: 'assets/docs/bonus.zip',       // Всё сразу
+CHECKLIST_URL: 'https://github.com/HrLubacheva/HrLubacheva.github.io/raw/main/assets/assets/docs/shpargalka.pdf',
+TRAINING_PROGRAM_URL: 'https://github.com/HrLubacheva/HrLubacheva.github.io/raw/main/assets/assets/docs/trening.pdf',
+MATERIALS_ZIP_URL: 'https://github.com/HrLubacheva/HrLubacheva.github.io/raw/main/assets/assets/docs/bonus.zip',
     CONSTANTS: {
         TOAST_DURATION: 3000,
         TOAST_FADE_DURATION: 300,
