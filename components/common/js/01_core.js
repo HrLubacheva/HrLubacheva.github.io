@@ -751,7 +751,7 @@ window.submitForm = async function (formId, formType, getAdditionalData = null) 
         await window.sendDataToSheetWithRetry(formData);
 
         const phoneDisplay = phone ? phone.replace(/(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/, '+$1 $2 $3-$4-$5') : '';
-        showSuccessToast(`🎉 Спасибо, ${name || 'друг'}! Ваша заявка принята. ${phoneDisplay ? `Мы свяжемся с вами по номеру ${phoneDisplay}` : 'Мы свяжемся с вами в ближайшее время.'}`);
+        showSuccessToast(`🎉 Спасибо, ${name || 'друг'}! Ваша заявка принята. ${phoneDisplay ? `Я свяжусь с Вами по номеру ${phoneDisplay}` : 'Я свяжусь с Вами в ближайшее время.'}`);
 
         clearFormFields(formId);
         form.reset();
