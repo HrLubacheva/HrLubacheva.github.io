@@ -750,26 +750,6 @@ body,
     justify-content: center;
 }
 /* ==================================================================
-   04_grids.css – универсальные сетки
-   ================================================================== */
-.grid-3, .grid-2, .grid-1 {
-    display: grid;
-    gap: 30px;
-    margin: 40px 0;
-    list-style: none;
-    padding-left: 0;
-}
-.grid-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-1 { grid-template-columns: 1fr; gap: 20px; }
-
-@media (min-width: 992px) and (max-width: 1199px) {
-    .grid-3 { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 991px) {
-    .grid-3 { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-}
-/* ==================================================================
    04_cards.css – единая система карточек
    ================================================================== */
 .card {
@@ -944,6 +924,26 @@ body,
         font-size: 0.75rem;
         margin-top: 8px;
     }
+}
+/* ==================================================================
+   04_grids.css – универсальные сетки
+   ================================================================== */
+.grid-3, .grid-2, .grid-1 {
+    display: grid;
+    gap: 30px;
+    margin: 40px 0;
+    list-style: none;
+    padding-left: 0;
+}
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-1 { grid-template-columns: 1fr; gap: 20px; }
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 991px) {
+    .grid-3 { grid-template-columns: repeat(2, 1fr); gap: 24px; }
 }
 /* ==================================================================
    05_footer.css – красивый, адаптивный футер
@@ -7082,7 +7082,7 @@ section:not(.section-dark):not(.certificates-section) {
                 <a href="#" onclick="openPrivacyModal(event); return false;" class="footer-policy-link">
                     <span class="policy-icon">🔒</span> Политика
                 </a>
-                <span class="footer-version">⚡ Версия 09.06.2026 16:24:04</span>
+                <span class="footer-version">⚡ Версия 18.06.2026 09:09:06</span>
             </div>
         </div>
         <div class="footer-bottom">
